@@ -18,10 +18,8 @@
 		FA09158C1E2AA9AD0052BCEC /* NowPlayingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA09158B1E2AA9AD0052BCEC /* NowPlayingViewController.swift */; };
 		FA09158E1E2AA9BE0052BCEC /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA09158D1E2AA9BE0052BCEC /* RootViewController.swift */; };
 		FA0915921E2AEF2C0052BCEC /* NowPlayingGameView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA0915911E2AEF2C0052BCEC /* NowPlayingGameView.xib */; };
-		FA0915951E2AEF5E0052BCEC /* NowPlayingGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0915941E2AEF5E0052BCEC /* NowPlayingGameView.swift */; };
 		FA0915971E2B367B0052BCEC /* NowPlayingGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0915961E2B367B0052BCEC /* NowPlayingGameViewController.swift */; };
 		FAC778B11E3481A200944B6B /* GameDetailOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */; };
-		FAC778B31E3481CF00944B6B /* GameDetailOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC778B21E3481CF00944B6B /* GameDetailOverlayView.swift */; };
 		FAC778B51E3481E200944B6B /* GameDetailOverlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC778B41E3481E200944B6B /* GameDetailOverlayViewController.swift */; };
 		FADA80881E4AE18F0069943D /* NoiseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA80871E4AE18F0069943D /* NoiseView.swift */; };
 		FADA808B1E4C07570069943D /* PanDirectionGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808A1E4C07570069943D /* PanDirectionGestureRecognizer.swift */; };
@@ -45,10 +43,8 @@
 		FA09158B1E2AA9AD0052BCEC /* NowPlayingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NowPlayingViewController.swift; path = "View Controllers/NowPlayingViewController.swift"; sourceTree = "<group>"; };
 		FA09158D1E2AA9BE0052BCEC /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RootViewController.swift; path = "View Controllers/RootViewController.swift"; sourceTree = "<group>"; };
 		FA0915911E2AEF2C0052BCEC /* NowPlayingGameView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = NowPlayingGameView.xib; path = Views/NowPlayingGameView.xib; sourceTree = "<group>"; };
-		FA0915941E2AEF5E0052BCEC /* NowPlayingGameView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NowPlayingGameView.swift; path = Views/NowPlayingGameView.swift; sourceTree = "<group>"; };
 		FA0915961E2B367B0052BCEC /* NowPlayingGameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NowPlayingGameViewController.swift; path = "View Controllers/NowPlayingGameViewController.swift"; sourceTree = "<group>"; };
 		FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GameDetailOverlayView.xib; path = Views/GameDetailOverlayView.xib; sourceTree = "<group>"; };
-		FAC778B21E3481CF00944B6B /* GameDetailOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameDetailOverlayView.swift; path = Views/GameDetailOverlayView.swift; sourceTree = "<group>"; };
 		FAC778B41E3481E200944B6B /* GameDetailOverlayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameDetailOverlayViewController.swift; path = "View Controllers/GameDetailOverlayViewController.swift"; sourceTree = "<group>"; };
 		FADA80871E4AE18F0069943D /* NoiseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NoiseView.swift; path = Views/NoiseView.swift; sourceTree = "<group>"; };
 		FADA808A1E4C07570069943D /* PanDirectionGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PanDirectionGestureRecognizer.swift; path = "Gesture Recognizers/PanDirectionGestureRecognizer.swift"; sourceTree = "<group>"; };
@@ -137,9 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				FA0915911E2AEF2C0052BCEC /* NowPlayingGameView.xib */,
-				FA0915941E2AEF5E0052BCEC /* NowPlayingGameView.swift */,
 				FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */,
-				FAC778B21E3481CF00944B6B /* GameDetailOverlayView.swift */,
 				FADA80871E4AE18F0069943D /* NoiseView.swift */,
 			);
 			name = Views;
@@ -288,10 +282,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAC778B31E3481CF00944B6B /* GameDetailOverlayView.swift in Sources */,
 				FADA80901E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift in Sources */,
 				FADA808B1E4C07570069943D /* PanDirectionGestureRecognizer.swift in Sources */,
-				FA0915951E2AEF5E0052BCEC /* NowPlayingGameView.swift in Sources */,
 				FAC778B51E3481E200944B6B /* GameDetailOverlayViewController.swift in Sources */,
 				FA0915881E2AA98C0052BCEC /* MoreViewController.swift in Sources */,
 				FA09158C1E2AA9AD0052BCEC /* NowPlayingViewController.swift in Sources */,
