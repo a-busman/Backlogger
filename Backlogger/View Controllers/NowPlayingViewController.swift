@@ -235,19 +235,45 @@ extension NowPlayingViewController: UICollectionViewDataSource, UICollectionView
             nowPlayingViewController.delegate = self
         }
 
-        // Use the outlet in our custom class to get a reference to the UILabel in the cell
         let nowPlayingView = (nowPlayingViewController.view)!
         nowPlayingView.translatesAutoresizingMaskIntoConstraints = false
         nowPlayingView.setNeedsLayout()
         nowPlayingView.layoutIfNeeded()
 
         cell.contentView.addSubview(nowPlayingView)
-        //cell.bounds.size = (self.collectionView?.bounds.size)!
 
-        NSLayoutConstraint(item: nowPlayingView, attribute: .leading, relatedBy: .equal, toItem: cell.contentView, attribute: .leading, multiplier: 1.0, constant: 0.0).isActive = true
-        NSLayoutConstraint(item: nowPlayingView, attribute: .trailing, relatedBy: .equal, toItem: cell.contentView, attribute: .trailing, multiplier: 1.0, constant: 0.0).isActive = true
-        NSLayoutConstraint(item: nowPlayingView, attribute: .top, relatedBy: .equal, toItem: cell.contentView, attribute: .top, multiplier: 1.0, constant: 0.0).isActive = true
-        NSLayoutConstraint(item: nowPlayingView, attribute: .bottom, relatedBy: .equal, toItem: cell.contentView, attribute: .bottom, multiplier: 1.0, constant: 0.0).isActive = true
+        NSLayoutConstraint(item: nowPlayingView,
+                           attribute: .leading,
+                           relatedBy: .equal,
+                           toItem: cell.contentView,
+                           attribute: .leading,
+                           multiplier: 1.0,
+                           constant: 0.0
+            ).isActive = true
+        NSLayoutConstraint(item: nowPlayingView,
+                           attribute: .trailing,
+                           relatedBy: .equal,
+                           toItem: cell.contentView,
+                           attribute: .trailing,
+                           multiplier: 1.0,
+                           constant: 0.0
+            ).isActive = true
+        NSLayoutConstraint(item: nowPlayingView,
+                           attribute: .top,
+                           relatedBy: .equal,
+                           toItem: cell.contentView,
+                           attribute: .top,
+                           multiplier: 1.0,
+                           constant: 0.0
+            ).isActive = true
+        NSLayoutConstraint(item: nowPlayingView,
+                           attribute: .bottom,
+                           relatedBy: .equal,
+                           toItem: cell.contentView,
+                           attribute: .bottom,
+                           multiplier: 1.0,
+                           constant: 0.0
+            ).isActive = true
         
         if inEditMode {
             self.addWiggleAnimation(to: cell as UICollectionViewCell)

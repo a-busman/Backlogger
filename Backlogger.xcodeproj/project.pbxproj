@@ -12,7 +12,7 @@
 		FA0915741E2AA4210052BCEC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA0915721E2AA4210052BCEC /* Main.storyboard */; };
 		FA0915761E2AA4210052BCEC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA0915751E2AA4210052BCEC /* Assets.xcassets */; };
 		FA0915791E2AA4210052BCEC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA0915771E2AA4210052BCEC /* LaunchScreen.storyboard */; };
-		FA0915831E2AA9480052BCEC /* BacklogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0915821E2AA9480052BCEC /* BacklogViewController.swift */; };
+		FA0915831E2AA9480052BCEC /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0915821E2AA9480052BCEC /* PlaylistViewController.swift */; };
 		FA0915861E2AA97B0052BCEC /* LibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0915851E2AA97B0052BCEC /* LibraryViewController.swift */; };
 		FA0915881E2AA98C0052BCEC /* MoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0915871E2AA98C0052BCEC /* MoreViewController.swift */; };
 		FA09158C1E2AA9AD0052BCEC /* NowPlayingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA09158B1E2AA9AD0052BCEC /* NowPlayingViewController.swift */; };
@@ -25,6 +25,8 @@
 		FADA808B1E4C07570069943D /* PanDirectionGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808A1E4C07570069943D /* PanDirectionGestureRecognizer.swift */; };
 		FADA808E1E4C0D680069943D /* NowPlayingGameViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808D1E4C0D680069943D /* NowPlayingGameViewCell.swift */; };
 		FADA80901E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808F1E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift */; };
+		FADA80921E4C22B90069943D /* ConsoleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FADA80911E4C22B90069943D /* ConsoleView.xib */; };
+		FADA80941E4C2A670069943D /* ConsoleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA80931E4C2A670069943D /* ConsoleViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,7 +39,7 @@
 		FA0915751E2AA4210052BCEC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FA0915781E2AA4210052BCEC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FA09157A1E2AA4210052BCEC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		FA0915821E2AA9480052BCEC /* BacklogViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BacklogViewController.swift; path = "View Controllers/BacklogViewController.swift"; sourceTree = "<group>"; };
+		FA0915821E2AA9480052BCEC /* PlaylistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlaylistViewController.swift; path = "View Controllers/PlaylistViewController.swift"; sourceTree = "<group>"; };
 		FA0915851E2AA97B0052BCEC /* LibraryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LibraryViewController.swift; path = "View Controllers/LibraryViewController.swift"; sourceTree = "<group>"; };
 		FA0915871E2AA98C0052BCEC /* MoreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MoreViewController.swift; path = "View Controllers/MoreViewController.swift"; sourceTree = "<group>"; };
 		FA09158B1E2AA9AD0052BCEC /* NowPlayingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NowPlayingViewController.swift; path = "View Controllers/NowPlayingViewController.swift"; sourceTree = "<group>"; };
@@ -50,6 +52,8 @@
 		FADA808A1E4C07570069943D /* PanDirectionGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PanDirectionGestureRecognizer.swift; path = "Gesture Recognizers/PanDirectionGestureRecognizer.swift"; sourceTree = "<group>"; };
 		FADA808D1E4C0D680069943D /* NowPlayingGameViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NowPlayingGameViewCell.swift; path = "Collection View/NowPlayingGameViewCell.swift"; sourceTree = "<group>"; };
 		FADA808F1E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TopAlignedCollectionViewFlowLayout.swift; path = "Collection View/TopAlignedCollectionViewFlowLayout.swift"; sourceTree = "<group>"; };
+		FADA80911E4C22B90069943D /* ConsoleView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConsoleView.xib; path = Views/ConsoleView.xib; sourceTree = "<group>"; };
+		FADA80931E4C2A670069943D /* ConsoleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConsoleViewController.swift; path = "View Controllers/ConsoleViewController.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,12 +123,13 @@
 			isa = PBXGroup;
 			children = (
 				FA09158B1E2AA9AD0052BCEC /* NowPlayingViewController.swift */,
-				FA0915821E2AA9480052BCEC /* BacklogViewController.swift */,
+				FA0915821E2AA9480052BCEC /* PlaylistViewController.swift */,
 				FA0915851E2AA97B0052BCEC /* LibraryViewController.swift */,
 				FA0915871E2AA98C0052BCEC /* MoreViewController.swift */,
 				FA09158D1E2AA9BE0052BCEC /* RootViewController.swift */,
 				FA0915961E2B367B0052BCEC /* NowPlayingGameViewController.swift */,
 				FAC778B41E3481E200944B6B /* GameDetailOverlayViewController.swift */,
+				FADA80931E4C2A670069943D /* ConsoleViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -135,6 +140,7 @@
 				FA0915911E2AEF2C0052BCEC /* NowPlayingGameView.xib */,
 				FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */,
 				FADA80871E4AE18F0069943D /* NoiseView.swift */,
+				FADA80911E4C22B90069943D /* ConsoleView.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -221,6 +227,7 @@
 			files = (
 				FAC778B11E3481A200944B6B /* GameDetailOverlayView.xib in Resources */,
 				FA0915921E2AEF2C0052BCEC /* NowPlayingGameView.xib in Resources */,
+				FADA80921E4C22B90069943D /* ConsoleView.xib in Resources */,
 				FA0915791E2AA4210052BCEC /* LaunchScreen.storyboard in Resources */,
 				FA0915761E2AA4210052BCEC /* Assets.xcassets in Resources */,
 				FA0915741E2AA4210052BCEC /* Main.storyboard in Resources */,
@@ -284,12 +291,13 @@
 			files = (
 				FADA80901E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift in Sources */,
 				FADA808B1E4C07570069943D /* PanDirectionGestureRecognizer.swift in Sources */,
+				FADA80941E4C2A670069943D /* ConsoleViewController.swift in Sources */,
 				FAC778B51E3481E200944B6B /* GameDetailOverlayViewController.swift in Sources */,
 				FA0915881E2AA98C0052BCEC /* MoreViewController.swift in Sources */,
 				FA09158C1E2AA9AD0052BCEC /* NowPlayingViewController.swift in Sources */,
 				FADA80881E4AE18F0069943D /* NoiseView.swift in Sources */,
 				FA09158E1E2AA9BE0052BCEC /* RootViewController.swift in Sources */,
-				FA0915831E2AA9480052BCEC /* BacklogViewController.swift in Sources */,
+				FA0915831E2AA9480052BCEC /* PlaylistViewController.swift in Sources */,
 				FA0915861E2AA97B0052BCEC /* LibraryViewController.swift in Sources */,
 				FADA808E1E4C0D680069943D /* NowPlayingGameViewCell.swift in Sources */,
 				FA0915971E2B367B0052BCEC /* NowPlayingGameViewController.swift in Sources */,

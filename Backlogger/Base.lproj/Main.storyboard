@@ -34,7 +34,7 @@
         <!--Playlists-->
         <scene sceneID="igX-f0-GRH">
             <objects>
-                <tableViewController title="Playlists" id="VuG-Nz-qef" customClass="BacklogViewController" customModule="Backlogger" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Playlists" id="VuG-Nz-qef" customClass="PlaylistViewController" customModule="Backlogger" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="yUb-vs-tlU">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -44,7 +44,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="gHQ-JI-FLq" id="48K-F2-Ybp">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -60,35 +60,6 @@
             </objects>
             <point key="canvasLocation" x="1650" y="-16"/>
         </scene>
-        <!--Library-->
-        <scene sceneID="zOL-cb-bUe">
-            <objects>
-                <tableViewController title="Library" id="6OV-xF-Oa8" customClass="LibraryViewController" customModule="Backlogger" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="xuK-3t-kzI">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="pwx-hi-KcX">
-                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="pwx-hi-KcX" id="79S-j5-1by">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="6OV-xF-Oa8" id="phN-TX-pN5"/>
-                            <outlet property="delegate" destination="6OV-xF-Oa8" id="Qdw-zs-Zid"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" title="Library" id="J7L-pC-plk"/>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="mi9-vS-hl6" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1649" y="633"/>
-        </scene>
         <!--More-->
         <scene sceneID="SHa-ao-n5C">
             <objects>
@@ -102,7 +73,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bHV-tF-IEG" id="Rhq-s1-hBU">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -147,12 +118,77 @@
                         <color key="barTintColor" red="0.0" green="0.72525911350000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="6OV-xF-Oa8" kind="relationship" relationship="rootViewController" id="Q0W-CP-i4p"/>
+                        <segue destination="NHJ-P8-wb8" kind="relationship" relationship="rootViewController" id="AWv-76-Uw9"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DdW-CE-fXJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="697" y="633"/>
+        </scene>
+        <!--Library-->
+        <scene sceneID="poY-XK-3k6">
+            <objects>
+                <viewController id="NHJ-P8-wb8" customClass="LibraryViewController" customModule="Backlogger" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Rmb-sC-7Ub"/>
+                        <viewControllerLayoutGuide type="bottom" id="ESV-tE-ttt"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="o8r-lV-E2y" customClass="NoiseView" customModule="Backlogger" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Aj4-LH-N0b">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Yzq-ne-rro">
+                                    <size key="itemSize" width="50" height="189"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="console_cell" id="StH-kl-vd9">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="189"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="189"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </view>
+                                    </collectionViewCell>
+                                </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="NHJ-P8-wb8" id="5Hz-oS-xFW"/>
+                                    <outlet property="delegate" destination="NHJ-P8-wb8" id="3IF-bM-mY1"/>
+                                </connections>
+                            </collectionView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.90071403589999999" green="0.90071403589999999" blue="0.90071403589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="Aj4-LH-N0b" firstAttribute="width" secondItem="o8r-lV-E2y" secondAttribute="width" id="3zF-Q6-1yH"/>
+                            <constraint firstItem="Aj4-LH-N0b" firstAttribute="centerX" secondItem="o8r-lV-E2y" secondAttribute="centerX" id="Dtz-DC-s2n"/>
+                            <constraint firstItem="Aj4-LH-N0b" firstAttribute="centerY" secondItem="o8r-lV-E2y" secondAttribute="centerY" id="OzX-XA-cBQ"/>
+                            <constraint firstItem="Aj4-LH-N0b" firstAttribute="height" secondItem="o8r-lV-E2y" secondAttribute="height" id="n3O-hC-uCJ"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="color" keyPath="noiseColor">
+                                <color key="value" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="number" keyPath="noiseMaxAlpha">
+                                <real key="value" value="0.29999999999999999"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <navigationItem key="navigationItem" title="Library" id="DbQ-cs-g3k">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="8lK-UE-gdp">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="collectionView" destination="Aj4-LH-N0b" id="F07-fO-u7i"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eus-Cs-GmS" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1648.8" y="632.83358320839591"/>
         </scene>
         <!--Playlists-->
         <scene sceneID="pmz-J8-nod">

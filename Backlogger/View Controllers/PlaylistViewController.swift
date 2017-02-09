@@ -1,5 +1,5 @@
 //
-//  BacklogViewController.swift
+//  PlaylistViewController.swift
 //  Backlogger
 //
 //  Created by Alex Busman on 1/14/17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BacklogViewController: UITableViewController {
+class PlaylistViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
