@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1212" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -15,10 +15,10 @@
                 <tabBarController id="49e-Tb-3d3" customClass="RootViewController" customModule="Backlogger" customModuleProvider="target" sceneMemberID="viewController">
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <nil key="simulatedBottomBarMetrics"/>
-                    <tabBar key="tabBar" contentMode="scaleToFill" barStyle="black" id="W28-zg-YXA">
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="W28-zg-YXA">
                         <rect key="frame" x="0.0" y="975" width="768" height="49"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                        <color key="barTintColor" red="0.001180158441617167" green="0.0" blue="0.3810296474358974" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="selectedImageTintColor" red="0.0" green="0.72525911350000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </tabBar>
                     <connections>
                         <segue destination="yFb-VB-gG6" kind="relationship" relationship="viewControllers" id="upR-KJ-vNr"/>
@@ -31,10 +31,10 @@
             </objects>
             <point key="canvasLocation" x="-4" y="294"/>
         </scene>
-        <!--Backlog-->
+        <!--Playlists-->
         <scene sceneID="igX-f0-GRH">
             <objects>
-                <tableViewController title="Backlog" id="VuG-Nz-qef" customClass="BacklogViewController" customModule="Backlogger" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Playlists" id="VuG-Nz-qef" customClass="BacklogViewController" customModule="Backlogger" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="yUb-vs-tlU">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -54,7 +54,7 @@
                             <outlet property="delegate" destination="VuG-Nz-qef" id="71R-ME-7hU"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Backlog" id="bhX-8J-HOA"/>
+                    <navigationItem key="navigationItem" title="Playlists" id="bhX-8J-HOA"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="w6f-eR-dVa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -98,7 +98,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="bHV-tF-IEG">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="customcell" id="bHV-tF-IEG">
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bHV-tF-IEG" id="Rhq-s1-hBU">
@@ -108,8 +108,8 @@
                             </tableViewCell>
                         </prototypes>
                         <connections>
-                            <outlet property="dataSource" destination="Twq-rV-IE1" id="T3Z-7t-1u2"/>
-                            <outlet property="delegate" destination="Twq-rV-IE1" id="2PM-Cf-e5j"/>
+                            <outlet property="dataSource" destination="Twq-rV-IE1" id="qYJ-Xt-Ykp"/>
+                            <outlet property="delegate" destination="Twq-rV-IE1" id="Is2-yn-thh"/>
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="More" id="CWO-e1-l7e"/>
@@ -123,9 +123,10 @@
             <objects>
                 <navigationController id="zfS-7l-ex8" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" systemItem="more" id="k1M-sh-jTC"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="dob-kV-7io">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="dob-kV-7io">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.0" green="0.72525911350000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </navigationBar>
                     <connections>
                         <segue destination="Twq-rV-IE1" kind="relationship" relationship="rootViewController" id="uAb-3d-RjO"/>
@@ -139,10 +140,11 @@
         <scene sceneID="Cz5-G1-dNb">
             <objects>
                 <navigationController id="Kzz-rj-QM8" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Library" image="second" id="Ju7-re-Oi4"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="wlB-lA-b2k">
+                    <tabBarItem key="tabBarItem" title="Library" image="library" id="Ju7-re-Oi4"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="wlB-lA-b2k">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.0" green="0.72525911350000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </navigationBar>
                     <connections>
                         <segue destination="6OV-xF-Oa8" kind="relationship" relationship="rootViewController" id="Q0W-CP-i4p"/>
@@ -152,14 +154,15 @@
             </objects>
             <point key="canvasLocation" x="697" y="633"/>
         </scene>
-        <!--Backlog-->
+        <!--Playlists-->
         <scene sceneID="pmz-J8-nod">
             <objects>
-                <navigationController id="RoH-L7-hIp" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Backlog" image="second" id="lHv-c8-gfK"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="bdw-u5-tBZ">
+                <navigationController title="Playlists" id="RoH-L7-hIp" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Playlists" image="playlists" id="lHv-c8-gfK"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="bdw-u5-tBZ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.0" green="0.72525911350000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </navigationBar>
                     <connections>
                         <segue destination="VuG-Nz-qef" kind="relationship" relationship="rootViewController" id="fRx-Zs-b1l"/>
@@ -173,20 +176,16 @@
         <scene sceneID="ZHQ-gT-gYS">
             <objects>
                 <navigationController title="Now Playing" automaticallyAdjustsScrollViewInsets="NO" id="yFb-VB-gG6" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Now Playing" image="first" id="Cew-XV-gew"/>
-                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="jNM-c2-5lP">
+                    <tabBarItem key="tabBarItem" title="Now Playing" image="controller_icon" id="Cew-XV-gew"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="jNM-c2-5lP">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="barTintColor" red="0.0011801584419999999" green="0.0" blue="0.3810296474" alpha="1" colorSpace="calibratedRGB"/>
-                        <textAttributes key="titleTextAttributes">
-                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        </textAttributes>
+                        <color key="barTintColor" red="0.1435236930847168" green="0.7611585259437561" blue="0.99458020925521851" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </navigationBar>
-                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="kcL-VL-bos">
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" barStyle="black" id="kcL-VL-bos">
                         <rect key="frame" x="0.0" y="623" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="barTintColor" red="0.66274509800000003" green="0.75294117650000003" blue="0.87450980389999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="barTintColor" red="0.14352369309999999" green="0.76115852589999999" blue="0.99458020930000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </toolbar>
                     <connections>
                         <segue destination="FgA-7B-gWl" kind="relationship" relationship="rootViewController" id="9fL-89-skA"/>
@@ -208,39 +207,96 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rau-yq-Sgf">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bMs-wG-lFu" customClass="NoiseView" customModule="Backlogger" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="64" width="375" height="554"/>
-                                <connections>
-                                    <segue destination="t0O-OL-ati" kind="embed" identifier="showPageViewController" id="YA8-9d-yce"/>
-                                </connections>
-                            </containerView>
+                                <subviews>
+                                    <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" directionalLockEnabled="YES" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="utv-38-NNd">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="512"/>
+                                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="73j-46-vv0" customClass="TopAlignedCollectionViewFlowLayout" customModule="Backlogger" customModuleProvider="target">
+                                            <size key="itemSize" width="100" height="80"/>
+                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                            <inset key="sectionInset" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
+                                        </collectionViewFlowLayout>
+                                        <cells>
+                                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="iHs-mf-cYW" customClass="NowPlayingGameViewCell" customModule="Backlogger" customModuleProvider="target">
+                                                <rect key="frame" x="20" y="0.0" width="100" height="80"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                                    <rect key="frame" x="0.0" y="0.0" width="100" height="80"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </view>
+                                            </collectionViewCell>
+                                        </cells>
+                                        <connections>
+                                            <outlet property="dataSource" destination="FgA-7B-gWl" id="zuB-F7-aX8"/>
+                                            <outlet property="delegate" destination="FgA-7B-gWl" id="ra6-mI-hyd"/>
+                                        </connections>
+                                    </collectionView>
+                                    <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="g3B-5A-f1o">
+                                        <rect key="frame" x="168" y="517" width="39" height="37"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="37" id="tFO-EG-Wmo"/>
+                                        </constraints>
+                                        <color key="pageIndicatorTintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <action selector="moveViewLeftRightWithSender:" destination="FgA-7B-gWl" eventType="valueChanged" id="3BW-IF-SeW"/>
+                                        </connections>
+                                    </pageControl>
+                                </subviews>
+                                <color key="backgroundColor" red="0.90071403589999999" green="0.90071403589999999" blue="0.90071403589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="utv-38-NNd" firstAttribute="top" secondItem="bMs-wG-lFu" secondAttribute="top" id="3js-2m-fKv"/>
+                                    <constraint firstItem="utv-38-NNd" firstAttribute="bottom" secondItem="g3B-5A-f1o" secondAttribute="top" constant="-5" id="H1X-Nu-bb0"/>
+                                    <constraint firstItem="utv-38-NNd" firstAttribute="leading" secondItem="bMs-wG-lFu" secondAttribute="leading" id="QqF-Mf-9bk"/>
+                                    <constraint firstItem="utv-38-NNd" firstAttribute="trailing" secondItem="bMs-wG-lFu" secondAttribute="trailing" id="Wy8-OB-Dgn"/>
+                                    <constraint firstItem="g3B-5A-f1o" firstAttribute="centerX" secondItem="bMs-wG-lFu" secondAttribute="centerX" id="aN2-iH-eXz"/>
+                                    <constraint firstItem="g3B-5A-f1o" firstAttribute="bottom" secondItem="bMs-wG-lFu" secondAttribute="bottom" id="oX6-nb-o1u"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="noiseColor">
+                                        <color key="value" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="noiseMaxAlpha">
+                                        <real key="value" value="0.29999999999999999"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="rau-yq-Sgf" firstAttribute="top" secondItem="CAd-pj-JZM" secondAttribute="bottom" id="58N-7G-SuU"/>
-                            <constraint firstItem="rau-yq-Sgf" firstAttribute="bottom" secondItem="tG9-su-aib" secondAttribute="top" id="5OV-lS-KDM"/>
-                            <constraint firstItem="rau-yq-Sgf" firstAttribute="width" secondItem="8rD-HO-R0s" secondAttribute="width" id="6IU-0z-Ssk"/>
-                            <constraint firstItem="rau-yq-Sgf" firstAttribute="leading" secondItem="8rD-HO-R0s" secondAttribute="leading" id="QHT-GY-JZz"/>
+                            <constraint firstItem="bMs-wG-lFu" firstAttribute="bottom" secondItem="tG9-su-aib" secondAttribute="top" id="IMt-uY-Jas"/>
+                            <constraint firstItem="bMs-wG-lFu" firstAttribute="top" secondItem="CAd-pj-JZM" secondAttribute="bottom" id="PaH-xC-bfV"/>
+                            <constraint firstItem="bMs-wG-lFu" firstAttribute="trailing" secondItem="8rD-HO-R0s" secondAttribute="trailing" id="cRQ-h3-hoC"/>
+                            <constraint firstItem="bMs-wG-lFu" firstAttribute="leading" secondItem="8rD-HO-R0s" secondAttribute="leading" id="fMf-Nl-Dai"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Now Playing" id="cHN-6A-2RY"/>
-                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
+                    <navigationItem key="navigationItem" title="Now Playing" id="cHN-6A-2RY">
+                        <barButtonItem key="leftBarButtonItem" systemItem="edit" id="0sM-0E-Gbf">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <action selector="handleTapEditWithSender:" destination="FgA-7B-gWl" id="CdE-fN-zX9"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="xgf-6X-uQN">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="addBarButtonItem" destination="xgf-6X-uQN" id="XQF-s8-MQE"/>
+                        <outlet property="collectionView" destination="utv-38-NNd" id="prV-vK-AYZ"/>
+                        <outlet property="editBarButtonItem" destination="0sM-0E-Gbf" id="Fon-qO-5ss"/>
+                        <outlet property="pageControl" destination="g3B-5A-f1o" id="H3j-nl-4Fr"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xUZ-cm-zCW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1477.5999999999999" y="-664.31784107946032"/>
         </scene>
-        <!--Page View Controller-->
-        <scene sceneID="7Zq-qy-UPn">
-            <objects>
-                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="t0O-OL-ati" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="46I-18-o8j" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2323" y="-666"/>
-        </scene>
     </scenes>
     <resources>
-        <image name="first" width="30" height="30"/>
-        <image name="second" width="30" height="30"/>
+        <image name="controller_icon" width="25" height="25"/>
+        <image name="library" width="25" height="25"/>
+        <image name="playlists" width="25" height="25"/>
     </resources>
 </document>

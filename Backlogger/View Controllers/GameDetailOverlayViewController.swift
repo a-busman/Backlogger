@@ -28,6 +28,10 @@ class GameDetailOverlayViewController: UIViewController {
         scrollView?.scrollIndicatorInsets = UIEdgeInsetsMake(0.0, 0.0, 5.0, 0.0)
     }
     
+    override func viewDidLayoutSubviews() {
+        self.scrollView?.contentSize = (self.contentView?.bounds.size)!
+    }
+    
     @IBAction func handleSlider(sender: UISlider) {
         let remainder = Int(sender.value) % 10
         var newValue: Int = 0

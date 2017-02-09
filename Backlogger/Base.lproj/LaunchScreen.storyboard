@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1212" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="A0H-K0-OJz">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="A0H-K0-OJz">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -13,13 +13,14 @@
         <scene sceneID="GiJ-To-U7D">
             <objects>
                 <navigationController id="7yf-rE-QVc" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Now Playing" image="first" id="D5U-Kd-KjS"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ra1-6s-DfT">
+                    <tabBarItem key="tabBarItem" title="Now Playing" image="controller_icon" id="D5U-Kd-KjS"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="ra1-6s-DfT">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.0" green="0.72525911350000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="IaZ-Lg-UbJ" kind="relationship" relationship="rootViewController" id="qbW-vB-ymw"/>
+                        <segue destination="51a-pg-CcY" kind="relationship" relationship="rootViewController" id="Fep-gs-fj6"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kCy-9a-HUq" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -27,14 +28,30 @@
             <point key="canvasLocation" x="1257" y="-535"/>
         </scene>
         <!--Now Playing-->
-        <scene sceneID="xuH-76-V59">
+        <scene sceneID="Nf2-hZ-aYH">
             <objects>
-                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="pageCurl" navigationOrientation="horizontal" spineLocation="min" id="IaZ-Lg-UbJ" sceneMemberID="viewController">
-                    <navigationItem key="navigationItem" title="Now Playing" id="EaB-8T-vAC"/>
-                </pageViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Tf0-p3-dYa" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="51a-pg-CcY" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="FgY-MI-XcG"/>
+                        <viewControllerLayoutGuide type="bottom" id="0PE-uG-xEr"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="RcU-D3-jAW">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="0.90071403589999999" green="0.90071403589999999" blue="0.90071403589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Now Playing" id="w3N-zM-9de">
+                        <barButtonItem key="leftBarButtonItem" systemItem="edit" id="0xz-RA-DKK">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="Zhp-a9-vmS">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vZ3-qn-qwu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2119" y="-536"/>
+            <point key="canvasLocation" x="2035" y="-539"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="2zZ-HL-6Fo">
@@ -44,6 +61,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <color key="selectedImageTintColor" red="0.0" green="0.72525911350000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </tabBar>
                     <connections>
                         <segue destination="7yf-rE-QVc" kind="relationship" relationship="viewControllers" id="s9x-sW-n45"/>
@@ -56,14 +74,15 @@
             </objects>
             <point key="canvasLocation" x="471" y="426"/>
         </scene>
-        <!--Backlog-->
+        <!--Playlists-->
         <scene sceneID="9Uu-JH-twT">
             <objects>
                 <navigationController id="v9C-uI-k6q" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Backlog" image="second" id="66W-Sh-Z5u"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="sfj-u1-n2z">
+                    <tabBarItem key="tabBarItem" title="Playlists" image="playlists" id="66W-Sh-Z5u"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="sfj-u1-n2z">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.0" green="0.72525911350000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </navigationBar>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7Sr-7d-MOk" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -74,10 +93,11 @@
         <scene sceneID="AC6-Zg-yLo">
             <objects>
                 <navigationController id="4hx-3w-HPM" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Library" image="second" id="LNa-jl-3oF"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="xlP-m0-VU9">
+                    <tabBarItem key="tabBarItem" title="Library" image="library" id="LNa-jl-3oF"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="xlP-m0-VU9">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.0" green="0.72525911350000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </navigationBar>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ksm-HG-xLq" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -89,9 +109,10 @@
             <objects>
                 <navigationController id="InQ-GP-85m" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" systemItem="more" id="LCK-aC-ImL"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="E7v-AT-JSm">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="E7v-AT-JSm">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.0" green="0.72525911350000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </navigationBar>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TGI-Bw-7WX" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -100,7 +121,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="first" width="30" height="30"/>
-        <image name="second" width="30" height="30"/>
+        <image name="controller_icon" width="25" height="25"/>
+        <image name="library" width="25" height="25"/>
+        <image name="playlists" width="25" height="25"/>
     </resources>
 </document>

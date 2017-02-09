@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1212" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -14,8 +14,12 @@
                 <outlet property="blurView" destination="iQl-Sd-wda" id="a0W-Wv-wM8"/>
                 <outlet property="containerView" destination="xbU-iO-SJ4" id="Ice-za-oCe"/>
                 <outlet property="coverImageView" destination="gKD-uv-46F" id="RAs-w6-KS9"/>
+                <outlet property="deleteView" destination="Gjc-3V-C8H" id="C73-Dn-mGM"/>
                 <outlet property="detailsContainerView" destination="nDh-vO-xPo" id="p7T-c3-SsL"/>
                 <outlet property="detailsGestureView" destination="W4A-1R-EnV" id="Qyu-B3-Fpo"/>
+                <outlet property="detailsPanRecognizer" destination="pnM-uF-3Jy" id="lgo-kD-Pz7"/>
+                <outlet property="detailsTapRecognizer" destination="SjP-R0-Flm" id="ZNV-mb-pfn"/>
+                <outlet property="hideTapRecognizer" destination="joJ-vu-OLq" id="dcg-Se-7f9"/>
                 <outlet property="shadowView" destination="zw8-dn-XTJ" id="jQq-iS-rWC"/>
                 <outlet property="view" destination="iN0-l3-epB" id="f0a-Xv-3p0"/>
             </connections>
@@ -44,7 +48,7 @@
                                     </connections>
                                 </imageView>
                                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iQl-Sd-wda">
-                                    <rect key="frame" x="0.0" y="347" width="300" height="522"/>
+                                    <rect key="frame" x="0.0" y="357" width="300" height="522"/>
                                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="nDh-vO-xPo">
                                         <rect key="frame" x="0.0" y="0.0" width="300" height="522"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -82,7 +86,7 @@
                                 <constraint firstItem="iQl-Sd-wda" firstAttribute="trailing" secondItem="xbU-iO-SJ4" secondAttribute="trailing" id="ZLM-dM-5Ti"/>
                                 <constraint firstItem="gKD-uv-46F" firstAttribute="height" secondItem="xbU-iO-SJ4" secondAttribute="height" id="hR9-wG-eP6"/>
                                 <constraint firstItem="iQl-Sd-wda" firstAttribute="leading" secondItem="xbU-iO-SJ4" secondAttribute="leading" id="oWI-Ie-AVj"/>
-                                <constraint firstItem="iQl-Sd-wda" firstAttribute="top" secondItem="xbU-iO-SJ4" secondAttribute="bottom" constant="-75" id="oXE-3i-QVu"/>
+                                <constraint firstItem="iQl-Sd-wda" firstAttribute="top" secondItem="xbU-iO-SJ4" secondAttribute="bottom" constant="-65" id="oXE-3i-QVu"/>
                             </constraints>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -92,6 +96,7 @@
                         </view>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <gestureRecognizers/>
                     <constraints>
                         <constraint firstItem="xbU-iO-SJ4" firstAttribute="top" secondItem="zw8-dn-XTJ" secondAttribute="top" id="I8e-gt-rKc"/>
                         <constraint firstItem="xbU-iO-SJ4" firstAttribute="leading" secondItem="zw8-dn-XTJ" secondAttribute="leading" id="S6B-4e-U4M"/>
@@ -104,12 +109,72 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </view>
+                <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gjc-3V-C8H" userLabel="Delete">
+                    <rect key="frame" x="-5" y="-5" width="30" height="30"/>
+                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="18Y-Lf-2eZ">
+                        <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TwW-CM-lqq">
+                                <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" id="2Wf-mf-HuM">
+                                    <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="na2-ut-KtK">
+                                            <rect key="frame" x="0.0" y="0.0" width="30" height="26"/>
+                                            <attributedString key="attributedText">
+                                                <fragment content="×">
+                                                    <attributes>
+                                                        <font key="NSFont" metaFont="system" size="21"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                    </attributes>
+                                                </fragment>
+                                            </attributedString>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="na2-ut-KtK" firstAttribute="top" secondItem="2Wf-mf-HuM" secondAttribute="top" id="L5F-dn-17s"/>
+                                        <constraint firstItem="na2-ut-KtK" firstAttribute="bottom" secondItem="2Wf-mf-HuM" secondAttribute="bottom" constant="-4" id="MNQ-Qz-bGJ"/>
+                                        <constraint firstItem="na2-ut-KtK" firstAttribute="trailing" secondItem="2Wf-mf-HuM" secondAttribute="trailing" id="eS4-vw-u63"/>
+                                        <constraint firstItem="na2-ut-KtK" firstAttribute="leading" secondItem="2Wf-mf-HuM" secondAttribute="leading" id="fDx-HB-oTQ"/>
+                                    </constraints>
+                                </view>
+                                <vibrancyEffect>
+                                    <blurEffect style="extraLight"/>
+                                </vibrancyEffect>
+                            </visualEffectView>
+                        </subviews>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="15"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <gestureRecognizers/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="KRJ-Jt-8i2"/>
+                        <constraint firstAttribute="width" constant="30" id="yEM-ry-qp1"/>
+                    </constraints>
+                    <blurEffect style="extraLight"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="15"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <outletCollection property="gestureRecognizers" destination="Qeo-we-YHj" appends="YES" id="uRr-JS-Foo"/>
+                    </connections>
+                </visualEffectView>
             </subviews>
-            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstItem="Gjc-3V-C8H" firstAttribute="top" secondItem="xbU-iO-SJ4" secondAttribute="top" constant="-15" id="2bj-sY-G47"/>
                 <constraint firstItem="zw8-dn-XTJ" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" constant="-10" id="BwU-FX-RA9"/>
                 <constraint firstItem="zw8-dn-XTJ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="E2A-QB-g5a"/>
                 <constraint firstItem="zw8-dn-XTJ" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" constant="-10" id="LHC-Vy-C1T"/>
+                <constraint firstItem="Gjc-3V-C8H" firstAttribute="leading" secondItem="xbU-iO-SJ4" secondAttribute="leading" constant="-15" id="Ptd-VG-5HK"/>
                 <constraint firstItem="zw8-dn-XTJ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="10" id="WJD-Mw-AjV"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
@@ -125,11 +190,16 @@
                 <action selector="handleTapDetailsWithRecognizer:" destination="-1" id="c3z-ea-P8v"/>
             </connections>
         </tapGestureRecognizer>
-        <panGestureRecognizer minimumNumberOfTouches="1" id="pnM-uF-3Jy">
+        <panGestureRecognizer minimumNumberOfTouches="1" id="pnM-uF-3Jy" customClass="PanDirectionGestureRecognizer" customModule="Backlogger" customModuleProvider="target">
             <connections>
                 <action selector="handlePanDetailsWithRecognizer:" destination="-1" id="2eT-Q1-Rj3"/>
             </connections>
         </panGestureRecognizer>
+        <tapGestureRecognizer cancelsTouchesInView="NO" delaysTouchesEnded="NO" id="Qeo-we-YHj" userLabel="Delete Tap Recognizer">
+            <connections>
+                <action selector="deleteTapWithRecognizer:" destination="-1" id="iYx-uj-Bp6"/>
+            </connections>
+        </tapGestureRecognizer>
     </objects>
     <resources>
         <image name="ssbm" width="763" height="1078"/>

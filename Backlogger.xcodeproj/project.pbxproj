@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F5EE7A022B3CAD2DD1FF320A /* Pods_Backlogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC8BBA1C96900E3F30355A5F /* Pods_Backlogger.framework */; };
 		FA09156D1E2AA4210052BCEC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA09156C1E2AA4210052BCEC /* AppDelegate.swift */; };
 		FA0915741E2AA4210052BCEC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA0915721E2AA4210052BCEC /* Main.storyboard */; };
 		FA0915761E2AA4210052BCEC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA0915751E2AA4210052BCEC /* Assets.xcassets */; };
@@ -22,9 +23,16 @@
 		FAC778B11E3481A200944B6B /* GameDetailOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */; };
 		FAC778B31E3481CF00944B6B /* GameDetailOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC778B21E3481CF00944B6B /* GameDetailOverlayView.swift */; };
 		FAC778B51E3481E200944B6B /* GameDetailOverlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC778B41E3481E200944B6B /* GameDetailOverlayViewController.swift */; };
+		FADA80881E4AE18F0069943D /* NoiseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA80871E4AE18F0069943D /* NoiseView.swift */; };
+		FADA808B1E4C07570069943D /* PanDirectionGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808A1E4C07570069943D /* PanDirectionGestureRecognizer.swift */; };
+		FADA808E1E4C0D680069943D /* NowPlayingGameViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808D1E4C0D680069943D /* NowPlayingGameViewCell.swift */; };
+		FADA80901E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808F1E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9AAD962DF395F2D66FEC110A /* Pods-Backlogger.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Backlogger.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Backlogger/Pods-Backlogger.debug.xcconfig"; sourceTree = "<group>"; };
+		D199AF38A366A54E48258FDF /* Pods-Backlogger.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Backlogger.release.xcconfig"; path = "Pods/Target Support Files/Pods-Backlogger/Pods-Backlogger.release.xcconfig"; sourceTree = "<group>"; };
+		DC8BBA1C96900E3F30355A5F /* Pods_Backlogger.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Backlogger.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA0915691E2AA4210052BCEC /* Backlogger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Backlogger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA09156C1E2AA4210052BCEC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FA0915731E2AA4210052BCEC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -42,6 +50,10 @@
 		FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GameDetailOverlayView.xib; path = Views/GameDetailOverlayView.xib; sourceTree = "<group>"; };
 		FAC778B21E3481CF00944B6B /* GameDetailOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameDetailOverlayView.swift; path = Views/GameDetailOverlayView.swift; sourceTree = "<group>"; };
 		FAC778B41E3481E200944B6B /* GameDetailOverlayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameDetailOverlayViewController.swift; path = "View Controllers/GameDetailOverlayViewController.swift"; sourceTree = "<group>"; };
+		FADA80871E4AE18F0069943D /* NoiseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NoiseView.swift; path = Views/NoiseView.swift; sourceTree = "<group>"; };
+		FADA808A1E4C07570069943D /* PanDirectionGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PanDirectionGestureRecognizer.swift; path = "Gesture Recognizers/PanDirectionGestureRecognizer.swift"; sourceTree = "<group>"; };
+		FADA808D1E4C0D680069943D /* NowPlayingGameViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NowPlayingGameViewCell.swift; path = "Collection View/NowPlayingGameViewCell.swift"; sourceTree = "<group>"; };
+		FADA808F1E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TopAlignedCollectionViewFlowLayout.swift; path = "Collection View/TopAlignedCollectionViewFlowLayout.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,17 +61,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5EE7A022B3CAD2DD1FF320A /* Pods_Backlogger.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D42009BDAD157796B99BA222 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9AAD962DF395F2D66FEC110A /* Pods-Backlogger.debug.xcconfig */,
+				D199AF38A366A54E48258FDF /* Pods-Backlogger.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		D89C49BAE2CAA1BC26041695 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DC8BBA1C96900E3F30355A5F /* Pods_Backlogger.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		FA0915601E2AA4210052BCEC = {
 			isa = PBXGroup;
 			children = (
 				FA09156B1E2AA4210052BCEC /* Backlogger */,
 				FA09156A1E2AA4210052BCEC /* Products */,
+				D42009BDAD157796B99BA222 /* Pods */,
+				D89C49BAE2CAA1BC26041695 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -74,6 +106,8 @@
 		FA09156B1E2AA4210052BCEC /* Backlogger */ = {
 			isa = PBXGroup;
 			children = (
+				FADA808C1E4C0D440069943D /* Collection View */,
+				FADA80891E4C072E0069943D /* Gesture Recognizers */,
 				FA0915931E2AEF400052BCEC /* Views */,
 				FA0915841E2AA9520052BCEC /* View Controllers */,
 				FA09156C1E2AA4210052BCEC /* AppDelegate.swift */,
@@ -106,8 +140,26 @@
 				FA0915941E2AEF5E0052BCEC /* NowPlayingGameView.swift */,
 				FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */,
 				FAC778B21E3481CF00944B6B /* GameDetailOverlayView.swift */,
+				FADA80871E4AE18F0069943D /* NoiseView.swift */,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		FADA80891E4C072E0069943D /* Gesture Recognizers */ = {
+			isa = PBXGroup;
+			children = (
+				FADA808A1E4C07570069943D /* PanDirectionGestureRecognizer.swift */,
+			);
+			name = "Gesture Recognizers";
+			sourceTree = "<group>";
+		};
+		FADA808C1E4C0D440069943D /* Collection View */ = {
+			isa = PBXGroup;
+			children = (
+				FADA808D1E4C0D680069943D /* NowPlayingGameViewCell.swift */,
+				FADA808F1E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift */,
+			);
+			name = "Collection View";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -117,9 +169,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = FA09157D1E2AA4210052BCEC /* Build configuration list for PBXNativeTarget "Backlogger" */;
 			buildPhases = (
+				C8889B9FD6B103ABC525973E /* [CP] Check Pods Manifest.lock */,
 				FA0915651E2AA4210052BCEC /* Sources */,
 				FA0915661E2AA4210052BCEC /* Frameworks */,
 				FA0915671E2AA4210052BCEC /* Resources */,
+				4AF8E8992E4F9638814F71F4 /* [CP] Embed Pods Frameworks */,
+				4C5FDF5FB9DB89EF0DF988BF /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -142,7 +197,7 @@
 				TargetAttributes = {
 					FA0915681E2AA4210052BCEC = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = D9J98STRHA;
+						DevelopmentTeam = RJTCSD68GK;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -180,19 +235,71 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		4AF8E8992E4F9638814F71F4 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Backlogger/Pods-Backlogger-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4C5FDF5FB9DB89EF0DF988BF /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Backlogger/Pods-Backlogger-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C8889B9FD6B103ABC525973E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		FA0915651E2AA4210052BCEC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				FAC778B31E3481CF00944B6B /* GameDetailOverlayView.swift in Sources */,
+				FADA80901E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift in Sources */,
+				FADA808B1E4C07570069943D /* PanDirectionGestureRecognizer.swift in Sources */,
 				FA0915951E2AEF5E0052BCEC /* NowPlayingGameView.swift in Sources */,
 				FAC778B51E3481E200944B6B /* GameDetailOverlayViewController.swift in Sources */,
 				FA0915881E2AA98C0052BCEC /* MoreViewController.swift in Sources */,
 				FA09158C1E2AA9AD0052BCEC /* NowPlayingViewController.swift in Sources */,
+				FADA80881E4AE18F0069943D /* NoiseView.swift in Sources */,
 				FA09158E1E2AA9BE0052BCEC /* RootViewController.swift in Sources */,
 				FA0915831E2AA9480052BCEC /* BacklogViewController.swift in Sources */,
 				FA0915861E2AA97B0052BCEC /* LibraryViewController.swift in Sources */,
+				FADA808E1E4C0D680069943D /* NowPlayingGameViewCell.swift in Sources */,
 				FA0915971E2B367B0052BCEC /* NowPlayingGameViewController.swift in Sources */,
 				FA09156D1E2AA4210052BCEC /* AppDelegate.swift in Sources */,
 			);
@@ -315,12 +422,13 @@
 		};
 		FA09157E1E2AA4210052BCEC /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9AAD962DF395F2D66FEC110A /* Pods-Backlogger.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = D9J98STRHA;
+				DEVELOPMENT_TEAM = RJTCSD68GK;
 				INFOPLIST_FILE = Backlogger/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.abusman.Backlogger;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.a-busman.Backlogger";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -328,12 +436,13 @@
 		};
 		FA09157F1E2AA4210052BCEC /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D199AF38A366A54E48258FDF /* Pods-Backlogger.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = D9J98STRHA;
+				DEVELOPMENT_TEAM = RJTCSD68GK;
 				INFOPLIST_FILE = Backlogger/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.abusman.Backlogger;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.a-busman.Backlogger";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
