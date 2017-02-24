@@ -28,6 +28,9 @@ class NowPlayingGameViewController: UIViewController {
     
     let gameDetailOverlayController = GameDetailOverlayViewController()
     
+    var game: Game?
+    var detailUrl: String?
+    
     private var isInEditMode = false
     
     enum DetailState {
@@ -50,8 +53,13 @@ class NowPlayingGameViewController: UIViewController {
     private let MINIMUM_TRANSFORM: CGFloat = 0.001
     private let MAXIMUM_TRANSOFRM: CGFloat = 1.0
     
-    init(gameId:String) {
+    init(gameId: String) {
         self.gameId = gameId
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    init(detailUrl: String) {
+        self.detailUrl = detailUrl
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -105,6 +113,19 @@ class NowPlayingGameViewController: UIViewController {
         self.animator = UIDynamicAnimator(referenceView: self.view)
         self.gravity = UIGravityBehavior(items: [self.blurView!])
         self.collision = UICollisionBehavior(items: [self.blurView!])
+        
+        if game == nil {
+            if self.detailUrl != nil {
+                Game.getGameDetail(withUrl: self.detailUrl!, { result in
+                    if let error = result.error {
+                        NSLog("error loading details: \(error.localizedDescription)")
+                    }
+                    self.addDetails()
+                })
+            }
+        } else {
+            self.addDetails()
+        }
     }
     
     // MARK: viewDidLayoutSubviews
@@ -118,10 +139,34 @@ class NowPlayingGameViewController: UIViewController {
         self.detailsContainerView?.bringSubview(toFront: self.detailsGestureView!)
         if self.blurViewMinimalY != 0.0 {
             self.blurViewState = .minimal
+            NSLog("\(self.blurViewMinimalY)")
             self.blurView?.center.y = self.blurViewMinimalY
         }
         self.deleteView?.transform = CGAffineTransform(scaleX: self.isInEditMode ? MAXIMUM_TRANSOFRM : MINIMUM_TRANSFORM,
                                                        y: self.isInEditMode ? MAXIMUM_TRANSOFRM : MINIMUM_TRANSFORM)
+    }
+    
+    func addDetails() {
+        guard let currentGame = self.game else {
+            NSLog("no game to get details from")
+            return
+        }
+        currentGame.getImage(withSize: .SuperUrl, { result in
+            if let error = result.error {
+                print(error)
+            } else {
+                if let imageView = self.coverImageView {
+                    UIView.transition(with: imageView,
+                                      duration:0.5,
+                                      options: .transitionCrossDissolve,
+                                      animations: { imageView.image = result.value! },
+                                      completion: nil)
+                } else {
+                    self.coverImageView?.image = result.value!
+                }
+            }
+        })
+        self.gameDetailOverlayController.game = currentGame
     }
     
     // MARK: setEditMode
@@ -155,6 +200,18 @@ class NowPlayingGameViewController: UIViewController {
                                                                        y: editMode ? self.MAXIMUM_TRANSOFRM : self.MINIMUM_TRANSFORM)
                        },
                        completion: nil)
+        if self.blurViewState != .minimal {
+            UIView.animate(withDuration: 0.2,
+                           delay: 0.0,
+                           usingSpringWithDamping: 1.0,
+                           initialSpringVelocity: 0,
+                           options: .curveEaseIn,
+                           animations: {
+                            self.blurView?.center.y = self.blurViewMinimalY
+            },
+                           completion: nil)
+            self.blurViewState = .minimal
+        }
     }
     
     // MARK: deleteTap

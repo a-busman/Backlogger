@@ -11,6 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ConsoleViewController" customModule="Backlogger" customModuleProvider="target">
             <connections>
+                <outlet property="companyLabel" destination="FUV-Lc-1iW" id="2M5-5E-EKs"/>
                 <outlet property="consoleImage" destination="zKW-uQ-z2x" id="jjb-8j-Ici"/>
                 <outlet property="consoleTitleLabel" destination="RYE-mx-ypH" id="l5C-vz-yPd"/>
                 <outlet property="gameCountLabel" destination="p6Y-nO-3xR" id="8iL-5m-EE1"/>
@@ -33,40 +34,32 @@
                                     <rect key="frame" x="0.0" y="0.0" width="180" height="180"/>
                                 </imageView>
                                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6LO-Fe-JDz">
-                                    <rect key="frame" x="0.0" y="135" width="180" height="45"/>
+                                    <rect key="frame" x="0.0" y="143" width="180" height="37"/>
                                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Ig9-Kx-IG2">
-                                        <rect key="frame" x="0.0" y="0.0" width="180" height="45"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="180" height="37"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="GameCube" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RYE-mx-ypH" userLabel="Console Title">
-                                                <rect key="frame" x="5" y="5" width="170" height="14.5"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Console Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RYE-mx-ypH" userLabel="Console Title">
+                                                <rect key="frame" x="5" y="5" width="109.5" height="14.5"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="11"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                                 <color key="shadowColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                 <size key="shadowOffset" width="-1" height="-1"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="1382" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p6Y-nO-3xR" userLabel="Game Count">
-                                                <rect key="frame" x="130.5" y="20" width="44.5" height="20"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="9999" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p6Y-nO-3xR" userLabel="Game Count">
+                                                <rect key="frame" x="119.5" y="8.5" width="55.5" height="20"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="20" id="9By-nF-Pyx"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" type="system" weight="thin" pointSize="20"/>
+                                                <fontDescription key="fontDescription" type="system" weight="thin" pointSize="23"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                                 <color key="shadowColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                 <size key="shadowOffset" width="-1" height="-1"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Games" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AkL-tY-uZo">
-                                                <rect key="frame" x="71.5" y="25.5" width="37.5" height="14.5"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                <nil key="highlightedColor"/>
-                                                <color key="shadowColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                                <size key="shadowOffset" width="-1" height="-1"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nintendo" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FUV-Lc-1iW" userLabel="Company">
-                                                <rect key="frame" x="5" y="25.5" width="120.5" height="14.5"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Console Company" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FUV-Lc-1iW" userLabel="Company">
+                                                <rect key="frame" x="5" y="17.5" width="109.5" height="14.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
@@ -75,20 +68,18 @@
                                             </label>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstItem="p6Y-nO-3xR" firstAttribute="bottom" secondItem="Ig9-Kx-IG2" secondAttribute="bottom" constant="-5" id="1Kx-ta-QR6"/>
                                             <constraint firstItem="FUV-Lc-1iW" firstAttribute="leading" secondItem="Ig9-Kx-IG2" secondAttribute="leading" constant="5" id="2n0-U7-gy5"/>
                                             <constraint firstItem="RYE-mx-ypH" firstAttribute="top" secondItem="Ig9-Kx-IG2" secondAttribute="top" constant="5" id="DvB-nj-xlG"/>
+                                            <constraint firstItem="RYE-mx-ypH" firstAttribute="trailing" secondItem="p6Y-nO-3xR" secondAttribute="leading" constant="-5" id="Jkd-lx-iaC"/>
+                                            <constraint firstItem="FUV-Lc-1iW" firstAttribute="bottom" secondItem="Ig9-Kx-IG2" secondAttribute="bottom" constant="-5" id="OOv-70-VTe"/>
                                             <constraint firstItem="p6Y-nO-3xR" firstAttribute="trailing" secondItem="Ig9-Kx-IG2" secondAttribute="trailing" constant="-5" id="XAd-YL-kIX"/>
-                                            <constraint firstItem="FUV-Lc-1iW" firstAttribute="bottom" secondItem="Ig9-Kx-IG2" secondAttribute="bottom" constant="-5" id="eQX-9U-eAl"/>
-                                            <constraint firstItem="RYE-mx-ypH" firstAttribute="trailing" secondItem="Ig9-Kx-IG2" secondAttribute="trailing" constant="-5" id="iyy-uP-qmk"/>
-                                            <constraint firstItem="AkL-tY-uZo" firstAttribute="bottom" secondItem="p6Y-nO-3xR" secondAttribute="bottom" id="kE9-hK-6Hh"/>
-                                            <constraint firstItem="AkL-tY-uZo" firstAttribute="centerX" secondItem="Ig9-Kx-IG2" secondAttribute="centerX" id="m0F-dn-OKN"/>
+                                            <constraint firstItem="p6Y-nO-3xR" firstAttribute="centerY" secondItem="Ig9-Kx-IG2" secondAttribute="centerY" id="aga-bi-LgZ"/>
                                             <constraint firstItem="p6Y-nO-3xR" firstAttribute="leading" secondItem="FUV-Lc-1iW" secondAttribute="trailing" constant="5" id="pDc-Np-Dty"/>
                                             <constraint firstItem="RYE-mx-ypH" firstAttribute="leading" secondItem="Ig9-Kx-IG2" secondAttribute="leading" constant="5" id="wym-j9-cMc"/>
                                         </constraints>
                                     </view>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="45" id="uVR-jz-9hU"/>
+                                        <constraint firstAttribute="height" constant="37" id="uVR-jz-9hU"/>
                                     </constraints>
                                     <blurEffect style="dark"/>
                                 </visualEffectView>

@@ -33,7 +33,7 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
                                                                   NowPlayingGameViewController(gameId: "2"),
                                                                   NowPlayingGameViewController(gameId: "3"),
                                                                   NowPlayingGameViewController(gameId: "4")]
-    
+    var games: [Game]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,6 +41,22 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
         self.longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(NowPlayingViewController.handleLongGesture))
         self.collectionView?.addGestureRecognizer(longPressGesture!)
         self.longPressGesture?.isEnabled = false
+        self.games = []
+        
+        for _ in 0..<4 {
+            let url = Game.buildDetailUrl(fromId: 50899)
+            Game.getGameDetail(withUrl: url, { result in
+                if let error = result.error {
+                    print("error in getting game detail: \(error.localizedDescription)")
+                    return
+                }
+                let game = result.value!
+                self.games?.append(game)
+                let vc = self.orderedViewControllers[(self.games?.count)! - 1]
+                vc.game = self.games!.last
+                vc.addDetails()
+            })
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -108,7 +124,6 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
     @IBAction func handleTapEdit(sender:UIBarButtonItem) {
         if self.inEditMode == true {
             let newButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(handleTapEdit))
-            newButton.tintColor = .white
             self.stopWiggle()
             self.longPressGesture?.isEnabled = false
             self.inEditMode = false
@@ -116,7 +131,6 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
             self.addBarButtonItem?.isEnabled = true
         } else {
             let newButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(handleTapEdit))
-            newButton.tintColor = .white
             self.startWiggle()
             self.longPressGesture?.isEnabled = true
             self.inEditMode = true
@@ -208,6 +222,7 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
         for i in 0..<orderedViewControllers.count {
             if orderedViewControllers[i].uuid == uuid {
                 orderedViewControllers.remove(at: i)
+                self.games?.remove(at: i)
                 self.collectionView?.deleteItems(at: [IndexPath(item: i, section: 0)])
                 self.pageControl?.numberOfPages -= 1
                 break
@@ -237,8 +252,6 @@ extension NowPlayingViewController: UICollectionViewDataSource, UICollectionView
 
         let nowPlayingView = (nowPlayingViewController.view)!
         nowPlayingView.translatesAutoresizingMaskIntoConstraints = false
-        nowPlayingView.setNeedsLayout()
-        nowPlayingView.layoutIfNeeded()
 
         cell.contentView.addSubview(nowPlayingView)
 
@@ -309,8 +322,11 @@ extension NowPlayingViewController: UICollectionViewDataSource, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, moveItemAt source: IndexPath, to destination: IndexPath) {
-        let game = self.orderedViewControllers.remove(at: source.item)
-        self.orderedViewControllers.insert(game, at: destination.item)
+        let gameVc = self.orderedViewControllers.remove(at: source.item)
+        if let game = self.games?.remove(at: source.item) {
+            self.games?.insert(game, at: destination.item)
+        }
+        self.orderedViewControllers.insert(gameVc, at: destination.item)
     }
     
     //func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {

@@ -19,6 +19,16 @@
 		FA09158E1E2AA9BE0052BCEC /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA09158D1E2AA9BE0052BCEC /* RootViewController.swift */; };
 		FA0915921E2AEF2C0052BCEC /* NowPlayingGameView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA0915911E2AEF2C0052BCEC /* NowPlayingGameView.xib */; };
 		FA0915971E2B367B0052BCEC /* NowPlayingGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0915961E2B367B0052BCEC /* NowPlayingGameViewController.swift */; };
+		FA4B44871E556AD3006A843F /* LibraryAddSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B44861E556AD3006A843F /* LibraryAddSearchViewController.swift */; };
+		FA4B44891E5625E7006A843F /* SearchResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B44881E5625E7006A843F /* SearchResults.swift */; };
+		FA4B448B1E5D3DC2006A843F /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B448A1E5D3DC2006A843F /* Field.swift */; };
+		FA4B448D1E5D3F04006A843F /* Company.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B448C1E5D3F04006A843F /* Company.swift */; };
+		FA4B448F1E5D3F2D006A843F /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B448E1E5D3F2D006A843F /* Genre.swift */; };
+		FA4B44911E5D3F5A006A843F /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B44901E5D3F5A006A843F /* Platform.swift */; };
+		FA4B44931E5D405E006A843F /* ImageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B44921E5D405E006A843F /* ImageList.swift */; };
+		FA4B44951E5D4269006A843F /* Publisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B44941E5D4269006A843F /* Publisher.swift */; };
+		FA4B44971E5E9743006A843F /* ImageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA4B44961E5E9743006A843F /* ImageCell.xib */; };
+		FA4B44991E5E97C5006A843F /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B44981E5E97C5006A843F /* ImageCell.swift */; };
 		FAC778B11E3481A200944B6B /* GameDetailOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */; };
 		FAC778B51E3481E200944B6B /* GameDetailOverlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC778B41E3481E200944B6B /* GameDetailOverlayViewController.swift */; };
 		FADA80881E4AE18F0069943D /* NoiseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA80871E4AE18F0069943D /* NoiseView.swift */; };
@@ -27,6 +37,11 @@
 		FADA80901E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808F1E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift */; };
 		FADA80921E4C22B90069943D /* ConsoleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FADA80911E4C22B90069943D /* ConsoleView.xib */; };
 		FADA80941E4C2A670069943D /* ConsoleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA80931E4C2A670069943D /* ConsoleViewController.swift */; };
+		FADA80981E4FA0EB0069943D /* GameTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA80971E4FA0EB0069943D /* GameTableViewController.swift */; };
+		FADA809C1E4FB2D20069943D /* TableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FADA809B1E4FB2D20069943D /* TableViewCell.xib */; };
+		FADA809F1E4FB66A0069943D /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA809E1E4FB66A0069943D /* TableViewCell.swift */; };
+		FADA80A21E5252DB0069943D /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA80A11E5252DB0069943D /* Game.swift */; };
+		FADA80A41E52540F0069943D /* Console.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA80A31E52540F0069943D /* Console.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +61,16 @@
 		FA09158D1E2AA9BE0052BCEC /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RootViewController.swift; path = "View Controllers/RootViewController.swift"; sourceTree = "<group>"; };
 		FA0915911E2AEF2C0052BCEC /* NowPlayingGameView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = NowPlayingGameView.xib; path = Views/NowPlayingGameView.xib; sourceTree = "<group>"; };
 		FA0915961E2B367B0052BCEC /* NowPlayingGameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NowPlayingGameViewController.swift; path = "View Controllers/NowPlayingGameViewController.swift"; sourceTree = "<group>"; };
+		FA4B44861E556AD3006A843F /* LibraryAddSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LibraryAddSearchViewController.swift; path = "View Controllers/LibraryAddSearchViewController.swift"; sourceTree = "<group>"; };
+		FA4B44881E5625E7006A843F /* SearchResults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SearchResults.swift; path = Model/SearchResults.swift; sourceTree = "<group>"; };
+		FA4B448A1E5D3DC2006A843F /* Field.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Field.swift; path = Model/Field.swift; sourceTree = "<group>"; };
+		FA4B448C1E5D3F04006A843F /* Company.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Company.swift; path = Model/Company.swift; sourceTree = "<group>"; };
+		FA4B448E1E5D3F2D006A843F /* Genre.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Genre.swift; path = Model/Genre.swift; sourceTree = "<group>"; };
+		FA4B44901E5D3F5A006A843F /* Platform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Platform.swift; path = Model/Platform.swift; sourceTree = "<group>"; };
+		FA4B44921E5D405E006A843F /* ImageList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageList.swift; path = Model/ImageList.swift; sourceTree = "<group>"; };
+		FA4B44941E5D4269006A843F /* Publisher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Publisher.swift; path = Model/Publisher.swift; sourceTree = "<group>"; };
+		FA4B44961E5E9743006A843F /* ImageCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ImageCell.xib; path = Views/ImageCell.xib; sourceTree = "<group>"; };
+		FA4B44981E5E97C5006A843F /* ImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageCell.swift; path = Views/ImageCell.swift; sourceTree = "<group>"; };
 		FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GameDetailOverlayView.xib; path = Views/GameDetailOverlayView.xib; sourceTree = "<group>"; };
 		FAC778B41E3481E200944B6B /* GameDetailOverlayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameDetailOverlayViewController.swift; path = "View Controllers/GameDetailOverlayViewController.swift"; sourceTree = "<group>"; };
 		FADA80871E4AE18F0069943D /* NoiseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NoiseView.swift; path = Views/NoiseView.swift; sourceTree = "<group>"; };
@@ -54,6 +79,11 @@
 		FADA808F1E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TopAlignedCollectionViewFlowLayout.swift; path = "Collection View/TopAlignedCollectionViewFlowLayout.swift"; sourceTree = "<group>"; };
 		FADA80911E4C22B90069943D /* ConsoleView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConsoleView.xib; path = Views/ConsoleView.xib; sourceTree = "<group>"; };
 		FADA80931E4C2A670069943D /* ConsoleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConsoleViewController.swift; path = "View Controllers/ConsoleViewController.swift"; sourceTree = "<group>"; };
+		FADA80971E4FA0EB0069943D /* GameTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameTableViewController.swift; path = "View Controllers/GameTableViewController.swift"; sourceTree = "<group>"; };
+		FADA809B1E4FB2D20069943D /* TableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TableViewCell.xib; path = Views/TableViewCell.xib; sourceTree = "<group>"; };
+		FADA809E1E4FB66A0069943D /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TableViewCell.swift; path = "Table View/TableViewCell.swift"; sourceTree = "<group>"; };
+		FADA80A11E5252DB0069943D /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Game.swift; path = Model/Game.swift; sourceTree = "<group>"; };
+		FADA80A31E52540F0069943D /* Console.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Console.swift; path = Model/Console.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +136,8 @@
 		FA09156B1E2AA4210052BCEC /* Backlogger */ = {
 			isa = PBXGroup;
 			children = (
+				FADA80A01E5252C20069943D /* Model */,
+				FADA809D1E4FB64E0069943D /* Table View */,
 				FADA808C1E4C0D440069943D /* Collection View */,
 				FADA80891E4C072E0069943D /* Gesture Recognizers */,
 				FA0915931E2AEF400052BCEC /* Views */,
@@ -130,6 +162,8 @@
 				FA0915961E2B367B0052BCEC /* NowPlayingGameViewController.swift */,
 				FAC778B41E3481E200944B6B /* GameDetailOverlayViewController.swift */,
 				FADA80931E4C2A670069943D /* ConsoleViewController.swift */,
+				FADA80971E4FA0EB0069943D /* GameTableViewController.swift */,
+				FA4B44861E556AD3006A843F /* LibraryAddSearchViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -141,6 +175,8 @@
 				FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */,
 				FADA80871E4AE18F0069943D /* NoiseView.swift */,
 				FADA80911E4C22B90069943D /* ConsoleView.xib */,
+				FADA809B1E4FB2D20069943D /* TableViewCell.xib */,
+				FA4B44961E5E9743006A843F /* ImageCell.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -158,8 +194,33 @@
 			children = (
 				FADA808D1E4C0D680069943D /* NowPlayingGameViewCell.swift */,
 				FADA808F1E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift */,
+				FA4B44981E5E97C5006A843F /* ImageCell.swift */,
 			);
 			name = "Collection View";
+			sourceTree = "<group>";
+		};
+		FADA809D1E4FB64E0069943D /* Table View */ = {
+			isa = PBXGroup;
+			children = (
+				FADA809E1E4FB66A0069943D /* TableViewCell.swift */,
+			);
+			name = "Table View";
+			sourceTree = "<group>";
+		};
+		FADA80A01E5252C20069943D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				FADA80A11E5252DB0069943D /* Game.swift */,
+				FA4B448A1E5D3DC2006A843F /* Field.swift */,
+				FADA80A31E52540F0069943D /* Console.swift */,
+				FA4B44881E5625E7006A843F /* SearchResults.swift */,
+				FA4B448C1E5D3F04006A843F /* Company.swift */,
+				FA4B448E1E5D3F2D006A843F /* Genre.swift */,
+				FA4B44901E5D3F5A006A843F /* Platform.swift */,
+				FA4B44921E5D405E006A843F /* ImageList.swift */,
+				FA4B44941E5D4269006A843F /* Publisher.swift */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -226,7 +287,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				FAC778B11E3481A200944B6B /* GameDetailOverlayView.xib in Resources */,
+				FA4B44971E5E9743006A843F /* ImageCell.xib in Resources */,
 				FA0915921E2AEF2C0052BCEC /* NowPlayingGameView.xib in Resources */,
+				FADA809C1E4FB2D20069943D /* TableViewCell.xib in Resources */,
 				FADA80921E4C22B90069943D /* ConsoleView.xib in Resources */,
 				FA0915791E2AA4210052BCEC /* LaunchScreen.storyboard in Resources */,
 				FA0915761E2AA4210052BCEC /* Assets.xcassets in Resources */,
@@ -289,19 +352,32 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FADA809F1E4FB66A0069943D /* TableViewCell.swift in Sources */,
 				FADA80901E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift in Sources */,
 				FADA808B1E4C07570069943D /* PanDirectionGestureRecognizer.swift in Sources */,
+				FA4B448F1E5D3F2D006A843F /* Genre.swift in Sources */,
+				FA4B44951E5D4269006A843F /* Publisher.swift in Sources */,
 				FADA80941E4C2A670069943D /* ConsoleViewController.swift in Sources */,
 				FAC778B51E3481E200944B6B /* GameDetailOverlayViewController.swift in Sources */,
 				FA0915881E2AA98C0052BCEC /* MoreViewController.swift in Sources */,
+				FA4B44871E556AD3006A843F /* LibraryAddSearchViewController.swift in Sources */,
 				FA09158C1E2AA9AD0052BCEC /* NowPlayingViewController.swift in Sources */,
+				FA4B44931E5D405E006A843F /* ImageList.swift in Sources */,
+				FA4B44911E5D3F5A006A843F /* Platform.swift in Sources */,
 				FADA80881E4AE18F0069943D /* NoiseView.swift in Sources */,
 				FA09158E1E2AA9BE0052BCEC /* RootViewController.swift in Sources */,
+				FA4B448B1E5D3DC2006A843F /* Field.swift in Sources */,
 				FA0915831E2AA9480052BCEC /* PlaylistViewController.swift in Sources */,
 				FA0915861E2AA97B0052BCEC /* LibraryViewController.swift in Sources */,
+				FA4B44891E5625E7006A843F /* SearchResults.swift in Sources */,
 				FADA808E1E4C0D680069943D /* NowPlayingGameViewCell.swift in Sources */,
 				FA0915971E2B367B0052BCEC /* NowPlayingGameViewController.swift in Sources */,
+				FA4B448D1E5D3F04006A843F /* Company.swift in Sources */,
 				FA09156D1E2AA4210052BCEC /* AppDelegate.swift in Sources */,
+				FADA80981E4FA0EB0069943D /* GameTableViewController.swift in Sources */,
+				FADA80A21E5252DB0069943D /* Game.swift in Sources */,
+				FADA80A41E52540F0069943D /* Console.swift in Sources */,
+				FA4B44991E5E97C5006A843F /* ImageCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

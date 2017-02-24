@@ -35,7 +35,7 @@
                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xbU-iO-SJ4" userLabel="Container">
                             <rect key="frame" x="0.0" y="0.0" width="300" height="422"/>
                             <subviews>
-                                <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ssbm" translatesAutoresizingMaskIntoConstraints="NO" id="gKD-uv-46F" userLabel="Cover Art View">
+                                <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="now_playing_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="gKD-uv-46F" userLabel="Cover Art View">
                                     <rect key="frame" x="0.0" y="0.0" width="300" height="422"/>
                                     <gestureRecognizers/>
                                     <userDefinedRuntimeAttributes>
@@ -202,6 +202,6 @@
         </tapGestureRecognizer>
     </objects>
     <resources>
-        <image name="ssbm" width="763" height="1078"/>
+        <image name="now_playing_placeholder" width="375" height="667"/>
     </resources>
 </document>
