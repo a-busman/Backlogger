@@ -98,7 +98,7 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: tableReuseIdentifier)!
+        let cell = tableView.dequeueReusableCell(withIdentifier: tableReuseIdentifier) as! TableViewCell
         let cellView = TableViewCellView()
         cellView.view.translatesAutoresizingMaskIntoConstraints = false
         cell.contentView.addSubview(cellView.view)
@@ -136,10 +136,6 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
                            constant: 0.0
             ).isActive = true
         cell.backgroundColor = (indexPath.item % 2) == (self.games.count % 2 == 0 ? 1 : 0) ? UIColor(colorLiteralRed: 0.9, green: 0.9, blue: 0.9, alpha: 1.0) : .white
-        cellView.artView?.image = #imageLiteral(resourceName: "ssbm")
-        cellView.titleLabel?.text = "Super Smash Bros. Melee"
-        cellView.descriptionLabel?.text = "Developer"
-        cellView.rightLabel?.text = "100%"
         
         return cell
     }

@@ -38,7 +38,7 @@ class ImageList {
         self.superUrl  = json[ImageFields.SuperUrl.rawValue]  as? String
         self.thumbUrl  = json[ImageFields.ThumbUrl.rawValue]  as? String
         self.tinyUrl   = json[ImageFields.TinyUrl.rawValue]   as? String
-        self.tags       = json[ImageFields.Tags.rawValue]       as? String
+        self.tags      = json[ImageFields.Tags.rawValue]      as? String
         
         self.removeSlashesFromUrls()
     }
@@ -53,10 +53,7 @@ class ImageList {
         self.tinyUrl = self.tinyUrl?.replacingOccurrences(of: "\\", with: "", options: NSString.CompareOptions.literal, range: nil)*/
 
     }
-    
-    class func endpointForImage() -> String {
-        return "https://static.giantbomb.com"
-    }
+
     func getImage(field: ImageFields, _ completionHandler: @escaping (Result<UIImage>) -> Void) {
         var imageUrl: String
         switch field {
@@ -78,12 +75,23 @@ class ImageList {
             completionHandler(.failure(BackendError.objectSerialization(reason: "Cannot get tag as a URL")))
             return
         }
-        if self.tags != nil {
-            imageUrl = ImageList.endpointForImage() + imageUrl
+        guard var urlComponents = URLComponents(string: imageUrl) else {
+            let error = BackendError.urlError(reason: "Tried to load an invalid URL")
+            completionHandler(.failure(error))
+            return
         }
-        Alamofire.request(imageUrl)
+        urlComponents.scheme = "https"
+        
+        guard let url = try? urlComponents.asURL() else {
+            let error = BackendError.urlError(reason: "Tried to load an invalid URL")
+            completionHandler(.failure(error))
+            return
+        }
+
+        Alamofire.request(url)
             .response { response in
                 guard let imageData = response.data else {
+                    
                     print("Could not get image from image URL returned in search results")
                     completionHandler(.failure(BackendError.objectSerialization(reason:
                         "Could not get image from image URL returned in search results")))
@@ -92,6 +100,8 @@ class ImageList {
                 if let image = UIImage(data: imageData) {
                     completionHandler(.success(image))
                 } else {
+                    print("Couldn't convert to UIImage")
+                    print("URL: \(response.request?.url?.absoluteString)")
                     completionHandler(.failure(BackendError.objectSerialization(reason: "Could not convert data to UIImage")))
                 }
         }

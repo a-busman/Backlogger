@@ -12,15 +12,50 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    var shortcutItem: UIApplicationShortcutItem?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        var performShortcutDelegate = true
+        
         let appColor = UIColor(colorLiteralRed: 0.0, green: 0.725, blue: 1.0, alpha: 1.0)
         (UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self])).tintColor = appColor
         UISlider.appearance().tintColor = appColor
-        self.window?.tintColor = .white
-        return true
+        //UINavigationBar.appearance().tintColor = .white
+        self.window?.tintColor = appColor
+        
+        if let shortcutItem = launchOptions?[UIApplicationLaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem {
+            self.shortcutItem = shortcutItem
+            performShortcutDelegate = false
+        }
+        
+        return performShortcutDelegate
+    }
+    
+
+    func handleShortcut(_ shortcutItem:UIApplicationShortcutItem ) -> Bool {
+        var succeeded = false
+        
+        if( shortcutItem.type == "a-busman.backlogger.appshortcut.add-game" ) {
+            let rootTabBarController = window!.rootViewController as? UITabBarController
+            
+            rootTabBarController?.selectedIndex = 2
+            let libraryNavigationViewController = rootTabBarController?.selectedViewController as? UINavigationController
+            let libraryViewController = libraryNavigationViewController?.viewControllers.first as? LibraryViewController
+            
+            libraryViewController?.performSegue(withIdentifier: "add_game_to_library", sender: nil)
+            // Add your code here
+
+            succeeded = true
+            
+        }
+        
+        return succeeded
+        
+    }
+    
+    func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
+        completionHandler(handleShortcut(shortcutItem))
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -38,7 +73,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        guard let shortcut = shortcutItem else { return }
+
+        handleShortcut(shortcut)
+        
+        self.shortcutItem = nil
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

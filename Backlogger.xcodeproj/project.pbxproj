@@ -29,16 +29,21 @@
 		FA4B44951E5D4269006A843F /* Publisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B44941E5D4269006A843F /* Publisher.swift */; };
 		FA4B44971E5E9743006A843F /* ImageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA4B44961E5E9743006A843F /* ImageCell.xib */; };
 		FA4B44991E5E97C5006A843F /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B44981E5E97C5006A843F /* ImageCell.swift */; };
+		FA4B449B1E610E53006A843F /* TableViewCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B449A1E610E53006A843F /* TableViewCellView.swift */; };
+		FA4B449D1E6124CC006A843F /* GameDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B449C1E6124CC006A843F /* GameDetailsViewController.swift */; };
+		FA4B449F1E61DF94006A843F /* ImageViewer.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA4B449E1E61DF94006A843F /* ImageViewer.xib */; };
+		FA4B44A11E61E3FC006A843F /* ImageViewerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B44A01E61E3FC006A843F /* ImageViewerController.swift */; };
+		FA4B44A31E6262FB006A843F /* AddedOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA4B44A21E6262FB006A843F /* AddedOverlayView.xib */; };
+		FA4B44A51E626AE5006A843F /* AddedOverlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B44A41E626AE5006A843F /* AddedOverlayViewController.swift */; };
 		FAC778B11E3481A200944B6B /* GameDetailOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */; };
 		FAC778B51E3481E200944B6B /* GameDetailOverlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC778B41E3481E200944B6B /* GameDetailOverlayViewController.swift */; };
-		FADA80881E4AE18F0069943D /* NoiseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA80871E4AE18F0069943D /* NoiseView.swift */; };
 		FADA808B1E4C07570069943D /* PanDirectionGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808A1E4C07570069943D /* PanDirectionGestureRecognizer.swift */; };
 		FADA808E1E4C0D680069943D /* NowPlayingGameViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808D1E4C0D680069943D /* NowPlayingGameViewCell.swift */; };
 		FADA80901E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808F1E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift */; };
 		FADA80921E4C22B90069943D /* ConsoleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FADA80911E4C22B90069943D /* ConsoleView.xib */; };
 		FADA80941E4C2A670069943D /* ConsoleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA80931E4C2A670069943D /* ConsoleViewController.swift */; };
 		FADA80981E4FA0EB0069943D /* GameTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA80971E4FA0EB0069943D /* GameTableViewController.swift */; };
-		FADA809C1E4FB2D20069943D /* TableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FADA809B1E4FB2D20069943D /* TableViewCell.xib */; };
+		FADA809C1E4FB2D20069943D /* TableViewCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FADA809B1E4FB2D20069943D /* TableViewCellView.xib */; };
 		FADA809F1E4FB66A0069943D /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA809E1E4FB66A0069943D /* TableViewCell.swift */; };
 		FADA80A21E5252DB0069943D /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA80A11E5252DB0069943D /* Game.swift */; };
 		FADA80A41E52540F0069943D /* Console.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA80A31E52540F0069943D /* Console.swift */; };
@@ -71,16 +76,21 @@
 		FA4B44941E5D4269006A843F /* Publisher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Publisher.swift; path = Model/Publisher.swift; sourceTree = "<group>"; };
 		FA4B44961E5E9743006A843F /* ImageCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ImageCell.xib; path = Views/ImageCell.xib; sourceTree = "<group>"; };
 		FA4B44981E5E97C5006A843F /* ImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageCell.swift; path = Views/ImageCell.swift; sourceTree = "<group>"; };
+		FA4B449A1E610E53006A843F /* TableViewCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TableViewCellView.swift; path = "Table View/TableViewCellView.swift"; sourceTree = "<group>"; };
+		FA4B449C1E6124CC006A843F /* GameDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameDetailsViewController.swift; path = "View Controllers/GameDetailsViewController.swift"; sourceTree = "<group>"; };
+		FA4B449E1E61DF94006A843F /* ImageViewer.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ImageViewer.xib; path = Views/ImageViewer.xib; sourceTree = "<group>"; };
+		FA4B44A01E61E3FC006A843F /* ImageViewerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageViewerController.swift; path = "View Controllers/ImageViewerController.swift"; sourceTree = "<group>"; };
+		FA4B44A21E6262FB006A843F /* AddedOverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AddedOverlayView.xib; path = Views/AddedOverlayView.xib; sourceTree = "<group>"; };
+		FA4B44A41E626AE5006A843F /* AddedOverlayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AddedOverlayViewController.swift; path = "View Controllers/AddedOverlayViewController.swift"; sourceTree = "<group>"; };
 		FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GameDetailOverlayView.xib; path = Views/GameDetailOverlayView.xib; sourceTree = "<group>"; };
 		FAC778B41E3481E200944B6B /* GameDetailOverlayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameDetailOverlayViewController.swift; path = "View Controllers/GameDetailOverlayViewController.swift"; sourceTree = "<group>"; };
-		FADA80871E4AE18F0069943D /* NoiseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NoiseView.swift; path = Views/NoiseView.swift; sourceTree = "<group>"; };
 		FADA808A1E4C07570069943D /* PanDirectionGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PanDirectionGestureRecognizer.swift; path = "Gesture Recognizers/PanDirectionGestureRecognizer.swift"; sourceTree = "<group>"; };
 		FADA808D1E4C0D680069943D /* NowPlayingGameViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NowPlayingGameViewCell.swift; path = "Collection View/NowPlayingGameViewCell.swift"; sourceTree = "<group>"; };
 		FADA808F1E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TopAlignedCollectionViewFlowLayout.swift; path = "Collection View/TopAlignedCollectionViewFlowLayout.swift"; sourceTree = "<group>"; };
 		FADA80911E4C22B90069943D /* ConsoleView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ConsoleView.xib; path = Views/ConsoleView.xib; sourceTree = "<group>"; };
 		FADA80931E4C2A670069943D /* ConsoleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConsoleViewController.swift; path = "View Controllers/ConsoleViewController.swift"; sourceTree = "<group>"; };
 		FADA80971E4FA0EB0069943D /* GameTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameTableViewController.swift; path = "View Controllers/GameTableViewController.swift"; sourceTree = "<group>"; };
-		FADA809B1E4FB2D20069943D /* TableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TableViewCell.xib; path = Views/TableViewCell.xib; sourceTree = "<group>"; };
+		FADA809B1E4FB2D20069943D /* TableViewCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TableViewCellView.xib; path = Views/TableViewCellView.xib; sourceTree = "<group>"; };
 		FADA809E1E4FB66A0069943D /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TableViewCell.swift; path = "Table View/TableViewCell.swift"; sourceTree = "<group>"; };
 		FADA80A11E5252DB0069943D /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Game.swift; path = Model/Game.swift; sourceTree = "<group>"; };
 		FADA80A31E52540F0069943D /* Console.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Console.swift; path = Model/Console.swift; sourceTree = "<group>"; };
@@ -164,6 +174,9 @@
 				FADA80931E4C2A670069943D /* ConsoleViewController.swift */,
 				FADA80971E4FA0EB0069943D /* GameTableViewController.swift */,
 				FA4B44861E556AD3006A843F /* LibraryAddSearchViewController.swift */,
+				FA4B449C1E6124CC006A843F /* GameDetailsViewController.swift */,
+				FA4B44A01E61E3FC006A843F /* ImageViewerController.swift */,
+				FA4B44A41E626AE5006A843F /* AddedOverlayViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -173,10 +186,11 @@
 			children = (
 				FA0915911E2AEF2C0052BCEC /* NowPlayingGameView.xib */,
 				FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */,
-				FADA80871E4AE18F0069943D /* NoiseView.swift */,
 				FADA80911E4C22B90069943D /* ConsoleView.xib */,
-				FADA809B1E4FB2D20069943D /* TableViewCell.xib */,
+				FADA809B1E4FB2D20069943D /* TableViewCellView.xib */,
 				FA4B44961E5E9743006A843F /* ImageCell.xib */,
+				FA4B449E1E61DF94006A843F /* ImageViewer.xib */,
+				FA4B44A21E6262FB006A843F /* AddedOverlayView.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -203,6 +217,7 @@
 			isa = PBXGroup;
 			children = (
 				FADA809E1E4FB66A0069943D /* TableViewCell.swift */,
+				FA4B449A1E610E53006A843F /* TableViewCellView.swift */,
 			);
 			name = "Table View";
 			sourceTree = "<group>";
@@ -289,10 +304,12 @@
 				FAC778B11E3481A200944B6B /* GameDetailOverlayView.xib in Resources */,
 				FA4B44971E5E9743006A843F /* ImageCell.xib in Resources */,
 				FA0915921E2AEF2C0052BCEC /* NowPlayingGameView.xib in Resources */,
-				FADA809C1E4FB2D20069943D /* TableViewCell.xib in Resources */,
+				FADA809C1E4FB2D20069943D /* TableViewCellView.xib in Resources */,
 				FADA80921E4C22B90069943D /* ConsoleView.xib in Resources */,
 				FA0915791E2AA4210052BCEC /* LaunchScreen.storyboard in Resources */,
+				FA4B449F1E61DF94006A843F /* ImageViewer.xib in Resources */,
 				FA0915761E2AA4210052BCEC /* Assets.xcassets in Resources */,
+				FA4B44A31E6262FB006A843F /* AddedOverlayView.xib in Resources */,
 				FA0915741E2AA4210052BCEC /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -353,6 +370,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				FADA809F1E4FB66A0069943D /* TableViewCell.swift in Sources */,
+				FA4B449D1E6124CC006A843F /* GameDetailsViewController.swift in Sources */,
+				FA4B44A51E626AE5006A843F /* AddedOverlayViewController.swift in Sources */,
 				FADA80901E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift in Sources */,
 				FADA808B1E4C07570069943D /* PanDirectionGestureRecognizer.swift in Sources */,
 				FA4B448F1E5D3F2D006A843F /* Genre.swift in Sources */,
@@ -363,8 +382,8 @@
 				FA4B44871E556AD3006A843F /* LibraryAddSearchViewController.swift in Sources */,
 				FA09158C1E2AA9AD0052BCEC /* NowPlayingViewController.swift in Sources */,
 				FA4B44931E5D405E006A843F /* ImageList.swift in Sources */,
+				FA4B44A11E61E3FC006A843F /* ImageViewerController.swift in Sources */,
 				FA4B44911E5D3F5A006A843F /* Platform.swift in Sources */,
-				FADA80881E4AE18F0069943D /* NoiseView.swift in Sources */,
 				FA09158E1E2AA9BE0052BCEC /* RootViewController.swift in Sources */,
 				FA4B448B1E5D3DC2006A843F /* Field.swift in Sources */,
 				FA0915831E2AA9480052BCEC /* PlaylistViewController.swift in Sources */,
@@ -375,6 +394,7 @@
 				FA4B448D1E5D3F04006A843F /* Company.swift in Sources */,
 				FA09156D1E2AA4210052BCEC /* AppDelegate.swift in Sources */,
 				FADA80981E4FA0EB0069943D /* GameTableViewController.swift in Sources */,
+				FA4B449B1E610E53006A843F /* TableViewCellView.swift in Sources */,
 				FADA80A21E5252DB0069943D /* Game.swift in Sources */,
 				FADA80A41E52540F0069943D /* Console.swift in Sources */,
 				FA4B44991E5E97C5006A843F /* ImageCell.swift in Sources */,

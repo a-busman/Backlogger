@@ -108,6 +108,10 @@ class LibraryViewController: UIViewController {
             }
         }
     }
+    
+    func addGame() {
+        self.performSegue(withIdentifier: "add_show_details", sender: nil)
+    }
 }
 
 extension LibraryViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {

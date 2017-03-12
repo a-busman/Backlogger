@@ -70,6 +70,11 @@ class Game: Field {
     static var request:   DataRequest?
     
     required init(json: [String: Any]) {
+        super.init(json: json)
+        self.updateGameDetailsFromJson(json: json)
+    }
+    
+    func updateGameDetailsFromJson(json: [String: Any]) {
         self.description  = json[GameFields.Deck.rawValue]                as? String ?? ""
         self.platforms    = json[GameFields.Platforms.rawValue]           as? [Platform]
         self.releaseDate  = json[GameFields.OriginalReleaseDate.rawValue] as? String ?? ""
@@ -113,7 +118,6 @@ class Game: Field {
                 self.images?.append(image)
             }
         }
-        super.init(json: json)
     }
     
     class func endpointForGame() -> String {
@@ -255,6 +259,41 @@ class Game: Field {
                 }
             }
         
+    }
+    
+    func updateGameDetails(_ completionHandler: @escaping (Result<Any>) -> Void) {
+        guard let idNumber = self.idNumber else {
+            completionHandler(.failure(BackendError.objectSerialization(reason: "No idNumber available")))
+            return
+        }
+        let url = Game.buildDetailUrl(fromId: idNumber) + "?api_key=" + GAME_API_KEY + "&format=json"
+        Alamofire.request(url)
+            .responseJSON { response in
+                if let error = response.result.error {
+                    completionHandler(.failure(error))
+                    return
+                }
+                guard let json = response.result.value as? [String: Any] else {
+                    completionHandler(.failure(BackendError.objectSerialization(reason:
+                        "Did not get JSON dictionary in response")))
+                    return
+                }
+                
+                let results:SearchResults = SearchResults()
+                results.error = json["error"] as? String
+                results.limit = json["limit"] as? Int
+                results.offset = json["offset"] as? Int
+                results.numberOfPageResults = json["number_of_page_results"] as? Int
+                results.numberOfTotalResults = json["number_of_total_results"] as? Int
+                results.statusCode = json["status_code"] as? Int
+                results.url = response.request?.mainDocumentURL?.absoluteString
+                if let jsonResults = json["results"] as? [String: Any] {
+                    self.updateGameDetailsFromJson(json: jsonResults)
+                    completionHandler(.success(BackendError.objectSerialization(reason: "success")))
+                } else {
+                    completionHandler(.failure(BackendError.objectSerialization(reason: "could not find game")))
+                }
+        }
     }
     
     class func getGames(withQuery query:String, _ completionHandler: @escaping (Result<SearchResults>) -> Void) {

@@ -18,6 +18,7 @@ class LibraryAddSearchViewController: UIViewController {
     @IBOutlet weak var activityBackground: UIView?
     @IBOutlet weak var searchBar:          UISearchBar?
     @IBOutlet weak var cancelButton:       UIBarButtonItem?
+    
     var games: [Game]?
     var gamesViewControllers: [TableViewCellView] = [TableViewCellView]()
     var searchResults: SearchResults?
@@ -25,6 +26,8 @@ class LibraryAddSearchViewController: UIViewController {
     var currentPage = 0
     var query: String?
     var imageCache: [String : UIImage] = [:]
+    
+    private var viewAlreadyLoaded = false
     
     let tableReuseIdentifier = "library_add_search_cell"
     override func viewDidLoad() {
@@ -46,7 +49,10 @@ class LibraryAddSearchViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        self.searchBar?.becomeFirstResponder()
+        if !viewAlreadyLoaded {
+            self.searchBar?.becomeFirstResponder()
+            self.viewAlreadyLoaded = true
+        }
     }
     
     func loadFirstGame(withQuery query: String) {
@@ -114,6 +120,7 @@ class LibraryAddSearchViewController: UIViewController {
         }
     }
     
+    
     @IBAction func dismissView() {
         if (self.searchBar?.isFirstResponder)! {
             self.searchBar?.resignFirstResponder()
@@ -167,6 +174,16 @@ class LibraryAddSearchViewController: UIViewController {
      // Pass the selected object to the new view controller.
      }
      */
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "add_show_details" {
+            if let cell = sender as? UITableViewCell {
+                let i = (self.tableView?.indexPath(for: cell)?.row)!
+                let vc = segue.destination as! GameDetailsViewController
+                vc.game = self.games?[i]
+                vc.state = .Add
+            }
+        }
+    }
     
 }
 
@@ -331,6 +348,7 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         NSLog("Tapped: \(self.games?[indexPath.row].name)")
         self.searchBar?.resignFirstResponder()
+        self.tableView?.deselectRow(at: indexPath, animated: true)
         self.searchBar?.setShowsCancelButton(false, animated: true)
     }
 }

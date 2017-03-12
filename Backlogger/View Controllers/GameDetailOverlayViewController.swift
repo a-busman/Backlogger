@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol GameDetailOverlayViewControllerDelegate {
+    func didTapDetails()
+}
+
 class GameDetailOverlayViewController: UIViewController {
     @IBOutlet weak var titleLabel:           UILabel?
     @IBOutlet weak var completionPercentage: UILabel?
@@ -21,11 +25,25 @@ class GameDetailOverlayViewController: UIViewController {
     @IBOutlet weak var developerLabel:       UILabel?
     @IBOutlet weak var platformsLabel:       UILabel?
     @IBOutlet weak var genresLabel:          UILabel?
+    @IBOutlet weak var completionView:       UIView?
+    @IBOutlet weak var completionCheckImage: UIImageView?
+    @IBOutlet weak var completionLabel:      UILabel?
+    @IBOutlet weak var detailsGestureView:   UIView?
+    @IBOutlet weak var pullTabView:          UIView?
     
     var images:        [UIImage]?
     private var _game:  Game?
     
     let imageCellReuseIdentifier = "image_cell"
+    
+    enum CompletionState {
+        case finished
+        case inProgress
+    }
+    
+    var delegate: GameDetailOverlayViewControllerDelegate?
+
+    private var completionState = CompletionState.inProgress
     
     var game: Game? {
         get {
@@ -54,9 +72,10 @@ class GameDetailOverlayViewController: UIViewController {
                         platformString += (platforms.last?.abbreviation)!
                     }
                 }
+                self.platformLabel?.text = platforms[0].name
+
             }
             self.platformsLabel?.text = platformString
-            self.platformLabel?.text = (newGame?.platforms?[0].name)!
             
             var developersString = ""
             if let developers = newGame?.developers {
@@ -131,7 +150,12 @@ class GameDetailOverlayViewController: UIViewController {
             newValue = Int(sender.value) + 10 - remainder
         }
         sender.value = Float(newValue)
-        completionPercentage?.text = String(format: "%d%%", newValue)
+
+        completionPercentage?.text = "\(newValue)%"
+    }
+    
+    @IBAction func tappedDetails(sender: UITapGestureRecognizer) {
+        delegate?.didTapDetails()
     }
 }
 
@@ -215,5 +239,9 @@ extension GameDetailOverlayViewController: UICollectionViewDelegate, UICollectio
         }
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+
     }
 }

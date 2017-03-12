@@ -35,6 +35,8 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
                                                                   NowPlayingGameViewController(gameId: "4")]
     var games: [Game]?
     
+    var gameIds: [Int] = [2600, 19125, 12572, 48727]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.pageControl?.numberOfPages = orderedViewControllers.count
@@ -43,8 +45,8 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
         self.longPressGesture?.isEnabled = false
         self.games = []
         
-        for _ in 0..<4 {
-            let url = Game.buildDetailUrl(fromId: 50899)
+        for i in 0..<4 {
+            let url = Game.buildDetailUrl(fromId: gameIds[i])
             Game.getGameDetail(withUrl: url, { result in
                 if let error = result.error {
                     print("error in getting game detail: \(error.localizedDescription)")
@@ -249,8 +251,9 @@ extension NowPlayingViewController: UICollectionViewDataSource, UICollectionView
         if nowPlayingViewController.delegate == nil {
             nowPlayingViewController.delegate = self
         }
-
+        
         let nowPlayingView = (nowPlayingViewController.view)!
+        nowPlayingView.setNeedsLayout()
         nowPlayingView.translatesAutoresizingMaskIntoConstraints = false
 
         cell.contentView.addSubview(nowPlayingView)
@@ -306,6 +309,10 @@ extension NowPlayingViewController: UICollectionViewDataSource, UICollectionView
         size.height -= 40
         size.width -= 40
         return size
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        self.view.endEditing(true)
     }
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {

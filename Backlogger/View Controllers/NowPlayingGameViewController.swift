@@ -12,17 +12,33 @@ protocol NowPlayingGameViewDelegate {
     func didDelete(viewController: NowPlayingGameViewController, uuid: String)
 }
 
-class NowPlayingGameViewController: UIViewController {
+class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewControllerDelegate {
     @IBOutlet weak var coverImageView:       UIImageView?
     @IBOutlet weak var detailsContainerView: UIView?
     @IBOutlet weak var blurView:             UIVisualEffectView?
     @IBOutlet weak var deleteView:           UIVisualEffectView?
     @IBOutlet weak var containerView:        UIView?
     @IBOutlet weak var shadowView:           UIView?
-    @IBOutlet weak var detailsGestureView:   UIView?
     @IBOutlet weak var detailsPanRecognizer: PanDirectionGestureRecognizer?
     @IBOutlet weak var hideTapRecognizer:    UITapGestureRecognizer?
-    @IBOutlet weak var detailsTapRecognizer: UITapGestureRecognizer?
+    @IBOutlet weak var statsButtonView:      UIView?
+    @IBOutlet weak var moreIcon:             UIImageView?
+    @IBOutlet weak var statsBlurView:        UIVisualEffectView?
+    @IBOutlet weak var playPauseButton:      UIButton?
+    @IBOutlet weak var favouriteButton:      UIButton?
+    @IBOutlet weak var finishedButton:       UIButton?
+    @IBOutlet weak var statsContainerView:   UIView?
+    @IBOutlet weak var ratingContainerView:  UIView?
+    @IBOutlet weak var notesTextView:        UITextView?
+    
+    @IBOutlet weak var statsButtonLeadingConstraint: NSLayoutConstraint?
+    @IBOutlet weak var statsButtonBottomConstraint:  NSLayoutConstraint?
+    
+    @IBOutlet weak var firstStar:  UIImageView?
+    @IBOutlet weak var secondStar: UIImageView?
+    @IBOutlet weak var thirdStar:  UIImageView?
+    @IBOutlet weak var fourthStar: UIImageView?
+    @IBOutlet weak var fifthStar:  UIImageView?
     
     var delegate: NowPlayingGameViewDelegate?
     
@@ -39,6 +55,30 @@ class NowPlayingGameViewController: UIViewController {
         case percent
         case full
     }
+    
+    enum StatsState {
+        case hidden
+        case visible
+    }
+    
+    enum ButtonState {
+        case heldDown
+        case down
+        case up
+    }
+    
+    enum StatsButtonState {
+        case selected
+        case normal
+    }
+    
+    private var statsState = StatsState.hidden
+    
+    private var buttonState = ButtonState.up
+    
+    private var playButtonState = StatsButtonState.selected
+    private var favouriteButtonState = StatsButtonState.normal
+    private var finishedButtonState = StatsButtonState.normal
     
     private var blurViewState = DetailState.minimal
     private var blurViewMinimalY: CGFloat = 0.0
@@ -71,8 +111,11 @@ class NowPlayingGameViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.gameDetailOverlayController.delegate = self
         self.detailsPanRecognizer?.direction = .vertical
         self.shadowView?.isUserInteractionEnabled = true
+        self.statsBlurView?.effect = nil
+        self.statsBlurView?.isHidden = true
         if let detailView = gameDetailOverlayController.view {
             self.detailsContainerView?.addSubview(detailView)
             detailView.translatesAutoresizingMaskIntoConstraints = false
@@ -126,6 +169,7 @@ class NowPlayingGameViewController: UIViewController {
         } else {
             self.addDetails()
         }
+        self.gameDetailOverlayController.detailsGestureView?.addGestureRecognizer(self.detailsPanRecognizer!)
     }
     
     // MARK: viewDidLayoutSubviews
@@ -134,12 +178,17 @@ class NowPlayingGameViewController: UIViewController {
         self.shadowView?.layer.shadowOpacity = 0.8
         self.shadowView?.layer.shadowRadius = 5.0
         self.shadowView?.layer.shadowColor = UIColor.black.cgColor
-        self.shadowView?.layer.shadowPath = UIBezierPath(rect: (self.shadowView?.bounds)!).cgPath
+        self.shadowView?.layer.shadowPath = UIBezierPath(roundedRect: (self.shadowView?.bounds)!, cornerRadius: 10).cgPath
         self.shadowView?.layer.shadowOffset = CGSize.zero
-        self.detailsContainerView?.bringSubview(toFront: self.detailsGestureView!)
+        
+        self.statsButtonView?.layer.shadowOpacity = 0.8
+        self.statsButtonView?.layer.shadowRadius = 5.0
+        self.statsButtonView?.layer.shadowColor = UIColor.black.cgColor
+        self.statsButtonView?.layer.shadowPath = UIBezierPath(roundedRect: (self.statsButtonView?.bounds)!, cornerRadius: 40).cgPath
+        self.statsButtonView?.layer.shadowOffset = CGSize.zero
+        
         if self.blurViewMinimalY != 0.0 {
             self.blurViewState = .minimal
-            NSLog("\(self.blurViewMinimalY)")
             self.blurView?.center.y = self.blurViewMinimalY
         }
         self.deleteView?.transform = CGAffineTransform(scaleX: self.isInEditMode ? MAXIMUM_TRANSOFRM : MINIMUM_TRANSFORM,
@@ -183,7 +232,7 @@ class NowPlayingGameViewController: UIViewController {
             self.isInEditMode = editMode
             self.detailsPanRecognizer?.isEnabled = !editMode
             self.hideTapRecognizer?.isEnabled = !editMode
-            self.detailsTapRecognizer?.isEnabled = !editMode
+            self.notesTextView?.resignFirstResponder()
         }
     }
     
@@ -200,7 +249,10 @@ class NowPlayingGameViewController: UIViewController {
                                                                        y: editMode ? self.MAXIMUM_TRANSOFRM : self.MINIMUM_TRANSFORM)
                        },
                        completion: nil)
-        if self.blurViewState != .minimal {
+        if self.statsState != .hidden {
+            handleTapMore(sender: UITapGestureRecognizer())
+        }
+        else if self.blurViewState != .minimal {
             UIView.animate(withDuration: 0.2,
                            delay: 0.0,
                            usingSpringWithDamping: 1.0,
@@ -256,34 +308,35 @@ class NowPlayingGameViewController: UIViewController {
     
     // MARK: handleTapDetails
     
-    @IBAction func handleTapDetails(recognizer:UITapGestureRecognizer) {
-        
-        // Show percent slider
-        if self.blurViewState == .minimal {
-            self.blurViewMinimalY = (self.blurView?.center.y)!
-            UIView.animate(withDuration: 0.4,
-                           delay: 0.0,
-                           usingSpringWithDamping: 1.0,
-                           initialSpringVelocity: 0,
-                           options: .curveEaseIn,
-                           animations: {
-                               self.blurView?.center.y -= 40
-                           },
-                           completion: nil)
-            self.blurViewState = .percent
-            
-        // Hide percent slider
-        } else if self.blurViewState == .percent {
-            UIView.animate(withDuration: 0.4,
-                           delay: 0.0,
-                           usingSpringWithDamping: 1.0,
-                           initialSpringVelocity: 0,
-                           options: .curveEaseIn,
-                           animations: {
-                               self.blurView?.center.y += 40
-                           },
-                           completion: nil)
-            self.blurViewState = .minimal
+    func didTapDetails() {
+        if !self.isInEditMode && self.statsState != .visible {
+            // Show percent slider
+            if self.blurViewState == .minimal {
+                self.blurViewMinimalY = (self.blurView?.center.y)!
+                UIView.animate(withDuration: 0.4,
+                               delay: 0.0,
+                               usingSpringWithDamping: 1.0,
+                               initialSpringVelocity: 0,
+                               options: .curveEaseIn,
+                               animations: {
+                                   self.blurView?.center.y -= 40
+                               },
+                               completion: nil)
+                self.blurViewState = .percent
+                
+            // Hide percent slider
+            } else if self.blurViewState == .percent {
+                UIView.animate(withDuration: 0.4,
+                               delay: 0.0,
+                               usingSpringWithDamping: 1.0,
+                               initialSpringVelocity: 0,
+                               options: .curveEaseIn,
+                               animations: {
+                                   self.blurView?.center.y += 40
+                               },
+                               completion: nil)
+                self.blurViewState = .minimal
+            }
         }
     }
     
@@ -296,6 +349,11 @@ class NowPlayingGameViewController: UIViewController {
             if self.blurViewState == .minimal {
                 self.blurViewMinimalY = (self.blurView?.center.y)!
             }
+            self.statsButtonBottomConstraint?.constant = 0
+            self.statsButtonLeadingConstraint?.constant = 0
+            UIView.animate(withDuration: 0.2, animations: {
+                self.view.layoutIfNeeded()
+            })
         }
         
         // Update view when user drags it around
@@ -340,9 +398,9 @@ class NowPlayingGameViewController: UIViewController {
                     if self.animator.behaviors.count == 0 {
                         self.collision.addBoundary(withIdentifier: NSString(string: "top"),
                                                    from: CGPoint(x: self.view.frame.origin.x,
-                                                                 y: self.view.frame.origin.y + 5),
+                                                                 y: self.view.frame.origin.y + 8),
                                                    to: CGPoint(x: self.view.frame.origin.x + self.view.frame.width,
-                                                               y: self.view.frame.origin.y + 5))
+                                                               y: self.view.frame.origin.y + 8))
                         self.animator.addBehavior(self.collision)
                         self.animator.addBehavior(self.gravity)
                     }
@@ -361,8 +419,207 @@ class NowPlayingGameViewController: UIViewController {
                                    },
                                    completion: nil)
                     self.blurViewState = .minimal
+                    self.statsButtonBottomConstraint?.constant = 40
+                    self.statsButtonLeadingConstraint?.constant = -40
+                    UIView.animate(withDuration: 0.2, animations: {
+                        self.view.layoutIfNeeded()
+                    })
                 }
             }
         }
+    }
+    
+    @IBAction func handleTapMore(sender: UIGestureRecognizer) {
+        if statsState == .hidden {
+            if self.blurViewState == .minimal {
+                didTapDetails()
+            }
+            self.statsBlurView?.isHidden = false
+            self.detailsPanRecognizer?.isEnabled = false
+            UIView.transition(with: self.moreIcon!,
+                              duration:0.2,
+                              options: .transitionCrossDissolve,
+                              animations: { self.moreIcon?.image = #imageLiteral(resourceName: "x_symbol") },
+                              completion: nil)
+            UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveLinear, animations: {
+                self.statsBlurView?.effect = UIBlurEffect(style: .light)
+                self.gameDetailOverlayController.pullTabView?.alpha = 0.0
+                self.statsContainerView?.alpha = 1.0
+            }, completion: nil)
+            statsState = .visible
+        } else {
+            UIView.transition(with: self.moreIcon!,
+                              duration:0.2,
+                              options: .transitionCrossDissolve,
+                              animations: { self.moreIcon?.image = #imageLiteral(resourceName: "more") },
+                              completion: nil)
+            UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveLinear, animations: {
+                self.statsBlurView?.effect = nil
+                self.gameDetailOverlayController.pullTabView?.alpha = 1.0
+                self.statsContainerView?.alpha = 0.0
+            }, completion: { _ in
+                UIView.animate(withDuration: 0.2, animations: {
+                    self.detailsPanRecognizer?.isEnabled = true
+                    self.statsBlurView?.isHidden = true
+                })
+            })
+            statsState = .hidden
+            didTapDetails()
+            self.notesTextView?.resignFirstResponder()
+        }
+    }
+    
+    @IBAction func statsControlTouchDown(sender: UIButton!) {
+        self.notesTextView?.resignFirstResponder()
+        if self.buttonState == .up {
+            self.buttonState = .down
+        } else if self.buttonState == .down {
+            self.buttonState = .heldDown
+            UIView.animate(withDuration: 0.1, animations: {sender.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)})
+        }
+    }
+    
+    @IBAction func statsControlTouchUpInside(sender: UIButton!) {
+        switch sender.tag {
+        case 1:
+            if self.favouriteButtonState == .selected {
+                self.favouriteButton?.setImage(#imageLiteral(resourceName: "heart-empty"), for: .normal)
+                self.favouriteButtonState = .normal
+            } else {
+                self.favouriteButton?.setImage(#imageLiteral(resourceName: "heart"), for: .normal)
+                self.favouriteButtonState = .selected
+            }
+        case 2:
+            if self.playButtonState == .selected {
+                self.playPauseButton?.setImage(#imageLiteral(resourceName: "play-black"), for: .normal)
+                self.playButtonState = .normal
+                let actions = UIAlertController(title: "Remove from Now Playing?", message: nil, preferredStyle: .alert)
+                actions.addAction(UIAlertAction(title: "Remove", style: .destructive, handler: { _ in self.delegate?.didDelete(viewController: self, uuid: self.uuid)}))
+                actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                self.present(actions, animated: true, completion: nil)
+                if self.finishedButtonState != .selected {
+                    self.gameDetailOverlayController.completionLabel?.text = "Incomplete"
+                    self.gameDetailOverlayController.completionCheckImage?.image = #imageLiteral(resourceName: "empty_check")
+                }
+            } else {
+                self.playPauseButton?.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
+                self.playButtonState = .selected
+                if self.finishedButtonState != .selected {
+                    self.gameDetailOverlayController.completionLabel?.text = "In Progress"
+                    self.gameDetailOverlayController.completionCheckImage?.image = #imageLiteral(resourceName: "check_light_filled")
+                }
+            }
+        case 3:
+            if self.finishedButtonState == .selected {
+                self.finishedButton?.setImage(#imageLiteral(resourceName: "check-empty-black"), for: .normal)
+                self.finishedButtonState = .normal
+                if self.playButtonState != .selected {
+                    self.gameDetailOverlayController.completionLabel?.text = "Incomplete"
+                    self.gameDetailOverlayController.completionCheckImage?.image = #imageLiteral(resourceName: "empty_check")
+                } else {
+                    self.gameDetailOverlayController.completionLabel?.text = "In Progress"
+                    self.gameDetailOverlayController.completionCheckImage?.image = #imageLiteral(resourceName: "check_light_filled")
+                }
+            } else {
+                self.finishedButton?.setImage(#imageLiteral(resourceName: "check-black"), for: .normal)
+                self.finishedButtonState = .selected
+                self.gameDetailOverlayController.completionLabel?.text = "Complete"
+                self.gameDetailOverlayController.completionCheckImage?.image = #imageLiteral(resourceName: "check_light")
+            }
+        default:
+            break
+        }
+        
+        UIView.animate(withDuration: 0.1, animations: {sender.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)}, completion: { _ in
+            UIView.animate(withDuration: 0.1, animations: {sender.transform = CGAffineTransform.identity})
+        })
+        self.buttonState = .up
+    }
+    
+    @IBAction func statsControlTouchDragExit(sender: UIButton!) {
+        self.buttonState = .up
+        UIView.animate(withDuration: 0.1, animations: {sender.transform = CGAffineTransform.identity})
+        self.notesTextView?.resignFirstResponder()
+    }
+    
+    @IBAction func ratingPanHandler(sender: UIPanGestureRecognizer) {
+        let location = sender.location(in: self.ratingContainerView!)
+        let starIndex = Int(location.x / ((self.ratingContainerView?.bounds.width)! / 5.0))
+        if starIndex < 0 {
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-white")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+        } else if starIndex == 0 {
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-white")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+        } else if starIndex == 1 {
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-black")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+        } else if starIndex == 2 {
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-black")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+        } else if starIndex == 3 {
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-black")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-black")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+        } else {
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-black")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-black")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-black")
+        }
+        self.notesTextView?.resignFirstResponder()
+    }
+    
+    @IBAction func ratingTapHandler(sender: UITapGestureRecognizer) {
+        let location = sender.location(in: self.ratingContainerView!)
+        let starIndex = Int(location.x / ((self.ratingContainerView?.bounds.width)! / 5.0))
+        
+        if starIndex <= 0 {
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-white")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+        } else if starIndex == 1 {
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-black")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+        } else if starIndex == 2 {
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-black")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+        } else if starIndex == 3 {
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-black")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-black")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+        } else {
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-black")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-black")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-black")
+        }
+        self.notesTextView?.resignFirstResponder()
     }
 }
