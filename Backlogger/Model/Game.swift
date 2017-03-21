@@ -9,6 +9,8 @@
 import Foundation
 import UIKit.UIImage
 import Alamofire
+import RealmSwift
+import Realm
 
 enum GameFields: String {
     case Aliases                   = "aliases"
@@ -53,19 +55,17 @@ enum BackendError: Error {
     case objectSerialization(reason: String)
 }
 
-class Game: Field {
-    var description:     String?
-    var percentComplete: String?
-    var platform:        String?
-    var releaseDate:     String?
-    var expectedDate:    Int?
-    var imageUrl:        String?
-    var image:           ImageList?
-    var images:          [ImageList]?
-    var developers:      [Company]?
-    var genres:          [Genre]?
-    var publishers:      [Publisher]?
-    var platforms:       [Platform]?
+class GameField: Field {
+    dynamic var deck:         String?         = nil
+    dynamic var releaseDate:  String?         = nil
+    dynamic var expectedDate: Int             = 0
+    dynamic var imageUrl:     String?         = nil
+    dynamic var image:        ImageList?      = nil
+            var images:       List<ImageList> = List<ImageList>()
+            var developers:   List<Developer> = List<Developer>()
+            var genres:       List<Genre>     = List<Genre>()
+            var publishers:   List<Publisher> = List<Publisher>()
+            var platforms:    List<Platform>  = List<Platform>()
     
     static var request:   DataRequest?
     
@@ -74,48 +74,93 @@ class Game: Field {
         self.updateGameDetailsFromJson(json: json)
     }
     
+    required init() {
+        super.init()
+    }
+    
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+        super.init(realm: realm, schema: schema)
+    }
+    
+    required init(value: Any, schema: RLMSchema) {
+        super.init(value: value, schema: schema)
+    }
+    
     func updateGameDetailsFromJson(json: [String: Any]) {
-        self.description  = json[GameFields.Deck.rawValue]                as? String ?? ""
-        self.platforms    = json[GameFields.Platforms.rawValue]           as? [Platform]
-        self.releaseDate  = json[GameFields.OriginalReleaseDate.rawValue] as? String ?? ""
-        self.expectedDate = json[GameFields.ExpectedReleaseYear.rawValue] as? Int ?? 0
-        self.platforms    = []
-        self.developers   = []
-        self.publishers   = []
-        self.genres       = []
-        self.images       = []
-        if let jsonPlatforms = json[GameFields.Platforms.rawValue] as? [[String: Any]] {
-            for jsonPlatform in jsonPlatforms {
-                let platform = Platform(json: jsonPlatform)
-                self.platforms?.append(platform)
+        self.update {
+            self.deck         = json[GameFields.Deck.rawValue]                as? String ?? ""
+            self.platforms    = json[GameFields.Platforms.rawValue]           as? List<Platform>  ?? List<Platform>()
+            self.developers   = json[GameFields.Developers.rawValue]          as? List<Developer> ?? List<Developer>()
+            self.publishers   = json[GameFields.Publishers.rawValue]          as? List<Publisher> ?? List<Publisher>()
+            self.genres       = json[GameFields.Genres.rawValue]              as? List<Genre>     ?? List<Genre>()
+            self.releaseDate  = json[GameFields.OriginalReleaseDate.rawValue] as? String ?? ""
+            self.expectedDate = json[GameFields.ExpectedReleaseYear.rawValue] as? Int ?? 0
+            
+            // Get from database, or create new
+            if let jsonPlatforms = json[GameFields.Platforms.rawValue] as? [[String: Any]] {
+                for jsonPlatform in jsonPlatforms {
+                    var platform = realm?.object(ofType: Platform.self, forPrimaryKey: (jsonPlatform[GenericFields.Id.rawValue] as? Int ?? 0))
+                    if platform == nil {
+                        platform = Platform(json: jsonPlatform)
+                        realm?.add(platform!, update: true)
+                    }
+                    platform?.linkCount += 1
+                    self.platforms.append(platform!)
+                }
             }
-        }
-        if let jsonDevelopers = json[GameFields.Developers.rawValue] as? [[String: Any]] {
-            for jsonDeveloper in jsonDevelopers {
-                let developer = Company(json: jsonDeveloper)
-                self.developers?.append(developer)
+            if let jsonDevelopers = json[GameFields.Developers.rawValue] as? [[String: Any]] {
+                for jsonDeveloper in jsonDevelopers {
+                    var developer = realm?.object(ofType: Developer.self, forPrimaryKey: (jsonDeveloper[GenericFields.Id.rawValue] as? Int ?? 0))
+                    if developer == nil {
+                        developer = Developer(json: jsonDeveloper)
+                        realm?.add(developer!, update: true)
+                    }
+                    developer?.linkCount += 1
+                    self.developers.append(developer!)
+                }
             }
-        }
-        if let jsonPublishers = json[GameFields.Publishers.rawValue] as? [[String: Any]] {
-            for jsonPublisher in jsonPublishers {
-                let publisher = Publisher(json: jsonPublisher)
-                self.publishers?.append(publisher)
+            if let jsonPublishers = json[GameFields.Publishers.rawValue] as? [[String: Any]] {
+                for jsonPublisher in jsonPublishers {
+                    var publisher = realm?.object(ofType: Publisher.self, forPrimaryKey: (jsonPublisher[GenericFields.Id.rawValue] as? Int ?? 0))
+                    if publisher == nil {
+                        publisher = Publisher(json: jsonPublisher)
+                        realm?.add(publisher!, update: true)
+                    }
+                    publisher?.linkCount += 1
+                    self.publishers.append(publisher!)
+                }
             }
-        }
-        if let jsonGenres = json[GameFields.Genres.rawValue] as? [[String: Any]] {
-            for jsonGenre in jsonGenres {
-                let genre = Genre(json: jsonGenre)
-                self.genres?.append(genre)
+            if let jsonGenres = json[GameFields.Genres.rawValue] as? [[String: Any]] {
+                for jsonGenre in jsonGenres {
+                    var genre = realm?.object(ofType: Genre.self, forPrimaryKey: (jsonGenre[GenericFields.Id.rawValue] as? Int ?? 0))
+                    if genre == nil {
+                        genre = Genre(json: jsonGenre)
+                        realm?.add(genre!, update: true)
+                    }
+                    genre?.linkCount += 1
+                    self.genres.append(genre!)
+                }
             }
-        }
-        if let image = json[GameFields.Image.rawValue] as? [String: Any] {
-            self.image    = ImageList(json: image)
-            self.imageUrl = self.image?.iconUrl
-        }
-        if let jsonImages = json[GameFields.Images.rawValue] as? [[String: Any]] {
-            for jsonImage in jsonImages {
-                let image = ImageList(json: jsonImage)
-                self.images?.append(image)
+            if let image = json[GameFields.Image.rawValue] as? [String: Any] {
+                self.image = realm?.object(ofType: ImageList.self, forPrimaryKey: "\(self.idNumber) main")
+                if self.image == nil {
+                    self.image = ImageList(json: image)
+                    self.image?.id = "\(self.idNumber) main"
+                }
+                self.imageUrl = self.image?.iconUrl
+            }
+            if let jsonImages = json[GameFields.Images.rawValue] as? [[String: Any]] {
+                var i = 0
+                
+                for jsonImage in jsonImages {
+                    var image = realm?.object(ofType: ImageList.self, forPrimaryKey: "\(self.idNumber) \(i)")
+                    if image == nil {
+                        image = ImageList(json: jsonImage)
+                        image?.id = "\(self.idNumber) \(i)"
+                    }
+                    self.images.append(image!)
+                    i += 1
+                }
             }
         }
     }
@@ -147,10 +192,10 @@ class Game: Field {
         results.statusCode = json["status_code"] as? Int
         results.url = response.request?.mainDocumentURL?.absoluteString
         
-        var allGames: [Game] = []
+        var allGames: [GameField] = []
         if let results = json["results"] as? [[String: Any]] {
             for jsonGame in results {
-                let game = Game(json: jsonGame)
+                let game = GameField(json: jsonGame)
                 allGames.append(game)
             }
         }
@@ -158,7 +203,7 @@ class Game: Field {
         return .success(results)
     }
     
-    private class func gameFromResponse(_ response: DataResponse<Any>) -> Result<Game> {
+    private class func gameFromResponse(_ response: DataResponse<Any>) -> Result<GameField> {
         guard response.result.error == nil else {
             // got an error in getting the data, need to handle it
             print(response.result.error!)
@@ -180,9 +225,9 @@ class Game: Field {
         results.numberOfTotalResults = json["number_of_total_results"] as? Int
         results.statusCode = json["status_code"] as? Int
         results.url = response.request?.mainDocumentURL?.absoluteString
-        var game: Game?
+        var game: GameField?
         if let jsonResults = json["results"] as? [String: Any] {
-            game = Game(json: jsonResults)
+            game = GameField(json: jsonResults)
         } else {
             return .failure(BackendError.objectSerialization(reason: "could not find game"))
         }
@@ -214,17 +259,17 @@ class Game: Field {
                     return
                 }
                 self.request = nil
-                let gamesWrapperResult = Game.gamesArrayFromResponse(response)
+                let gamesWrapperResult = GameField.gamesArrayFromResponse(response)
                 completionHandler(gamesWrapperResult)
         }
     }
     
     class func buildDetailUrl(fromId id: Int) -> String {
-        let url = Game.endpointForGame() + String(id) + "/"
+        let url = GameField.endpointForGame() + String(id) + "/"
         return url
     }
     
-    class func getGameDetail(withUrl detailUrl: String?, _ completionHandler: @escaping (Result<Game>) -> Void) {
+    class func getGameDetail(withUrl detailUrl: String?, _ completionHandler: @escaping (Result<GameField>) -> Void) {
         guard var detailedUrl = detailUrl else {
             let error = BackendError.objectSerialization(reason: "no detail url")
             completionHandler(.failure(error))
@@ -250,7 +295,7 @@ class Game: Field {
                     completionHandler(.failure(error))
                     return
                 }
-                let gameResult = Game.gameFromResponse(response)
+                let gameResult = GameField.gameFromResponse(response)
                 if let error = gameResult.error {
                     completionHandler(.failure(error))
                     return
@@ -262,11 +307,8 @@ class Game: Field {
     }
     
     func updateGameDetails(_ completionHandler: @escaping (Result<Any>) -> Void) {
-        guard let idNumber = self.idNumber else {
-            completionHandler(.failure(BackendError.objectSerialization(reason: "No idNumber available")))
-            return
-        }
-        let url = Game.buildDetailUrl(fromId: idNumber) + "?api_key=" + GAME_API_KEY + "&format=json"
+        let idNumber = self.idNumber
+        let url = GameField.buildDetailUrl(fromId: idNumber) + "?api_key=" + GAME_API_KEY + "&format=json"
         Alamofire.request(url)
             .responseJSON { response in
                 if let error = response.result.error {
@@ -279,7 +321,7 @@ class Game: Field {
                     return
                 }
                 
-                let results:SearchResults = SearchResults()
+                let results = SearchResults()
                 results.error = json["error"] as? String
                 results.limit = json["limit"] as? Int
                 results.offset = json["offset"] as? Int
@@ -338,7 +380,154 @@ class Game: Field {
         }
     }
     
+    func deepCopy() -> GameField {
+        let newGameField = GameField()
+        newGameField.deck = self.deck
+        newGameField.releaseDate = self.releaseDate
+        newGameField.expectedDate = self.expectedDate
+        newGameField.imageUrl = self.imageUrl
+        newGameField.image = self.image?.deepCopy()
+        newGameField.name = self.name
+        newGameField.idNumber = self.idNumber
+        newGameField.apiDetailUrl = self.apiDetailUrl
+        newGameField.siteDetailUrl = self.siteDetailUrl
+        for image in self.images {
+            newGameField.images.append(image.deepCopy())
+        }
+        for developer in self.developers {
+            newGameField.developers.append(developer.deepCopy())
+        }
+        for genre in self.genres {
+            newGameField.genres.append(genre.deepCopy())
+        }
+        for publisher in self.publishers {
+            newGameField.publishers.append(publisher.deepCopy())
+        }
+        for platform in self.platforms {
+            newGameField.platforms.append(platform.deepCopy())
+        }
+        return newGameField
+    }
+    
     class func cancelCurrentRequest() {
         self.request?.cancel()
+    }
+    
+    override func add() {
+        // Update contained objects
+        for platform in self.platforms {
+            platform.update {
+                platform.linkCount += 1
+            }
+            platform.add()
+        }
+        for developer in self.developers {
+            developer.update {
+                developer.linkCount += 1
+            }
+            developer.add()
+        }
+        for publisher in self.publishers {
+            publisher.update {
+                publisher.linkCount += 1
+            }
+            publisher.add()
+        }
+        for genre in self.genres {
+            genre.update {
+                genre.linkCount += 1
+            }
+            genre.add()
+        }
+        super.add()
+    }
+    
+    override func delete() {
+        for platform in self.platforms {
+            platform.update {
+                platform.linkCount -= 1
+                if platform.linkCount <= 0 {
+                    realm?.delete(platform)
+                }
+            }
+        }
+        for developer in self.developers {
+            developer.update {
+                developer.linkCount -= 1
+                if developer.linkCount <= 0 {
+                    realm?.delete(developer)
+                }
+            }
+        }
+        for publisher in self.publishers {
+            publisher.update {
+                publisher.linkCount -= 1
+                if publisher.linkCount <= 0 {
+                    realm?.delete(publisher)
+                }
+            }
+        }
+        for genre in self.genres {
+            genre.update {
+                genre.linkCount -= 1
+                if genre.linkCount <= 0 {
+                    realm?.delete(genre)
+                }
+            }
+        }
+        
+        self.image?.delete()
+        for image in self.images {
+            image.delete()
+        }
+        super.delete()
+    }
+}
+
+class Game: Object {
+    private(set) dynamic var uuid = NSUUID().uuidString
+
+    dynamic var gameFields: GameField? = nil
+    dynamic var platform:   Platform?  = nil
+    dynamic var inLibrary:  Bool       = false
+    dynamic var nowPlaying: Bool       = false
+    dynamic var favourite:  Bool       = false
+    dynamic var rating:     Int        = 0
+    dynamic var progress:   Int        = 0
+    dynamic var finished:   Bool       = false
+    dynamic var notes:      String?    = nil
+    
+    override static func primaryKey() -> String? {
+        return "uuid"
+    }
+    
+    func add(_ gameField: GameField?, _ platform: Platform?) {
+        let realm = try? Realm()
+        try! realm?.write {
+            gameField?.linkCount += 1
+            platform?.linkCount  += 1
+            self.gameFields = gameField
+            self.platform   = platform
+            realm?.add(self, update: true)
+            // these get reset to nil after adding, so we have to readd them.
+            self.gameFields = gameField
+            self.platform   = platform
+        }
+    }
+    
+    override func delete() {
+        self.gameFields?.update {
+            self.gameFields?.linkCount -= 1
+        }
+        if self.gameFields?.linkCount == 0 {
+            self.gameFields?.delete()
+        }
+        self.platform?.update {
+            self.platform?.linkCount -= 1
+        }
+        if self.platform?.linkCount == 0 {
+            self.platform?.delete()
+        }
+        super.delete()
     }
 }

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
     
@@ -29,33 +30,35 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
     private var isWiggling = false
     private var movingIndexPath: IndexPath? = nil
     
-    var orderedViewControllers: [NowPlayingGameViewController] = [NowPlayingGameViewController(gameId: "1"),
-                                                                  NowPlayingGameViewController(gameId: "2"),
-                                                                  NowPlayingGameViewController(gameId: "3"),
-                                                                  NowPlayingGameViewController(gameId: "4")]
-    var games: [Game]?
+    var orderedViewControllers: [NowPlayingGameViewController] = []
+    var games: [Game] = []
     
-    var gameIds: [Int] = [2600, 19125, 12572, 48727]
+    //var gameIds: [Int] = [2600, 19125, 12572, 48727]
+    var gameIds: [Int] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let realm = try! Realm()
         self.pageControl?.numberOfPages = orderedViewControllers.count
         self.longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(NowPlayingViewController.handleLongGesture))
         self.collectionView?.addGestureRecognizer(longPressGesture!)
         self.longPressGesture?.isEnabled = false
-        self.games = []
+        self.games = Array(realm.objects(Game.self).filter("nowPlaying = true"))
         
-        for i in 0..<4 {
-            let url = Game.buildDetailUrl(fromId: gameIds[i])
-            Game.getGameDetail(withUrl: url, { result in
+        for i in 0..<self.games.count {
+            let url = GameField.buildDetailUrl(fromId: gameIds[i])
+            GameField.getGameDetail(withUrl: url, { result in
                 if let error = result.error {
                     print("error in getting game detail: \(error.localizedDescription)")
                     return
                 }
-                let game = result.value!
-                self.games?.append(game)
-                let vc = self.orderedViewControllers[(self.games?.count)! - 1]
-                vc.game = self.games!.last
+                let gameField = result.value!
+                let game = Game()
+                game.gameFields = gameField
+                self.games.append(game)
+                let vc = NowPlayingGameViewController(gameId: "\(game.uuid)")
+                self.orderedViewControllers.append(vc)
+                vc.game = self.games.last
                 vc.addDetails()
             })
         }
@@ -124,6 +127,7 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
     }
     
     @IBAction func handleTapEdit(sender:UIBarButtonItem) {
+        self.navigationController?.navigationBar.tintColor = .white
         if self.inEditMode == true {
             let newButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(handleTapEdit))
             self.stopWiggle()
@@ -133,10 +137,12 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
             self.addBarButtonItem?.isEnabled = true
         } else {
             let newButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(handleTapEdit))
+            newButton.tintColor = .white
             self.startWiggle()
             self.longPressGesture?.isEnabled = true
             self.inEditMode = true
             self.navigationController?.navigationBar.topItem?.leftBarButtonItem = newButton
+
             self.addBarButtonItem?.isEnabled = false
         }
         for vc in orderedViewControllers {
@@ -224,7 +230,7 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
         for i in 0..<orderedViewControllers.count {
             if orderedViewControllers[i].uuid == uuid {
                 orderedViewControllers.remove(at: i)
-                self.games?.remove(at: i)
+                self.games.remove(at: i)
                 self.collectionView?.deleteItems(at: [IndexPath(item: i, section: 0)])
                 self.pageControl?.numberOfPages -= 1
                 break
@@ -330,9 +336,9 @@ extension NowPlayingViewController: UICollectionViewDataSource, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, moveItemAt source: IndexPath, to destination: IndexPath) {
         let gameVc = self.orderedViewControllers.remove(at: source.item)
-        if let game = self.games?.remove(at: source.item) {
-            self.games?.insert(game, at: destination.item)
-        }
+        let game = self.games.remove(at: source.item)
+        self.games.insert(game, at: destination.item)
+        
         self.orderedViewControllers.insert(gameVc, at: destination.item)
     }
     

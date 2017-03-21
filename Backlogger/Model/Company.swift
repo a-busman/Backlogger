@@ -7,9 +7,80 @@
 //
 
 import Foundation
+import Realm
 
 class Company: Field {
     required init(json: [String : Any]) {
         super.init(json: json)
+    }
+    
+    required init() {
+        super.init()
+    }
+    
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+        super.init(realm: realm, schema: schema)
+    }
+    
+    required init(value: Any, schema: RLMSchema) {
+        super.init(value: value, schema: schema)
+    }
+}
+
+
+class Publisher: Company {
+    required init(json: [String : Any]) {
+        super.init(json: json)
+    }
+    
+    required init() {
+        super.init()
+    }
+    
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+        super.init(realm: realm, schema: schema)
+    }
+    
+    required init(value: Any, schema: RLMSchema) {
+        super.init(value: value, schema: schema)
+    }
+    func deepCopy() -> Publisher {
+        let newField = Publisher()
+        newField.apiDetailUrl = self.apiDetailUrl
+        newField.idNumber = self.idNumber
+        newField.name = self.name
+        newField.siteDetailUrl = self.siteDetailUrl
+        newField.linkCount = self.linkCount
+
+        return newField
+    }
+}
+
+class Developer: Company {
+    required init(json: [String : Any]) {
+        super.init(json: json)
+    }
+    
+    required init() {
+        super.init()
+    }
+    
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+        super.init(realm: realm, schema: schema)
+    }
+    
+    required init(value: Any, schema: RLMSchema) {
+        super.init(value: value, schema: schema)
+    }
+    
+    func deepCopy() -> Developer {
+        let newField = Developer()
+        newField.apiDetailUrl = self.apiDetailUrl
+        newField.idNumber = self.idNumber
+        newField.name = self.name
+        newField.siteDetailUrl = self.siteDetailUrl
+        newField.linkCount = self.linkCount
+
+        return newField
     }
 }

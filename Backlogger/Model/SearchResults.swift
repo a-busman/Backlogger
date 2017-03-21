@@ -17,7 +17,7 @@ class SearchResults {
     var numberOfPageResults: Int?
     var numberOfTotalResults: Int?
     var statusCode: Int?
-    var results: [Game]?
+    var results: [GameField]?
     var url: String?
     
     class func endpointForSearch() -> String {

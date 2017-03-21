@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LibraryAddSearchViewController: UIViewController {
+class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableViewControllerDelegate, GameDetailsViewControllerDelegate {
     
     @IBOutlet weak var tableView:          UITableView?
     @IBOutlet weak var searchTintView:     UIView?
@@ -19,7 +19,7 @@ class LibraryAddSearchViewController: UIViewController {
     @IBOutlet weak var searchBar:          UISearchBar?
     @IBOutlet weak var cancelButton:       UIBarButtonItem?
     
-    var games: [Game]?
+    var games: [GameField]?
     var gamesViewControllers: [TableViewCellView] = [TableViewCellView]()
     var searchResults: SearchResults?
     var isLoadingGames = false
@@ -27,7 +27,17 @@ class LibraryAddSearchViewController: UIViewController {
     var query: String?
     var imageCache: [String : UIImage] = [:]
     
+    var platformDict: [Int : Platform] = [:]
+    
+    var currentGameField: GameField?
+    
+    var tempGames: [Int: [Game]] = [:]
+    
+    var currentlySelectedRow = 0
+    
     private var viewAlreadyLoaded = false
+    
+    var toastOverlay = ToastOverlayViewController()
     
     let tableReuseIdentifier = "library_add_search_cell"
     override func viewDidLoad() {
@@ -41,6 +51,40 @@ class LibraryAddSearchViewController: UIViewController {
         
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        self.toastOverlay.view.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(toastOverlay.view)
+        NSLayoutConstraint(item: toastOverlay.view,
+                           attribute: .centerX,
+                           relatedBy: .equal,
+                           toItem: self.view,
+                           attribute: .centerX,
+                           multiplier: 1.0,
+                           constant: 0.0
+            ).isActive = true
+        NSLayoutConstraint(item: toastOverlay.view,
+                           attribute: .centerY,
+                           relatedBy: .equal,
+                           toItem: self.view,
+                           attribute: .centerY,
+                           multiplier: 1.0,
+                           constant: 0.0
+            ).isActive = true
+        NSLayoutConstraint(item: toastOverlay.view,
+                           attribute: .width,
+                           relatedBy: .equal,
+                           toItem: nil,
+                           attribute: .notAnAttribute,
+                           multiplier: 1.0,
+                           constant: 250.0
+            ).isActive = true
+        NSLayoutConstraint(item: toastOverlay.view,
+                           attribute: .height,
+                           relatedBy: .equal,
+                           toItem: nil,
+                           attribute: .notAnAttribute,
+                           multiplier: 1.0,
+                           constant: 250.0
+            ).isActive = true
     }
     
     override func didReceiveMemoryWarning() {
@@ -58,7 +102,7 @@ class LibraryAddSearchViewController: UIViewController {
     func loadFirstGame(withQuery query: String) {
         self.isLoadingGames = true
         self.currentPage = 0
-        Game.getGames(withQuery: query, { result in
+        GameField.getGames(withQuery: query, { result in
             if let error = result.error {
                 self.isLoadingGames = false
                 if error.localizedDescription != "cancelled" {
@@ -89,7 +133,7 @@ class LibraryAddSearchViewController: UIViewController {
             (self.currentPage) * results.limit! < totalGamesCount {
             // there are more games out there!
             self.currentPage += 1
-            Game.getGames(withPageNum: currentPage, query: query, prevResults: results, { result in
+            GameField.getGames(withPageNum: currentPage, query: query, prevResults: results, { result in
                 if let error = result.error {
                     self.isLoadingGames = false
                     if error.localizedDescription != "cancelled" {
@@ -179,12 +223,68 @@ class LibraryAddSearchViewController: UIViewController {
             if let cell = sender as? UITableViewCell {
                 let i = (self.tableView?.indexPath(for: cell)?.row)!
                 let vc = segue.destination as! GameDetailsViewController
-                vc.game = self.games?[i]
-                vc.state = .Add
+                var stringList = [String]()
+                let gameList = self.tempGames[(self.games?[i].idNumber)!] ?? [Game]()
+                
+                self.currentlySelectedRow = i
+                for game in gameList {
+                    stringList.append(game.uuid)
+                }
+                
+                self.searchBar?.resignFirstResponder()
+                
+                vc.stringsToFetch = stringList
+                vc.gameFieldId = self.games?[i].idNumber
+                vc.gameField = self.games?[i]
+                vc.state = stringList.count > 0 ? .partialAddToLibrary : .addToLibrary
+                vc.delegate = self
             }
         }
     }
     
+    func gamesCreated(gameField: GameField, games: [Game]) {
+        if games.count > 0 {
+            self.gamesViewControllers[self.currentlySelectedRow].libraryState = .remove
+        } else {
+            self.gamesViewControllers[self.currentlySelectedRow].libraryState = .add
+        }
+        self.games?[self.currentlySelectedRow] = gameField
+        self.tempGames[gameField.idNumber] = games
+    }
+    
+    func didSelectConsoles(_ consoles: [Int]) {
+        let currentGameId = (self.currentGameField?.idNumber)!
+        var gameList: [Game] = self.tempGames[currentGameId] ?? [Game]()
+        var currentPlatformList: [Int] = [Int]()
+        for i in 0..<gameList.count {
+            let game = gameList[i]
+            if !consoles.contains((game.platform?.idNumber)!) {
+                game.delete()
+                gameList.remove(at: i)
+            } else {
+                currentPlatformList.append((game.platform?.idNumber)!)
+            }
+        }
+        if consoles.count > 0 {
+            for platform in consoles[0..<consoles.endIndex] {
+                if !currentPlatformList.contains(platform) {
+                    let newGameToSave = Game()
+                    newGameToSave.inLibrary = true
+                    newGameToSave.add(self.currentGameField, self.platformDict[platform])
+                    gameList.append(newGameToSave)
+                }
+            }
+            self.gamesViewControllers[self.currentlySelectedRow].libraryState = .remove
+            self.tempGames[currentGameId] = gameList
+        }
+    }
+    
+    func didSelectConsoles(withCustom custom: [Platform], _ consoles: [Int]) {
+        for newPlatform in custom {
+            self.platformDict[newPlatform.idNumber] = newPlatform
+        }
+        self.didSelectConsoles(consoles)
+    }
 }
 
 extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSource {
@@ -197,7 +297,9 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
         let cell = tableView.dequeueReusableCell(withIdentifier: tableReuseIdentifier, for: indexPath) as! TableViewCell
         var cellView: TableViewCellView
         if indexPath.row + 1 > gamesViewControllers.count {
-            cellView = TableViewCellView()
+            cellView = TableViewCellView(indexPath.row)
+            cellView.addButtonHidden = false
+            cellView.delegate = self
             gamesViewControllers.append(cellView)
         } else {
             cellView = gamesViewControllers[indexPath.row]
@@ -251,14 +353,14 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
                     let index = releaseDate.index(releaseDate.startIndex, offsetBy: 4)
                     rightLabelText = releaseDate.substring(to: index)
                 } else {
-                    if let expectedDate = gameToShow.expectedDate {
-                        if expectedDate > 0 {
-                            rightLabelText = String(expectedDate)
-                        }
+                    let expectedDate = gameToShow.expectedDate
+                    if expectedDate > 0 {
+                        rightLabelText = String(expectedDate)
                     }
+                    
                 }
             }
-            cellView.rightLabel?.text = rightLabelText
+            cellView.rightLabel?.text = ""
             
             if let name = gameToShow.name {
                 let attributedString = NSMutableAttributedString(string: name)
@@ -278,22 +380,21 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
                 cellView.titleLabel?.text = ""
             }
             var platformString = ""
-            if let platforms = gameToShow.platforms {
-                if platforms.count > 0 {
-                    if platforms.count > 1 {
-                        for platform in platforms[0..<platforms.endIndex - 1] {
-                            if platform.name!.characters.count < 10 {
-                                platformString += platform.name! + " | "
-                            } else {
-                                platformString += platform.abbreviation! + " | "
-                            }
+            let platforms = gameToShow.platforms
+            if platforms.count > 0 {
+                if platforms.count > 1 {
+                    for platform in platforms[0..<platforms.endIndex - 1] {
+                        if platform.name!.characters.count < 10 {
+                            platformString += platform.name! + " • "
+                        } else {
+                            platformString += platform.abbreviation! + " • "
                         }
                     }
-                    if platforms[platforms.endIndex - 1].name!.characters.count < 10 {
-                        platformString += platforms[platforms.endIndex - 1].name!
-                    } else {
-                        platformString += platforms[platforms.endIndex - 1].abbreviation!
-                    }
+                }
+                if platforms[platforms.endIndex - 1].name!.characters.count < 10 {
+                    platformString += platforms[platforms.endIndex - 1].name!
+                } else {
+                    platformString += platforms[platforms.endIndex - 1].abbreviation!
                 }
             }
             cellView.descriptionLabel?.text = platformString
@@ -346,7 +447,6 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        NSLog("Tapped: \(self.games?[indexPath.row].name)")
         self.searchBar?.resignFirstResponder()
         self.tableView?.deselectRow(at: indexPath, animated: true)
         self.searchBar?.setShowsCancelButton(false, animated: true)
@@ -408,7 +508,7 @@ extension LibraryAddSearchViewController: UISearchBarDelegate {
                             self.searchTintView?.alpha = 0.2
             },
                            completion: nil)
-            Game.cancelCurrentRequest()
+            GameField.cancelCurrentRequest()
             tableView?.reloadData()
         }
     }
@@ -424,5 +524,36 @@ extension LibraryAddSearchViewController: UISearchBarDelegate {
                         self.searchTintView?.alpha = 0.0
         },
                        completion: nil)
+    }
+}
+
+extension LibraryAddSearchViewController: TableViewCellViewDelegate {
+    func addTapped(_ row: Int) {
+        self.currentlySelectedRow = row
+        let gameField = self.games?[row]
+        let consoleSelection = ConsoleSelectionTableViewController()
+        
+        consoleSelection.delegate = self
+        for platform in (gameField?.platforms)! {
+            let dict: [Int: String] = [platform.idNumber: platform.name!]
+            self.platformDict[platform.idNumber] = platform
+            consoleSelection.consoles.append(dict)
+        }
+        self.navigationController?.pushViewController(consoleSelection, animated: true)
+        self.currentGameField = gameField
+    }
+    func removeTapped(_ row: Int) {
+        
+        let gameField = self.games?[row]
+        let gameFieldIdNumber = (gameField?.idNumber)!
+        let gameList = self.tempGames[(gameField?.idNumber)!]
+        let newGameFieldCopy = (gameField?.deepCopy())!
+        for game in gameList! {
+            game.delete()
+        }
+        self.games?[row] = newGameFieldCopy
+        self.gamesViewControllers[row].libraryState = .add
+        self.tempGames[gameFieldIdNumber]!.removeAll()
+        toastOverlay.show(withIcon: #imageLiteral(resourceName: "large_x"), text: "Removed from Library")
     }
 }

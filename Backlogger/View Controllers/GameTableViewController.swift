@@ -24,6 +24,7 @@ class GameTableViewController: UIViewController {
                                Console(title: "GameCube", company: "Nintendo", releaseDate: "2001", gameCount: "1382", image: #imageLiteral(resourceName: "gc-logo"))]
     
     let tableReuseIdentifier = "game_cell"
+    var count = 6
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.tintColor = .white
@@ -92,14 +93,14 @@ class GameTableViewController: UIViewController {
 
 extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 6
+        return count
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: tableReuseIdentifier) as! TableViewCell
         let cellView = TableViewCellView()
+        cellView.addButtonHidden = true
         cellView.view.translatesAutoresizingMaskIntoConstraints = false
         cell.contentView.addSubview(cellView.view)
         
@@ -142,5 +143,17 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 55.0
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if (editingStyle == UITableViewCellEditingStyle.delete) {
+            count = count - 1
+            self.tableView?.deleteRows(at: [indexPath], with: .automatic)
+            self.tableView?.reloadData()
+        }
     }
 }

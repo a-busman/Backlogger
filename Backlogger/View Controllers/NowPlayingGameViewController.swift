@@ -159,7 +159,7 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
         
         if game == nil {
             if self.detailUrl != nil {
-                Game.getGameDetail(withUrl: self.detailUrl!, { result in
+                GameField.getGameDetail(withUrl: self.detailUrl!, { result in
                     if let error = result.error {
                         NSLog("error loading details: \(error.localizedDescription)")
                     }
@@ -200,7 +200,7 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
             NSLog("no game to get details from")
             return
         }
-        currentGame.getImage(withSize: .SuperUrl, { result in
+        currentGame.gameFields?.getImage(withSize: .SuperUrl, { result in
             if let error = result.error {
                 print(error)
             } else {

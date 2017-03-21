@@ -51,11 +51,11 @@ class GameDetailOverlayViewController: UIViewController {
         }
         set(newGame) {
             self._game = newGame
-            self.titleLabel?.text = newGame?.name
-            self.descriptionLabel?.text = newGame?.description
+            self.titleLabel?.text = newGame?.gameFields?.name
+            self.descriptionLabel?.text = newGame?.gameFields?.deck
             self.images = []
             var platformString = ""
-            if let platforms = newGame?.platforms {
+            if let platforms = newGame?.gameFields?.platforms {
                 if platforms.count > 0 {
                     if platforms.count > 1 {
                         for platform in platforms[0..<platforms.endIndex - 1] {
@@ -78,7 +78,7 @@ class GameDetailOverlayViewController: UIViewController {
             self.platformsLabel?.text = platformString
             
             var developersString = ""
-            if let developers = newGame?.developers {
+            if let developers = newGame?.gameFields?.developers {
                 if developers.count > 0 {
                     if developers.count > 1 {
                         for developer in developers[0..<developers.endIndex - 1] {
@@ -91,7 +91,7 @@ class GameDetailOverlayViewController: UIViewController {
             self.developerLabel?.text = developersString
             
             var publishersString = ""
-            if let publishers = newGame?.publishers {
+            if let publishers = newGame?.gameFields?.publishers {
                 if publishers.count > 0 {
                     if publishers.count > 1 {
                         for publisher in publishers[0..<publishers.endIndex - 1] {
@@ -104,7 +104,7 @@ class GameDetailOverlayViewController: UIViewController {
             self.publisherLabel?.text = publishersString
             
             var genresString = ""
-            if let genres = newGame?.genres {
+            if let genres = newGame?.gameFields?.genres {
                 if genres.count > 0 {
                     if genres.count > 1 {
                         for genre in genres[0..<genres.endIndex - 1] {
@@ -116,7 +116,7 @@ class GameDetailOverlayViewController: UIViewController {
             }
             self.genresLabel?.text = genresString
             
-            if let images = newGame?.images {
+            if let images = newGame?.gameFields?.images {
                 for image in images {
                     image.getImage(field: .MediumUrl, { results in
                         if let error = results.error {

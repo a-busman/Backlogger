@@ -3,7 +3,7 @@ platform :ios, '10.0'
 use_frameworks!
 
 target 'Backlogger' do
-    pod 'Alamofire', '~> 4.3'
+    pod 'Alamofire'
     pod 'RealmSwift'
 end
 

@@ -8,6 +8,8 @@
 
 import Foundation
 import Alamofire
+import RealmSwift
+import Realm
 
 enum ImageFields: String {
     case IconUrl   = "icon_url"
@@ -20,17 +22,19 @@ enum ImageFields: String {
     case Tags       = "tags"
 }
 
-class ImageList {
-    var iconUrl:   String?
-    var mediumUrl: String?
-    var screenUrl: String?
-    var smallUrl:  String?
-    var superUrl:  String?
-    var thumbUrl:  String?
-    var tinyUrl:   String?
-    var tags:       String?
+class ImageList: Object {
+    dynamic var iconUrl:   String? = nil
+    dynamic var mediumUrl: String? = nil
+    dynamic var screenUrl: String? = nil
+    dynamic var smallUrl:  String? = nil
+    dynamic var superUrl:  String? = nil
+    dynamic var thumbUrl:  String? = nil
+    dynamic var tinyUrl:   String? = nil
+    dynamic var tags:      String? = nil
+    dynamic var id:        String? = nil
     
     required init(json: [String : Any]) {
+        super.init()
         self.iconUrl   = json[ImageFields.IconUrl.rawValue]   as? String
         self.mediumUrl = json[ImageFields.MediumUrl.rawValue] as? String
         self.screenUrl = json[ImageFields.ScreenUrl.rawValue] as? String
@@ -39,19 +43,36 @@ class ImageList {
         self.thumbUrl  = json[ImageFields.ThumbUrl.rawValue]  as? String
         self.tinyUrl   = json[ImageFields.TinyUrl.rawValue]   as? String
         self.tags      = json[ImageFields.Tags.rawValue]      as? String
-        
-        self.removeSlashesFromUrls()
     }
     
-    private func removeSlashesFromUrls() {
-        /*self.iconUrl = self.iconUrl?.replacingOccurrences(of: "\\", with: "", options: NSString.CompareOptions.literal, range: nil)
-        self.mediumUrl = self.mediumUrl?.replacingOccurrences(of: "\\", with: "", options: NSString.CompareOptions.literal, range: nil)
-        self.screenUrl = self.screenUrl?.replacingOccurrences(of: "\\", with: "", options: NSString.CompareOptions.literal, range: nil)
-        self.smallUrl = self.smallUrl?.replacingOccurrences(of: "\\", with: "", options: NSString.CompareOptions.literal, range: nil)
-        self.superUrl = self.superUrl?.replacingOccurrences(of: "\\", with: "", options: NSString.CompareOptions.literal, range: nil)
-        self.thumbUrl = self.thumbUrl?.replacingOccurrences(of: "\\", with: "", options: NSString.CompareOptions.literal, range: nil)
-        self.tinyUrl = self.tinyUrl?.replacingOccurrences(of: "\\", with: "", options: NSString.CompareOptions.literal, range: nil)*/
-
+    required init() {
+        super.init()
+    }
+    
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+        super.init(realm: realm, schema: schema)
+    }
+    
+    required init(value: Any, schema: RLMSchema) {
+        super.init(value: value, schema: schema)
+    }
+    
+    override static func primaryKey() -> String? {
+        return "id"
+    }
+    
+    func deepCopy() -> ImageList {
+        let newImageList = ImageList()
+        newImageList.iconUrl = self.iconUrl
+        newImageList.mediumUrl = self.mediumUrl
+        newImageList.screenUrl = self.screenUrl
+        newImageList.smallUrl = self.smallUrl
+        newImageList.superUrl = self.superUrl
+        newImageList.thumbUrl = self.thumbUrl
+        newImageList.tinyUrl = self.tinyUrl
+        newImageList.tags = self.tags
+        newImageList.id = self.id
+        return newImageList
     }
 
     func getImage(field: ImageFields, _ completionHandler: @escaping (Result<UIImage>) -> Void) {
