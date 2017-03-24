@@ -1,15 +1,15 @@
 //
-//  Company.swift
+//  Publisher.swift
 //  Backlogger
 //
-//  Created by Alex Busman on 2/21/17.
+//  Created by Alex Busman on 3/20/17.
 //  Copyright © 2017 Alex Busman. All rights reserved.
 //
 
 import Foundation
 import Realm
 
-class Company: Field {
+class Publisher: Field {
     required init(json: [String : Any]) {
         super.init(json: json)
     }
@@ -25,9 +25,8 @@ class Company: Field {
     required init(value: Any, schema: RLMSchema) {
         super.init(value: value, schema: schema)
     }
-    
-    func deepCopy() -> Company {
-        let newField = Company()
+    func deepCopy() -> Publisher {
+        let newField = Publisher()
         newField.apiDetailUrl = self.apiDetailUrl
         newField.idNumber = self.idNumber
         newField.name = self.name

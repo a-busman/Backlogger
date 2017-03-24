@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 class LibraryViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView?
@@ -38,6 +39,8 @@ class LibraryViewController: UIViewController {
     let collectionReuseIdentifier = "console_cell"
     let tableReuseIdentifier = "console_table_cell"
     let collectionHeaderReuseIdentifier = "library_collection_header"
+    
+    var realm: Realm?
 
     var consoles: [Console] = [Console(title: "GameCube", company: "Nintendo", releaseDate: "2001", gameCount: "1382", image: #imageLiteral(resourceName: "gc-logo")),
                                Console(title: "GameCube", company: "Nintendo", releaseDate: "2001", gameCount: "1382", image: #imageLiteral(resourceName: "gc-logo")),
@@ -47,8 +50,13 @@ class LibraryViewController: UIViewController {
                                Console(title: "GameCube", company: "Nintendo", releaseDate: "2001", gameCount: "1382", image: #imageLiteral(resourceName: "gc-logo")),
                                Console(title: "GameCube", company: "Nintendo", releaseDate: "2001", gameCount: "1382", image: #imageLiteral(resourceName: "gc-logo")),
                                Console(title: "GameCube", company: "Nintendo", releaseDate: "2001", gameCount: "1382", image: #imageLiteral(resourceName: "gc-logo"))]
+    
+    var platforms: Results<Platform>?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        realm = try! Realm()
+        platforms = realm?.objects(Platform.self)
         tableSearchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: 320, height: 44))
         tableSearchBar?.tintColor = .white
         tableSearchBar?.placeholder = "Library"

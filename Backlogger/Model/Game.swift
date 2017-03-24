@@ -102,9 +102,7 @@ class GameField: Field {
                     var platform = realm?.object(ofType: Platform.self, forPrimaryKey: (jsonPlatform[GenericFields.Id.rawValue] as? Int ?? 0))
                     if platform == nil {
                         platform = Platform(json: jsonPlatform)
-                        realm?.add(platform!, update: true)
                     }
-                    platform?.linkCount += 1
                     self.platforms.append(platform!)
                 }
             }
@@ -113,9 +111,7 @@ class GameField: Field {
                     var developer = realm?.object(ofType: Developer.self, forPrimaryKey: (jsonDeveloper[GenericFields.Id.rawValue] as? Int ?? 0))
                     if developer == nil {
                         developer = Developer(json: jsonDeveloper)
-                        realm?.add(developer!, update: true)
                     }
-                    developer?.linkCount += 1
                     self.developers.append(developer!)
                 }
             }
@@ -124,9 +120,7 @@ class GameField: Field {
                     var publisher = realm?.object(ofType: Publisher.self, forPrimaryKey: (jsonPublisher[GenericFields.Id.rawValue] as? Int ?? 0))
                     if publisher == nil {
                         publisher = Publisher(json: jsonPublisher)
-                        realm?.add(publisher!, update: true)
                     }
-                    publisher?.linkCount += 1
                     self.publishers.append(publisher!)
                 }
             }
@@ -135,9 +129,7 @@ class GameField: Field {
                     var genre = realm?.object(ofType: Genre.self, forPrimaryKey: (jsonGenre[GenericFields.Id.rawValue] as? Int ?? 0))
                     if genre == nil {
                         genre = Genre(json: jsonGenre)
-                        realm?.add(genre!, update: true)
                     }
-                    genre?.linkCount += 1
                     self.genres.append(genre!)
                 }
             }
@@ -409,35 +401,119 @@ class GameField: Field {
         return newGameField
     }
     
+    func syncWithRealm() {
+        let realm = try? Realm()
+        
+        let imageId = self.image?.id
+        let dbImage = realm?.object(ofType: ImageList.self, forPrimaryKey: imageId)
+        if dbImage != nil {
+            self.image = dbImage!
+        }
+        
+        for (index, image) in self.images.enumerated() {
+            let imagesId = image.id
+            let dbImages = realm?.object(ofType: ImageList.self, forPrimaryKey: imagesId)
+            if dbImages != nil {
+                self.images[index] = dbImages!
+            }
+        }
+        for (index, developer) in self.developers.enumerated() {
+            let developerId = developer.idNumber
+            let dbDeveloper = realm?.object(ofType: Developer.self, forPrimaryKey: developerId)
+            if dbDeveloper != nil {
+                self.developers[index] = dbDeveloper!
+            } else {
+                self.developers[index].linkCount = 0
+            }
+        }
+        for (index, genre) in self.genres.enumerated() {
+            let genreId = genre.idNumber
+            let dbGenre = realm?.object(ofType: Genre.self, forPrimaryKey: genreId)
+            if dbGenre != nil {
+                self.genres[index] = dbGenre!
+            } else {
+                self.genres[index].linkCount = 0
+            }
+        }
+        for (index, publisher) in self.publishers.enumerated() {
+            let publisherId = publisher.idNumber
+            let dbPublisher = realm?.object(ofType: Publisher.self, forPrimaryKey: publisherId)
+            if dbPublisher != nil {
+                self.publishers[index] = dbPublisher!
+            } else {
+                self.publishers[index].linkCount = 0
+            }
+        }
+        for (index, platform) in self.platforms.enumerated() {
+            let platformId = platform.idNumber
+            let dbPlatform = realm?.object(ofType: Platform.self, forPrimaryKey: platformId)
+            if dbPlatform != nil {
+                self.platforms[index] = dbPlatform!
+            } else {
+                self.platforms[index].linkCount = 0
+                self.platforms[index].syncWithRealm()
+            }
+        }
+    }
+    
     class func cancelCurrentRequest() {
         self.request?.cancel()
     }
     
     override func add() {
+        let realm = try? Realm()
         // Update contained objects
-        for platform in self.platforms {
-            platform.update {
-                platform.linkCount += 1
+        for (index, platform) in self.platforms.enumerated() {
+            if let dbPlatform = realm?.object(ofType: Platform.self, forPrimaryKey: platform.idNumber) {
+                self.update {
+                    self.platforms[index] = dbPlatform
+                }
+                self.platforms[index].update {
+                    self.platforms[index].linkCount += 1
+                }
+            } else {
+                platform.linkCount = 1
+                platform.add()
             }
-            platform.add()
         }
-        for developer in self.developers {
-            developer.update {
-                developer.linkCount += 1
+        for (index, developer) in self.developers.enumerated() {
+            if let dbDeveloper = realm?.object(ofType: Developer.self, forPrimaryKey: developer.idNumber) {
+                self.update {
+                    self.developers[index] = dbDeveloper
+                }
+                self.developers[index].update {
+                    self.developers[index].linkCount += 1
+                }
+            } else {
+                developer.linkCount = 1
+                developer.add()
             }
-            developer.add()
         }
-        for publisher in self.publishers {
-            publisher.update {
-                publisher.linkCount += 1
+        for (index, publisher) in self.publishers.enumerated() {
+            if let dbPublisher = realm?.object(ofType: Publisher.self, forPrimaryKey: publisher.idNumber) {
+                self.update {
+                    self.publishers[index] = dbPublisher
+                }
+                self.publishers[index].update {
+                    self.publishers[index].linkCount += 1
+                }
+            } else {
+                publisher.linkCount = 1
+                publisher.add()
             }
-            publisher.add()
         }
-        for genre in self.genres {
-            genre.update {
-                genre.linkCount += 1
+        for (index, genre) in self.genres.enumerated() {
+            if let dbGenre = realm?.object(ofType: Genre.self, forPrimaryKey: genre.idNumber) {
+                self.update {
+                    self.genres[index] = dbGenre
+                }
+                self.genres[index].update {
+                    self.genres[index].linkCount += 1
+                }
+            } else {
+                genre.linkCount = 1
+                genre.add()
             }
-            genre.add()
         }
         super.add()
     }
@@ -446,33 +522,33 @@ class GameField: Field {
         for platform in self.platforms {
             platform.update {
                 platform.linkCount -= 1
-                if platform.linkCount <= 0 {
-                    realm?.delete(platform)
-                }
+            }
+            if platform.linkCount <= 0 {
+                platform.delete()
             }
         }
         for developer in self.developers {
             developer.update {
                 developer.linkCount -= 1
-                if developer.linkCount <= 0 {
-                    realm?.delete(developer)
-                }
+            }
+            if developer.linkCount <= 0 {
+                developer.delete()
             }
         }
         for publisher in self.publishers {
             publisher.update {
                 publisher.linkCount -= 1
-                if publisher.linkCount <= 0 {
-                    realm?.delete(publisher)
-                }
+            }
+            if publisher.linkCount <= 0 {
+                publisher.delete()
             }
         }
         for genre in self.genres {
             genre.update {
                 genre.linkCount -= 1
-                if genre.linkCount <= 0 {
-                    realm?.delete(genre)
-                }
+            }
+            if genre.linkCount <= 0 {
+                genre.delete()
             }
         }
         
@@ -481,6 +557,94 @@ class GameField: Field {
             image.delete()
         }
         super.delete()
+    }
+    
+    func deleteRetainCopy() -> GameField {
+        let newGameField = GameField()
+        newGameField.deck = self.deck
+        newGameField.releaseDate = self.releaseDate
+        newGameField.expectedDate = self.expectedDate
+        newGameField.imageUrl = self.imageUrl
+        newGameField.image = self.image?.deepCopy()
+        newGameField.name = self.name
+        newGameField.idNumber = self.idNumber
+        newGameField.apiDetailUrl = self.apiDetailUrl
+        newGameField.siteDetailUrl = self.siteDetailUrl
+        
+        self.image?.delete()
+        for platform in self.platforms {
+            platform.update {
+                platform.linkCount -= 1
+            }
+            if platform.linkCount <= 0 {
+                newGameField.platforms.append(platform.deleteRetainCopy())
+            } else {
+                newGameField.platforms.append(platform)
+            }
+        }
+        for developer in self.developers {
+            developer.update {
+                developer.linkCount -= 1
+            }
+            if developer.linkCount <= 0 {
+                newGameField.developers.append(developer.deepCopy())
+                developer.delete()
+            } else {
+                newGameField.developers.append(developer)
+            }
+        }
+        for publisher in self.publishers {
+            publisher.update {
+                publisher.linkCount -= 1
+            }
+            if publisher.linkCount <= 0 {
+                newGameField.publishers.append(publisher.deepCopy())
+                publisher.delete()
+            } else {
+                newGameField.publishers.append(publisher)
+            }
+        }
+        for genre in self.genres {
+            genre.update {
+                genre.linkCount -= 1
+            }
+            if genre.linkCount <= 0 {
+                newGameField.genres.append(genre.deepCopy())
+                genre.delete()
+            } else {
+                newGameField.genres.append(genre)
+            }
+        }
+        for image in self.images {
+            newGameField.images.append(image.deepCopy())
+            image.delete()
+        }
+        super.delete()
+        return newGameField
+    }
+    
+    func decrementLinkCounts() {
+        self.linkCount -= 1
+        for platform in self.platforms {
+            platform.update {
+                platform.linkCount -= 1
+            }
+        }
+        for developer in self.developers {
+            developer.update {
+                developer.linkCount -= 1
+            }
+        }
+        for publisher in self.publishers {
+            publisher.update {
+                publisher.linkCount -= 1
+            }
+        }
+        for genre in self.genres {
+            genre.update {
+                genre.linkCount -= 1
+            }
+        }
     }
 }
 
@@ -503,15 +667,31 @@ class Game: Object {
     
     func add(_ gameField: GameField?, _ platform: Platform?) {
         let realm = try? Realm()
+
+        var dbGameField = realm?.object(ofType: GameField.self, forPrimaryKey: (gameField?.idNumber)!)
+        if dbGameField == nil {
+            gameField?.linkCount = 1
+            gameField?.add()
+            dbGameField = gameField
+        } else {
+            dbGameField?.update {
+                dbGameField?.linkCount += 1
+            }
+        }
+        var dbPlatform = realm?.object(ofType: Platform.self, forPrimaryKey: (platform?.idNumber)!)
+        if dbPlatform == nil {
+            platform?.linkCount = 1
+            platform?.add()
+            dbPlatform = platform
+        } else {
+            dbPlatform?.update {
+                dbPlatform?.linkCount += 1
+            }
+        }
+        self.gameFields = dbGameField
+        self.platform   = dbPlatform
         try! realm?.write {
-            gameField?.linkCount += 1
-            platform?.linkCount  += 1
-            self.gameFields = gameField
-            self.platform   = platform
             realm?.add(self, update: true)
-            // these get reset to nil after adding, so we have to readd them.
-            self.gameFields = gameField
-            self.platform   = platform
         }
     }
     
@@ -529,5 +709,24 @@ class Game: Object {
             self.platform?.delete()
         }
         super.delete()
+    }
+    
+    func deleteWithGameFieldCopy() -> GameField {
+
+        self.gameFields?.update {
+            self.gameFields?.linkCount -= 1
+        }
+        let newGameField = (self.gameFields?.deepCopy())!
+        if self.gameFields?.linkCount == 0 {
+            self.gameFields?.delete()
+        }
+        self.platform?.update {
+            self.platform?.linkCount -= 1
+        }
+        if self.platform?.linkCount == 0 {
+            self.platform?.delete()
+        }
+        super.delete()
+        return newGameField
     }
 }

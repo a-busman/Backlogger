@@ -48,6 +48,10 @@ class Field: Object {
     override static func primaryKey() -> String? {
         return "idNumber"
     }
+    
+    class func idNumber(fromJson json: [String : Any]) -> Int {
+        return json[GenericFields.Id.rawValue] as? Int ?? 0
+    }
 }
 
 extension Object {

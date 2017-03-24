@@ -575,15 +575,13 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
             })
             self.statsState = .visible
         } else {
-            UIView.animate(withDuration: 0.2,
-                           animations: {
-                            self.statsButton?.backgroundColor = UIColor(colorLiteralRed: 0.0, green: 0.725, blue: 1.0, alpha: 1.0)
-                            self.statsLabel?.textColor = .white
-                            self.statsScrollView?.alpha = 0.0
-                            self.statsEffectView?.effect = nil
-            },
-                           completion: { _ in
-                            self.statsEffectView?.isHidden = true
+            UIView.animate(withDuration: 0.2, animations: {
+                self.statsButton?.backgroundColor = UIColor(colorLiteralRed: 0.0, green: 0.725, blue: 1.0, alpha: 1.0)
+                self.statsLabel?.textColor = .white
+                self.statsScrollView?.alpha = 0.0
+                self.statsEffectView?.effect = nil
+            }, completion: { _ in
+                self.statsEffectView?.isHidden = true
             })
             self.statsState = .hidden
         }

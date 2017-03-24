@@ -28,9 +28,7 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
     var imageCache: [String : UIImage] = [:]
     
     var platformDict: [Int : Platform] = [:]
-    
-    var currentGameField: GameField?
-    
+        
     var tempGames: [Int: [Game]] = [:]
     
     var currentlySelectedRow = 0
@@ -158,9 +156,9 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
     func addGames(fromSearchResults searchResults: SearchResults?) {
         self.searchResults = searchResults
         if self.games == nil {
-            self.games = self.searchResults?.results
+            self.games = self.searchResults?.results as! [GameField]?
         } else if self.searchResults != nil && self.searchResults!.results != nil {
-            self.games = self.games! + self.searchResults!.results!
+            self.games = self.games! + (self.searchResults!.results! as! [GameField])
         }
     }
     
@@ -253,30 +251,46 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
     }
     
     func didSelectConsoles(_ consoles: [Int]) {
-        let currentGameId = (self.currentGameField?.idNumber)!
+        let selectedRow = self.currentlySelectedRow
+        let currentGameId = (self.games?[selectedRow].idNumber)!
         var gameList: [Game] = self.tempGames[currentGameId] ?? [Game]()
+        var newGameList: [Game] = []
         var currentPlatformList: [Int] = [Int]()
-        for i in 0..<gameList.count {
-            let game = gameList[i]
-            if !consoles.contains((game.platform?.idNumber)!) {
-                game.delete()
-                gameList.remove(at: i)
-            } else {
-                currentPlatformList.append((game.platform?.idNumber)!)
-            }
-        }
+        var gameField: GameField = (self.games?[selectedRow])!
         if consoles.count > 0 {
+            for (index, game) in gameList.enumerated() {
+                if !consoles.contains((game.platform?.idNumber)!) {
+                    if index == (gameList.count - 1) {
+                        gameField = game.deleteWithGameFieldCopy()
+                    } else {
+                        game.delete()
+                    }
+                } else {
+                    newGameList.append(game)
+                    currentPlatformList.append((game.platform?.idNumber)!)
+                }
+            }
             for platform in consoles[0..<consoles.endIndex] {
                 if !currentPlatformList.contains(platform) {
                     let newGameToSave = Game()
                     newGameToSave.inLibrary = true
-                    newGameToSave.add(self.currentGameField, self.platformDict[platform])
-                    gameList.append(newGameToSave)
+                    newGameToSave.add(gameField, self.platformDict[platform])
+                    newGameList.append(newGameToSave)
                 }
             }
-            self.gamesViewControllers[self.currentlySelectedRow].libraryState = .remove
-            self.tempGames[currentGameId] = gameList
+            self.gamesViewControllers[selectedRow].libraryState = .remove
+            self.tempGames[currentGameId] = newGameList
+        } else {
+            for (index, game) in gameList.enumerated() {
+                if index == (gameList.count - 1) {
+                    gameField = game.deleteWithGameFieldCopy()
+                } else {
+                    game.delete()
+                }
+            }
         }
+        self.games?[selectedRow] = gameField
+
     }
     
     func didSelectConsoles(withCustom custom: [Platform], _ consoles: [Int]) {
@@ -530,28 +544,35 @@ extension LibraryAddSearchViewController: UISearchBarDelegate {
 extension LibraryAddSearchViewController: TableViewCellViewDelegate {
     func addTapped(_ row: Int) {
         self.currentlySelectedRow = row
-        let gameField = self.games?[row]
         let consoleSelection = ConsoleSelectionTableViewController()
         
         consoleSelection.delegate = self
-        for platform in (gameField?.platforms)! {
+        for platform in (self.games?[row].platforms)! {
             let dict: [Int: String] = [platform.idNumber: platform.name!]
             self.platformDict[platform.idNumber] = platform
             consoleSelection.consoles.append(dict)
         }
         self.navigationController?.pushViewController(consoleSelection, animated: true)
-        self.currentGameField = gameField
     }
     func removeTapped(_ row: Int) {
         
         let gameField = self.games?[row]
         let gameFieldIdNumber = (gameField?.idNumber)!
         let gameList = self.tempGames[(gameField?.idNumber)!]
-        let newGameFieldCopy = (gameField?.deepCopy())!
-        for game in gameList! {
-            game.delete()
+        var newGameFieldCopy: GameField?
+        for (index, game) in gameList!.enumerated() {
+            if index == ((gameList?.count)! - 1) {
+                newGameFieldCopy = game.deleteWithGameFieldCopy()
+            } else {
+                game.delete()
+            }
         }
-        self.games?[row] = newGameFieldCopy
+        
+        // This is the deep copy from right before the last delete
+        // We should reduce its link count, and all the contained
+        // elements.
+        
+        self.games?[row] = newGameFieldCopy!
         self.gamesViewControllers[row].libraryState = .add
         self.tempGames[gameFieldIdNumber]!.removeAll()
         toastOverlay.show(withIcon: #imageLiteral(resourceName: "large_x"), text: "Removed from Library")
