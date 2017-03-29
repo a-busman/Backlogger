@@ -61,6 +61,7 @@ class GameField: Field {
     dynamic var expectedDate: Int             = 0
     dynamic var imageUrl:     String?         = nil
     dynamic var image:        ImageList?      = nil
+    dynamic var hasDetails:   Bool            = false
             var images:       List<ImageList> = List<ImageList>()
             var developers:   List<Developer> = List<Developer>()
             var genres:       List<Genre>     = List<Genre>()
@@ -89,57 +90,151 @@ class GameField: Field {
     func updateGameDetailsFromJson(json: [String: Any]) {
         self.update {
             self.deck         = json[GameFields.Deck.rawValue]                as? String ?? ""
-            self.platforms    = json[GameFields.Platforms.rawValue]           as? List<Platform>  ?? List<Platform>()
-            self.developers   = json[GameFields.Developers.rawValue]          as? List<Developer> ?? List<Developer>()
-            self.publishers   = json[GameFields.Publishers.rawValue]          as? List<Publisher> ?? List<Publisher>()
-            self.genres       = json[GameFields.Genres.rawValue]              as? List<Genre>     ?? List<Genre>()
             self.releaseDate  = json[GameFields.OriginalReleaseDate.rawValue] as? String ?? ""
             self.expectedDate = json[GameFields.ExpectedReleaseYear.rawValue] as? Int ?? 0
-            
+        }
+        autoreleasepool {
+            let realm = try? Realm()
             // Get from database, or create new
             if let jsonPlatforms = json[GameFields.Platforms.rawValue] as? [[String: Any]] {
                 for jsonPlatform in jsonPlatforms {
-                    var platform = realm?.object(ofType: Platform.self, forPrimaryKey: (jsonPlatform[GenericFields.Id.rawValue] as? Int ?? 0))
+                    let platformId = jsonPlatform[GenericFields.Id.rawValue] as? Int ?? 0
+                    var platform = realm?.object(ofType: Platform.self, forPrimaryKey: platformId)
+
+                    var inPlatforms = false
+                    for p in self.platforms {
+                        if p.idNumber == platformId {
+                            inPlatforms = true
+                            break
+                        }
+                    }
+                    
                     if platform == nil {
                         platform = Platform(json: jsonPlatform)
+                        if self.linkCount > 0 {
+                            platform?.linkCount = 1
+                            platform?.add()
+                        }
+                    } else if !inPlatforms {
+                        if self.linkCount > 0 {
+                            platform?.update {
+                                platform?.linkCount += 1
+                            }
+                        }
                     }
-                    self.platforms.append(platform!)
+                    if !inPlatforms {
+                        self.update {
+                            self.platforms.append(platform!)
+                        }
+                    }
                 }
             }
             if let jsonDevelopers = json[GameFields.Developers.rawValue] as? [[String: Any]] {
                 for jsonDeveloper in jsonDevelopers {
-                    var developer = realm?.object(ofType: Developer.self, forPrimaryKey: (jsonDeveloper[GenericFields.Id.rawValue] as? Int ?? 0))
+                    let developerId = jsonDeveloper[GenericFields.Id.rawValue] as? Int ?? 0
+                    var developer = realm?.object(ofType: Developer.self, forPrimaryKey: developerId)
+                    var inDevelopers = false
+                    for d in self.developers {
+                        if d.idNumber == developerId {
+                            inDevelopers = true
+                            break
+                        }
+                    }
                     if developer == nil {
                         developer = Developer(json: jsonDeveloper)
+                        if self.linkCount > 0 {
+                            developer?.linkCount = 1
+                            developer?.add()
+                        }
+                    } else if !inDevelopers {
+                        if self.linkCount > 0 {
+                            developer?.update {
+                                developer?.linkCount += 1
+                            }
+                        }
                     }
-                    self.developers.append(developer!)
+                    if !inDevelopers {
+                        self.update {
+                            self.hasDetails = true
+                            self.developers.append(developer!)
+                        }
+                    }
                 }
             }
             if let jsonPublishers = json[GameFields.Publishers.rawValue] as? [[String: Any]] {
                 for jsonPublisher in jsonPublishers {
-                    var publisher = realm?.object(ofType: Publisher.self, forPrimaryKey: (jsonPublisher[GenericFields.Id.rawValue] as? Int ?? 0))
+                    let publisherId = jsonPublisher[GenericFields.Id.rawValue] as? Int ?? 0
+                    var publisher = realm?.object(ofType: Publisher.self, forPrimaryKey: publisherId)
+                    var inPublishers = false
+                    for p in self.publishers {
+                        if p.idNumber == publisherId {
+                            inPublishers = true
+                            break
+                        }
+                    }
                     if publisher == nil {
                         publisher = Publisher(json: jsonPublisher)
+                        if self.linkCount > 0 {
+                            publisher?.linkCount = 1
+                            publisher?.add()
+                        }
+                    } else if !inPublishers {
+                        if self.linkCount > 0 {
+                            publisher?.update {
+                                publisher?.linkCount = 1
+                            }
+                        }
                     }
-                    self.publishers.append(publisher!)
+                    if !inPublishers {
+                        self.update {
+                            self.hasDetails = true
+                            self.publishers.append(publisher!)
+                        }
+                    }
                 }
+                
             }
             if let jsonGenres = json[GameFields.Genres.rawValue] as? [[String: Any]] {
                 for jsonGenre in jsonGenres {
-                    var genre = realm?.object(ofType: Genre.self, forPrimaryKey: (jsonGenre[GenericFields.Id.rawValue] as? Int ?? 0))
+                    let genreId = jsonGenre[GenericFields.Id.rawValue] as? Int ?? 0
+                    var genre = realm?.object(ofType: Genre.self, forPrimaryKey: genreId)
+                    var inGenres = false
+                    for g in self.genres {
+                        if g.idNumber == genreId {
+                            inGenres = true
+                        }
+                    }
                     if genre == nil {
                         genre = Genre(json: jsonGenre)
+                        if self.linkCount > 0 {
+                            genre?.linkCount = 1
+                            genre?.add()
+                        }
+                    } else if !inGenres {
+                        if self.linkCount > 0 {
+                            genre?.update {
+                                genre?.linkCount += 1
+                            }
+                        }
                     }
-                    self.genres.append(genre!)
+                    if !inGenres {
+                        self.update {
+                            self.hasDetails = true
+                            self.genres.append(genre!)
+                        }
+                    }
                 }
             }
             if let image = json[GameFields.Image.rawValue] as? [String: Any] {
-                self.image = realm?.object(ofType: ImageList.self, forPrimaryKey: "\(self.idNumber) main")
-                if self.image == nil {
-                    self.image = ImageList(json: image)
-                    self.image?.id = "\(self.idNumber) main"
+                var imageObject = realm?.object(ofType: ImageList.self, forPrimaryKey: "\(self.idNumber) main")
+                if imageObject == nil {
+                    imageObject = ImageList(json: image)
+                    imageObject?.id = "\(self.idNumber) main"
                 }
-                self.imageUrl = self.image?.iconUrl
+                self.update {
+                    self.image = imageObject
+                    self.imageUrl = self.image?.iconUrl
+                }
             }
             if let jsonImages = json[GameFields.Images.rawValue] as? [[String: Any]] {
                 var i = 0
@@ -150,7 +245,18 @@ class GameField: Field {
                         image = ImageList(json: jsonImage)
                         image?.id = "\(self.idNumber) \(i)"
                     }
-                    self.images.append(image!)
+                    var inImages = false
+                    for i in self.images {
+                        if i.id == image?.id {
+                            inImages = true
+                        }
+                    }
+                    if !inImages {
+                        self.update {
+                            self.hasDetails = true
+                            self.images.append(image!)
+                        }
+                    }
                     i += 1
                 }
             }
@@ -402,56 +508,58 @@ class GameField: Field {
     }
     
     func syncWithRealm() {
-        let realm = try? Realm()
-        
-        let imageId = self.image?.id
-        let dbImage = realm?.object(ofType: ImageList.self, forPrimaryKey: imageId)
-        if dbImage != nil {
-            self.image = dbImage!
-        }
-        
-        for (index, image) in self.images.enumerated() {
-            let imagesId = image.id
-            let dbImages = realm?.object(ofType: ImageList.self, forPrimaryKey: imagesId)
-            if dbImages != nil {
-                self.images[index] = dbImages!
+        autoreleasepool {
+            let realm = try? Realm()
+            
+            let imageId = self.image?.id
+            let dbImage = realm?.object(ofType: ImageList.self, forPrimaryKey: imageId)
+            if dbImage != nil {
+                self.image = dbImage!
             }
-        }
-        for (index, developer) in self.developers.enumerated() {
-            let developerId = developer.idNumber
-            let dbDeveloper = realm?.object(ofType: Developer.self, forPrimaryKey: developerId)
-            if dbDeveloper != nil {
-                self.developers[index] = dbDeveloper!
-            } else {
-                self.developers[index].linkCount = 0
+            
+            for (index, image) in self.images.enumerated() {
+                let imagesId = image.id
+                let dbImages = realm?.object(ofType: ImageList.self, forPrimaryKey: imagesId)
+                if dbImages != nil {
+                    self.images[index] = dbImages!
+                }
             }
-        }
-        for (index, genre) in self.genres.enumerated() {
-            let genreId = genre.idNumber
-            let dbGenre = realm?.object(ofType: Genre.self, forPrimaryKey: genreId)
-            if dbGenre != nil {
-                self.genres[index] = dbGenre!
-            } else {
-                self.genres[index].linkCount = 0
+            for (index, developer) in self.developers.enumerated() {
+                let developerId = developer.idNumber
+                let dbDeveloper = realm?.object(ofType: Developer.self, forPrimaryKey: developerId)
+                if dbDeveloper != nil {
+                    self.developers[index] = dbDeveloper!
+                } else {
+                    self.developers[index].linkCount = 0
+                }
             }
-        }
-        for (index, publisher) in self.publishers.enumerated() {
-            let publisherId = publisher.idNumber
-            let dbPublisher = realm?.object(ofType: Publisher.self, forPrimaryKey: publisherId)
-            if dbPublisher != nil {
-                self.publishers[index] = dbPublisher!
-            } else {
-                self.publishers[index].linkCount = 0
+            for (index, genre) in self.genres.enumerated() {
+                let genreId = genre.idNumber
+                let dbGenre = realm?.object(ofType: Genre.self, forPrimaryKey: genreId)
+                if dbGenre != nil {
+                    self.genres[index] = dbGenre!
+                } else {
+                    self.genres[index].linkCount = 0
+                }
             }
-        }
-        for (index, platform) in self.platforms.enumerated() {
-            let platformId = platform.idNumber
-            let dbPlatform = realm?.object(ofType: Platform.self, forPrimaryKey: platformId)
-            if dbPlatform != nil {
-                self.platforms[index] = dbPlatform!
-            } else {
-                self.platforms[index].linkCount = 0
-                self.platforms[index].syncWithRealm()
+            for (index, publisher) in self.publishers.enumerated() {
+                let publisherId = publisher.idNumber
+                let dbPublisher = realm?.object(ofType: Publisher.self, forPrimaryKey: publisherId)
+                if dbPublisher != nil {
+                    self.publishers[index] = dbPublisher!
+                } else {
+                    self.publishers[index].linkCount = 0
+                }
+            }
+            for (index, platform) in self.platforms.enumerated() {
+                let platformId = platform.idNumber
+                let dbPlatform = realm?.object(ofType: Platform.self, forPrimaryKey: platformId)
+                if dbPlatform != nil {
+                    self.platforms[index] = dbPlatform!
+                } else {
+                    self.platforms[index].linkCount = 0
+                    self.platforms[index].syncWithRealm()
+                }
             }
         }
     }
@@ -461,58 +569,60 @@ class GameField: Field {
     }
     
     override func add() {
-        let realm = try? Realm()
-        // Update contained objects
-        for (index, platform) in self.platforms.enumerated() {
-            if let dbPlatform = realm?.object(ofType: Platform.self, forPrimaryKey: platform.idNumber) {
-                self.update {
-                    self.platforms[index] = dbPlatform
+        autoreleasepool {
+            let realm = try? Realm()
+            // Update contained objects
+            for (index, platform) in self.platforms.enumerated() {
+                if let dbPlatform = realm?.object(ofType: Platform.self, forPrimaryKey: platform.idNumber) {
+                    self.update {
+                        self.platforms[index] = dbPlatform
+                    }
+                    self.platforms[index].update {
+                        self.platforms[index].linkCount += 1
+                    }
+                } else {
+                    platform.linkCount = 1
+                    platform.add()
                 }
-                self.platforms[index].update {
-                    self.platforms[index].linkCount += 1
-                }
-            } else {
-                platform.linkCount = 1
-                platform.add()
             }
-        }
-        for (index, developer) in self.developers.enumerated() {
-            if let dbDeveloper = realm?.object(ofType: Developer.self, forPrimaryKey: developer.idNumber) {
-                self.update {
-                    self.developers[index] = dbDeveloper
+            for (index, developer) in self.developers.enumerated() {
+                if let dbDeveloper = realm?.object(ofType: Developer.self, forPrimaryKey: developer.idNumber) {
+                    self.update {
+                        self.developers[index] = dbDeveloper
+                    }
+                    self.developers[index].update {
+                        self.developers[index].linkCount += 1
+                    }
+                } else {
+                    developer.linkCount = 1
+                    developer.add()
                 }
-                self.developers[index].update {
-                    self.developers[index].linkCount += 1
-                }
-            } else {
-                developer.linkCount = 1
-                developer.add()
             }
-        }
-        for (index, publisher) in self.publishers.enumerated() {
-            if let dbPublisher = realm?.object(ofType: Publisher.self, forPrimaryKey: publisher.idNumber) {
-                self.update {
-                    self.publishers[index] = dbPublisher
+            for (index, publisher) in self.publishers.enumerated() {
+                if let dbPublisher = realm?.object(ofType: Publisher.self, forPrimaryKey: publisher.idNumber) {
+                    self.update {
+                        self.publishers[index] = dbPublisher
+                    }
+                    self.publishers[index].update {
+                        self.publishers[index].linkCount += 1
+                    }
+                } else {
+                    publisher.linkCount = 1
+                    publisher.add()
                 }
-                self.publishers[index].update {
-                    self.publishers[index].linkCount += 1
-                }
-            } else {
-                publisher.linkCount = 1
-                publisher.add()
             }
-        }
-        for (index, genre) in self.genres.enumerated() {
-            if let dbGenre = realm?.object(ofType: Genre.self, forPrimaryKey: genre.idNumber) {
-                self.update {
-                    self.genres[index] = dbGenre
+            for (index, genre) in self.genres.enumerated() {
+                if let dbGenre = realm?.object(ofType: Genre.self, forPrimaryKey: genre.idNumber) {
+                    self.update {
+                        self.genres[index] = dbGenre
+                    }
+                    self.genres[index].update {
+                        self.genres[index].linkCount += 1
+                    }
+                } else {
+                    genre.linkCount = 1
+                    genre.add()
                 }
-                self.genres[index].update {
-                    self.genres[index].linkCount += 1
-                }
-            } else {
-                genre.linkCount = 1
-                genre.add()
             }
         }
         super.add()
@@ -666,33 +776,33 @@ class Game: Object {
     }
     
     func add(_ gameField: GameField?, _ platform: Platform?) {
-        let realm = try? Realm()
+        autoreleasepool {
+            let realm = try? Realm()
 
-        var dbGameField = realm?.object(ofType: GameField.self, forPrimaryKey: (gameField?.idNumber)!)
-        if dbGameField == nil {
-            gameField?.linkCount = 1
-            gameField?.add()
-            dbGameField = gameField
-        } else {
-            dbGameField?.update {
-                dbGameField?.linkCount += 1
+            var dbGameField = realm?.object(ofType: GameField.self, forPrimaryKey: (gameField?.idNumber)!)
+            if dbGameField == nil {
+                gameField?.linkCount = 1
+                gameField?.add()
+                dbGameField = gameField
+            } else {
+                dbGameField?.update {
+                    dbGameField?.linkCount += 1
+                }
             }
-        }
-        var dbPlatform = realm?.object(ofType: Platform.self, forPrimaryKey: (platform?.idNumber)!)
-        if dbPlatform == nil {
-            platform?.linkCount = 1
-            platform?.add()
-            dbPlatform = platform
-        } else {
-            dbPlatform?.update {
-                dbPlatform?.linkCount += 1
+            var dbPlatform = realm?.object(ofType: Platform.self, forPrimaryKey: (platform?.idNumber)!)
+            if dbPlatform == nil {
+                platform?.linkCount = 1
+                platform?.add()
+                dbPlatform = platform
+            } else {
+                dbPlatform?.update {
+                    dbPlatform?.linkCount += 1
+                }
             }
+            self.gameFields = dbGameField
+            self.platform   = dbPlatform
         }
-        self.gameFields = dbGameField
-        self.platform   = dbPlatform
-        try! realm?.write {
-            realm?.add(self, update: true)
-        }
+        super.add()
     }
     
     override func delete() {

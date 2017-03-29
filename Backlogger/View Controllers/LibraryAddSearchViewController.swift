@@ -250,22 +250,24 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
         self.tempGames[gameField.idNumber] = games
     }
     
-    func didSelectConsoles(_ consoles: [Int]) {
+    func didSelectConsoles(_ consoles: [Int], _ custom: [Int : Platform]?) {
         let selectedRow = self.currentlySelectedRow
         let currentGameId = (self.games?[selectedRow].idNumber)!
-        var gameList: [Game] = self.tempGames[currentGameId] ?? [Game]()
+        let gameList: [Game] = self.tempGames[currentGameId] ?? [Game]()
         var newGameList: [Game] = []
         var currentPlatformList: [Int] = [Int]()
         var gameField: GameField = (self.games?[selectedRow])!
+        var shouldDelete = true
         if consoles.count > 0 {
             for (index, game) in gameList.enumerated() {
                 if !consoles.contains((game.platform?.idNumber)!) {
-                    if index == (gameList.count - 1) {
+                    if index == (gameList.count - 1) && shouldDelete {
                         gameField = game.deleteWithGameFieldCopy()
                     } else {
                         game.delete()
                     }
                 } else {
+                    shouldDelete = false
                     newGameList.append(game)
                     currentPlatformList.append((game.platform?.idNumber)!)
                 }
@@ -274,7 +276,18 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
                 if !currentPlatformList.contains(platform) {
                     let newGameToSave = Game()
                     newGameToSave.inLibrary = true
-                    newGameToSave.add(gameField, self.platformDict[platform])
+                    if custom == nil {
+                        newGameToSave.add(gameField, self.platformDict[platform])
+                    } else {
+                        if custom?[platform] != nil {
+                            newGameToSave.add(gameField, custom?[platform])
+                        } else if self.platformDict[platform] != nil{
+                            newGameToSave.add(gameField, self.platformDict[platform])
+                        } else {
+                            NSLog("Could not add game to library: No platform")
+                            continue
+                        }
+                    }
                     newGameList.append(newGameToSave)
                 }
             }
@@ -291,13 +304,6 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
         }
         self.games?[selectedRow] = gameField
 
-    }
-    
-    func didSelectConsoles(withCustom custom: [Platform], _ consoles: [Int]) {
-        for newPlatform in custom {
-            self.platformDict[newPlatform.idNumber] = newPlatform
-        }
-        self.didSelectConsoles(consoles)
     }
 }
 
@@ -361,19 +367,7 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
                 cellView.artView?.image = (indexPath.item % 2) == 1 ? #imageLiteral(resourceName: "table_placeholder_dark") : #imageLiteral(resourceName: "table_placeholder_light")
             }
             let gameToShow = games[indexPath.row]
-            var rightLabelText = ""
-            if let releaseDate = gameToShow.releaseDate {
-                if !releaseDate.isEmpty {
-                    let index = releaseDate.index(releaseDate.startIndex, offsetBy: 4)
-                    rightLabelText = releaseDate.substring(to: index)
-                } else {
-                    let expectedDate = gameToShow.expectedDate
-                    if expectedDate > 0 {
-                        rightLabelText = String(expectedDate)
-                    }
-                    
-                }
-            }
+
             cellView.rightLabel?.text = ""
             
             if let name = gameToShow.name {
@@ -425,8 +419,7 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
             }
             // this isn't ideal since it will keep running even if the cell scrolls off of the screen
             // if we had lots of cells we'd want to stop this process when the cell gets reused
-            let cellViewToUpdate = self.gamesViewControllers[indexPath.row]
-            if cellViewToUpdate.imageSource == .Placeholder {
+            if cellView.imageSource == .Placeholder {
 
                 gameToShow.getImage {
                     result in
@@ -435,12 +428,12 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
                     } else {
                         // Save the image so we won't have to keep fetching it if they scroll
                         if let cellToUpdate = self.tableView?.cellForRow(at: indexPath) {
-                            UIView.transition(with: cellViewToUpdate.artView!,
+                            UIView.transition(with: cellView.artView!,
                                                       duration:0.5,
                                                       options: .transitionCrossDissolve,
-                                                      animations: { cellViewToUpdate.artView?.image = result.value! },
+                                                      animations: { cellView.artView?.image = result.value! },
                                                       completion: nil)
-                            cellViewToUpdate.imageSource = .Downloaded
+                            cellView.imageSource = .Downloaded
                             cellToUpdate.setNeedsLayout() // need to reload the view, which won't happen otherwise since this is in an async call
                         }
                     }
@@ -548,9 +541,8 @@ extension LibraryAddSearchViewController: TableViewCellViewDelegate {
         
         consoleSelection.delegate = self
         for platform in (self.games?[row].platforms)! {
-            let dict: [Int: String] = [platform.idNumber: platform.name!]
             self.platformDict[platform.idNumber] = platform
-            consoleSelection.consoles.append(dict)
+            consoleSelection.consoles.append(platform)
         }
         self.navigationController?.pushViewController(consoleSelection, animated: true)
     }

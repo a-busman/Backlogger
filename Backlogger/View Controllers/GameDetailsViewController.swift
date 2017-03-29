@@ -174,13 +174,17 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let realm = try! Realm()
-        print(Realm.Configuration.defaultConfiguration.fileURL?.absoluteString)
-        if let gameFieldId = self.gameFieldId {
-            if self._gameField == nil {
-                self._gameField = realm.object(ofType: GameField.self, forPrimaryKey: gameFieldId)
+        
+        autoreleasepool {
+            let realm = try? Realm()
+            print(Realm.Configuration.defaultConfiguration.fileURL?.absoluteString ?? "")
+            if let gameFieldId = self.gameFieldId {
+                if self._gameField == nil {
+                    self._gameField = realm?.object(ofType: GameField.self, forPrimaryKey: gameFieldId)
+                }
             }
         }
+        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         if self._state == .addToLibrary {
@@ -348,12 +352,16 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         }
         
         for uuid in stringsToFetch {
-            let gameResult = realm.objects(Game.self).filter("uuid = '\(uuid)'")
-            if let game = gameResult.first {
-                self._gameList.append(game)
-                self._selectedPlatforms.append((game.platform?.idNumber)!)
-                if self.platformDict[(game.platform?.idNumber)!] == nil {
-                    self.platformDict[(game.platform?.idNumber)!] = game.platform!
+            autoreleasepool {
+                let realm = try? Realm()
+            
+                let gameResult = realm?.objects(Game.self).filter("uuid = '\(uuid)'")
+                if let game = gameResult?.first {
+                    self._gameList.append(game)
+                    self._selectedPlatforms.append((game.platform?.idNumber)!)
+                    if self.platformDict[(game.platform?.idNumber)!] == nil && (game.platform?.custom)! == false{
+                        self.platformDict[(game.platform?.idNumber)!] = game.platform!
+                    }
                 }
             }
         }
@@ -439,23 +447,15 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: self.view.window)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: self.view.window)
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
         if self.isMovingFromParentViewController {
             self.delegate?.gamesCreated(gameField: self._gameField!, games: self._gameList)
         }
     }
     
     private func refreshPlatformDict() {
-        for i in 0..<(self._gameField?.platforms.count)! {
-            if let platform = self._gameField?.platforms[i] {
-                if platform.isInvalidated {
-                    print("invalid")
-                }
-                self.platformDict[platform.idNumber] = platform
-            }
+        self.platformDict = [Int : Platform]()
+        for platform in (self._gameField?.platforms)! {
+            self.platformDict[platform.idNumber] = platform
         }
     }
     
@@ -464,8 +464,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
             let consoleSelection = ConsoleSelectionTableViewController()
             consoleSelection.delegate = self
             for platform in self.platformDict {
-                let dict = [platform.key : platform.value.name!]
-                consoleSelection.consoles.append(dict)
+                consoleSelection.consoles.append(platform.value)
             }
             self.navigationController?.pushViewController(consoleSelection, animated: true)
         } else {
@@ -498,8 +497,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         consoleSelection.delegate = self
         consoleSelection.selected = self._selectedPlatforms
         for platform in self.platformDict {
-            let dict = [platform.key : platform.value.name!]
-            consoleSelection.consoles.append(dict)
+            consoleSelection.consoles.append(platform.value)
         }
         self.navigationController?.pushViewController(consoleSelection, animated: true)
     }
@@ -660,7 +658,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
                     self.completionImageView?.image = #imageLiteral(resourceName: "check-filled")
                 }
                 gameToModify?.update {
-                    gameToModify?.finished = true
+                    gameToModify?.finished = false
                 }
             } else {
                 self.finishedButton?.setImage(#imageLiteral(resourceName: "check-black"), for: .normal)
@@ -706,6 +704,10 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
             self.percentTimer?.invalidate()
             self.percentTimer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(hidePercentage), userInfo: nil, repeats: false)
         }
+        let gameToModify = self._gameList.first
+        gameToModify?.update {
+            gameToModify?.progress = newValue
+        }
         self.notesTextView?.resignFirstResponder()
     }
     
@@ -733,6 +735,8 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     @IBAction func ratingPanHandler(sender: UIPanGestureRecognizer) {
         let location = sender.location(in: self.ratingContainerView!)
         let starIndex = Int(location.x / ((self.ratingContainerView?.bounds.width)! / 5.0))
+        let gameToModify = self._gameList.first
+        var rating = 0
         if starIndex < 0 {
             self.firstStar?.image  = #imageLiteral(resourceName: "star-white")
             self.secondStar?.image = #imageLiteral(resourceName: "star-white")
@@ -745,30 +749,38 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
             self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
             self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
             self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            rating = 1
         } else if starIndex == 1 {
             self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
             self.secondStar?.image = #imageLiteral(resourceName: "star-black")
             self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
             self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
             self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            rating = 2
         } else if starIndex == 2 {
             self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
             self.secondStar?.image = #imageLiteral(resourceName: "star-black")
             self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
             self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
             self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            rating = 3
         } else if starIndex == 3 {
             self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
             self.secondStar?.image = #imageLiteral(resourceName: "star-black")
             self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
             self.fourthStar?.image = #imageLiteral(resourceName: "star-black")
             self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            rating = 4
         } else {
             self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
             self.secondStar?.image = #imageLiteral(resourceName: "star-black")
             self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
             self.fourthStar?.image = #imageLiteral(resourceName: "star-black")
             self.fifthStar?.image  = #imageLiteral(resourceName: "star-black")
+            rating = 5
+        }
+        gameToModify?.update {
+            gameToModify?.rating = rating
         }
         self.notesTextView?.resignFirstResponder()
     }
@@ -776,37 +788,47 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     @IBAction func ratingTapHandler(sender: UITapGestureRecognizer) {
         let location = sender.location(in: self.ratingContainerView!)
         let starIndex = Int(location.x / ((self.ratingContainerView?.bounds.width)! / 5.0))
-        
+        let gameToModify = self._gameList.first
+
+        var rating = 0
         if starIndex <= 0 {
             self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
             self.secondStar?.image = #imageLiteral(resourceName: "star-white")
             self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
             self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
             self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            rating = 1
         } else if starIndex == 1 {
             self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
             self.secondStar?.image = #imageLiteral(resourceName: "star-black")
             self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
             self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
             self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            rating = 2
         } else if starIndex == 2 {
             self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
             self.secondStar?.image = #imageLiteral(resourceName: "star-black")
             self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
             self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
             self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            rating = 3
         } else if starIndex == 3 {
             self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
             self.secondStar?.image = #imageLiteral(resourceName: "star-black")
             self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
             self.fourthStar?.image = #imageLiteral(resourceName: "star-black")
             self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            rating = 4
         } else {
             self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
             self.secondStar?.image = #imageLiteral(resourceName: "star-black")
             self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
             self.fourthStar?.image = #imageLiteral(resourceName: "star-black")
             self.fifthStar?.image  = #imageLiteral(resourceName: "star-black")
+            rating = 5
+        }
+        gameToModify?.update {
+            gameToModify?.rating = rating
         }
         self.notesTextView?.resignFirstResponder()
     }
@@ -834,57 +856,85 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         self.notesTextView?.resignFirstResponder()
     }
     
-    func didSelectConsoles(withCustom custom: [Platform], _ consoles: [Int]) {
-        for newPlatform in custom {
-            self.platformDict[newPlatform.idNumber] = newPlatform
-        }
-        self.didSelectConsoles(consoles)
-    }
-    
-    func didSelectConsoles(_ consoles: [Int]) {
+    func didSelectConsoles(_ consoles: [Int], _ custom: [Int : Platform]?) {
         self._selectedPlatforms = consoles
         var currentPlatformList: [Int] = [Int]()
         var newGameList = [Game]()
-        let gameFieldCopy = self._gameField?.deepCopy()
-        for i in 0..<self._gameList.count {
-            let game = self._gameList[i]
-            if !consoles.contains((game.platform?.idNumber)!) {
-                game.delete()
-            } else {
-                newGameList.append(game)
-                currentPlatformList.append((game.platform?.idNumber)!)
-            }
-        }
-        self._gameList = newGameList
-
+        var gameField = self._gameField
+        var shouldDelete = true
+        
         if consoles.count > 0 {
+            for (index, game) in self._gameList.enumerated() {
+                if !consoles.contains((game.platform?.idNumber)!) {
+                    if index == (self._gameList.count - 1) && shouldDelete {
+                        gameField = game.deleteWithGameFieldCopy()
+                    } else {
+                        game.delete()
+                    }
+                } else {
+                    shouldDelete = false
+                    newGameList.append(game)
+                    currentPlatformList.append((game.platform?.idNumber)!)
+                }
+            }
+            self._gameField = gameField
+            self.refreshPlatformDict()
+            
             var platformString = ""
 
             if consoles.count > 1 {
-                for platform in consoles[0..<consoles.endIndex - 1] {
-                    if !currentPlatformList.contains(platform) {
+                for platformId in consoles[0..<consoles.endIndex - 1] {
+                    var platform: Platform?
+                    if custom == nil {
+                        platform = self.platformDict[platformId]
+                    } else {
+                        if custom?[platformId] != nil {
+                            platform = custom?[platformId]
+                        } else if self.platformDict[platformId] != nil {
+                            platform = self.platformDict[platformId]
+                        } else {
+                            NSLog("Could not get Platform id: \(platformId)")
+                            continue
+                        }
+                    }
+                    if !currentPlatformList.contains(platformId) {
                         let newGameToSave = Game()
                         newGameToSave.inLibrary = true
-                        self._gameList.append(newGameToSave)
-                        newGameToSave.add(self._gameField, self.platformDict[platform])
+                        newGameToSave.add(gameField, platform)
+                        newGameList.append(newGameToSave)
                     }
-                    if (self.platformDict[platform]?.name?.characters.count)! < 10 {
-                        platformString += (self.platformDict[platform]?.name)! + " • "
+                    if (platform?.name?.characters.count)! < 10 {
+                        platformString += (platform?.name)! + " • "
                     } else {
-                        platformString += (self.platformDict[platform]?.abbreviation)! + " • "
+                        platformString += (platform?.abbreviation)! + " • "
                     }
                 }
             }
-            if !currentPlatformList.contains(consoles[consoles.endIndex - 1]) {
+            let platformId = consoles[consoles.endIndex - 1]
+            var platform: Platform?
+            
+            if custom == nil {
+                platform = self.platformDict[platformId]
+            } else {
+                if custom?[platformId] != nil {
+                    platform = custom?[platformId]
+                } else if self.platformDict[platformId] != nil {
+                    platform = self.platformDict[platformId]
+                } else {
+                    NSLog("Could not get Platform id: \(platformId)")
+                }
+            }
+            
+            if !currentPlatformList.contains(platformId) {
                 let newGameToSave = Game()
                 newGameToSave.inLibrary = true
-                _gameList.append(newGameToSave)
-                newGameToSave.add(self._gameField, self.platformDict[consoles[consoles.endIndex - 1]])
+                newGameToSave.add(gameField, platform)
+                newGameList.append(newGameToSave)
             }
-            if (self.platformDict[consoles[consoles.endIndex - 1]]?.name?.characters.count)! < 10 {
-                platformString += (self.platformDict[consoles[consoles.endIndex - 1]]?.name)!
+            if (platform?.name?.characters.count)! < 10 {
+                platformString += (platform?.name)!
             } else {
-                platformString += (self.platformDict[consoles[consoles.endIndex - 1]]?.abbreviation)!
+                platformString += (platform?.abbreviation)!
             }
             UIView.setAnimationsEnabled(false)
             self.platformButton?.setTitle(platformString, for: .normal)
@@ -892,6 +942,9 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
             self.platformButton?.isEnabled = true
             if self._state == .addToLibrary {
                 self.transitionToRemove()
+                if consoles.count == 1 {
+                    self.showStatsButton()
+                }
             } else {
                 if consoles.count > 1 {
                     self.hideStatsButton()
@@ -900,10 +953,14 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
                 }
             }
         } else {
-            if self._gameList.count == 0 {
-                self._gameField = gameFieldCopy
+            for (index, game) in self._gameList.enumerated() {
+                if index == (self._gameList.count - 1) {
+                    gameField = game.deleteWithGameFieldCopy()
+                } else {
+                    game.delete()
+                }
             }
-            self.platformDict = [Int : Platform]()
+            self._gameField = gameField
             self.refreshPlatformDict()
             UIView.setAnimationsEnabled(false)
             self.platformButton?.setTitle("", for: .normal)
@@ -911,6 +968,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
             self.platformButton?.isEnabled = false
             self.transitionToAdd()
         }
+        self._gameList = newGameList
     }
 }
 

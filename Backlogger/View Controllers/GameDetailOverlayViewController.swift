@@ -72,8 +72,7 @@ class GameDetailOverlayViewController: UIViewController {
                         platformString += (platforms.last?.abbreviation)!
                     }
                 }
-                self.platformLabel?.text = platforms[0].name
-
+                self.platformLabel?.text = (self._game?.platform?.name)!
             }
             self.platformsLabel?.text = platformString
             
@@ -128,6 +127,16 @@ class GameDetailOverlayViewController: UIViewController {
                     })
                 }
             }
+            completionPercentage?.text = "\((newGame?.progress)!)%"
+            progressSliderView?.value = Float((newGame?.progress)!)
+            
+            if (newGame?.finished)! == true {
+                self.completionCheckImage?.image = #imageLiteral(resourceName: "check_light")
+                self.completionLabel?.text = "Finished"
+            } else {
+                self.completionCheckImage?.image = #imageLiteral(resourceName: "check_light_filled")
+                self.completionLabel?.text = "In Progress"
+            }
         }
     }
     
@@ -141,6 +150,16 @@ class GameDetailOverlayViewController: UIViewController {
         self.scrollView?.contentSize = (self.contentView?.bounds.size)!
     }
     
+    func updateFinished() {
+        if (self._game?.finished)! == true {
+            self.completionCheckImage?.image = #imageLiteral(resourceName: "check_light")
+            self.completionLabel?.text = "In Progress"
+        } else {
+            self.completionCheckImage?.image = #imageLiteral(resourceName: "check_light_filled")
+            self.completionLabel?.text = "Finished"
+        }
+    }
+    
     @IBAction func handleSlider(sender: UISlider) {
         let remainder = Int(sender.value) % 10
         var newValue: Int = 0
@@ -152,6 +171,9 @@ class GameDetailOverlayViewController: UIViewController {
         sender.value = Float(newValue)
 
         completionPercentage?.text = "\(newValue)%"
+        self._game?.update {
+            self._game?.progress = newValue
+        }
     }
     
     @IBAction func tappedDetails(sender: UITapGestureRecognizer) {

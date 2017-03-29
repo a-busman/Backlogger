@@ -15,10 +15,13 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
     @IBOutlet weak var addBarButtonItem:  UIBarButtonItem?
     @IBOutlet weak var pageControl:       UIPageControl?
     @IBOutlet weak var collectionView:    UICollectionView?
+    @IBOutlet weak var addBackgroundView: UIView?
     
     var flowLayout: TopAlignedCollectionViewFlowLayout {
         return self.collectionView?.collectionViewLayout as! TopAlignedCollectionViewFlowLayout
     }
+    
+    static var shouldRefresh = false
     
     var currentIndex = 0
     var inEditMode = false
@@ -32,36 +35,44 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
     
     var orderedViewControllers: [NowPlayingGameViewController] = []
     var games: [Game] = []
-    
-    //var gameIds: [Int] = [2600, 19125, 12572, 48727]
-    var gameIds: [Int] = []
+    var gameIds: [String] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let realm = try! Realm()
-        self.pageControl?.numberOfPages = orderedViewControllers.count
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+
         self.longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(NowPlayingViewController.handleLongGesture))
         self.collectionView?.addGestureRecognizer(longPressGesture!)
         self.longPressGesture?.isEnabled = false
-        self.games = Array(realm.objects(Game.self).filter("nowPlaying = true"))
-        
-        for i in 0..<self.games.count {
-            let url = GameField.buildDetailUrl(fromId: gameIds[i])
-            GameField.getGameDetail(withUrl: url, { result in
-                if let error = result.error {
-                    print("error in getting game detail: \(error.localizedDescription)")
-                    return
-                }
-                let gameField = result.value!
-                let game = Game()
-                game.gameFields = gameField
-                self.games.append(game)
-                let vc = NowPlayingGameViewController(gameId: "\(game.uuid)")
-                self.orderedViewControllers.append(vc)
-                vc.game = self.games.last
-                vc.addDetails()
-            })
+        autoreleasepool {
+            let realm = try? Realm()
+            self.games = Array(realm!.objects(Game.self).filter("nowPlaying = true"))
         }
+        var newGameIds = [String]()
+        if self.games.count > 0 {
+            self.addBackgroundView?.isHidden = true
+        } else {
+            self.addBackgroundView?.isHidden = false
+        }
+        
+        for game in self.games {
+            newGameIds.append(game.uuid)
+        }
+        if !NowPlayingViewController.containSameElements(newGameIds, self.gameIds) {
+            self.orderedViewControllers.removeAll()
+            for game in self.games {
+                let vc = NowPlayingGameViewController()
+                vc.game = game
+                
+                self.orderedViewControllers.append(vc)
+                vc.addDetails()
+            }
+            self.gameIds = newGameIds
+            self.collectionView?.reloadData()
+        }
+        self.pageControl?.numberOfPages = orderedViewControllers.count
     }
     
     override func viewDidLayoutSubviews() {
@@ -70,6 +81,13 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
         flowLayout.itemSize = size
         collectionView?.contentInset.top = 0.0
         collectionView?.contentInset.bottom = 0.0
+    }
+    
+    fileprivate class func containSameElements<T: Comparable>(_ array1: [T], _ array2: [T]) -> Bool {
+        guard array1.count == array2.count else {
+            return false
+        }
+        return array1.sorted() == array2.sorted()
     }
     
     func handleLongGesture(gesture: UILongPressGestureRecognizer) {
@@ -228,7 +246,7 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
     
     func didDelete(viewController: NowPlayingGameViewController, uuid: String) {
         for i in 0..<orderedViewControllers.count {
-            if orderedViewControllers[i].uuid == uuid {
+            if orderedViewControllers[i].game?.uuid == uuid {
                 orderedViewControllers.remove(at: i)
                 self.games.remove(at: i)
                 self.collectionView?.deleteItems(at: [IndexPath(item: i, section: 0)])

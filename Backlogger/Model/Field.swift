@@ -56,20 +56,26 @@ class Field: Object {
 
 extension Object {
     func add() {
-        let realm = try? Realm()
-        try! realm?.write {
-            realm?.add(self, update: true)
+        autoreleasepool {
+            let realm = try? Realm()
+            try! realm?.write {
+                realm?.add(self, update: true)
+            }
         }
     }
     func update(updateBlock: () -> ()) {
-        let realm = try? Realm()
-        try! realm?.write(updateBlock)
+        autoreleasepool {
+            let realm = try? Realm()
+            try! realm?.write(updateBlock)
+        }
     }
     
     func delete() {
-        let realm = try? Realm()
-        try! realm?.write {
-            realm?.delete(self)
+        autoreleasepool {
+            let realm = try? Realm()
+            try! realm?.write {
+                realm?.delete(self)
+            }
         }
     }
 }

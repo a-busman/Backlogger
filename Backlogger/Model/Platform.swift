@@ -14,14 +14,19 @@ import Alamofire
 enum PlatformFields: String {
     case Abbreviation  = "abbreviation"
     case Company       = "company"
+    case Image         = "image"
 }
 
 class Platform: Field {
-    dynamic var abbreviation: String?  = nil
-    dynamic var company:      Company? = nil
+    dynamic var abbreviation: String?    = nil
+    dynamic var company:      Company?   = nil
+    dynamic var image:        ImageList? = nil
+    dynamic var custom:       Bool       = false
     
-    private var gettingCompany: Bool = false
-    private var tempCompanyJson: [String : Any] = [:]
+    let ownedGames: LinkingObjects<Game> = LinkingObjects(fromType: Game.self, property: "platform")
+    
+    private var gettingDetails: Bool = false
+    private var tempJson: [String : Any] = [:]
     
     required init(json: [String : Any]) {
         self.abbreviation  = json[PlatformFields.Abbreviation.rawValue] as? String
@@ -45,7 +50,7 @@ class Platform: Field {
     }
     
     override static func ignoredProperties() -> [String] {
-        return ["gettingCompany", "tempCompanyJson"]
+        return ["gettingDetails", "tempJson"]
     }
     
     func deepCopy() -> Platform {
@@ -61,25 +66,27 @@ class Platform: Field {
     }
     
     func syncWithRealm() {
-        let realm = try? Realm()
-        if let company = self.company {
-            let companyId = company.idNumber
-            let dbCompany = realm?.object(ofType: Company.self, forPrimaryKey: companyId)
-            if dbCompany != nil {
-                self.company = dbCompany
-            } else {
-                self.company?.linkCount = 0
+        autoreleasepool {
+            let realm = try? Realm()
+            if let company = self.company {
+                let companyId = company.idNumber
+                let dbCompany = realm?.object(ofType: Company.self, forPrimaryKey: companyId)
+                if dbCompany != nil {
+                    self.company = dbCompany
+                } else {
+                    self.company?.linkCount = 0
+                }
             }
         }
     }
     
-    func updateCompanyDetails(_ completionHandler: @escaping (Result<Any>) -> Void) {
-        self.gettingCompany = true
+    func updateDetails(_ completionHandler: @escaping (Result<Any>) -> Void) {
+        self.gettingDetails = true
         if let apiDetailUrl = self.apiDetailUrl {
-            let url = apiDetailUrl + "?api_key=" + GAME_API_KEY + "&format=json&field_list=company"
+            let url = apiDetailUrl + "?api_key=" + GAME_API_KEY + "&format=json&field_list=company,image"
             Alamofire.request(url)
                 .responseJSON { response in
-                    self.gettingCompany = false
+                    self.gettingDetails = false
                     if let error = response.result.error {
                         completionHandler(.failure(error))
                         return
@@ -99,14 +106,10 @@ class Platform: Field {
                     results.statusCode = json["status_code"] as? Int
                     results.url = response.request?.mainDocumentURL?.absoluteString
                     if let jsonResults = json["results"] as? [String: Any] {
-                        if let jsonCompany = jsonResults[PlatformFields.Company.rawValue] as? [String : Any] {
-                            self.tempCompanyJson = jsonCompany
-                            completionHandler(.success(BackendError.objectSerialization(reason: "success")))
-                        } else {
-                            completionHandler(.failure(BackendError.objectSerialization(reason: "Could not convert company")))
-                        }
+                        self.tempJson = jsonResults
+                        completionHandler(.success(BackendError.objectSerialization(reason: "success")))
                     } else {
-                        completionHandler(.failure(BackendError.objectSerialization(reason: "could not platform")))
+                        completionHandler(.failure(BackendError.objectSerialization(reason: "could not get platform details")))
                     }
             }
         } else {
@@ -116,44 +119,68 @@ class Platform: Field {
     }
     
     override func add() {
-        let realm = try? Realm()
-        if self.company != nil {
-            if let dbCompany = realm?.object(ofType: Company.self, forPrimaryKey: (self.company?.idNumber)!) {
-                self.update {
-                    self.company = dbCompany
-                }
-                self.company?.update {
-                    self.company?.linkCount += 1
-                }
-            } else {
-                self.company?.linkCount = 1
-                self.company?.add()
-            }
-            super.add()
-        }
-        if self.company == nil && !self.gettingCompany {
-            self.updateCompanyDetails { results in
-                if let error = results.error {
-                    print(error.localizedDescription)
+        autoreleasepool {
+            let realm = try? Realm()
+            if self.company != nil {
+                if let dbCompany = realm?.object(ofType: Company.self, forPrimaryKey: (self.company?.idNumber)!) {
+                    self.update {
+                        self.company = dbCompany
+                    }
+                    self.company?.update {
+                        self.company?.linkCount += 1
+                    }
                 } else {
-                    if let dbCompany = realm?.object(ofType: Company.self, forPrimaryKey: Field.idNumber(fromJson: self.tempCompanyJson)) {
-                        self.update {
-                            self.company = dbCompany
-                        }
-                        self.company?.update {
-                            self.company?.linkCount += 1
-                        }
-                    } else {
-                        self.update {
-                            self.company = Company(json: self.tempCompanyJson)
-                        }
-                        self.company?.update {
-                            self.company?.linkCount = 1
-                        }
-                        self.company?.add()
+                    self.company?.linkCount = 1
+                    self.company?.add()
+                }
+                super.add()
+            }
+            if self.image != nil {
+                if let dbImage = realm?.object(ofType: ImageList.self, forPrimaryKey: "\(self.idNumber) platform") {
+                    self.update {
+                        self.image = dbImage
                     }
                 }
                 super.add()
+            }
+            if (self.company == nil || self.image == nil) && !self.gettingDetails {
+                self.updateDetails { results in
+                    if let error = results.error {
+                        print(error.localizedDescription)
+                    } else {
+                        if let companyJson = self.tempJson[PlatformFields.Company.rawValue] as? [String: Any] {
+                            if let dbCompany = realm?.object(ofType: Company.self, forPrimaryKey: Field.idNumber(fromJson: companyJson)) {
+                                if self.company == nil || self.company?.idNumber != dbCompany.idNumber {
+                                    self.update {
+                                        self.company = dbCompany
+                                    }
+                                    self.company?.update {
+                                        self.company?.linkCount += 1
+                                    }
+                                }
+                            } else {
+                                self.update {
+                                    self.company = Company(json: companyJson)
+                                }
+                                self.company?.update {
+                                    self.company?.linkCount = 1
+                                }
+                                self.company?.add()
+                            }
+                        }
+                        if let imageJson = self.tempJson[PlatformFields.Image.rawValue] as? [String: Any] {
+                            var imageObject = realm?.object(ofType: ImageList.self, forPrimaryKey: "\(self.idNumber) platform")
+                            if imageObject == nil {
+                                imageObject = ImageList(json: imageJson)
+                                imageObject?.id = "\(self.idNumber) platform"
+                            }
+                            self.update {
+                                self.image = imageObject
+                            }
+                        }
+                    }
+                    super.add()
+                }
             }
         }
     }
@@ -166,6 +193,9 @@ class Platform: Field {
             if company.linkCount <= 0 {
                 company.delete()
             }
+        }
+        if let image = self.image {
+            image.delete()
         }
         super.delete()
     }

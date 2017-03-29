@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Segues with Peek and Pop" minToolsVersion="7.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -46,7 +46,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="gHQ-JI-FLq" id="48K-F2-Ybp">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -75,7 +75,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bHV-tF-IEG" id="Rhq-s1-hBU">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -139,45 +139,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Aj4-LH-N0b">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <inset key="scrollIndicatorInsets" minX="0.0" minY="44" maxX="0.0" maxY="0.0"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Yzq-ne-rro">
-                                    <size key="itemSize" width="50" height="189"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="44" maxX="0.0" maxY="0.0"/>
-                                </collectionViewFlowLayout>
-                                <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="console_cell" id="StH-kl-vd9">
-                                        <rect key="frame" x="0.0" y="44" width="50" height="189"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="189"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </view>
-                                        <connections>
-                                            <segue destination="wfS-Ip-fau" kind="show" identifier="collection_game_list" id="aSx-O5-7eY"/>
-                                        </connections>
-                                    </collectionViewCell>
-                                </cells>
-                                <connections>
-                                    <outlet property="dataSource" destination="NHJ-P8-wb8" id="5Hz-oS-xFW"/>
-                                    <outlet property="delegate" destination="NHJ-P8-wb8" id="3IF-bM-mY1"/>
-                                </connections>
-                            </collectionView>
-                            <searchBar contentMode="redraw" placeholder="Library" translatesAutoresizingMaskIntoConstraints="NO" id="IVb-Ky-76x">
-                                <rect key="frame" x="0.0" y="64" width="375" height="44"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="Acz-tZ-fH1"/>
-                                </constraints>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="search" enablesReturnKeyAutomatically="YES"/>
-                                <connections>
-                                    <outlet property="delegate" destination="NHJ-P8-wb8" id="sr7-es-l1n"/>
-                                </connections>
-                            </searchBar>
-                            <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="BIX-jT-PEG">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="BIX-jT-PEG">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
@@ -198,24 +160,45 @@
                                     <outlet property="delegate" destination="NHJ-P8-wb8" id="tmg-g8-71j"/>
                                 </connections>
                             </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZL7-7b-oHA">
+                                <rect key="frame" x="0.0" y="64" width="375" height="554"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="large_plus" translatesAutoresizingMaskIntoConstraints="NO" id="AIa-X4-6ZA">
+                                        <rect key="frame" x="117.5" y="207.5" width="140" height="140"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="AIa-X4-6ZA" secondAttribute="height" id="XG2-vp-eMC"/>
+                                            <constraint firstAttribute="width" constant="140" id="bDO-4a-pTE"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add games to your Library" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="frB-db-s6E">
+                                        <rect key="frame" x="87" y="352.5" width="202" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.7725490196" green="0.77647058820000003" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="AIa-X4-6ZA" firstAttribute="centerX" secondItem="ZL7-7b-oHA" secondAttribute="centerX" id="Dsl-lU-8Ox"/>
+                                    <constraint firstItem="frB-db-s6E" firstAttribute="top" secondItem="AIa-X4-6ZA" secondAttribute="bottom" constant="5" id="Ge7-Or-T1y"/>
+                                    <constraint firstItem="AIa-X4-6ZA" firstAttribute="centerY" secondItem="ZL7-7b-oHA" secondAttribute="centerY" id="HbM-WX-zlR"/>
+                                    <constraint firstItem="frB-db-s6E" firstAttribute="centerX" secondItem="AIa-X4-6ZA" secondAttribute="centerX" id="lDP-PY-nQf"/>
+                                </constraints>
+                            </view>
                         </subviews>
-                        <color key="backgroundColor" red="0.90071403589999999" green="0.90071403589999999" blue="0.90071403589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.92156862745098034" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="IVb-Ky-76x" firstAttribute="trailing" secondItem="o8r-lV-E2y" secondAttribute="trailing" id="1Ky-t1-9sv"/>
                             <constraint firstItem="BIX-jT-PEG" firstAttribute="centerX" secondItem="o8r-lV-E2y" secondAttribute="centerX" id="2dD-Sh-qVe"/>
-                            <constraint firstItem="Aj4-LH-N0b" firstAttribute="width" secondItem="o8r-lV-E2y" secondAttribute="width" id="3zF-Q6-1yH"/>
-                            <constraint firstItem="Aj4-LH-N0b" firstAttribute="centerX" secondItem="o8r-lV-E2y" secondAttribute="centerX" id="Dtz-DC-s2n"/>
-                            <constraint firstItem="Aj4-LH-N0b" firstAttribute="centerY" secondItem="o8r-lV-E2y" secondAttribute="centerY" id="OzX-XA-cBQ"/>
+                            <constraint firstItem="ZL7-7b-oHA" firstAttribute="bottom" secondItem="ESV-tE-ttt" secondAttribute="top" id="I2B-Vq-Ptt"/>
+                            <constraint firstItem="ZL7-7b-oHA" firstAttribute="leading" secondItem="o8r-lV-E2y" secondAttribute="leading" id="TJ4-rd-kT2"/>
                             <constraint firstItem="BIX-jT-PEG" firstAttribute="width" secondItem="o8r-lV-E2y" secondAttribute="width" id="YCf-Us-hRL"/>
-                            <constraint firstItem="IVb-Ky-76x" firstAttribute="top" secondItem="Rmb-sC-7Ub" secondAttribute="bottom" id="YMC-IY-7D9"/>
+                            <constraint firstItem="ZL7-7b-oHA" firstAttribute="trailing" secondItem="o8r-lV-E2y" secondAttribute="trailing" id="aXq-kK-nAw"/>
+                            <constraint firstItem="ZL7-7b-oHA" firstAttribute="top" secondItem="Rmb-sC-7Ub" secondAttribute="bottom" id="b11-Bw-mRa"/>
                             <constraint firstItem="BIX-jT-PEG" firstAttribute="centerY" secondItem="o8r-lV-E2y" secondAttribute="centerY" id="iRJ-aA-l0f"/>
-                            <constraint firstItem="Aj4-LH-N0b" firstAttribute="height" secondItem="o8r-lV-E2y" secondAttribute="height" id="n3O-hC-uCJ"/>
                             <constraint firstItem="BIX-jT-PEG" firstAttribute="height" secondItem="o8r-lV-E2y" secondAttribute="height" id="oLH-yi-4P9"/>
-                            <constraint firstItem="IVb-Ky-76x" firstAttribute="leading" secondItem="o8r-lV-E2y" secondAttribute="leading" id="seM-uw-Mid"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Library" id="DbQ-cs-g3k">
-                        <barButtonItem key="leftBarButtonItem" image="list_icon" id="2zn-Ad-TPb">
+                        <barButtonItem key="leftBarButtonItem" image="filter" id="2zn-Ad-TPb">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
                                 <action selector="leftBarButtonTappedWithSender:" destination="NHJ-P8-wb8" id="n3K-aM-JTP"/>
@@ -229,8 +212,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="collectionSearchBar" destination="IVb-Ky-76x" id="zw8-9v-ydf"/>
-                        <outlet property="collectionView" destination="Aj4-LH-N0b" id="F07-fO-u7i"/>
+                        <outlet property="addBackgroundView" destination="ZL7-7b-oHA" id="1xP-o9-5tM"/>
                         <outlet property="tableView" destination="BIX-jT-PEG" id="T33-jB-Ifl"/>
                     </connections>
                 </viewController>
@@ -813,13 +795,13 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                                 <blurEffect style="extraLight"/>
                             </visualEffectView>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="thQ-co-ZR8">
-                                <rect key="frame" x="0.0" y="249" width="375" height="418"/>
+                                <rect key="frame" x="0.0" y="249" width="375" height="369"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="ydf-rd-4fg">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="418"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="369"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="djC-wv-i8j">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="418"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="369"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zpl-ms-vop">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="401.5"/>
@@ -933,7 +915,6 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="240" id="q40-qb-S7f"/>
                                                             </constraints>
-                                                            <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                             <userDefinedRuntimeAttributes>
@@ -1114,7 +1095,7 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
         <!--Console Selection Table View Controller-->
         <scene sceneID="eW9-7N-0Gf">
             <objects>
-                <tableViewController id="hKz-dl-lyd" customClass="ConsoleSelectionTableViewController" customModule="Backlogger" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="Console Selection" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hKz-dl-lyd" userLabel="Console Selection Table View Controller" customClass="ConsoleSelectionTableViewController" customModule="Backlogger" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="nVI-sE-POF">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1124,7 +1105,7 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="M6U-6b-l3J" id="VLs-jD-CFP">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -1317,30 +1298,41 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                                     <constraint firstItem="g3B-5A-f1o" firstAttribute="bottom" secondItem="bMs-wG-lFu" secondAttribute="bottom" id="oX6-nb-o1u"/>
                                 </constraints>
                             </view>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="large_plus" translatesAutoresizingMaskIntoConstraints="NO" id="bXY-rk-tHv">
-                                <rect key="frame" x="117" y="263" width="140" height="140"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MQB-Bd-1ZK">
+                                <rect key="frame" x="0.0" y="64" width="375" height="554"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="large_plus" translatesAutoresizingMaskIntoConstraints="NO" id="bXY-rk-tHv">
+                                        <rect key="frame" x="117.5" y="207" width="140" height="140"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="140" id="6YW-zi-fMV"/>
+                                            <constraint firstAttribute="width" secondItem="bXY-rk-tHv" secondAttribute="height" id="d75-0r-h2j"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add games from your Library" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Blg-hp-3ac">
+                                        <rect key="frame" x="76.5" y="352" width="222.5" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.7725490196" green="0.77647058820000003" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="140" id="6YW-zi-fMV"/>
-                                    <constraint firstAttribute="width" secondItem="bXY-rk-tHv" secondAttribute="height" id="d75-0r-h2j"/>
+                                    <constraint firstItem="bXY-rk-tHv" firstAttribute="centerX" secondItem="MQB-Bd-1ZK" secondAttribute="centerX" id="Rl2-Tr-VXV"/>
+                                    <constraint firstItem="bXY-rk-tHv" firstAttribute="centerY" secondItem="MQB-Bd-1ZK" secondAttribute="centerY" id="SL6-K0-PVt"/>
+                                    <constraint firstItem="Blg-hp-3ac" firstAttribute="top" secondItem="bXY-rk-tHv" secondAttribute="bottom" constant="5" id="ipY-9U-jPG"/>
+                                    <constraint firstItem="Blg-hp-3ac" firstAttribute="centerX" secondItem="bXY-rk-tHv" secondAttribute="centerX" id="vhB-uL-nPn"/>
                                 </constraints>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add games from your Library" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Blg-hp-3ac">
-                                <rect key="frame" x="76" y="408" width="222.5" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.7725490196" green="0.77647058820000003" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.92146831750000002" green="0.92162626979999995" blue="0.92145836349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="Blg-hp-3ac" firstAttribute="top" secondItem="bXY-rk-tHv" secondAttribute="bottom" constant="5" id="4Lb-ds-Jl0"/>
-                            <constraint firstItem="Blg-hp-3ac" firstAttribute="centerX" secondItem="bXY-rk-tHv" secondAttribute="centerX" id="BJS-wf-RGy"/>
                             <constraint firstItem="bMs-wG-lFu" firstAttribute="bottom" secondItem="tG9-su-aib" secondAttribute="top" id="IMt-uY-Jas"/>
-                            <constraint firstItem="bXY-rk-tHv" firstAttribute="centerX" secondItem="8rD-HO-R0s" secondAttribute="centerX" id="KDY-dL-RjD"/>
+                            <constraint firstItem="MQB-Bd-1ZK" firstAttribute="bottom" secondItem="bMs-wG-lFu" secondAttribute="bottom" id="KRr-eL-puG"/>
+                            <constraint firstItem="MQB-Bd-1ZK" firstAttribute="leading" secondItem="bMs-wG-lFu" secondAttribute="leading" id="Mef-S8-sy2"/>
                             <constraint firstItem="bMs-wG-lFu" firstAttribute="top" secondItem="CAd-pj-JZM" secondAttribute="bottom" id="PaH-xC-bfV"/>
                             <constraint firstItem="bMs-wG-lFu" firstAttribute="trailing" secondItem="8rD-HO-R0s" secondAttribute="trailing" id="cRQ-h3-hoC"/>
                             <constraint firstItem="bMs-wG-lFu" firstAttribute="leading" secondItem="8rD-HO-R0s" secondAttribute="leading" id="fMf-Nl-Dai"/>
-                            <constraint firstItem="bXY-rk-tHv" firstAttribute="centerY" secondItem="8rD-HO-R0s" secondAttribute="centerY" id="zxF-ZT-aiq"/>
+                            <constraint firstItem="MQB-Bd-1ZK" firstAttribute="top" secondItem="bMs-wG-lFu" secondAttribute="top" id="mdf-0Y-rPb"/>
+                            <constraint firstItem="MQB-Bd-1ZK" firstAttribute="trailing" secondItem="bMs-wG-lFu" secondAttribute="trailing" id="qWf-wz-AFl"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Now Playing" id="cHN-6A-2RY">
@@ -1355,6 +1347,7 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="addBackgroundView" destination="MQB-Bd-1ZK" id="kay-2u-z5J"/>
                         <outlet property="addBarButtonItem" destination="xgf-6X-uQN" id="XQF-s8-MQE"/>
                         <outlet property="collectionView" destination="utv-38-NNd" id="prV-vK-AYZ"/>
                         <outlet property="editBarButtonItem" destination="0sM-0E-Gbf" id="Fon-qO-5ss"/>
@@ -1371,11 +1364,11 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
         <image name="check-empty" width="10" height="10"/>
         <image name="check-empty-black" width="25" height="25"/>
         <image name="controller_icon" width="25" height="25"/>
+        <image name="filter" width="25" height="25"/>
         <image name="heart-empty" width="30" height="30"/>
         <image name="info_image_placeholder" width="128" height="128"/>
         <image name="large_plus" width="200" height="200"/>
         <image name="library" width="25" height="25"/>
-        <image name="list_icon" width="22" height="17"/>
         <image name="more" width="30" height="30"/>
         <image name="play-black" width="36" height="36"/>
         <image name="playlists" width="25" height="25"/>
@@ -1383,8 +1376,7 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
         <image name="star-white" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="iyR-s8-c7z"/>
-        <segue reference="I95-sA-tJG"/>
-        <segue reference="aSx-O5-7eY"/>
+        <segue reference="bAt-KP-orA"/>
+        <segue reference="dQU-AM-wLF"/>
     </inferredMetricsTieBreakers>
 </document>

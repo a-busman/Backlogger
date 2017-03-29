@@ -8,23 +8,15 @@
 
 import UIKit
 
-class GameTableViewController: UIViewController {
+class GameTableViewController: UIViewController, GameDetailsViewControllerDelegate {
     
     @IBOutlet weak var tableView: UITableView?
     
-    var games: [Game] = [
-    ]
-    var consoles: [Console] = [Console(title: "GameCube", company: "Nintendo", releaseDate: "2001", gameCount: "1382", image: #imageLiteral(resourceName: "gc-logo")),
-                               Console(title: "GameCube", company: "Nintendo", releaseDate: "2001", gameCount: "1382", image: #imageLiteral(resourceName: "gc-logo")),
-                               Console(title: "GameCube", company: "Nintendo", releaseDate: "2001", gameCount: "1382", image: #imageLiteral(resourceName: "gc-logo")),
-                               Console(title: "GameCube", company: "Nintendo", releaseDate: "2001", gameCount: "1382", image: #imageLiteral(resourceName: "gc-logo")),
-                               Console(title: "GameCube", company: "Nintendo", releaseDate: "2001", gameCount: "1382", image: #imageLiteral(resourceName: "gc-logo")),
-                               Console(title: "GameCube", company: "Nintendo", releaseDate: "2001", gameCount: "1382", image: #imageLiteral(resourceName: "gc-logo")),
-                               Console(title: "GameCube", company: "Nintendo", releaseDate: "2001", gameCount: "1382", image: #imageLiteral(resourceName: "gc-logo")),
-                               Console(title: "GameCube", company: "Nintendo", releaseDate: "2001", gameCount: "1382", image: #imageLiteral(resourceName: "gc-logo"))]
+    var games: [Game] = []
+    
+    var currentlySelectedRow = 0
     
     let tableReuseIdentifier = "game_cell"
-    var count = 6
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.tintColor = .white
@@ -35,6 +27,15 @@ class GameTableViewController: UIViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if games.count < 1 {
+            let _ = self.navigationController?.popViewController(animated: true)
+            return
+        }
+        self.tableView?.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -79,27 +80,48 @@ class GameTableViewController: UIViewController {
     }
     */
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "library_show_details" {
+            if let cell = sender as? UITableViewCell {
+                let i = (self.tableView?.indexPath(for: cell)?.row)!
+                let vc = segue.destination as! GameDetailsViewController
+                var stringList = [String]()
+                let gameList = [self.games[i]]
+                
+                self.currentlySelectedRow = i
+                for game in gameList {
+                    stringList.append(game.uuid)
+                }
+                
+                //self.searchBar?.resignFirstResponder()
+                
+                vc.stringsToFetch = stringList
+                vc.gameFieldId = self.games[i].gameFields?.idNumber
+                vc.gameField = self.games[i].gameFields
+                vc.state = .inLibrary
+                vc.delegate = self
+            }
+        }
     }
-    */
-
+    func gamesCreated(gameField: GameField, games: [Game]) {
+        self.games = games
+    }
 }
 
 extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return count
+        return games.count
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: tableReuseIdentifier) as! TableViewCell
         let cellView = TableViewCellView()
+        let game = self.games[indexPath.row]
         cellView.addButtonHidden = true
         cellView.view.translatesAutoresizingMaskIntoConstraints = false
         cell.contentView.addSubview(cellView.view)
@@ -136,8 +158,30 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
                            multiplier: 1.0,
                            constant: 0.0
             ).isActive = true
-        cell.backgroundColor = (indexPath.item % 2) == (self.games.count % 2 == 0 ? 1 : 0) ? UIColor(colorLiteralRed: 0.9, green: 0.9, blue: 0.9, alpha: 1.0) : .white
-        
+        cell.backgroundColor = (indexPath.item % 2) == 1 ? UIColor(colorLiteralRed: 0.9, green: 0.9, blue: 0.9, alpha: 1.0) : .white
+        cellView.titleLabel?.text = game.gameFields?.name
+        cellView.descriptionLabel?.text = game.gameFields?.releaseDate
+        cellView.rightLabel?.text = "\(game.progress)%"
+        if cellView.imageSource == .Placeholder {
+            cellView.artView?.image = (indexPath.item % 2) == 1 ? #imageLiteral(resourceName: "table_placeholder_dark") : #imageLiteral(resourceName: "table_placeholder_light")
+            game.gameFields?.getImage {
+                result in
+                if let error = result.error {
+                    print(error)
+                } else {
+                    // Save the image so we won't have to keep fetching it if they scroll
+                    if let cellToUpdate = self.tableView?.cellForRow(at: indexPath) {
+                        UIView.transition(with: cellView.artView!,
+                                          duration:0.5,
+                                          options: .transitionCrossDissolve,
+                                          animations: { cellView.artView?.image = result.value! },
+                                          completion: nil)
+                        cellView.imageSource = .Downloaded
+                        cellToUpdate.setNeedsLayout() // need to reload the view, which won't happen otherwise since this is in an async call
+                    }
+                }
+            }
+        }
         return cell
     }
     
@@ -151,8 +195,12 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == UITableViewCellEditingStyle.delete) {
-            count = count - 1
+            let game = games.remove(at: indexPath.row)
+            game.delete()
             self.tableView?.deleteRows(at: [indexPath], with: .automatic)
+            if games.count < 1 {
+                let _ = self.navigationController?.popViewController(animated: true)
+            }
             self.tableView?.reloadData()
         }
     }

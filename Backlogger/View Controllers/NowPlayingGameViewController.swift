@@ -44,10 +44,30 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
     
     let gameDetailOverlayController = GameDetailOverlayViewController()
     
-    var game: Game?
+    private var _game: Game?
     var detailUrl: String?
     
     private var isInEditMode = false
+    
+    var game: Game? {
+        get {
+            return self._game
+        }
+        set(newGame) {
+            self._game = newGame
+            if let gameField = self._game?.gameFields {
+                if !gameField.hasDetails {
+                    gameField.updateGameDetails { result in
+                        if result.error != nil {
+                            print((result.error?.localizedDescription)!)
+                            return
+                        }
+                        self.addDetails()
+                    }
+                }
+            }
+        }
+    }
     
     enum DetailState {
         case hidden
@@ -87,14 +107,10 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
     private var gravity: UIGravityBehavior!
     private var collision: UICollisionBehavior!
     
-    var gameId: String = ""
-    let uuid = UUID().uuidString
-    
     private let MINIMUM_TRANSFORM: CGFloat = 0.001
     private let MAXIMUM_TRANSOFRM: CGFloat = 1.0
     
-    init(gameId: String) {
-        self.gameId = gameId
+    init() {
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -270,7 +286,7 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
     
     @IBAction func deleteTap(recognizer:UITapGestureRecognizer) {
         // Send UUID to delegate
-        delegate?.didDelete(viewController: self, uuid: self.uuid)
+        delegate?.didDelete(viewController: self, uuid: (self.game?.uuid)!)
     }
 
     // MARK: handleTapArt
@@ -485,16 +501,25 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
             if self.favouriteButtonState == .selected {
                 self.favouriteButton?.setImage(#imageLiteral(resourceName: "heart-empty"), for: .normal)
                 self.favouriteButtonState = .normal
+                self._game?.update {
+                    self._game?.favourite = false
+                }
             } else {
                 self.favouriteButton?.setImage(#imageLiteral(resourceName: "heart"), for: .normal)
                 self.favouriteButtonState = .selected
+                self._game?.update {
+                    self._game?.favourite = true
+                }
             }
         case 2:
             if self.playButtonState == .selected {
                 self.playPauseButton?.setImage(#imageLiteral(resourceName: "play-black"), for: .normal)
                 self.playButtonState = .normal
+                self._game?.update {
+                    self._game?.nowPlaying = false
+                }
                 let actions = UIAlertController(title: "Remove from Now Playing?", message: nil, preferredStyle: .alert)
-                actions.addAction(UIAlertAction(title: "Remove", style: .destructive, handler: { _ in self.delegate?.didDelete(viewController: self, uuid: self.uuid)}))
+                actions.addAction(UIAlertAction(title: "Remove", style: .destructive, handler: { _ in self.delegate?.didDelete(viewController: self, uuid: (self.game?.uuid)!)}))
                 actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                 self.present(actions, animated: true, completion: nil)
                 if self.finishedButtonState != .selected {
@@ -504,6 +529,9 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
             } else {
                 self.playPauseButton?.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
                 self.playButtonState = .selected
+                self._game?.update {
+                    self._game?.nowPlaying = true
+                }
                 if self.finishedButtonState != .selected {
                     self.gameDetailOverlayController.completionLabel?.text = "In Progress"
                     self.gameDetailOverlayController.completionCheckImage?.image = #imageLiteral(resourceName: "check_light_filled")
@@ -513,6 +541,9 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
             if self.finishedButtonState == .selected {
                 self.finishedButton?.setImage(#imageLiteral(resourceName: "check-empty-black"), for: .normal)
                 self.finishedButtonState = .normal
+                self._game?.update {
+                    self._game?.finished = false
+                }
                 if self.playButtonState != .selected {
                     self.gameDetailOverlayController.completionLabel?.text = "Incomplete"
                     self.gameDetailOverlayController.completionCheckImage?.image = #imageLiteral(resourceName: "empty_check")
@@ -523,6 +554,9 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
             } else {
                 self.finishedButton?.setImage(#imageLiteral(resourceName: "check-black"), for: .normal)
                 self.finishedButtonState = .selected
+                self._game?.update {
+                    self._game?.finished = true
+                }
                 self.gameDetailOverlayController.completionLabel?.text = "Complete"
                 self.gameDetailOverlayController.completionCheckImage?.image = #imageLiteral(resourceName: "check_light")
             }

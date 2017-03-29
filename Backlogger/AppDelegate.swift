@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,11 +18,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         var performShortcutDelegate = true
+        self.compactRealm()
         
         let appColor = UIColor(colorLiteralRed: 0.0, green: 0.725, blue: 1.0, alpha: 1.0)
         (UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self])).tintColor = appColor
         UISlider.appearance().tintColor = appColor
-        //UINavigationBar.appearance().tintColor = .white
         self.window?.tintColor = appColor
         
         if let shortcutItem = launchOptions?[UIApplicationLaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem {
@@ -36,7 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func handleShortcut(_ shortcutItem:UIApplicationShortcutItem ) -> Bool {
         var succeeded = false
         
-        if( shortcutItem.type == "a-busman.backlogger.appshortcut.add-game" ) {
+        if(shortcutItem.type == "a-busman.backlogger.appshortcut.add-game") {
             let rootTabBarController = window!.rootViewController as? UITabBarController
             
             rootTabBarController?.selectedIndex = 2
@@ -75,7 +76,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
         guard let shortcut = shortcutItem else { return }
 
-        handleShortcut(shortcut)
+        let _ = self.handleShortcut(shortcut)
         
         self.shortcutItem = nil
     }
@@ -84,6 +85,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
-
+    func compactRealm() {
+        let defaultURL = Realm.Configuration.defaultConfiguration.fileURL!
+        let defaultParentURL = defaultURL.deletingLastPathComponent()
+        let compactedURL = defaultParentURL.appendingPathComponent("default-compact.realm")
+        autoreleasepool {
+            let realm = try? Realm()
+            try! realm?.writeCopy(toFile: compactedURL)
+            try! FileManager.default.removeItem(at: defaultURL)
+            try! FileManager.default.moveItem(at: compactedURL, to: defaultURL)
+        }
+    }
+    
 }
 

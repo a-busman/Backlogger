@@ -51,9 +51,19 @@ class TableViewCellView: UIViewController {
         set(newState) {
             self._libraryState = newState
             if newState == .remove {
-                self.addButton?.setImage(#imageLiteral(resourceName: "x_symbol_red"), for: .normal)
+                UIView.animate(withDuration: 0.1, animations: {
+                    self.addButton?.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 4)
+                })
+                UIView.transition(with: self.addButton!, duration: 0.1, options: .transitionCrossDissolve, animations: {
+                        self.addButton?.setImage(#imageLiteral(resourceName: "add_symbol_red"), for: .normal)
+                }, completion: nil)
             } else {
-                self.addButton?.setImage(#imageLiteral(resourceName: "add_symbol_blue"), for: .normal)
+                UIView.animate(withDuration: 0.1, animations: {
+                    self.addButton?.transform = CGAffineTransform.identity
+                })
+                UIView.transition(with: self.addButton!, duration: 0.1, options: .transitionCrossDissolve, animations: {
+                    self.addButton?.setImage(#imageLiteral(resourceName: "add_symbol_blue"), for: .normal)
+                }, completion: nil)
             }
         }
     }
