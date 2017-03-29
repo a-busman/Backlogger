@@ -39,9 +39,6 @@ class TableViewCellView: UIViewController {
     
     var imageSource: ImageSource = .Placeholder
     
-    var game:    Game?
-    var console: Console?
-    
     var row: Int!
     
     var libraryState: LibraryState {
@@ -70,15 +67,6 @@ class TableViewCellView: UIViewController {
     
     init() {
         super.init(nibName: nil, bundle: nil)
-    }
-    
-    init(console: Console) {
-        super.init(nibName: nil, bundle: nil)
-        self.console = console
-    }
-    init(game: Game) {
-        super.init(nibName: nil, bundle: nil)
-        self.game = game
     }
     
     init(_ row: Int) {

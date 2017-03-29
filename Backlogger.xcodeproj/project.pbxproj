@@ -46,7 +46,6 @@
 		FADA809C1E4FB2D20069943D /* TableViewCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FADA809B1E4FB2D20069943D /* TableViewCellView.xib */; };
 		FADA809F1E4FB66A0069943D /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA809E1E4FB66A0069943D /* TableViewCell.swift */; };
 		FADA80A21E5252DB0069943D /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA80A11E5252DB0069943D /* Game.swift */; };
-		FADA80A41E52540F0069943D /* Console.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA80A31E52540F0069943D /* Console.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -93,7 +92,6 @@
 		FADA809B1E4FB2D20069943D /* TableViewCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TableViewCellView.xib; path = Views/TableViewCellView.xib; sourceTree = "<group>"; };
 		FADA809E1E4FB66A0069943D /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TableViewCell.swift; path = "Table View/TableViewCell.swift"; sourceTree = "<group>"; };
 		FADA80A11E5252DB0069943D /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Game.swift; path = Model/Game.swift; sourceTree = "<group>"; };
-		FADA80A31E52540F0069943D /* Console.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Console.swift; path = Model/Console.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -226,7 +224,6 @@
 			children = (
 				FADA80A11E5252DB0069943D /* Game.swift */,
 				FA4B448A1E5D3DC2006A843F /* Field.swift */,
-				FADA80A31E52540F0069943D /* Console.swift */,
 				FA4B44881E5625E7006A843F /* SearchResults.swift */,
 				FA4B448C1E5D3F04006A843F /* Company.swift */,
 				FA4B448E1E5D3F2D006A843F /* Genre.swift */,
@@ -396,7 +393,6 @@
 				FA4B449B1E610E53006A843F /* TableViewCellView.swift in Sources */,
 				FA5C623F1E762169008558BF /* ConsoleSelectionTableViewController.swift in Sources */,
 				FADA80A21E5252DB0069943D /* Game.swift in Sources */,
-				FADA80A41E52540F0069943D /* Console.swift in Sources */,
 				FA4B44991E5E97C5006A843F /* ImageCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
