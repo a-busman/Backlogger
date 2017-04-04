@@ -30,6 +30,7 @@ class TableViewCellView: UIViewController {
     
     enum LibraryState {
         case add
+        case addPartial
         case remove
     }
     
@@ -53,6 +54,13 @@ class TableViewCellView: UIViewController {
                 })
                 UIView.transition(with: self.addButton!, duration: 0.1, options: .transitionCrossDissolve, animations: {
                         self.addButton?.setImage(#imageLiteral(resourceName: "add_symbol_red"), for: .normal)
+                }, completion: nil)
+            } else if newState == .addPartial {
+                UIView.animate(withDuration: 0.1, animations: {
+                    self.addButton?.transform = CGAffineTransform.identity
+                })
+                UIView.transition(with: self.addButton!, duration: 0.1, options: .transitionCrossDissolve, animations: {
+                    self.addButton?.setImage(#imageLiteral(resourceName: "add_partial"), for: .normal)
                 }, completion: nil)
             } else {
                 UIView.animate(withDuration: 0.1, animations: {
@@ -95,8 +103,8 @@ class TableViewCellView: UIViewController {
     @IBAction func addButtonTapped(sender: UIButton!) {
         if self.libraryState == .add {
             self.delegate?.addTapped(self.row)
-        } else {
-            self.delegate?.removeTapped(self.row)
+        //} else {
+        //    self.delegate?.removeTapped(self.row)
         }
     }
 }

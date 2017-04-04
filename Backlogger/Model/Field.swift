@@ -22,10 +22,8 @@ class Field: Object {
     dynamic var idNumber:      Int     = 0
     dynamic var name:          String? = nil
     dynamic var siteDetailUrl: String? = nil
-    
-    dynamic var linkCount: Int = 0
-    
-    required init(json: [String : Any]) {
+        
+    init(json: [String : Any]) {
         super.init()
         self.apiDetailUrl  = json[GenericFields.ApiDetailUrl.rawValue]  as? String
         self.idNumber      = json[GenericFields.Id.rawValue]            as? Int ?? 0
@@ -51,6 +49,10 @@ class Field: Object {
     
     class func idNumber(fromJson json: [String : Any]) -> Int {
         return json[GenericFields.Id.rawValue] as? Int ?? 0
+    }
+    
+    func deleteRetainCopy() -> Field {
+        fatalError("Must override deleteRetainCopy")
     }
 }
 

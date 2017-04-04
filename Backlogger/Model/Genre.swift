@@ -10,7 +10,14 @@ import Foundation
 import Realm
 
 class Genre: Field {
-    required init(json: [String : Any]) {
+    var linkingGameFields: [GameField] {
+        if let objects = realm?.objects(GameField.self).filter("%@ IN genres", self) {
+            return Array(objects)
+        } else {
+            return [GameField]()
+        }
+    }
+    override init(json: [String : Any]) {
         super.init(json: json)
     }
     
@@ -32,7 +39,12 @@ class Genre: Field {
         newField.idNumber = self.idNumber
         newField.name = self.name
         newField.siteDetailUrl = self.siteDetailUrl
-        newField.linkCount = self.linkCount
+        return newField
+    }
+    
+    override func deleteRetainCopy() -> Genre {
+        let newField = self.deepCopy()
+        super.delete()
         return newField
     }
 }

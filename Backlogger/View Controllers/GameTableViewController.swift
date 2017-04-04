@@ -10,18 +10,72 @@ import UIKit
 
 class GameTableViewController: UIViewController, GameDetailsViewControllerDelegate {
     
-    @IBOutlet weak var tableView: UITableView?
+    @IBOutlet weak var tableView:     UITableView?
+    @IBOutlet weak var headerView:    UIVisualEffectView?
+    @IBOutlet weak var yearLabel:     UILabel?
+    @IBOutlet weak var titleLabel:    UILabel?
+    @IBOutlet weak var platformImage: UIImageView?
+    @IBOutlet weak var shadowView:    UIView?
+    
+    @IBOutlet weak var headerHeightConstraint:         NSLayoutConstraint?
+    @IBOutlet weak var platformImageLeadingConstraint: NSLayoutConstraint?
+    @IBOutlet weak var platformImageTopConstraint:     NSLayoutConstraint?
+    @IBOutlet weak var platformImageBottomConstraint:  NSLayoutConstraint?
     
     var games: [Game] = []
     
+    var platform: Platform?
+    
     var currentlySelectedRow = 0
     
-    let tableReuseIdentifier = "game_cell"
+    fileprivate var didLayout = false
+    
+    fileprivate let headerMaxHeight:      CGFloat = 165.0
+    fileprivate let headerMinHeight:      CGFloat = 80.0
+    fileprivate let platformMaxMargin:    CGFloat = 20.0
+    fileprivate let platformMinMargin:    CGFloat = 10.0
+    fileprivate let startInset:           CGFloat = 229.0
+    fileprivate var headerTravelDistance: CGFloat = 0.0
+    fileprivate var insetToHeader:        CGFloat = 0.0
+    
+    fileprivate let tableReuseIdentifier = "game_cell"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.shadowView?.layer.shadowOpacity = 0.8
+        self.shadowView?.layer.shadowRadius = 5.0
+        self.shadowView?.layer.shadowColor = UIColor.black.cgColor
+        //self.shadowView?.layer.shadowPath = UIBezierPath(rect: (self.shadowView?.bounds)!).cgPath
+        self.shadowView?.layer.shadowOffset = CGSize.zero
         self.navigationController?.navigationBar.tintColor = .white
-        tableView?.tableFooterView = UIView(frame: .zero)
-        
+        self.tableView?.tableFooterView = UIView(frame: .zero)
+        self.headerTravelDistance = self.headerMaxHeight - self.headerMinHeight
+        self.insetToHeader = startInset - headerMaxHeight
+        if let platform = self.platform {
+            self.titleLabel?.text = platform.name
+            self.games = Array(platform.ownedGames)
+
+            if let releaseDate = platform.releaseDate {
+                let index = releaseDate.index(releaseDate.startIndex, offsetBy: 4)
+                self.yearLabel?.text = "\(platform.company?.name ?? "") • \(releaseDate.substring(to: index))"
+            } else {
+                self.yearLabel?.text = "\(platform.company?.name ?? "")"
+            }
+            
+            platform.image?.getImage(field: .MediumUrl, { result in
+                if let error = result.error {
+                    NSLog("\(error.localizedDescription)")
+                    return
+                }
+                UIView.transition(with: self.platformImage!,
+                                  duration:0.5,
+                                  options: .transitionCrossDissolve,
+                                  animations: { self.platformImage?.image = result.value! },
+                                  completion: nil)
+            })
+        } else {
+            NSLog("No platform during load")
+        }
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -31,13 +85,20 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if games.count < 1 {
+        self.games = Array((self.platform?.ownedGames)!)
+        self.tableView?.reloadData()
+        if self.games.count < 1 {
             let _ = self.navigationController?.popViewController(animated: true)
             return
         }
-        self.tableView?.reloadData()
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.tableView?.contentInset.top = self.startInset
+        self.tableView?.scrollIndicatorInsets.top = self.startInset
+        self.didLayout = true
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -89,34 +150,32 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
             if let cell = sender as? UITableViewCell {
                 let i = (self.tableView?.indexPath(for: cell)?.row)!
                 let vc = segue.destination as! GameDetailsViewController
-                var stringList = [String]()
-                let gameList = [self.games[i]]
                 
                 self.currentlySelectedRow = i
-                for game in gameList {
-                    stringList.append(game.uuid)
-                }
                 
                 //self.searchBar?.resignFirstResponder()
                 
-                vc.stringsToFetch = stringList
-                vc.gameFieldId = self.games[i].gameFields?.idNumber
                 vc.gameField = self.games[i].gameFields
+                vc.game = self.games[i]
                 vc.state = .inLibrary
                 vc.delegate = self
             }
         }
     }
-    func gamesCreated(gameField: GameField, games: [Game]) {
-        self.games = games
+    func gamesCreated(gameField: GameField) {
+        /*if games.count == 1 {
+            self.games[self.currentlySelectedRow] = games.first!
+        } else {
+            self.games.remove(at: self.currentlySelectedRow)
+        }*/
     }
 }
 
 extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return games.count
     }
-    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: tableReuseIdentifier) as! TableViewCell
@@ -160,7 +219,8 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
             ).isActive = true
         cell.backgroundColor = (indexPath.item % 2) == 1 ? UIColor(colorLiteralRed: 0.9, green: 0.9, blue: 0.9, alpha: 1.0) : .white
         cellView.titleLabel?.text = game.gameFields?.name
-        cellView.descriptionLabel?.text = game.gameFields?.releaseDate
+        let index = game.gameFields?.releaseDate?.index((game.gameFields?.releaseDate?.startIndex)!, offsetBy: 4)
+        cellView.descriptionLabel?.text = game.gameFields?.releaseDate?.substring(to: index!)
         cellView.rightLabel?.text = "\(game.progress)%"
         if cellView.imageSource == .Placeholder {
             cellView.artView?.image = (indexPath.item % 2) == 1 ? #imageLiteral(resourceName: "table_placeholder_dark") : #imageLiteral(resourceName: "table_placeholder_light")
@@ -202,6 +262,34 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
                 let _ = self.navigationController?.popViewController(animated: true)
             }
             self.tableView?.reloadData()
+        }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if self.didLayout {
+            let offset = scrollView.contentOffset.y * -1.0
+            if offset < self.startInset {
+                if offset > (self.startInset - self.headerTravelDistance) {
+                    let offsetPercentage = (offset - (self.startInset - self.headerTravelDistance)) / self.headerTravelDistance
+                    let imageMargin = (offsetPercentage * self.platformMinMargin) + self.platformMinMargin
+                    self.headerHeightConstraint?.constant = offset - insetToHeader
+                    self.platformImageTopConstraint?.constant = imageMargin
+                    self.platformImageBottomConstraint?.constant = imageMargin * -1.0
+                    self.platformImageLeadingConstraint?.constant = imageMargin
+                } else {
+                    self.headerHeightConstraint?.constant = headerMinHeight
+                    self.platformImageTopConstraint?.constant = self.platformMinMargin
+                    self.platformImageBottomConstraint?.constant = self.platformMinMargin * -1.0
+                    self.platformImageLeadingConstraint?.constant = self.platformMinMargin
+                    
+                }
+            } else {
+                self.headerHeightConstraint?.constant = headerMaxHeight
+                self.platformImageTopConstraint?.constant = self.platformMaxMargin
+                self.platformImageBottomConstraint?.constant = self.platformMaxMargin * -1.0
+                self.platformImageLeadingConstraint?.constant = self.platformMaxMargin
+            }
+            //self.headerView?.layoutIfNeeded()
         }
     }
 }

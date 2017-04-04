@@ -7,10 +7,13 @@
 //
 
 import Foundation
+import RealmSwift
 import Realm
 
 class Company: Field {
-    required init(json: [String : Any]) {
+    let platforms: LinkingObjects<Platform> = LinkingObjects(fromType: Platform.self, property: "company")
+    
+    override init(json: [String : Any]) {
         super.init(json: json)
     }
     
@@ -32,8 +35,13 @@ class Company: Field {
         newField.idNumber = self.idNumber
         newField.name = self.name
         newField.siteDetailUrl = self.siteDetailUrl
-        newField.linkCount = self.linkCount
         
+        return newField
+    }
+    
+    override func deleteRetainCopy() -> Company {
+        let newField = self.deepCopy()
+        super.delete()
         return newField
     }
 }

@@ -74,6 +74,12 @@ class ImageList: Object {
         newImageList.id = self.id
         return newImageList
     }
+    
+    func deleteRetainCopy() -> ImageList {
+        let newImageList = self.deepCopy()
+        super.delete()
+        return newImageList
+    }
 
     func getImage(field: ImageFields, _ completionHandler: @escaping (Result<UIImage>) -> Void) {
         var imageUrl: String

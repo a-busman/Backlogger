@@ -8,7 +8,18 @@
 
 import Foundation
 
-let GAME_API_KEY = "YOUR_API_KEY"
+var GAME_API_KEY: String {
+    var keys: NSDictionary!
+    if let path = Bundle.main.path(forResource: "keys", ofType: "plist") {
+        keys = NSDictionary(contentsOfFile: path)
+    }
+    if let dict = keys {
+        let key = dict["GiantBombApiKey"] as! String
+        return key
+    } else {
+        return ""
+    }
+}
 
 class SearchResults {
     var error: String?

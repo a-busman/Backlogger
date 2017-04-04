@@ -10,14 +10,14 @@ import UIKit
 import RealmSwift
 
 protocol ConsoleSelectionTableViewControllerDelegate {
-    func didSelectConsoles(_ consoles: [Int], _ custom: [Int : Platform]?)
+    func didSelectConsoles(_ consoles: [Platform])
 }
 
 class ConsoleSelectionTableViewController: UITableViewController {
     
     var consoles = [Platform]()
     
-    var selected = [Int]()
+    var selected = [Platform]()
     var delegate: ConsoleSelectionTableViewControllerDelegate?
     
     var customPlatforms = [Platform]()
@@ -88,7 +88,7 @@ class ConsoleSelectionTableViewController: UITableViewController {
         
         if indexPath.section == 0 {
             cell.textLabel?.text = consoles[indexPath.row].name ?? ""
-            if self.selected.contains(consoles[indexPath.row].idNumber) {
+            if self.selected.contains(consoles[indexPath.row]) {
                 cell.accessoryType = .checkmark
             } else {
                 cell.accessoryType = .none
@@ -99,7 +99,7 @@ class ConsoleSelectionTableViewController: UITableViewController {
                 cell.accessoryType = .none
             } else {
                 cell.textLabel?.text = customPlatforms[indexPath.row].name ?? ""
-                if self.selected.contains(customPlatforms[indexPath.row].idNumber) {
+                if self.selected.contains(customPlatforms[indexPath.row]) {
                     cell.accessoryType = .checkmark
                 } else {
                     cell.accessoryType = .none
@@ -143,7 +143,7 @@ class ConsoleSelectionTableViewController: UITableViewController {
                                 newPlatform?.idNumber = self.currentMaxId
                                 self.currentMaxId = self.currentMaxId + 1
                             }
-                            self.selected.append((newPlatform?.idNumber)!)
+                            self.selected.append(newPlatform!)
                             self.customPlatforms.append(newPlatform!)
                         }
 
@@ -167,12 +167,12 @@ class ConsoleSelectionTableViewController: UITableViewController {
                 
                 self.present(alertController, animated: true, completion: nil)
             } else {
-                if !self.selected.contains(customPlatforms[indexPath.row].idNumber) {
+                if !self.selected.contains(customPlatforms[indexPath.row]) {
                     cell?.accessoryType = .checkmark
-                    self.selected.append(customPlatforms[indexPath.row].idNumber)
+                    self.selected.append(customPlatforms[indexPath.row])
                 } else {
                     for i in 0..<self.selected.count {
-                        if self.selected[i] == customPlatforms[indexPath.row].idNumber {
+                        if self.selected[i] == customPlatforms[indexPath.row] {
                             self.selected.remove(at: i)
                             break
                         }
@@ -181,12 +181,12 @@ class ConsoleSelectionTableViewController: UITableViewController {
                 }
             }
         } else {
-            if !self.selected.contains(consoles[indexPath.row].idNumber) {
+            if !self.selected.contains(consoles[indexPath.row]) {
                 cell?.accessoryType = .checkmark
-                self.selected.append(consoles[indexPath.row].idNumber)
+                self.selected.append(consoles[indexPath.row])
             } else {
                 for i in 0..<self.selected.count {
-                    if self.selected[i] == consoles[indexPath.row].idNumber {
+                    if self.selected[i] == consoles[indexPath.row] {
                         self.selected.remove(at: i)
                         break
                     }
@@ -205,18 +205,7 @@ class ConsoleSelectionTableViewController: UITableViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        var customPlatformsToReturn = [Int : Platform]()
-        for platform in self.customPlatforms {
-            if self.selected.contains(platform.idNumber) {
-                customPlatformsToReturn[platform.idNumber] = platform
-            }
-        }
-        if customPlatformsToReturn.count == 0 {
-            self.delegate?.didSelectConsoles(self.selected, nil)
-        } else {
-            
-            self.delegate?.didSelectConsoles(self.selected, customPlatformsToReturn)
-        }
+        self.delegate?.didSelectConsoles(self.selected)
     }
 
     /*

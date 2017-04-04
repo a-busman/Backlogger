@@ -45,12 +45,12 @@ class LibraryViewController: UIViewController {
             self.tableView?.isHidden = true
             
         }
-        //var contentOffset = (self.tableView?.contentOffset)!
-        //if contentOffset.y == 0 {
-        //    contentOffset.y = (self.tableView?.tableHeaderView?.frame)!.height
-        //}
-        //self.tableView?.contentOffset = contentOffset
-        //self.tableView?.contentInset.top = 64
+        var contentOffset = (self.tableView?.contentOffset)!
+        if contentOffset.y == 0 {
+            contentOffset.y = (self.tableView?.tableHeaderView?.frame)!.height
+        }
+        self.tableView?.contentOffset = contentOffset
+        //self.tableView?.contentInset.top = 165
         //self.tableView?.contentInset.bottom = 40
     }
     
@@ -63,8 +63,8 @@ class LibraryViewController: UIViewController {
             if let cell = sender as? UITableViewCell {
                 let i = (self.tableView?.indexPath(for: cell)?.row)!
                 let vc = segue.destination as! GameTableViewController
-                vc.title = self.platforms?[i].name
-                vc.games = Array((self.platforms?[i].ownedGames)!)
+                //vc.title = self.platforms?[i].name
+                vc.platform = self.platforms?[i]
             }
         }
     }

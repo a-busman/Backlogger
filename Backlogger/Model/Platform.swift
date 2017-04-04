@@ -15,20 +15,29 @@ enum PlatformFields: String {
     case Abbreviation  = "abbreviation"
     case Company       = "company"
     case Image         = "image"
+    case ReleaseDate   = "release_date"
 }
 
 class Platform: Field {
     dynamic var abbreviation: String?    = nil
     dynamic var company:      Company?   = nil
     dynamic var image:        ImageList? = nil
+    dynamic var releaseDate:  String?    = nil
     dynamic var custom:       Bool       = false
     
     let ownedGames: LinkingObjects<Game> = LinkingObjects(fromType: Game.self, property: "platform")
-    
+
+    var linkedGameFields: [GameField] {
+        if let objects = realm?.objects(GameField.self).filter("%@ IN platforms", self) {
+            return Array(objects)
+        } else {
+            return [GameField]()
+        }
+    }
     private var gettingDetails: Bool = false
     private var tempJson: [String : Any] = [:]
     
-    required init(json: [String : Any]) {
+    override init(json: [String : Any]) {
         self.abbreviation  = json[PlatformFields.Abbreviation.rawValue] as? String
         super.init(json: json)
     }
@@ -60,8 +69,9 @@ class Platform: Field {
         newPlatform.idNumber = self.idNumber
         newPlatform.apiDetailUrl = self.apiDetailUrl
         newPlatform.siteDetailUrl = self.siteDetailUrl
+        newPlatform.image = self.image?.deepCopy()
+        newPlatform.releaseDate = self.releaseDate
         newPlatform.name = self.name
-        newPlatform.linkCount = self.linkCount
         return newPlatform
     }
     
@@ -73,8 +83,6 @@ class Platform: Field {
                 let dbCompany = realm?.object(ofType: Company.self, forPrimaryKey: companyId)
                 if dbCompany != nil {
                     self.company = dbCompany
-                } else {
-                    self.company?.linkCount = 0
                 }
             }
         }
@@ -83,7 +91,7 @@ class Platform: Field {
     func updateDetails(_ completionHandler: @escaping (Result<Any>) -> Void) {
         self.gettingDetails = true
         if let apiDetailUrl = self.apiDetailUrl {
-            let url = apiDetailUrl + "?api_key=" + GAME_API_KEY + "&format=json&field_list=company,image"
+            let url = apiDetailUrl + "?api_key=" + GAME_API_KEY + "&format=json&field_list=company,image,release_date"
             Alamofire.request(url)
                 .responseJSON { response in
                     self.gettingDetails = false
@@ -126,11 +134,7 @@ class Platform: Field {
                     self.update {
                         self.company = dbCompany
                     }
-                    self.company?.update {
-                        self.company?.linkCount += 1
-                    }
                 } else {
-                    self.company?.linkCount = 1
                     self.company?.add()
                 }
                 super.add()
@@ -154,16 +158,10 @@ class Platform: Field {
                                     self.update {
                                         self.company = dbCompany
                                     }
-                                    self.company?.update {
-                                        self.company?.linkCount += 1
-                                    }
                                 }
                             } else {
                                 self.update {
                                     self.company = Company(json: companyJson)
-                                }
-                                self.company?.update {
-                                    self.company?.linkCount = 1
                                 }
                                 self.company?.add()
                             }
@@ -178,6 +176,10 @@ class Platform: Field {
                                 self.image = imageObject
                             }
                         }
+                        self.update {
+                            self.releaseDate = self.tempJson[PlatformFields.ReleaseDate.rawValue] as? String
+                            self.gettingDetails = false
+                        }
                     }
                     super.add()
                 }
@@ -187,10 +189,10 @@ class Platform: Field {
     
     override func delete() {
         if let company = self.company {
-            company.update {
-                company.linkCount -= 1
+            self.update {
+                self.company = nil
             }
-            if company.linkCount <= 0 {
+            if company.platforms.count == 0 {
                 company.delete()
             }
         }
@@ -199,25 +201,25 @@ class Platform: Field {
         }
         super.delete()
     }
-    
-    func deleteRetainCopy() -> Platform {
+
+    override func deleteRetainCopy() -> Platform {
         let newPlatform = Platform()
         newPlatform.abbreviation = self.abbreviation
         newPlatform.idNumber = self.idNumber
         newPlatform.apiDetailUrl = self.apiDetailUrl
         newPlatform.siteDetailUrl = self.siteDetailUrl
         newPlatform.name = self.name
-        newPlatform.linkCount = self.linkCount
+        newPlatform.image = self.image?.deleteRetainCopy()
+        newPlatform.releaseDate = self.releaseDate
         
         if let company = self.company {
-            company.update {
-                company.linkCount -= 1
+            self.update {
+                self.company = nil
             }
-            if company.linkCount <= 0 {
-                newPlatform.company = company.deepCopy()
-                company.delete()
+            if company.platforms.count == 0 {
+                newPlatform.company = company.deleteRetainCopy()
             } else {
-                newPlatform.company = company
+                newPlatform.company = company.deepCopy()
             }
         }
         super.delete()

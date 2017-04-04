@@ -19,6 +19,7 @@
 		FA09158E1E2AA9BE0052BCEC /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA09158D1E2AA9BE0052BCEC /* RootViewController.swift */; };
 		FA0915921E2AEF2C0052BCEC /* NowPlayingGameView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA0915911E2AEF2C0052BCEC /* NowPlayingGameView.xib */; };
 		FA0915971E2B367B0052BCEC /* NowPlayingGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0915961E2B367B0052BCEC /* NowPlayingGameViewController.swift */; };
+		FA0C488E1EAC4BF300F82C7D /* keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = FA0C488D1EAC4BF300F82C7D /* keys.plist */; };
 		FA4B44871E556AD3006A843F /* LibraryAddSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B44861E556AD3006A843F /* LibraryAddSearchViewController.swift */; };
 		FA4B44891E5625E7006A843F /* SearchResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B44881E5625E7006A843F /* SearchResults.swift */; };
 		FA4B448B1E5D3DC2006A843F /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B448A1E5D3DC2006A843F /* Field.swift */; };
@@ -65,6 +66,7 @@
 		FA09158D1E2AA9BE0052BCEC /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RootViewController.swift; path = "View Controllers/RootViewController.swift"; sourceTree = "<group>"; };
 		FA0915911E2AEF2C0052BCEC /* NowPlayingGameView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = NowPlayingGameView.xib; path = Views/NowPlayingGameView.xib; sourceTree = "<group>"; };
 		FA0915961E2B367B0052BCEC /* NowPlayingGameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NowPlayingGameViewController.swift; path = "View Controllers/NowPlayingGameViewController.swift"; sourceTree = "<group>"; };
+		FA0C488D1EAC4BF300F82C7D /* keys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = keys.plist; sourceTree = "<group>"; };
 		FA4B44861E556AD3006A843F /* LibraryAddSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LibraryAddSearchViewController.swift; path = "View Controllers/LibraryAddSearchViewController.swift"; sourceTree = "<group>"; };
 		FA4B44881E5625E7006A843F /* SearchResults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SearchResults.swift; path = Model/SearchResults.swift; sourceTree = "<group>"; };
 		FA4B448A1E5D3DC2006A843F /* Field.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Field.swift; path = Model/Field.swift; sourceTree = "<group>"; };
@@ -155,6 +157,7 @@
 				FA0915751E2AA4210052BCEC /* Assets.xcassets */,
 				FA0915771E2AA4210052BCEC /* LaunchScreen.storyboard */,
 				FA09157A1E2AA4210052BCEC /* Info.plist */,
+				FA0C488D1EAC4BF300F82C7D /* keys.plist */,
 			);
 			path = Backlogger;
 			sourceTree = "<group>";
@@ -298,6 +301,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA0C488E1EAC4BF300F82C7D /* keys.plist in Resources */,
 				FAC778B11E3481A200944B6B /* GameDetailOverlayView.xib in Resources */,
 				FA4B44971E5E9743006A843F /* ImageCell.xib in Resources */,
 				FA0915921E2AEF2C0052BCEC /* NowPlayingGameView.xib in Resources */,
@@ -519,6 +523,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = RJTCSD68GK;
 				INFOPLIST_FILE = Backlogger/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.a-busman.Backlogger";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -533,6 +538,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = RJTCSD68GK;
 				INFOPLIST_FILE = Backlogger/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.a-busman.Backlogger";
 				PRODUCT_NAME = "$(TARGET_NAME)";
