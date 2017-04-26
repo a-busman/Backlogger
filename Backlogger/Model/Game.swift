@@ -103,15 +103,14 @@ class GameField: Field {
                     for jsonPlatform in jsonPlatforms {
                         let platformId = jsonPlatform[GenericFields.Id.rawValue] as? Int ?? 0
                         var platform = realm?.object(ofType: Platform.self, forPrimaryKey: platformId)
-
                         var inPlatforms = false
+                        
                         for p in self.platforms {
                             if p.idNumber == platformId {
                                 inPlatforms = true
                                 break
                             }
                         }
-                        
                         if platform == nil {
                             platform = Platform(json: jsonPlatform)
                             if self.ownedGames.count > 0 {
@@ -130,6 +129,7 @@ class GameField: Field {
                         let developerId = jsonDeveloper[GenericFields.Id.rawValue] as? Int ?? 0
                         var developer = realm?.object(ofType: Developer.self, forPrimaryKey: developerId)
                         var inDevelopers = false
+                        
                         for d in self.developers {
                             if d.idNumber == developerId {
                                 inDevelopers = true
@@ -155,6 +155,7 @@ class GameField: Field {
                         let publisherId = jsonPublisher[GenericFields.Id.rawValue] as? Int ?? 0
                         var publisher = realm?.object(ofType: Publisher.self, forPrimaryKey: publisherId)
                         var inPublishers = false
+                        
                         for p in self.publishers {
                             if p.idNumber == publisherId {
                                 inPublishers = true
@@ -174,13 +175,13 @@ class GameField: Field {
                             }
                         }
                     }
-                    
                 }
                 if let jsonGenres = json[GameFields.Genres.rawValue] as? [[String: Any]] {
                     for jsonGenre in jsonGenres {
                         let genreId = jsonGenre[GenericFields.Id.rawValue] as? Int ?? 0
                         var genre = realm?.object(ofType: Genre.self, forPrimaryKey: genreId)
                         var inGenres = false
+                        
                         for g in self.genres {
                             if g.idNumber == genreId {
                                 inGenres = true
@@ -202,6 +203,7 @@ class GameField: Field {
                 }
                 if let image = json[GameFields.Image.rawValue] as? [String: Any] {
                     var imageObject = realm?.object(ofType: ImageList.self, forPrimaryKey: "\(self.idNumber) main")
+                    
                     if imageObject == nil {
                         imageObject = ImageList(json: image)
                         imageObject?.id = "\(self.idNumber) main"
@@ -212,10 +214,9 @@ class GameField: Field {
                     }
                 }
                 if let jsonImages = json[GameFields.Images.rawValue] as? [[String: Any]] {
-                    var i = 0
-                    
-                    for jsonImage in jsonImages {
+                    for (i, jsonImage) in jsonImages.enumerated() {
                         var image = realm?.object(ofType: ImageList.self, forPrimaryKey: "\(self.idNumber) \(i)")
+                        
                         if image == nil {
                             image = ImageList(json: jsonImage)
                             image?.id = "\(self.idNumber) \(i)"
@@ -232,145 +233,48 @@ class GameField: Field {
                                 self.images.append(image!)
                             }
                         }
-                        i += 1
                     }
                 }
             }
         } else {
             if let jsonPlatforms = json[GameFields.Platforms.rawValue] as? [[String: Any]] {
                 for jsonPlatform in jsonPlatforms {
-                    let platformId = jsonPlatform[GenericFields.Id.rawValue] as? Int ?? 0
-                    var platform = realm?.object(ofType: Platform.self, forPrimaryKey: platformId)
-                    
-                    var inPlatforms = false
-                    for p in self.platforms {
-                        if p.idNumber == platformId {
-                            inPlatforms = true
-                            break
-                        }
-                    }
-                    
-                    if platform == nil {
-                        platform = Platform(json: jsonPlatform)
-                        if self.ownedGames.count > 0 {
-                            platform?.add()
-                        }
-                    }
-                    if !inPlatforms {
-                        self.update {
-                            self.platforms.append(platform!)
-                        }
-                    }
+                    let platform = Platform(json: jsonPlatform)
+                    self.platforms.append(platform)
                 }
             }
             if let jsonDevelopers = json[GameFields.Developers.rawValue] as? [[String: Any]] {
                 for jsonDeveloper in jsonDevelopers {
-                    let developerId = jsonDeveloper[GenericFields.Id.rawValue] as? Int ?? 0
-                    var developer = realm?.object(ofType: Developer.self, forPrimaryKey: developerId)
-                    var inDevelopers = false
-                    for d in self.developers {
-                        if d.idNumber == developerId {
-                            inDevelopers = true
-                            break
-                        }
-                    }
-                    if developer == nil {
-                        developer = Developer(json: jsonDeveloper)
-                        if self.ownedGames.count > 0 {
-                            developer?.add()
-                        }
-                    }
-                    if !inDevelopers {
-                        self.update {
-                            self.hasDetails = true
-                            self.developers.append(developer!)
-                        }
-                    }
+                    let developer = Developer(json: jsonDeveloper)
+                    self.developers.append(developer)
                 }
             }
             if let jsonPublishers = json[GameFields.Publishers.rawValue] as? [[String: Any]] {
                 for jsonPublisher in jsonPublishers {
-                    let publisherId = jsonPublisher[GenericFields.Id.rawValue] as? Int ?? 0
-                    var publisher = realm?.object(ofType: Publisher.self, forPrimaryKey: publisherId)
-                    var inPublishers = false
-                    for p in self.publishers {
-                        if p.idNumber == publisherId {
-                            inPublishers = true
-                            break
-                        }
-                    }
-                    if publisher == nil {
-                        publisher = Publisher(json: jsonPublisher)
-                        if self.ownedGames.count > 0 {
-                            publisher?.add()
-                        }
-                    }
-                    if !inPublishers {
-                        self.update {
-                            self.hasDetails = true
-                            self.publishers.append(publisher!)
-                        }
-                    }
+                    let publisher = Publisher(json: jsonPublisher)
+                    self.publishers.append(publisher)
                 }
-                
             }
             if let jsonGenres = json[GameFields.Genres.rawValue] as? [[String: Any]] {
                 for jsonGenre in jsonGenres {
-                    let genreId = jsonGenre[GenericFields.Id.rawValue] as? Int ?? 0
-                    var genre = realm?.object(ofType: Genre.self, forPrimaryKey: genreId)
-                    var inGenres = false
-                    for g in self.genres {
-                        if g.idNumber == genreId {
-                            inGenres = true
-                        }
-                    }
-                    if genre == nil {
-                        genre = Genre(json: jsonGenre)
-                        if self.ownedGames.count > 0 {
-                            genre?.add()
-                        }
-                    }
-                    if !inGenres {
-                        self.update {
-                            self.hasDetails = true
-                            self.genres.append(genre!)
-                        }
-                    }
+                    let genre = Genre(json: jsonGenre)
+                    self.genres.append(genre)
                 }
             }
             if let image = json[GameFields.Image.rawValue] as? [String: Any] {
-                var imageObject = realm?.object(ofType: ImageList.self, forPrimaryKey: "\(self.idNumber) main")
-                if imageObject == nil {
-                    imageObject = ImageList(json: image)
-                    imageObject?.id = "\(self.idNumber) main"
-                }
-                self.update {
-                    self.image = imageObject
-                    self.imageUrl = self.image?.iconUrl
-                }
+                let imageObject = ImageList(json: image)
+
+                imageObject.id = "\(self.idNumber) main"
+                self.image = imageObject
+                self.imageUrl = self.image?.iconUrl
             }
             if let jsonImages = json[GameFields.Images.rawValue] as? [[String: Any]] {
-                var i = 0
-                
-                for jsonImage in jsonImages {
-                    var image = realm?.object(ofType: ImageList.self, forPrimaryKey: "\(self.idNumber) \(i)")
-                    if image == nil {
-                        image = ImageList(json: jsonImage)
-                        image?.id = "\(self.idNumber) \(i)"
-                    }
-                    var inImages = false
-                    for i in self.images {
-                        if i.id == image?.id {
-                            inImages = true
-                        }
-                    }
-                    if !inImages {
-                        self.update {
-                            self.hasDetails = true
-                            self.images.append(image!)
-                        }
-                    }
-                    i += 1
+                for (i, jsonImage) in jsonImages.enumerated() {
+                    let image = ImageList(json: jsonImage)
+                    
+                    image.id = "\(self.idNumber) \(i)"
+                    self.hasDetails = true
+                    self.images.append(image)
                 }
             }
         }
