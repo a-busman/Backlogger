@@ -11,16 +11,17 @@ import UIKit
 class GameTableViewController: UIViewController, GameDetailsViewControllerDelegate {
     
     @IBOutlet weak var tableView:     UITableView?
-    @IBOutlet weak var headerView:    UIVisualEffectView?
-    @IBOutlet weak var yearLabel:     UILabel?
-    @IBOutlet weak var titleLabel:    UILabel?
+    @IBOutlet weak var headerView:    UIView?
     @IBOutlet weak var platformImage: UIImageView?
+    @IBOutlet weak var titleLabel:    UILabel?
     @IBOutlet weak var shadowView:    UIView?
     
-    @IBOutlet weak var headerHeightConstraint:         NSLayoutConstraint?
-    @IBOutlet weak var platformImageLeadingConstraint: NSLayoutConstraint?
-    @IBOutlet weak var platformImageTopConstraint:     NSLayoutConstraint?
-    @IBOutlet weak var platformImageBottomConstraint:  NSLayoutConstraint?
+    @IBOutlet weak var shadowBottomLayoutConstraint: NSLayoutConstraint?
+    @IBOutlet weak var titleBottomLayoutConstraint:  NSLayoutConstraint?
+    @IBOutlet weak var imageTopLayoutConstraint:     NSLayoutConstraint?
+    @IBOutlet weak var imageHeightLayoutConstraint:  NSLayoutConstraint?
+    
+    let shadowGradientLayer = CAGradientLayer()
     
     var games: [Game] = []
     
@@ -29,6 +30,11 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
     var currentlySelectedRow = 0
     
     fileprivate var didLayout = false
+    
+    fileprivate let titleBottomInitial:  CGFloat = -10.0
+    fileprivate let shadowBottomInitial: CGFloat = 0.0
+    fileprivate let imageHeightInitial:  CGFloat = 165.0
+    fileprivate let imageTopInitial:     CGFloat = 0.0
     
     fileprivate let headerMaxHeight:      CGFloat = 165.0
     fileprivate let headerMinHeight:      CGFloat = 80.0
@@ -42,11 +48,6 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.shadowView?.layer.shadowOpacity = 0.8
-        self.shadowView?.layer.shadowRadius = 5.0
-        self.shadowView?.layer.shadowColor = UIColor.black.cgColor
-        //self.shadowView?.layer.shadowPath = UIBezierPath(rect: (self.shadowView?.bounds)!).cgPath
-        self.shadowView?.layer.shadowOffset = CGSize.zero
         self.navigationController?.navigationBar.tintColor = .white
         self.tableView?.tableFooterView = UIView(frame: .zero)
         self.headerTravelDistance = self.headerMaxHeight - self.headerMinHeight
@@ -54,15 +55,21 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         if let platform = self.platform {
             self.titleLabel?.text = platform.name
             self.games = Array(platform.ownedGames)
-
-            if let releaseDate = platform.releaseDate {
-                let index = releaseDate.index(releaseDate.startIndex, offsetBy: 4)
-                self.yearLabel?.text = "\(platform.company?.name ?? "") • \(releaseDate.substring(to: index))"
-            } else {
-                self.yearLabel?.text = "\(platform.company?.name ?? "")"
-            }
             
-            platform.image?.getImage(field: .MediumUrl, { result in
+            if platform.name!.characters.count < 10 {
+                self.title = platform.name
+            } else {
+                self.title = platform.abbreviation
+            }
+            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.clear]
+//            if let releaseDate = platform.releaseDate {
+//                let index = releaseDate.index(releaseDate.startIndex, offsetBy: 4)
+//                self.yearLabel?.text = "\(platform.company?.name ?? "") • \(releaseDate.substring(to: index))"
+//            } else {
+//                self.yearLabel?.text = "\(platform.company?.name ?? "")"
+//            }
+            
+            platform.image?.getImage(field: .SuperUrl, { result in
                 if let error = result.error {
                     NSLog("\(error.localizedDescription)")
                     return
@@ -78,9 +85,6 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         }
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -91,13 +95,22 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
             let _ = self.navigationController?.popViewController(animated: true)
             return
         }
-        self.tableView?.setContentOffset(CGPoint(x: 0.0, y: -self.startInset), animated: false)
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         self.tableView?.contentInset.top = self.startInset
         self.tableView?.scrollIndicatorInsets.top = self.startInset
+        self.tableView?.contentInset.bottom = 50.0
+        self.tableView?.scrollIndicatorInsets.bottom = 50.0
+        self.shadowGradientLayer.frame = CGRect(x: 0.0, y: 0.0, width: (self.shadowView?.frame.width)!, height: (self.shadowView?.frame.height)!)
+        let darkColor = UIColor(white: 0.0, alpha: 0.3).cgColor
+        self.shadowGradientLayer.colors = [UIColor.clear.cgColor, darkColor]
+        self.shadowGradientLayer.locations = [0.7, 1.0]
+        if !self.didLayout {
+            self.tableView?.setContentOffset(CGPoint(x: 0.0, y: -self.startInset), animated: false)
+            self.shadowView?.layer.addSublayer(shadowGradientLayer)
+        }
         self.didLayout = true
     }
     override func didReceiveMemoryWarning() {
@@ -269,28 +282,27 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if self.didLayout {
             let offset = scrollView.contentOffset.y * -1.0
-            if offset < self.startInset {
-                if offset > (self.startInset - self.headerTravelDistance) {
-                    let offsetPercentage = (offset - (self.startInset - self.headerTravelDistance)) / self.headerTravelDistance
-                    let imageMargin = (offsetPercentage * self.platformMinMargin) + self.platformMinMargin
-                    self.headerHeightConstraint?.constant = offset - insetToHeader
-                    self.platformImageTopConstraint?.constant = imageMargin
-                    self.platformImageBottomConstraint?.constant = imageMargin * -1.0
-                    self.platformImageLeadingConstraint?.constant = imageMargin
-                } else {
-                    self.headerHeightConstraint?.constant = headerMinHeight
-                    self.platformImageTopConstraint?.constant = self.platformMinMargin
-                    self.platformImageBottomConstraint?.constant = self.platformMinMargin * -1.0
-                    self.platformImageLeadingConstraint?.constant = self.platformMinMargin
-                    
-                }
+            print(offset)
+            self.titleBottomLayoutConstraint?.constant = offset - self.startInset + self.titleBottomInitial
+            self.shadowBottomLayoutConstraint?.constant = offset - self.startInset
+            if offset > self.startInset {
+                self.imageHeightLayoutConstraint?.constant = offset - self.startInset + self.imageHeightInitial
+                self.imageTopLayoutConstraint?.constant = 0.0
+                self.tableView?.scrollIndicatorInsets.top = offset
             } else {
-                self.headerHeightConstraint?.constant = headerMaxHeight
-                self.platformImageTopConstraint?.constant = self.platformMaxMargin
-                self.platformImageBottomConstraint?.constant = self.platformMaxMargin * -1.0
-                self.platformImageLeadingConstraint?.constant = self.platformMaxMargin
+                self.imageTopLayoutConstraint?.constant = (offset - self.startInset) / 5.0
+                self.imageHeightLayoutConstraint?.constant = self.imageHeightInitial
+                self.tableView?.scrollIndicatorInsets.top = self.startInset
             }
-            //self.headerView?.layoutIfNeeded()
+            if offset < 90.0 {
+                let remainingWidth = offset - 65.0
+                let newColor = UIColor(white: 1.0, alpha: (25.0 - remainingWidth) / 25.0)
+                self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: newColor]
+            } else if offset < 65.0 {
+                self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+            } else {
+                self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.clear]
+            }
         }
     }
 }
