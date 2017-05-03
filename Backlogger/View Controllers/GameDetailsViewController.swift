@@ -456,9 +456,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         if self.state == .addToLibrary {
             let consoleSelection = ConsoleSelectionTableViewController()
             consoleSelection.delegate = self
-            for platform in (self._gameField?.platforms)! {
-                consoleSelection.consoles.append(platform)
-            }
+            consoleSelection.gameField = self._gameField
             self.navigationController?.pushViewController(consoleSelection, animated: true)
         } else {
             var gameFieldCopy: GameField?
@@ -485,10 +483,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     @IBAction func platformsTapped(sender: UIButton!) {
         let consoleSelection = ConsoleSelectionTableViewController()
         consoleSelection.delegate = self
-        consoleSelection.selected = self._selectedPlatforms
-        for platform in (self._gameField?.platforms)! {
-            consoleSelection.consoles.append(platform)
-        }
+        consoleSelection.gameField = self._gameField
         self.navigationController?.pushViewController(consoleSelection, animated: true)
     }
     
@@ -850,7 +845,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         self._selectedPlatforms = consoles
         var currentPlatformList: [Platform] = [Platform]()
         var newGameList = [Game]()
-        var gameField = self._gameField
+        var gameField = self._gameField?.deepCopy()
         
         if consoles.count > 0 {
             for game in (self._gameField?.ownedGames)! {

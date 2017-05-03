@@ -779,26 +779,20 @@ class Game: Object {
         }
     }
     
-    func deleteIncludingGameField() {
-        let gameField = self.gameFields!
-        self.update {
-            self.gameFields = nil
-            self.platform = nil
-        }
-        if gameField.ownedGames.count == 0 {
-            gameField.delete()
-        }
-        super.delete()
-    }
-    
     override func delete() {
         let platformId = self.platform!.idNumber
+        let gameId = self.gameFields!.idNumber
         super.delete()
         autoreleasepool {
             let realm = try? Realm()
             if let dbPlatform = realm?.object(ofType: Platform.self, forPrimaryKey: platformId) {
-                if dbPlatform.ownedGames.count == 0 {
+                if dbPlatform.ownedGames.count == 0 && dbPlatform.linkedGameFields.count == 0 {
                     dbPlatform.delete()
+                }
+            }
+            if let dbGameField = realm?.object(ofType: GameField.self, forPrimaryKey: gameId) {
+                if dbGameField.ownedGames.count == 0 {
+                    dbGameField.delete()
                 }
             }
         }

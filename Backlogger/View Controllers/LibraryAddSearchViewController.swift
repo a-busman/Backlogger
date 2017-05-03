@@ -243,20 +243,26 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
     
     func gamesCreated(gameField: GameField) {
         if gameField.ownedGames.count > 0 {
-            self.gamesViewControllers[self.currentlySelectedRow].libraryState = .remove
+            self.gamesViewControllers[self.currentlySelectedRow].libraryState = .addPartial
         } else {
             self.gamesViewControllers[self.currentlySelectedRow].libraryState = .add
         }
-        self.gameFields[self.currentlySelectedRow] = gameField
     }
     
     func didSelectConsoles(_ consoles: [Platform]) {
         let selectedRow = self.currentlySelectedRow
-        let gameList: [Game] = Array(self.gameFields[selectedRow].ownedGames)
+        var gameList: [Game] = []
+        autoreleasepool {
+            let realm = try! Realm()
+            if let dbGameField = realm.object(ofType: GameField.self, forPrimaryKey: self.gameFields[selectedRow].idNumber) {
+                gameList = Array(dbGameField.ownedGames)
+            }
+        }
         var newGameList: [Game] = []
         var currentPlatformList: [Platform] = [Platform]()
-        var gameField: GameField = self.gameFields[selectedRow]
+        var gameField: GameField = self.gameFields[selectedRow].deepCopy()
         var shouldDelete = true
+        
         if consoles.count > 0 {
             for (index, game) in gameList.enumerated() {
                 if !consoles.contains(game.platform!) {
@@ -279,7 +285,7 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
                     newGameList.append(newGameToSave)
                 }
             }
-            self.gamesViewControllers[selectedRow].libraryState = .remove
+            self.gamesViewControllers[selectedRow].libraryState = .addPartial
         } else {
             for (index, game) in gameList.enumerated() {
                 if index == (gameList.count - 1) {
@@ -288,9 +294,8 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
                     game.delete()
                 }
             }
-        }
-        self.gameFields[selectedRow] = gameField
-
+            self.gamesViewControllers[selectedRow].libraryState = .add
+        }        
     }
 }
 
@@ -354,9 +359,20 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
                 cellView.artView?.image = (indexPath.item % 2) == 1 ? #imageLiteral(resourceName: "table_placeholder_dark") : #imageLiteral(resourceName: "table_placeholder_light")
             }
             let gameToShow = self.gameFields[indexPath.row]
-
-            cellView.rightLabel?.text = ""
             
+            cellView.rightLabel?.text = ""
+            var inLibrary = false
+            
+            // Check if game is in library
+            autoreleasepool {
+                let realm = try! Realm()
+                if let _ = realm.object(ofType: GameField.self, forPrimaryKey: gameToShow.idNumber) {
+                    inLibrary = true
+                }
+            }
+            if inLibrary {
+                cellView.libraryState = .addPartial
+            }
             if let name = gameToShow.name {
                 let attributedString = NSMutableAttributedString(string: name)
                 let paragraphStyle = NSMutableParagraphStyle()
@@ -520,13 +536,7 @@ extension LibraryAddSearchViewController: TableViewCellViewDelegate {
         let consoleSelection = ConsoleSelectionTableViewController()
         
         consoleSelection.delegate = self
-        for platform in self.gameFields[row].platforms {
-            self.platformDict[platform.idNumber] = platform
-            consoleSelection.consoles.append(platform)
-        }
-        for game in self.gameFields[row].ownedGames {
-            consoleSelection.selected.append(game.platform!)
-        }
+        consoleSelection.gameField = self.gameFields[row]
         self.navigationController?.pushViewController(consoleSelection, animated: true)
     }
     func removeTapped(_ row: Int) {

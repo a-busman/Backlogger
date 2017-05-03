@@ -22,6 +22,8 @@ class ConsoleSelectionTableViewController: UITableViewController {
     
     var customPlatforms = [Platform]()
     
+    var gameField: GameField?
+    
     var currentMaxId: Int = 0
     
     let reuseIdentifier = "console_selection_cell"
@@ -36,12 +38,30 @@ class ConsoleSelectionTableViewController: UITableViewController {
         //self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
         // Uncomment the following line to preserve selection between presentations
         self.clearsSelectionOnViewWillAppear = false
-        autoreleasepool {
-            let realm = try? Realm()
-            if let custom = realm?.objects(Platform.self).filter("custom = true") {
-                for customPlatform in custom {
-                    customPlatforms.append(customPlatform)
+        
+        if self.gameField != nil {
+            autoreleasepool {
+                let realm = try! Realm()
+                if let dbGameField = realm.object(ofType: GameField.self, forPrimaryKey: gameField!.idNumber) {
+                    for game in dbGameField.ownedGames {
+                        print("adding \(game.platform!.name!)")
+                        selected.append(game.platform!)
+                    }
+                    for platform in dbGameField.platforms {
+                        consoles.append(platform)
+                    }
+                } else {
+                    for platform in gameField!.platforms {
+                        consoles.append(platform)
+                    }
                 }
+            }
+        }
+        autoreleasepool {
+            let realm = try! Realm()
+            let custom = realm.objects(Platform.self).filter("custom = true")
+            for customPlatform in custom {
+                customPlatforms.append(customPlatform)
             }
         }
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.

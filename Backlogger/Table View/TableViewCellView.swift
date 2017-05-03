@@ -101,7 +101,7 @@ class TableViewCellView: UIViewController {
     }
     
     @IBAction func addButtonTapped(sender: UIButton!) {
-        if self.libraryState == .add {
+        if self.libraryState != .remove{
             self.delegate?.addTapped(self.row)
         //} else {
         //    self.delegate?.removeTapped(self.row)

@@ -91,6 +91,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
             let _ = self.navigationController?.popViewController(animated: true)
             return
         }
+        self.tableView?.setContentOffset(CGPoint(x: 0.0, y: -self.startInset), animated: false)
     }
 
     override func viewDidLayoutSubviews() {
