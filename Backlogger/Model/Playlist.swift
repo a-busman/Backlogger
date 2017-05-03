@@ -11,6 +11,8 @@ import RealmSwift
 import Realm
 
 class Playlist: Object {
+    var games: List<Game> = List<Game>()
+    
     required init() {
         super.init()
     }
