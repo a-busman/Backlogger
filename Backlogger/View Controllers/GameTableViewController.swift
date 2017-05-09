@@ -16,14 +16,17 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
     @IBOutlet weak var titleLabel:    UILabel?
     @IBOutlet weak var shadowView:    UIView?
     
-    @IBOutlet weak var shadowBottomLayoutConstraint: NSLayoutConstraint?
-    @IBOutlet weak var titleBottomLayoutConstraint:  NSLayoutConstraint?
-    @IBOutlet weak var imageTopLayoutConstraint:     NSLayoutConstraint?
-    @IBOutlet weak var imageHeightLayoutConstraint:  NSLayoutConstraint?
+    @IBOutlet weak var shadowBottomLayoutConstraint:  NSLayoutConstraint?
+    @IBOutlet weak var titleBottomLayoutConstraint:   NSLayoutConstraint?
+    @IBOutlet weak var backgroundTopLayoutConstraint: NSLayoutConstraint?
+    @IBOutlet weak var imageTopLayoutConstraint:      NSLayoutConstraint?
+    @IBOutlet weak var imageHeightLayoutConstraint:   NSLayoutConstraint?
     
     let shadowGradientLayer = CAGradientLayer()
     
     var games: [Game] = []
+    
+    var images: [UIImage?] = []
     
     var platform: Platform?
     
@@ -31,10 +34,11 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
     
     fileprivate var didLayout = false
     
-    fileprivate let titleBottomInitial:  CGFloat = -10.0
-    fileprivate let shadowBottomInitial: CGFloat = 0.0
-    fileprivate let imageHeightInitial:  CGFloat = 165.0
-    fileprivate let imageTopInitial:     CGFloat = 0.0
+    fileprivate let titleBottomInitial:   CGFloat = -10.0
+    fileprivate let shadowBottomInitial:  CGFloat = 0.0
+    fileprivate let imageHeightInitial:   CGFloat = 165.0
+    fileprivate let imageTopInitial:      CGFloat = 0.0
+    fileprivate let backgroundTopInitial: CGFloat = 165.0
     
     fileprivate let headerMaxHeight:      CGFloat = 165.0
     fileprivate let headerMinHeight:      CGFloat = 80.0
@@ -55,7 +59,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         if let platform = self.platform {
             self.titleLabel?.text = platform.name
             self.games = Array(platform.ownedGames)
-            
+            self.images = Array(repeating: nil, count: self.games.count)
             if platform.name!.characters.count < 10 {
                 self.title = platform.name
             } else {
@@ -99,15 +103,16 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.tableView?.contentInset.top = self.startInset
-        self.tableView?.scrollIndicatorInsets.top = self.startInset
-        self.tableView?.contentInset.bottom = 50.0
-        self.tableView?.scrollIndicatorInsets.bottom = 50.0
-        self.shadowGradientLayer.frame = CGRect(x: 0.0, y: 0.0, width: (self.shadowView?.frame.width)!, height: (self.shadowView?.frame.height)!)
-        let darkColor = UIColor(white: 0.0, alpha: 0.3).cgColor
-        self.shadowGradientLayer.colors = [UIColor.clear.cgColor, darkColor]
-        self.shadowGradientLayer.locations = [0.7, 1.0]
+
         if !self.didLayout {
+            self.shadowGradientLayer.frame = CGRect(x: 0.0, y: 0.0, width: (self.shadowView?.frame.width)!, height: (self.shadowView?.frame.height)!)
+            let darkColor = UIColor(white: 0.0, alpha: 0.3).cgColor
+            self.shadowGradientLayer.colors = [UIColor.clear.cgColor, darkColor]
+            self.shadowGradientLayer.locations = [0.7, 1.0]
+            self.tableView?.contentInset.top = self.startInset
+            self.tableView?.contentInset.bottom = 49.0
+            self.tableView?.scrollIndicatorInsets.top = self.startInset
+            self.tableView?.scrollIndicatorInsets.bottom = 50.0
             self.tableView?.setContentOffset(CGPoint(x: 0.0, y: -self.startInset), animated: false)
             self.shadowView?.layer.addSublayer(shadowGradientLayer)
         }
@@ -195,6 +200,56 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: tableReuseIdentifier) as! TableViewCell
         let cellView = TableViewCellView()
         let game = self.games[indexPath.row]
+        
+        let lineView = UIView()
+        lineView.backgroundColor = .lightGray
+        lineView.translatesAutoresizingMaskIntoConstraints = false
+        cellView.view.addSubview(lineView)
+        
+        if indexPath.row == self.games.count - 1 {
+            NSLayoutConstraint(item: lineView,
+                               attribute: .leading,
+                               relatedBy: .equal,
+                               toItem: cellView.view,
+                               attribute: .leading,
+                               multiplier: 1.0,
+                               constant: 0.0
+                ).isActive = true
+        } else {
+            NSLayoutConstraint(item: lineView,
+                               attribute: .leading,
+                               relatedBy: .equal,
+                               toItem: cellView.titleLabel,
+                               attribute: .leading,
+                               multiplier: 1.0,
+                               constant: 0.0
+                ).isActive = true
+        }
+        NSLayoutConstraint(item: lineView,
+                           attribute: .trailing,
+                           relatedBy: .equal,
+                           toItem: cellView.view,
+                           attribute: .trailing,
+                           multiplier: 1.0,
+                           constant: 0.0
+            ).isActive = true
+        NSLayoutConstraint(item: lineView,
+                           attribute: .top,
+                           relatedBy: .equal,
+                           toItem: cellView.view,
+                           attribute: .bottom,
+                           multiplier: 1.0,
+                           constant: -0.5
+            ).isActive = true
+        NSLayoutConstraint(item: lineView,
+                           attribute: .bottom,
+                           relatedBy: .equal,
+                           toItem: cellView.view,
+                           attribute: .bottom,
+                           multiplier: 1.0,
+                           constant: 0.0
+            ).isActive = true
+        
         cellView.addButtonHidden = true
         cellView.view.translatesAutoresizingMaskIntoConstraints = false
         cell.contentView.addSubview(cellView.view)
@@ -231,17 +286,16 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
                            multiplier: 1.0,
                            constant: 0.0
             ).isActive = true
-        cell.backgroundColor = (indexPath.item % 2) == 1 ? UIColor(colorLiteralRed: 0.9, green: 0.9, blue: 0.9, alpha: 1.0) : .white
         cellView.titleLabel?.text = game.gameFields?.name
         let index = game.gameFields?.releaseDate?.index((game.gameFields?.releaseDate?.startIndex)!, offsetBy: 4)
         cellView.descriptionLabel?.text = game.gameFields?.releaseDate?.substring(to: index!)
         cellView.rightLabel?.text = "\(game.progress)%"
-        if cellView.imageSource == .Placeholder {
-            cellView.artView?.image = (indexPath.item % 2) == 1 ? #imageLiteral(resourceName: "table_placeholder_dark") : #imageLiteral(resourceName: "table_placeholder_light")
+        if cellView.imageSource == .Placeholder && self.images[indexPath.row] == nil {
+            cellView.artView?.image = #imageLiteral(resourceName: "table_placeholder_light")
             game.gameFields?.getImage {
                 result in
                 if let error = result.error {
-                    print(error)
+                    NSLog("\(error)")
                 } else {
                     // Save the image so we won't have to keep fetching it if they scroll
                     if let cellToUpdate = self.tableView?.cellForRow(at: indexPath) {
@@ -250,11 +304,15 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
                                           options: .transitionCrossDissolve,
                                           animations: { cellView.artView?.image = result.value! },
                                           completion: nil)
+                        self.images[indexPath.row] = result.value
                         cellView.imageSource = .Downloaded
                         cellToUpdate.setNeedsLayout() // need to reload the view, which won't happen otherwise since this is in an async call
                     }
                 }
             }
+        } else if self.images[indexPath.row] != nil {
+            cellView.artView?.image = (self.images[indexPath.row])!
+            cellView.imageSource = .Downloaded
         }
         return cell
     }
@@ -282,9 +340,9 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if self.didLayout {
             let offset = scrollView.contentOffset.y * -1.0
-            print(offset)
             self.titleBottomLayoutConstraint?.constant = offset - self.startInset + self.titleBottomInitial
             self.shadowBottomLayoutConstraint?.constant = offset - self.startInset
+            self.backgroundTopLayoutConstraint?.constant = offset - self.startInset + self.backgroundTopInitial
             if offset > self.startInset {
                 self.imageHeightLayoutConstraint?.constant = offset - self.startInset + self.imageHeightInitial
                 self.imageTopLayoutConstraint?.constant = 0.0

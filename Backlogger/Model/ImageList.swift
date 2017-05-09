@@ -119,7 +119,7 @@ class ImageList: Object {
             .response { response in
                 guard let imageData = response.data else {
                     
-                    print("Could not get image from image URL returned in search results")
+                    NSLog("Could not get image from image URL returned in search results")
                     completionHandler(.failure(BackendError.objectSerialization(reason:
                         "Could not get image from image URL returned in search results")))
                     return
@@ -127,8 +127,8 @@ class ImageList: Object {
                 if let image = UIImage(data: imageData) {
                     completionHandler(.success(image))
                 } else {
-                    print("Couldn't convert to UIImage")
-                    print("URL: \(response.request?.url?.absoluteString)")
+                    NSLog("Couldn't convert to UIImage")
+                    NSLog("URL: \(response.request?.url?.absoluteString)")
                     completionHandler(.failure(BackendError.objectSerialization(reason: "Could not convert data to UIImage")))
                 }
         }

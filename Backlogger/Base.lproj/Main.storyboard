@@ -42,13 +42,16 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="gHQ-JI-FLq">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="playlist_cell" id="gHQ-JI-FLq" customClass="TableViewCell" customModule="Backlogger" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="gHQ-JI-FLq" id="48K-F2-Ybp">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="jcV-33-EHh" kind="presentation" id="1l0-rX-C8t"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -56,7 +59,14 @@
                             <outlet property="delegate" destination="VuG-Nz-qef" id="71R-ME-7hU"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Playlists" id="bhX-8J-HOA"/>
+                    <navigationItem key="navigationItem" title="Playlists" id="bhX-8J-HOA">
+                        <barButtonItem key="rightBarButtonItem" title="Sort" id="3T0-WP-QbY">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="tableView" destination="yUb-vs-tlU" id="Z70-1C-RHX"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="w6f-eR-dVa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -141,13 +151,13 @@
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="BIX-jT-PEG">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="0.92156862750000001" green="0.92156862750000001" blue="0.92156862750000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="console_table_cell" id="RnJ-LV-Fpa" customClass="TableViewCell" customModule="Backlogger" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="console_table_cell" id="RnJ-LV-Fpa" customClass="TableViewCell" customModule="Backlogger" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="RnJ-LV-Fpa" id="Uvq-zu-GmZ">
-                                            <rect key="frame" x="0.0" y="0.0" width="342" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                         <connections>
@@ -198,7 +208,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Library" id="DbQ-cs-g3k">
-                        <barButtonItem key="leftBarButtonItem" image="filter" id="2zn-Ad-TPb">
+                        <barButtonItem key="leftBarButtonItem" title="Sort" id="2zn-Ad-TPb">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
                                 <action selector="leftBarButtonTappedWithSender:" destination="NHJ-P8-wb8" id="n3K-aM-JTP"/>
@@ -340,7 +350,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uWJ-Hj-vVB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3242" y="-17"/>
+            <point key="canvasLocation" x="4065" y="633"/>
         </scene>
         <!--Info-->
         <scene sceneID="QXh-k6-wwf">
@@ -600,7 +610,7 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                                             <rect key="frame" x="20" y="20" width="128" height="128"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="info_image_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="e03-aO-4Lk">
-                                                    <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                                    <rect key="frame" x="0.5" y="0.5" width="127" height="127"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="e03-aO-4Lk" secondAttribute="height" multiplier="1:1" id="eeh-IM-vDY"/>
                                                     </constraints>
@@ -611,19 +621,19 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                                                     </userDefinedRuntimeAttributes>
                                                 </imageView>
                                                 <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GlE-oM-j4W">
-                                                    <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                                    <rect key="frame" x="0.5" y="0.5" width="127" height="127"/>
                                                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="6TS-w3-tkP">
-                                                        <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="127" height="127"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
                                                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lJV-EB-lhU">
-                                                                <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="127" height="127"/>
                                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="PAp-Vg-ZfT">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="127" height="127"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0%" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jvE-Vz-oPB">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                                                            <rect key="frame" x="0.0" y="0.0" width="127" height="127"/>
                                                                             <fontDescription key="fontDescription" type="system" pointSize="42"/>
                                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                             <nil key="highlightedColor"/>
@@ -656,7 +666,7 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                                                     </userDefinedRuntimeAttributes>
                                                 </visualEffectView>
                                             </subviews>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                             <gestureRecognizers/>
                                             <constraints>
                                                 <constraint firstItem="e03-aO-4Lk" firstAttribute="centerY" secondItem="srX-AB-VRu" secondAttribute="centerY" id="5u3-Tu-Jga"/>
@@ -664,10 +674,10 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                                                 <constraint firstAttribute="width" secondItem="srX-AB-VRu" secondAttribute="height" id="Kpp-Gk-ohs"/>
                                                 <constraint firstItem="GlE-oM-j4W" firstAttribute="centerY" secondItem="srX-AB-VRu" secondAttribute="centerY" id="LZD-bi-NAX"/>
                                                 <constraint firstItem="GlE-oM-j4W" firstAttribute="centerX" secondItem="srX-AB-VRu" secondAttribute="centerX" id="U20-f4-6EY"/>
-                                                <constraint firstItem="GlE-oM-j4W" firstAttribute="width" secondItem="srX-AB-VRu" secondAttribute="width" id="YeR-sX-Gfs"/>
-                                                <constraint firstItem="e03-aO-4Lk" firstAttribute="height" secondItem="srX-AB-VRu" secondAttribute="height" id="axA-95-Y5A"/>
-                                                <constraint firstItem="e03-aO-4Lk" firstAttribute="width" secondItem="srX-AB-VRu" secondAttribute="width" id="hT9-Lr-vQv"/>
-                                                <constraint firstItem="GlE-oM-j4W" firstAttribute="height" secondItem="srX-AB-VRu" secondAttribute="height" id="n2u-Ei-ZuN"/>
+                                                <constraint firstItem="GlE-oM-j4W" firstAttribute="width" secondItem="srX-AB-VRu" secondAttribute="width" constant="-1" id="YeR-sX-Gfs"/>
+                                                <constraint firstItem="e03-aO-4Lk" firstAttribute="height" secondItem="srX-AB-VRu" secondAttribute="height" constant="-1" id="axA-95-Y5A"/>
+                                                <constraint firstItem="e03-aO-4Lk" firstAttribute="width" secondItem="srX-AB-VRu" secondAttribute="width" constant="-1" id="hT9-Lr-vQv"/>
+                                                <constraint firstItem="GlE-oM-j4W" firstAttribute="height" secondItem="srX-AB-VRu" secondAttribute="height" constant="-1" id="n2u-Ei-ZuN"/>
                                                 <constraint firstItem="e03-aO-4Lk" firstAttribute="centerX" secondItem="srX-AB-VRu" secondAttribute="centerX" id="vDr-Wf-ee9"/>
                                             </constraints>
                                             <userDefinedRuntimeAttributes>
@@ -1090,7 +1100,7 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                     </connections>
                 </panGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="4064.8000000000002" y="-18.440779610194905"/>
+            <point key="canvasLocation" x="4878" y="633"/>
         </scene>
         <!--Console Selection Table View Controller-->
         <scene sceneID="eW9-7N-0Gf">
@@ -1118,7 +1128,66 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PdH-bq-iMu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4802" y="-23"/>
+            <point key="canvasLocation" x="4878" y="-59"/>
+        </scene>
+        <!--New Playlist-->
+        <scene sceneID="6Vj-Rn-5Gd">
+            <objects>
+                <tableViewController id="MPi-Yo-5w4" customClass="PlaylistDetailsViewController" customModule="Backlogger" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="e1n-u7-4D7">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="playlist_detail_cell" id="Y1C-fa-7fk" customClass="TableViewCell" customModule="Backlogger" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Y1C-fa-7fk" id="ZtL-nL-wpP">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="MPi-Yo-5w4" id="QZP-On-wDQ"/>
+                            <outlet property="delegate" destination="MPi-Yo-5w4" id="sdm-cl-a5h"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="New Playlist" id="XD9-Fq-qKR">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="oez-hA-BP7">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <action selector="cancelTappedWithSender:" destination="MPi-Yo-5w4" id="PB5-Q0-b4B"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="1mA-vd-7k0">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <action selector="doneTappedWithSender:" destination="MPi-Yo-5w4" id="MjD-IN-F1o"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Cox-ug-b8m" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3241" y="-17"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="xfg-nU-3vk">
+            <objects>
+                <navigationController id="jcV-33-EHh" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="YKW-IB-2H8">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.0" green="0.72549019609999998" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="MPi-Yo-5w4" kind="relationship" relationship="rootViewController" id="cSK-p2-89Z"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Glq-up-bJx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2449" y="-17"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Y8M-Ug-346">
@@ -1135,7 +1204,7 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xWt-wf-TQP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2449" y="-17"/>
+            <point key="canvasLocation" x="3241" y="633"/>
         </scene>
         <!--Game Table View Controller-->
         <scene sceneID="rQH-cT-yXI">
@@ -1188,15 +1257,19 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                                     <constraint firstItem="zI5-hc-onU" firstAttribute="trailing" secondItem="pFu-eN-03J" secondAttribute="trailing" id="oq4-D7-FVv"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbc-zl-XaZ">
+                                <rect key="frame" x="0.0" y="229" width="375" height="389"/>
+                                <color key="backgroundColor" red="0.92156862750000001" green="0.92156862750000001" blue="0.92156862750000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="y7t-In-c23">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="game_cell" id="VwL-vg-cbS" customClass="TableViewCell" customModule="Backlogger" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="game_cell" id="VwL-vg-cbS" customClass="TableViewCell" customModule="Backlogger" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="VwL-vg-cbS" id="tiF-dM-fMF">
-                                            <rect key="frame" x="0.0" y="0.0" width="342" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                         <connections>
@@ -1215,13 +1288,17 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="rbc-zl-XaZ" firstAttribute="leading" secondItem="TeE-yH-QFM" secondAttribute="leading" id="4BG-kk-c8j"/>
+                            <constraint firstItem="rbc-zl-XaZ" firstAttribute="bottom" secondItem="tVV-HX-Lxr" secondAttribute="top" id="4RG-7o-dAd"/>
                             <constraint firstItem="pFu-eN-03J" firstAttribute="top" secondItem="QyH-hG-WwG" secondAttribute="bottom" id="J6q-Ck-fhk"/>
                             <constraint firstItem="pFu-eN-03J" firstAttribute="centerX" secondItem="TeE-yH-QFM" secondAttribute="centerX" id="S3T-lG-acC"/>
                             <constraint firstItem="y7t-In-c23" firstAttribute="centerX" secondItem="TeE-yH-QFM" secondAttribute="centerX" id="h26-g2-yU8"/>
                             <constraint firstItem="y7t-In-c23" firstAttribute="height" secondItem="TeE-yH-QFM" secondAttribute="height" id="ip1-UL-TzA"/>
                             <constraint firstItem="y7t-In-c23" firstAttribute="centerY" secondItem="TeE-yH-QFM" secondAttribute="centerY" id="mEO-8o-BDW"/>
                             <constraint firstItem="y7t-In-c23" firstAttribute="width" secondItem="TeE-yH-QFM" secondAttribute="width" id="nFf-Md-vXU"/>
+                            <constraint firstItem="rbc-zl-XaZ" firstAttribute="top" secondItem="QyH-hG-WwG" secondAttribute="bottom" constant="165" id="s8T-aW-RyJ"/>
                             <constraint firstItem="pFu-eN-03J" firstAttribute="width" secondItem="TeE-yH-QFM" secondAttribute="width" id="sva-t2-fcd"/>
+                            <constraint firstItem="rbc-zl-XaZ" firstAttribute="trailing" secondItem="TeE-yH-QFM" secondAttribute="trailing" id="vw3-9W-bja"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="VbX-aS-wuD">
@@ -1233,6 +1310,7 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="backgroundTopLayoutConstraint" destination="s8T-aW-RyJ" id="FDt-qF-JC4"/>
                         <outlet property="headerView" destination="pFu-eN-03J" id="SQT-J8-cUk"/>
                         <outlet property="imageHeightLayoutConstraint" destination="yem-GX-ILA" id="FLT-Nc-hAk"/>
                         <outlet property="imageTopLayoutConstraint" destination="2b2-C4-W6B" id="pE8-cl-mpg"/>
@@ -1414,7 +1492,6 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
         <image name="check-empty" width="10" height="10"/>
         <image name="check-empty-black" width="25" height="25"/>
         <image name="controller_icon" width="25" height="25"/>
-        <image name="filter" width="25" height="25"/>
         <image name="heart-empty" width="30" height="30"/>
         <image name="info_image_placeholder" width="128" height="128"/>
         <image name="large_plus" width="200" height="200"/>
@@ -1426,7 +1503,7 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
         <image name="star-white" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="oSh-fC-Gev"/>
         <segue reference="I95-sA-tJG"/>
-        <segue reference="dQU-AM-wLF"/>
     </inferredMetricsTieBreakers>
 </document>

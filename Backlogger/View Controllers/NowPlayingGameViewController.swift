@@ -59,7 +59,7 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
                 if !gameField.hasDetails {
                     gameField.updateGameDetails { result in
                         if result.error != nil {
-                            print((result.error?.localizedDescription)!)
+                            NSLog("\((result.error?.localizedDescription)!)")
                             return
                         }
                         self.addDetails()
@@ -218,7 +218,7 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
         }
         currentGame.gameFields?.getImage(withSize: .SuperUrl, { result in
             if let error = result.error {
-                print(error)
+                NSLog("\(error)")
             } else {
                 if let imageView = self.coverImageView {
                     UIView.transition(with: imageView,

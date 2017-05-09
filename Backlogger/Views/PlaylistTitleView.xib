@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PlaylistTitleView" customModule="Backlogger" customModuleProvider="target">
+            <connections>
+                <outlet property="blurView" destination="GLr-ne-YpV" id="GJF-i8-33z"/>
+                <outlet property="imageView" destination="R4n-Bn-iBO" id="qJR-NI-BT1"/>
+                <outlet property="titleTextView" destination="dgA-6g-nKX" id="rp9-6d-Pdx"/>
+                <outlet property="view" destination="6TG-YZ-Va9" id="FxX-Go-xbM"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="6TG-YZ-Va9">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="150"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ofh-AL-noF">
+                    <rect key="frame" x="15" y="4" width="131.5" height="131.5"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="new_playlist" translatesAutoresizingMaskIntoConstraints="NO" id="R4n-Bn-iBO">
+                            <rect key="frame" x="1" y="1" width="129.5" height="129.5"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="5"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </imageView>
+                        <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GLr-ne-YpV">
+                            <rect key="frame" x="1" y="1" width="129.5" height="129.5"/>
+                            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="flg-nh-9a5">
+                                <rect key="frame" x="0.0" y="0.0" width="129.5" height="129.5"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="agr-sR-1kn">
+                                        <rect key="frame" x="0.0" y="0.0" width="129.5" height="129.5"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="lIf-Z6-0gB">
+                                            <rect key="frame" x="0.0" y="0.0" width="129.5" height="129.5"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="controller_icon_lg" translatesAutoresizingMaskIntoConstraints="NO" id="0FD-GV-eq3">
+                                                    <rect key="frame" x="25" y="25" width="80" height="80"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="0FD-GV-eq3" secondAttribute="height" id="J3j-Rn-aJH"/>
+                                                    </constraints>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="0FD-GV-eq3" firstAttribute="centerX" secondItem="lIf-Z6-0gB" secondAttribute="centerX" id="Q0z-jD-8Y7"/>
+                                                <constraint firstItem="0FD-GV-eq3" firstAttribute="leading" secondItem="lIf-Z6-0gB" secondAttribute="leading" constant="25" id="jc7-Bm-RHX"/>
+                                                <constraint firstItem="0FD-GV-eq3" firstAttribute="centerY" secondItem="lIf-Z6-0gB" secondAttribute="centerY" id="mz4-FE-bvl"/>
+                                            </constraints>
+                                        </view>
+                                        <vibrancyEffect>
+                                            <blurEffect style="light"/>
+                                        </vibrancyEffect>
+                                    </visualEffectView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="agr-sR-1kn" firstAttribute="top" secondItem="flg-nh-9a5" secondAttribute="top" id="NAg-0K-FAx"/>
+                                    <constraint firstAttribute="trailing" secondItem="agr-sR-1kn" secondAttribute="trailing" id="P5D-Yh-enL"/>
+                                    <constraint firstAttribute="bottom" secondItem="agr-sR-1kn" secondAttribute="bottom" id="gXp-yb-I9K"/>
+                                    <constraint firstItem="agr-sR-1kn" firstAttribute="leading" secondItem="flg-nh-9a5" secondAttribute="leading" id="j3R-Il-7jg"/>
+                                </constraints>
+                            </view>
+                            <blurEffect style="light"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="5"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </visualEffectView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="Ofh-AL-noF" secondAttribute="height" id="65c-hY-AkK"/>
+                        <constraint firstItem="R4n-Bn-iBO" firstAttribute="bottom" secondItem="Ofh-AL-noF" secondAttribute="bottom" constant="-0.5" id="8em-Nd-D5R"/>
+                        <constraint firstItem="R4n-Bn-iBO" firstAttribute="leading" secondItem="Ofh-AL-noF" secondAttribute="leading" constant="0.5" id="BQj-ph-xZs"/>
+                        <constraint firstAttribute="width" constant="131.5" id="Fjh-hN-WV4"/>
+                        <constraint firstItem="GLr-ne-YpV" firstAttribute="bottom" secondItem="Ofh-AL-noF" secondAttribute="bottom" constant="-0.5" id="IQA-j9-eZ1"/>
+                        <constraint firstItem="GLr-ne-YpV" firstAttribute="leading" secondItem="Ofh-AL-noF" secondAttribute="leading" constant="0.5" id="P93-pw-ebm"/>
+                        <constraint firstItem="R4n-Bn-iBO" firstAttribute="trailing" secondItem="Ofh-AL-noF" secondAttribute="trailing" constant="-0.5" id="SqT-ql-t7x"/>
+                        <constraint firstItem="GLr-ne-YpV" firstAttribute="trailing" secondItem="Ofh-AL-noF" secondAttribute="trailing" constant="-0.5" id="a5P-Q9-Vn2"/>
+                        <constraint firstItem="R4n-Bn-iBO" firstAttribute="top" secondItem="Ofh-AL-noF" secondAttribute="top" constant="0.5" id="jd2-op-DkE"/>
+                        <constraint firstItem="GLr-ne-YpV" firstAttribute="top" secondItem="Ofh-AL-noF" secondAttribute="top" constant="0.5" id="w8D-ki-Oue"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="5"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="dgA-6g-nKX">
+                    <rect key="frame" x="167" y="-1" width="198" height="493.5"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" spellCheckingType="no"/>
+                </textView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="Ofh-AL-noF" firstAttribute="leading" secondItem="6TG-YZ-Va9" secondAttribute="leading" constant="15" id="6WD-mE-HH7"/>
+                <constraint firstItem="dgA-6g-nKX" firstAttribute="top" secondItem="Ofh-AL-noF" secondAttribute="top" constant="-5" id="LU9-fI-XDJ"/>
+                <constraint firstItem="dgA-6g-nKX" firstAttribute="trailing" secondItem="6TG-YZ-Va9" secondAttribute="trailing" constant="-10" id="fUo-zt-JOO"/>
+                <constraint firstItem="dgA-6g-nKX" firstAttribute="leading" secondItem="Ofh-AL-noF" secondAttribute="trailing" constant="20" id="is5-ul-tY1"/>
+                <constraint firstItem="Ofh-AL-noF" firstAttribute="top" secondItem="6TG-YZ-Va9" secondAttribute="top" constant="4.5" id="qE1-BX-rzX"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="33.5" y="192"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="controller_icon_lg" width="170" height="170"/>
+        <image name="new_playlist" width="90" height="90"/>
+    </resources>
+</document>

@@ -174,7 +174,6 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         
         autoreleasepool {
             let realm = try? Realm()
-            print(Realm.Configuration.defaultConfiguration.fileURL?.absoluteString ?? "")
             if let gameFieldId = self.gameFieldId {
                 if self._gameField == nil {
                     self._gameField = realm?.object(ofType: GameField.self, forPrimaryKey: gameFieldId)
@@ -420,12 +419,6 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     }
     
     override func viewDidLayoutSubviews() {
-        self.shadowView?.layer.shadowOpacity = 0.8
-        self.shadowView?.layer.shadowRadius = 5.0
-        self.shadowView?.layer.shadowColor = UIColor.black.cgColor
-        self.shadowView?.layer.shadowPath = UIBezierPath(rect: (self.shadowView?.bounds)!).cgPath
-        self.shadowView?.layer.shadowOffset = CGSize.zero
-        
         self.detailsScrollView?.scrollIndicatorInsets = UIEdgeInsets(top: (self.headerView?.bounds.height)! + 25.0 + (self.navigationController?.navigationBar.bounds.height ?? -20.0), left: 0, bottom: self.tabBarController?.tabBar.bounds.height ?? 0.0, right: 0)
         self.detailsScrollView?.contentInset = UIEdgeInsets(top: (self.headerView?.bounds.height)! + 25.0 + (self.navigationController?.navigationBar.bounds.height ?? -20.0), left: 0.0, bottom: self.tabBarController?.tabBar.bounds.height ?? 0.0, right: 0.0)
         
@@ -460,7 +453,6 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
             self.navigationController?.pushViewController(consoleSelection, animated: true)
         } else {
             var gameFieldCopy: GameField?
-            print(self._gameField?.ownedGames.count ?? -1)
             let endIndex = (self._gameField?.ownedGames.endIndex)!
             // All links are broken at this point
             for (i, game) in (self._gameField?.ownedGames.enumerated())! {
@@ -947,10 +939,11 @@ extension GameDetailsViewController: UICollectionViewDelegate, UICollectionViewD
         // get a reference to our storyboard cell
         self.imageCollectionView?.register(UINib(nibName: "ImageCell", bundle: Bundle.main), forCellWithReuseIdentifier: imageCellReuseIdentifier)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: imageCellReuseIdentifier, for: indexPath)
-        let cellView = UIImageView()
+        let cellView = UIView()
+        cellView.backgroundColor = .lightGray
         cellView.clipsToBounds = true
+        cellView.layer.cornerRadius = 5.0
         cell.clipsToBounds = false
-        cellView.contentMode = .scaleAspectFill
         cellView.translatesAutoresizingMaskIntoConstraints = false
         
         cell.contentView.addSubview(cellView)
@@ -986,22 +979,55 @@ extension GameDetailsViewController: UICollectionViewDelegate, UICollectionViewD
                            multiplier: 1.0,
                            constant: -5.0
             ).isActive = true
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.cornerRadius = 5.0
+        imageView.clipsToBounds = true
         
-        cell.contentView.layer.shadowOpacity = 1.0
-        cell.contentView.layer.shadowRadius = 2.0
-        cell.contentView.layer.shadowColor = UIColor.black.cgColor
-        let newBounds = cell.bounds
-        cell.contentView.layer.shadowPath = UIBezierPath(rect: CGRect(x: newBounds.origin.x + 5, y: newBounds.origin.y + 5, width: newBounds.width - 10, height: newBounds.height - 10)).cgPath
-        cell.contentView.layer.shadowOffset = .zero
+        cellView.addSubview(imageView)
+        NSLayoutConstraint(item: imageView,
+                           attribute: .leading,
+                           relatedBy: .equal,
+                           toItem: cellView,
+                           attribute: .leading,
+                           multiplier: 1.0,
+                           constant: 0.5
+            ).isActive = true
+        NSLayoutConstraint(item: imageView,
+                           attribute: .trailing,
+                           relatedBy: .equal,
+                           toItem: cellView,
+                           attribute: .trailing,
+                           multiplier: 1.0,
+                           constant: -0.5
+            ).isActive = true
+        NSLayoutConstraint(item: imageView,
+                           attribute: .top,
+                           relatedBy: .equal,
+                           toItem: cellView,
+                           attribute: .top,
+                           multiplier: 1.0,
+                           constant: 0.5
+            ).isActive = true
+        NSLayoutConstraint(item: imageView,
+                           attribute: .bottom,
+                           relatedBy: .equal,
+                           toItem: cellView,
+                           attribute: .bottom,
+                           multiplier: 1.0,
+                           constant: -0.5
+            ).isActive = true
+        
         if indexPath.item >= (self.images?.count)! {
-            cellView.image = #imageLiteral(resourceName: "info_image_placeholder")
+            imageView.image = #imageLiteral(resourceName: "info_image_placeholder")
         } else {
             if (self.images?.count)! > 0 {
                 if let image = self.images?[indexPath.item] {
-                    UIView.transition(with: cellView,
+                    UIView.transition(with: imageView,
                                       duration:0.5,
                                       options: .transitionCrossDissolve,
-                                      animations: { cellView.image = image },
+                                      animations: { imageView.image = image },
                                       completion: nil)
                 }
             }

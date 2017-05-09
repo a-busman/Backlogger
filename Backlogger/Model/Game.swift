@@ -287,13 +287,13 @@ class GameField: Field {
     private class func gamesArrayFromResponse(_ response: DataResponse<Any>) -> Result<SearchResults> {
         guard response.result.error == nil else {
             // got an error in getting the data, need to handle it
-            print(response.result.error!)
+            NSLog("\(response.result.error!)")
             return .failure(response.result.error!)
         }
         
         // make sure we got JSON and it's a dictionary
         guard let json = response.result.value as? [String: Any] else {
-            print("didn't get gamess object as JSON from API")
+            NSLog("didn't get gamess object as JSON from API")
             return .failure(BackendError.objectSerialization(reason:
                 "Did not get JSON dictionary in response"))
         }
@@ -321,13 +321,13 @@ class GameField: Field {
     private class func gameFromResponse(_ response: DataResponse<Any>) -> Result<GameField> {
         guard response.result.error == nil else {
             // got an error in getting the data, need to handle it
-            print(response.result.error!)
+            NSLog("\(response.result.error!)")
             return .failure(response.result.error!)
         }
         
         // make sure we got JSON and it's a dictionary
         guard let json = response.result.value as? [String: Any] else {
-            print("didn't get gamess object as JSON from API")
+            NSLog("didn't get gamess object as JSON from API")
             return .failure(BackendError.objectSerialization(reason:
                 "Did not get JSON dictionary in response"))
         }
@@ -367,8 +367,10 @@ class GameField: Field {
         if self.request != nil {
             self.request!.cancel()
         }
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         self.request = Alamofire.request(url)
             .responseJSON { response in
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
                 if let error = response.result.error {
                     completionHandler(.failure(error))
                     return
@@ -749,12 +751,19 @@ class Game: Object {
     dynamic var finished:   Bool       = false
     dynamic var notes:      String?    = nil
     
+    var linkedPlaylists: [Playlist] {
+        if let objects = realm?.objects(Playlist.self).filter("%@ IN games", self) {
+            return Array(objects)
+        } else {
+            return [Playlist]()
+        }
+    }
+    
     override static func primaryKey() -> String? {
         return "uuid"
     }
     
     func add(_ gameField: GameField?, _ platform: Platform?) {
-        print(gameField?.ownedGames.count ?? -1)
         autoreleasepool {
             let realm = try? Realm()
 
@@ -775,7 +784,6 @@ class Game: Object {
                 self.gameFields = dbGameField
                 self.platform = dbPlatform
             }
-            print(gameField?.ownedGames.count ?? -1)
         }
     }
     

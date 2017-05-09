@@ -44,7 +44,6 @@ class ConsoleSelectionTableViewController: UITableViewController {
                 let realm = try! Realm()
                 if let dbGameField = realm.object(ofType: GameField.self, forPrimaryKey: gameField!.idNumber) {
                     for game in dbGameField.ownedGames {
-                        print("adding \(game.platform!.name!)")
                         selected.append(game.platform!)
                     }
                     for platform in dbGameField.platforms {

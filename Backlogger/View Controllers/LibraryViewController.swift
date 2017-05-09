@@ -108,6 +108,56 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: tableReuseIdentifier)!
         let cellView = TableViewCellView()
         let platform = self.platforms![indexPath.row]
+        
+        let lineView = UIView()
+        lineView.backgroundColor = .lightGray
+        lineView.translatesAutoresizingMaskIntoConstraints = false
+        cellView.view.addSubview(lineView)
+        
+        if indexPath.row == (self.platforms?.count)! - 1 {
+            NSLayoutConstraint(item: lineView,
+                               attribute: .leading,
+                               relatedBy: .equal,
+                               toItem: cellView.view,
+                               attribute: .leading,
+                               multiplier: 1.0,
+                               constant: 0.0
+                ).isActive = true
+        } else {
+            NSLayoutConstraint(item: lineView,
+                               attribute: .leading,
+                               relatedBy: .equal,
+                               toItem: cellView.titleLabel,
+                               attribute: .leading,
+                               multiplier: 1.0,
+                               constant: 0.0
+                ).isActive = true
+        }
+        NSLayoutConstraint(item: lineView,
+                           attribute: .trailing,
+                           relatedBy: .equal,
+                           toItem: cellView.view,
+                           attribute: .trailing,
+                           multiplier: 1.0,
+                           constant: 0.0
+            ).isActive = true
+        NSLayoutConstraint(item: lineView,
+                           attribute: .top,
+                           relatedBy: .equal,
+                           toItem: cellView.view,
+                           attribute: .bottom,
+                           multiplier: 1.0,
+                           constant: -0.5
+            ).isActive = true
+        NSLayoutConstraint(item: lineView,
+                           attribute: .bottom,
+                           relatedBy: .equal,
+                           toItem: cellView.view,
+                           attribute: .bottom,
+                           multiplier: 1.0,
+                           constant: 0.0
+            ).isActive = true
+        
         cellView.view.translatesAutoresizingMaskIntoConstraints = false
         cell.contentView.addSubview(cellView.view)
         
@@ -150,11 +200,11 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
             cellView.rightLabel?.text = "\(platform.ownedGames.count)"
             
             if cellView.imageSource == .Placeholder {
-                cellView.artView?.image = (indexPath.item % 2) == 1 ? #imageLiteral(resourceName: "table_placeholder_dark") : #imageLiteral(resourceName: "table_placeholder_light")
+                cellView.artView?.image = #imageLiteral(resourceName: "table_placeholder_light")
                 platform.image?.getImage(field: .IconUrl) {
                     result in
                     if let error = result.error {
-                        print(error)
+                        NSLog("\(error)")
                     } else {
                         // Save the image so we won't have to keep fetching it if they scroll
                         if let cellToUpdate = self.tableView?.cellForRow(at: indexPath) {
@@ -172,8 +222,6 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
         } else {
             
         }
-        
-        cell.backgroundColor = (indexPath.item % 2) == 1 ? UIColor(colorLiteralRed: 0.9, green: 0.9, blue: 0.9, alpha: 1.0) : .white
         return cell
     }
     

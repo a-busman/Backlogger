@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -16,7 +17,7 @@
                 <outlet property="artView" destination="vra-l8-XHu" id="PMj-EP-nxx"/>
                 <outlet property="descriptionLabel" destination="MYG-Sy-BgC" id="KVQ-Ve-6CK"/>
                 <outlet property="rightLabel" destination="lPU-fk-BXR" id="MO6-dM-G3n"/>
-                <outlet property="rightTrailingLayoutConstraint" destination="ufY-9E-rVD" id="dsn-6s-ghu"/>
+                <outlet property="rightTrailingLayoutConstraint" destination="0Nl-7M-FB0" id="Aiw-2u-hjh"/>
                 <outlet property="titleLabel" destination="M86-Nr-Z7l" id="Yk6-jB-ehO"/>
                 <outlet property="view" destination="iN0-l3-epB" id="Onw-Yu-fZk"/>
             </connections>
@@ -26,23 +27,47 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="55"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vra-l8-XHu">
-                    <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
-                </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Super Smash Bros. Melee" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M86-Nr-Z7l" userLabel="Title">
-                    <rect key="frame" x="60" y="5" width="220.5" height="20.5"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JUf-60-Ilm">
+                    <rect key="frame" x="5" y="5" width="45" height="45"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vra-l8-XHu">
+                            <rect key="frame" x="0.0" y="0.0" width="45" height="44"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="2"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="JUf-60-Ilm" secondAttribute="height" id="Ggj-JA-vsn"/>
+                        <constraint firstItem="vra-l8-XHu" firstAttribute="trailing" secondItem="JUf-60-Ilm" secondAttribute="trailing" constant="-0.5" id="Ihe-EI-2lb"/>
+                        <constraint firstItem="vra-l8-XHu" firstAttribute="leading" secondItem="JUf-60-Ilm" secondAttribute="leading" constant="0.5" id="KJC-RJ-hPr"/>
+                        <constraint firstItem="vra-l8-XHu" firstAttribute="top" secondItem="JUf-60-Ilm" secondAttribute="top" constant="0.5" id="dgh-bJ-K1m"/>
+                        <constraint firstItem="vra-l8-XHu" firstAttribute="bottom" secondItem="JUf-60-Ilm" secondAttribute="bottom" constant="-0.5" id="yRA-go-qje"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="2"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Super Smash Bros. Melee" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M86-Nr-Z7l" userLabel="Title">
+                    <rect key="frame" x="55" y="7" width="235" height="20.5"/>
                     <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Developer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MYG-Sy-BgC" userLabel="Description">
-                    <rect key="frame" x="60" y="32.5" width="220.5" height="20"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <rect key="frame" x="55" y="27.5" width="235" height="17"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="100%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lPU-fk-BXR" userLabel="Right">
-                    <rect key="frame" x="285.5" y="17" width="42" height="21"/>
+                    <rect key="frame" x="295" y="17" width="42" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
@@ -61,20 +86,19 @@
                 </button>
             </subviews>
             <constraints>
+                <constraint firstItem="lPU-fk-BXR" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" constant="-38" id="0Nl-7M-FB0"/>
+                <constraint firstItem="M86-Nr-Z7l" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="centerY" id="2lG-bS-mlC"/>
+                <constraint firstItem="MYG-Sy-BgC" firstAttribute="leading" secondItem="M86-Nr-Z7l" secondAttribute="leading" id="7gK-Iq-vs3"/>
                 <constraint firstItem="okp-sa-rRu" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" constant="-5" id="A6Q-hn-uzG"/>
-                <constraint firstItem="MYG-Sy-BgC" firstAttribute="leading" secondItem="vra-l8-XHu" secondAttribute="trailing" constant="5" id="B6P-OL-A0r"/>
                 <constraint firstItem="lPU-fk-BXR" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="Rng-hT-qPp"/>
-                <constraint firstItem="vra-l8-XHu" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="height" id="X1M-sA-fcr"/>
-                <constraint firstItem="M86-Nr-Z7l" firstAttribute="leading" secondItem="vra-l8-XHu" secondAttribute="trailing" constant="5" id="eal-pK-TJg"/>
+                <constraint firstItem="JUf-60-Ilm" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="5" id="Udn-QJ-Urk"/>
+                <constraint firstItem="M86-Nr-Z7l" firstAttribute="leading" secondItem="JUf-60-Ilm" secondAttribute="trailing" constant="5" id="YDj-NC-Foq"/>
                 <constraint firstItem="M86-Nr-Z7l" firstAttribute="trailing" secondItem="lPU-fk-BXR" secondAttribute="leading" constant="-5" id="f6M-Bl-mgv"/>
                 <constraint firstItem="MYG-Sy-BgC" firstAttribute="trailing" secondItem="lPU-fk-BXR" secondAttribute="leading" constant="-5" id="frQ-c3-SOl"/>
+                <constraint firstItem="JUf-60-Ilm" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" constant="-5" id="gcr-M3-vNd"/>
                 <constraint firstItem="okp-sa-rRu" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="hT0-X6-0I0"/>
-                <constraint firstItem="MYG-Sy-BgC" firstAttribute="top" secondItem="M86-Nr-Z7l" secondAttribute="bottom" constant="7" id="l8d-cN-x9n"/>
-                <constraint firstItem="vra-l8-XHu" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="nPL-mg-cJB"/>
-                <constraint firstItem="vra-l8-XHu" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" id="tIY-Gf-YJK"/>
-                <constraint firstItem="lPU-fk-BXR" firstAttribute="trailing" secondItem="okp-sa-rRu" secondAttribute="leading" constant="-10" id="ufY-9E-rVD"/>
-                <constraint firstItem="M86-Nr-Z7l" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="5" id="yZp-Wd-iF7"/>
-                <constraint firstItem="vra-l8-XHu" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="zVt-EB-PJW"/>
+                <constraint firstItem="JUf-60-Ilm" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="5" id="iLq-zN-mzt"/>
+                <constraint firstItem="MYG-Sy-BgC" firstAttribute="top" secondItem="M86-Nr-Z7l" secondAttribute="bottom" id="l8d-cN-x9n"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

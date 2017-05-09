@@ -150,7 +150,7 @@ class Platform: Field {
             if (self.company == nil || self.image == nil) && !self.gettingDetails {
                 self.updateDetails { results in
                     if let error = results.error {
-                        print(error.localizedDescription)
+                        NSLog("\(error.localizedDescription)")
                     } else {
                         if let companyJson = self.tempJson[PlatformFields.Company.rawValue] as? [String: Any] {
                             if let dbCompany = realm?.object(ofType: Company.self, forPrimaryKey: Field.idNumber(fromJson: companyJson)) {

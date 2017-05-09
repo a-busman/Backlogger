@@ -26,7 +26,7 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
     var isLoadingGames = false
     var currentPage = 0
     var query: String?
-    var imageCache: [String : UIImage] = [:]
+    var imageCache: [Int : UIImage] = [:]
     
     var platformDict: [Int : Platform] = [:]
     
@@ -316,6 +316,44 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
         } else {
             cellView = self.gamesViewControllers[indexPath.row]
         }
+        
+        let lineView = UIView()
+        lineView.backgroundColor = .lightGray
+        lineView.translatesAutoresizingMaskIntoConstraints = false
+        cellView.view.addSubview(lineView)
+        
+        NSLayoutConstraint(item: lineView,
+                           attribute: .leading,
+                           relatedBy: .equal,
+                           toItem: cellView.titleLabel,
+                           attribute: .leading,
+                           multiplier: 1.0,
+                           constant: 0.0
+            ).isActive = true
+        NSLayoutConstraint(item: lineView,
+                           attribute: .trailing,
+                           relatedBy: .equal,
+                           toItem: cellView.view,
+                           attribute: .trailing,
+                           multiplier: 1.0,
+                           constant: 0.0
+            ).isActive = true
+        NSLayoutConstraint(item: lineView,
+                           attribute: .top,
+                           relatedBy: .equal,
+                           toItem: cellView.view,
+                           attribute: .bottom,
+                           multiplier: 1.0,
+                           constant: -0.5
+            ).isActive = true
+        NSLayoutConstraint(item: lineView,
+                           attribute: .bottom,
+                           relatedBy: .equal,
+                           toItem: cellView.view,
+                           attribute: .bottom,
+                           multiplier: 1.0,
+                           constant: 0.0
+            ).isActive = true
 
         cellView.view.translatesAutoresizingMaskIntoConstraints = false
         cell.contentView.addSubview(cellView.view)
@@ -354,9 +392,8 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
             ).isActive = true
         
         if self.gameFields.count >= indexPath.row {
-            cell.backgroundColor = (indexPath.item % 2) == 1 ? .clear : .white
             if cellView.imageSource == .Placeholder {
-                cellView.artView?.image = (indexPath.item % 2) == 1 ? #imageLiteral(resourceName: "table_placeholder_dark") : #imageLiteral(resourceName: "table_placeholder_light")
+                cellView.artView?.image = #imageLiteral(resourceName: "table_placeholder_light")
             }
             let gameToShow = self.gameFields[indexPath.row]
             
@@ -415,14 +452,15 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
             }
             // this isn't ideal since it will keep running even if the cell scrolls off of the screen
             // if we had lots of cells we'd want to stop this process when the cell gets reused
-            if cellView.imageSource == .Placeholder {
+            if cellView.imageSource == .Placeholder && self.imageCache[indexPath.row] == nil {
 
                 gameToShow.getImage {
                     result in
                     if let error = result.error {
-                        print(error)
+                        NSLog("\(error)")
                     } else {
                         // Save the image so we won't have to keep fetching it if they scroll
+                        self.imageCache[indexPath.row] = result.value!
                         if let cellToUpdate = self.tableView?.cellForRow(at: indexPath) {
                             UIView.transition(with: cellView.artView!,
                                                       duration:0.5,
@@ -434,6 +472,9 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
                         }
                     }
                 }
+            } else if self.imageCache[indexPath.row] != nil {
+                cellView.artView?.image = self.imageCache[indexPath.row]
+                cellView.imageSource = .Downloaded
             }
         }
         
