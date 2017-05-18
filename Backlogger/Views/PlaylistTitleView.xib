@@ -13,6 +13,8 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PlaylistTitleView" customModule="Backlogger" customModuleProvider="target">
             <connections>
                 <outlet property="blurView" destination="GLr-ne-YpV" id="GJF-i8-33z"/>
+                <outlet property="deleteButton" destination="KdE-yU-QGI" id="6fx-ix-DVG"/>
+                <outlet property="deleteImage" destination="akh-Me-C1q" id="r95-z1-yYM"/>
                 <outlet property="imageView" destination="R4n-Bn-iBO" id="qJR-NI-BT1"/>
                 <outlet property="titleTextView" destination="dgA-6g-nKX" id="rp9-6d-Pdx"/>
                 <outlet property="view" destination="6TG-YZ-Va9" id="FxX-Go-xbM"/>
@@ -98,17 +100,52 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </view>
-                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="dgA-6g-nKX">
-                    <rect key="frame" x="167" y="-1" width="198" height="493.5"/>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" text="Title" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="dgA-6g-nKX">
+                    <rect key="frame" x="167" y="-1" width="198" height="35.5"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" spellCheckingType="no"/>
                 </textView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KdE-yU-QGI">
+                    <rect key="frame" x="156.5" y="116.5" width="95.5" height="26"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="add_symbol" translatesAutoresizingMaskIntoConstraints="NO" id="akh-Me-C1q">
+                            <rect key="frame" x="5" y="5" width="16" height="16"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="akh-Me-C1q" secondAttribute="height" id="uB5-8o-ZxZ"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="DELETE" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mc0-ub-9yy">
+                            <rect key="frame" x="31" y="5" width="54.5" height="16"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <gestureRecognizers/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="mc0-ub-9yy" secondAttribute="trailing" constant="10" id="4u7-84-GOn"/>
+                        <constraint firstAttribute="height" constant="26" id="7FW-zg-Gdu"/>
+                        <constraint firstItem="mc0-ub-9yy" firstAttribute="centerY" secondItem="KdE-yU-QGI" secondAttribute="centerY" id="Edj-v9-aQN"/>
+                        <constraint firstItem="mc0-ub-9yy" firstAttribute="height" secondItem="akh-Me-C1q" secondAttribute="height" id="INi-Cg-89X"/>
+                        <constraint firstItem="akh-Me-C1q" firstAttribute="leading" secondItem="KdE-yU-QGI" secondAttribute="leading" constant="5" id="cCR-4f-mW7"/>
+                        <constraint firstItem="akh-Me-C1q" firstAttribute="height" secondItem="KdE-yU-QGI" secondAttribute="height" constant="-10" id="cmp-Ol-uyp"/>
+                        <constraint firstItem="akh-Me-C1q" firstAttribute="centerY" secondItem="KdE-yU-QGI" secondAttribute="centerY" id="f3O-en-Vnz"/>
+                        <constraint firstItem="mc0-ub-9yy" firstAttribute="leading" secondItem="akh-Me-C1q" secondAttribute="trailing" constant="10" id="iB4-Nr-CbH"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="13"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstItem="KdE-yU-QGI" firstAttribute="bottom" secondItem="Ofh-AL-noF" secondAttribute="bottom" constant="7" id="6Nn-pD-ZI4"/>
                 <constraint firstItem="Ofh-AL-noF" firstAttribute="leading" secondItem="6TG-YZ-Va9" secondAttribute="leading" constant="15" id="6WD-mE-HH7"/>
+                <constraint firstItem="KdE-yU-QGI" firstAttribute="leading" secondItem="Ofh-AL-noF" secondAttribute="trailing" constant="10" id="GWn-Es-dVa"/>
                 <constraint firstItem="dgA-6g-nKX" firstAttribute="top" secondItem="Ofh-AL-noF" secondAttribute="top" constant="-5" id="LU9-fI-XDJ"/>
                 <constraint firstItem="dgA-6g-nKX" firstAttribute="trailing" secondItem="6TG-YZ-Va9" secondAttribute="trailing" constant="-10" id="fUo-zt-JOO"/>
                 <constraint firstItem="dgA-6g-nKX" firstAttribute="leading" secondItem="Ofh-AL-noF" secondAttribute="trailing" constant="20" id="is5-ul-tY1"/>
@@ -120,6 +157,7 @@
         </view>
     </objects>
     <resources>
+        <image name="add_symbol" width="22" height="22"/>
         <image name="controller_icon_lg" width="170" height="170"/>
         <image name="new_playlist" width="90" height="90"/>
     </resources>

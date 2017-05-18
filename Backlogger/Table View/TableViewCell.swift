@@ -10,7 +10,7 @@ import UIKit
 
 class TableViewCell: UITableViewCell {
     override func prepareForReuse() {
-        layer.removeAllAnimations()
+        //layer.removeAllAnimations()
         for view in contentView.subviews {
             view.removeFromSuperview()
         }

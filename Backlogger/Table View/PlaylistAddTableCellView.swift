@@ -9,20 +9,24 @@
 import UIKit
 
 protocol PlaylistAddTableCellViewDelegate {
-    func addTapped(_ row: Int)
-    func removeTapped(_ row: Int)
+    func handleLongPress(sender: UILongPressGestureRecognizer)
+    func handleTap(sender: UITapGestureRecognizer)
 }
 
 class PlaylistAddTableCellView: UIViewController {
-    
     @IBOutlet weak var artView:          UIImageView?
     @IBOutlet weak var artViewBorder:    UIView?
     @IBOutlet weak var titleLabel:       UILabel?
     @IBOutlet weak var descriptionLabel: UILabel?
-    @IBOutlet weak var rightImage:       UIImageView?
-    @IBOutlet weak var addButton:        UIButton?
+    @IBOutlet weak var moveHandle:       UIImageView?
+    @IBOutlet weak var rightLabel:       UILabel?
+    @IBOutlet weak var truncGradient:    UIView?
     
-    @IBOutlet weak var rightTrailingLayoutConstraint: NSLayoutConstraint?
+    @IBOutlet weak var longPressRecognizer: UILongPressGestureRecognizer?
+    @IBOutlet weak var tapRecognizer:       UITapGestureRecognizer?
+    
+    @IBOutlet weak var titleCenterLayoutConstraint:   NSLayoutConstraint?
+    @IBOutlet weak var titleLeadingLayoutConstraint:  NSLayoutConstraint?
     
     enum ImageSource {
         case Placeholder
@@ -35,12 +39,17 @@ class PlaylistAddTableCellView: UIViewController {
     }
     
     var delegate: PlaylistAddTableCellViewDelegate?
-    var addButtonHidden = true
     private var _playlistState = PlaylistState.add
+    
+    var didLayout = false
+    
+    let truncateGradientLayer = CAGradientLayer()
     
     var imageSource: ImageSource = .Placeholder
     
-    var row: Int!
+    var isHandleHidden = false
+    
+    var game: Game?
     
     var playlistState: PlaylistState {
         get {
@@ -48,32 +57,11 @@ class PlaylistAddTableCellView: UIViewController {
         }
         set(newState) {
             self._playlistState = newState
-            if newState == .remove {
-                
-                UIView.animate(withDuration: 0.1, animations: {
-                    self.addButton?.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 4)
-                })
-                UIView.transition(with: self.addButton!, duration: 0.1, options: .transitionCrossDissolve, animations: {
-                    self.addButton?.setImage(#imageLiteral(resourceName: "remove_red_circle"), for: .normal)
-                }, completion: nil)
-            } else {
-                UIView.animate(withDuration: 0.1, animations: {
-                    self.addButton?.transform = CGAffineTransform.identity
-                })
-                UIView.transition(with: self.addButton!, duration: 0.1, options: .transitionCrossDissolve, animations: {
-                    self.addButton?.setImage(#imageLiteral(resourceName: "add_green_circle"), for: .normal)
-                }, completion: nil)
-            }
         }
     }
     
     init() {
         super.init(nibName: nil, bundle: nil)
-    }
-    
-    init(_ row: Int) {
-        super.init(nibName: nil, bundle: nil)
-        self.row = row
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -83,24 +71,126 @@ class PlaylistAddTableCellView: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         if playlistState == .add {
-            self.addButton?.setImage(#imageLiteral(resourceName: "add_green_circle"), for: .normal)
+            self.artViewBorder?.isHidden = true
+            self.descriptionLabel?.isHidden = true
+            self.moveHandle?.isHidden = true
+            self.rightLabel?.isHidden = true
+            self.titleLabel?.text = "Add Games"
+            self.titleLabel?.textColor = UIColor(colorLiteralRed: 0.0, green: 0.725, blue: 1.0, alpha: 1.0)
+            self.titleCenterLayoutConstraint?.constant = 0
+            self.titleLeadingLayoutConstraint?.constant = 10
         } else {
-            self.addButton?.setImage(#imageLiteral(resourceName: "remove_red_circle"), for: .normal)
+            self.moveHandle?.isHidden = self.isHandleHidden
+            self.rightLabel?.isHidden = !self.isHandleHidden
+            self.tapRecognizer?.isEnabled = false
+            if self.game != nil {
+                self.titleLabel?.text = self.game!.gameFields?.name
+                self.descriptionLabel?.text = self.game!.platform?.name
+                self.rightLabel?.text = "\(self.game!.progress)%"
+            }
         }
     }
     
     override func viewDidLayoutSubviews() {
-        self.addButton?.isHidden = self.addButtonHidden
-        if self.addButtonHidden {
-            self.rightTrailingLayoutConstraint?.constant = -10.0
+        if !self.didLayout {
+            let lineView = UIView()
+            lineView.backgroundColor = .lightGray
+            lineView.translatesAutoresizingMaskIntoConstraints = false
+            self.view.addSubview(lineView)
+            if playlistState == .add {
+                NSLayoutConstraint(item: lineView,
+                                   attribute: .leading,
+                                   relatedBy: .equal,
+                                   toItem: self.titleLabel,
+                                   attribute: .leading,
+                                   multiplier: 1.0,
+                                   constant: 0.0
+                    ).isActive = true
+
+            } else {
+                self.truncateGradientLayer.frame = CGRect(x: 0.0, y: 0.0, width: (self.truncGradient?.frame.width)!, height: (self.truncGradient?.frame.height)!)
+                let whiteColor = UIColor(white: 1.0, alpha: 1.0).cgColor
+                let clearColor = UIColor(white: 1.0, alpha: 0.0).cgColor
+                self.truncateGradientLayer.colors = [clearColor, whiteColor]
+                let newLocation = 35.0/(self.truncGradient?.frame.width)!
+                self.truncateGradientLayer.locations = [0.0, NSNumber(value: Float(newLocation))]
+                self.truncateGradientLayer.startPoint = .zero
+                self.truncateGradientLayer.endPoint = CGPoint(x: 1.0, y: 0.0)
+                self.truncGradient?.layer.addSublayer(self.truncateGradientLayer)
+                self.view.bringSubview(toFront: self.moveHandle!)
+                NSLayoutConstraint(item: lineView,
+                                   attribute: .leading,
+                                   relatedBy: .equal,
+                                   toItem: self.artView,
+                                   attribute: .centerX,
+                                   multiplier: 1.0,
+                                   constant: 0.0
+                    ).isActive = true
+            }
+            NSLayoutConstraint(item: lineView,
+                               attribute: .trailing,
+                               relatedBy: .equal,
+                               toItem: self.view,
+                               attribute: .trailing,
+                               multiplier: 1.0,
+                               constant: 0.0
+                ).isActive = true
+            NSLayoutConstraint(item: lineView,
+                               attribute: .top,
+                               relatedBy: .equal,
+                               toItem: self.view,
+                               attribute: .bottom,
+                               multiplier: 1.0,
+                               constant: -0.5
+                ).isActive = true
+            NSLayoutConstraint(item: lineView,
+                               attribute: .bottom,
+                               relatedBy: .equal,
+                               toItem: self.view,
+                               attribute: .bottom,
+                               multiplier: 1.0,
+                               constant: 0.0
+                ).isActive = true
+            self.didLayout = true
         }
     }
     
-    @IBAction func addButtonTapped(sender: UIButton!) {
-        if self.playlistState != .remove{
-            self.delegate?.addTapped(self.row)
-            //} else {
-            //    self.delegate?.removeTapped(self.row)
+    func set(image: UIImage) {
+        self.artView?.image = image
+    }
+    
+    func showHandle() {
+        if self.isViewLoaded {
+            self.moveHandle!.isHidden = false
+            self.rightLabel!.isHidden = true
+            self.isHandleHidden = false
+        }
+    }
+    
+    func hideHandle() {
+        if self.isViewLoaded {
+            self.moveHandle!.isHidden = true
+            self.rightLabel!.isHidden = false
+            self.isHandleHidden = true
+        }
+    }
+    
+    func toggleHandle() {
+        if self.isViewLoaded {
+            UIView.transition(with: self.moveHandle!, duration: 0.15, options: .transitionCrossDissolve, animations: {
+                self.moveHandle!.isHidden = !self.moveHandle!.isHidden
+                self.rightLabel!.isHidden = !self.rightLabel!.isHidden
+            }, completion: nil)
+        }
+    }
+    
+    @IBAction func handleLongPress(sender: UILongPressGestureRecognizer) {
+        self.delegate?.handleLongPress(sender: sender)
+    }
+    
+    @IBAction func handleTap(sender: UITapGestureRecognizer) {
+        if self.playlistState == .add {
+            self.delegate?.handleTap(sender: sender)
         }
     }
 }

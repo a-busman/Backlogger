@@ -12,16 +12,26 @@ import RealmSwift
 class PlaylistViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView?
     let cellReuseIdentifier = "playlist_cell"
-    let playlistList = [Playlist]()
+    var playlistList: Results<Playlist>?
+    
+    var selectedRow = -1
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView?.separatorStyle = .none
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        autoreleasepool {
+            let realm = try! Realm()
+            playlistList = realm.objects(Playlist.self)
+        }
+        self.tableView?.reloadData()
     }
 }
 
 extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return playlistList.count + 1
+        return (self.playlistList?.count ?? 0) + 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -66,8 +76,8 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.row == 0 {
             cellView.state = .new
         } else {
-            cellView.titleLabel?.text = playlistList[indexPath.row - 1].name
-            if let desc = playlistList[indexPath.row - 1].descriptionText {
+            cellView.titleLabel?.text = playlistList![indexPath.row - 1].name
+            if let desc = playlistList?[indexPath.row - 1].descriptionText {
                 cellView.descLabel?.text = desc
                 cellView.state = .full
             } else {
@@ -81,7 +91,25 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
         return 100.0
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "newPlaylist" {
+            let nav = segue.destination as! UINavigationController
+            let details = nav.topViewController! as! PlaylistDetailsViewController
+            details.playlistState = .new
+        } else {
+            let details = segue.destination as! PlaylistDetailsViewController
+            details.playlist = playlistList![self.selectedRow - 1]
+            details.playlistState = .default
+        }
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.row == 0 {
+            self.performSegue(withIdentifier: "newPlaylist", sender: tableView.cellForRow(at: indexPath))
+        } else {
+            self.selectedRow = indexPath.row
+            self.performSegue(withIdentifier: "viewPlaylist", sender: tableView.cellForRow(at: indexPath))
+        }
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }

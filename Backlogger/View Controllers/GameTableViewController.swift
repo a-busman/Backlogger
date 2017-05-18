@@ -26,7 +26,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
     
     var games: [Game] = []
     
-    var images: [UIImage?] = []
+    var imageCache: [Int: UIImage] = [:]
     
     var platform: Platform?
     
@@ -59,13 +59,11 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         if let platform = self.platform {
             self.titleLabel?.text = platform.name
             self.games = Array(platform.ownedGames)
-            self.images = Array(repeating: nil, count: self.games.count)
             if platform.name!.characters.count < 10 {
                 self.title = platform.name
             } else {
                 self.title = platform.abbreviation
             }
-            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.clear]
 //            if let releaseDate = platform.releaseDate {
 //                let index = releaseDate.index(releaseDate.startIndex, offsetBy: 4)
 //                self.yearLabel?.text = "\(platform.company?.name ?? "") • \(releaseDate.substring(to: index))"
@@ -95,6 +93,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         super.viewWillAppear(animated)
         self.games = Array((self.platform?.ownedGames)!)
         self.tableView?.reloadData()
+        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.clear]
         if self.games.count < 1 {
             let _ = self.navigationController?.popViewController(animated: true)
             return
@@ -118,9 +117,10 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         }
         self.didLayout = true
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        self.imageCache = [:]
     }
 
     // MARK: - Table view data source
@@ -290,8 +290,8 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
         let index = game.gameFields?.releaseDate?.index((game.gameFields?.releaseDate?.startIndex)!, offsetBy: 4)
         cellView.descriptionLabel?.text = game.gameFields?.releaseDate?.substring(to: index!)
         cellView.rightLabel?.text = "\(game.progress)%"
-        if cellView.imageSource == .Placeholder && self.images[indexPath.row] == nil {
-            cellView.artView?.image = #imageLiteral(resourceName: "table_placeholder_light")
+        if cellView.imageSource == .Placeholder && self.imageCache[(game.gameFields?.idNumber)!] == nil {
+            cellView.set(image: #imageLiteral(resourceName: "table_placeholder_light"))
             game.gameFields?.getImage {
                 result in
                 if let error = result.error {
@@ -302,16 +302,16 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
                         UIView.transition(with: cellView.artView!,
                                           duration:0.5,
                                           options: .transitionCrossDissolve,
-                                          animations: { cellView.artView?.image = result.value! },
+                                          animations: { cellView.set(image: result.value!) },
                                           completion: nil)
-                        self.images[indexPath.row] = result.value
+                        self.imageCache[(game.gameFields?.idNumber)!] = result.value
                         cellView.imageSource = .Downloaded
                         cellToUpdate.setNeedsLayout() // need to reload the view, which won't happen otherwise since this is in an async call
                     }
                 }
             }
-        } else if self.images[indexPath.row] != nil {
-            cellView.artView?.image = (self.images[indexPath.row])!
+        } else if self.imageCache[(game.gameFields?.idNumber)!] != nil {
+            cellView.set(image: self.imageCache[(game.gameFields!.idNumber)]!)
             cellView.imageSource = .Downloaded
         }
         return cell
@@ -353,6 +353,7 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
                 self.tableView?.scrollIndicatorInsets.top = self.startInset
             }
             if offset < 90.0 {
+                
                 let remainingWidth = offset - 65.0
                 let newColor = UIColor(white: 1.0, alpha: (25.0 - remainingWidth) / 25.0)
                 self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: newColor]

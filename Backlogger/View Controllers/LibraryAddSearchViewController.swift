@@ -84,7 +84,7 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        self.imageCache = [:]
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -393,7 +393,7 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
         
         if self.gameFields.count >= indexPath.row {
             if cellView.imageSource == .Placeholder {
-                cellView.artView?.image = #imageLiteral(resourceName: "table_placeholder_light")
+                cellView.set(image: #imageLiteral(resourceName: "table_placeholder_light"))
             }
             let gameToShow = self.gameFields[indexPath.row]
             
@@ -452,7 +452,7 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
             }
             // this isn't ideal since it will keep running even if the cell scrolls off of the screen
             // if we had lots of cells we'd want to stop this process when the cell gets reused
-            if cellView.imageSource == .Placeholder && self.imageCache[indexPath.row] == nil {
+            if cellView.imageSource == .Placeholder && self.imageCache[gameToShow.idNumber] == nil {
 
                 gameToShow.getImage {
                     result in
@@ -460,20 +460,20 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
                         NSLog("\(error)")
                     } else {
                         // Save the image so we won't have to keep fetching it if they scroll
-                        self.imageCache[indexPath.row] = result.value!
+                        self.imageCache[gameToShow.idNumber] = result.value!
                         if let cellToUpdate = self.tableView?.cellForRow(at: indexPath) {
                             UIView.transition(with: cellView.artView!,
                                                       duration:0.5,
                                                       options: .transitionCrossDissolve,
-                                                      animations: { cellView.artView?.image = result.value! },
+                                                      animations: { cellView.set(image: result.value!) },
                                                       completion: nil)
                             cellView.imageSource = .Downloaded
                             cellToUpdate.setNeedsLayout() // need to reload the view, which won't happen otherwise since this is in an async call
                         }
                     }
                 }
-            } else if self.imageCache[indexPath.row] != nil {
-                cellView.artView?.image = self.imageCache[indexPath.row]
+            } else if self.imageCache[gameToShow.idNumber] != nil {
+                cellView.set(image: self.imageCache[gameToShow.idNumber]!)
                 cellView.imageSource = .Downloaded
             }
         }
@@ -511,31 +511,40 @@ extension LibraryAddSearchViewController: UISearchBarDelegate {
                        completion: nil)
         
     }
+    
+    private func performSearch() {
+        UIView.animate(withDuration: 0.5,
+                       delay: 0.0,
+                       usingSpringWithDamping: 1.0,
+                       initialSpringVelocity: 0,
+                       options: .curveEaseIn,
+                       animations: {
+                        self.searchTintView?.alpha = 0.0
+        },
+                       completion: nil)
+        self.gameFields.removeAll()
+        self.gamesViewControllers.removeAll()
+        self.searchLabel?.isHidden = true
+        self.searchBackground?.isHidden = true
+        self.activityIndicator?.startAnimating()
+        self.activityBackground?.isHidden = false
+        self.tableView?.reloadData()
+        self.loadFirstGame(withQuery: self.query!)
+    }
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(false, animated: true)
         searchBar.resignFirstResponder()
+        if self.query != searchBar.text {
+            self.query = searchBar.text
+            self.performSearch()
+        }
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         self.query = searchText
         if !(self.query?.isEmpty)! {
-            UIView.animate(withDuration: 0.5,
-                           delay: 0.0,
-                           usingSpringWithDamping: 1.0,
-                           initialSpringVelocity: 0,
-                           options: .curveEaseIn,
-                           animations: {
-                            self.searchTintView?.alpha = 0.0
-            },
-                           completion: nil)
-            self.gameFields.removeAll()
-            self.gamesViewControllers.removeAll()
-            self.searchLabel?.isHidden = true
-            self.searchBackground?.isHidden = true
-            self.activityIndicator?.startAnimating()
-            self.activityBackground?.isHidden = false
-            self.tableView?.reloadData()
-            self.loadFirstGame(withQuery: self.query!)
+            self.performSearch()
         } else {
             self.gameFields.removeAll()
             self.gamesViewControllers.removeAll()
@@ -575,7 +584,7 @@ extension LibraryAddSearchViewController: TableViewCellViewDelegate {
     func addTapped(_ row: Int) {
         self.currentlySelectedRow = row
         let consoleSelection = ConsoleSelectionTableViewController()
-        
+        self.searchBar?.resignFirstResponder()
         consoleSelection.delegate = self
         consoleSelection.gameField = self.gameFields[row]
         self.navigationController?.pushViewController(consoleSelection, animated: true)

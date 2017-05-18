@@ -12,7 +12,7 @@ protocol NowPlayingGameViewDelegate {
     func didDelete(viewController: NowPlayingGameViewController, uuid: String)
 }
 
-class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewControllerDelegate {
+class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewControllerDelegate, UITextViewDelegate {
     @IBOutlet weak var coverImageView:       UIImageView?
     @IBOutlet weak var detailsContainerView: UIView?
     @IBOutlet weak var blurView:             UIVisualEffectView?
@@ -41,6 +41,8 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
     @IBOutlet weak var fifthStar:  UIImageView?
     
     var delegate: NowPlayingGameViewDelegate?
+    
+    var didExpandDetails = false
     
     let gameDetailOverlayController = GameDetailOverlayViewController()
     
@@ -186,6 +188,72 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
             self.addDetails()
         }
         self.gameDetailOverlayController.detailsGestureView?.addGestureRecognizer(self.detailsPanRecognizer!)
+        
+        if let game = self._game {
+            if !game.favourite {
+                self.favouriteButton?.setImage(#imageLiteral(resourceName: "heart-empty"), for: .normal)
+                self.favouriteButtonState = .normal
+            } else {
+                self.favouriteButton?.setImage(#imageLiteral(resourceName: "heart"), for: .normal)
+                self.favouriteButtonState = .selected
+            }
+            if !game.nowPlaying {
+                self.playPauseButton?.setImage(#imageLiteral(resourceName: "play-black"), for: .normal)
+                self.playButtonState = .normal
+            } else {
+                self.playPauseButton?.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
+                self.playButtonState = .selected
+            }
+            if !game.finished {
+                self.finishedButton?.setImage(#imageLiteral(resourceName: "check-empty-black"), for: .normal)
+                self.finishedButtonState = .normal
+            } else {
+                self.finishedButton?.setImage(#imageLiteral(resourceName: "check-black"), for: .normal)
+                self.finishedButtonState = .selected
+            }
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-white")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            switch (game.rating) {
+            case 0:
+                self.firstStar?.image  = #imageLiteral(resourceName: "star-white")
+                self.secondStar?.image = #imageLiteral(resourceName: "star-white")
+                self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
+                self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
+                self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+                break
+            case 1:
+                self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
+                break
+            case 2:
+                self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
+                self.secondStar?.image = #imageLiteral(resourceName: "star-black")
+                break
+            case 3:
+                self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
+                self.secondStar?.image = #imageLiteral(resourceName: "star-black")
+                self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
+                break
+            case 4:
+                self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
+                self.secondStar?.image = #imageLiteral(resourceName: "star-black")
+                self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
+                self.fourthStar?.image = #imageLiteral(resourceName: "star-black")
+                break
+            case 5:
+                self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
+                self.secondStar?.image = #imageLiteral(resourceName: "star-black")
+                self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
+                self.fourthStar?.image = #imageLiteral(resourceName: "star-black")
+                self.fifthStar?.image  = #imageLiteral(resourceName: "star-black")
+                break
+            default:
+                break
+            }
+            self.notesTextView?.text = self._game?.notes
+        }
     }
     
     // MARK: viewDidLayoutSubviews
@@ -209,6 +277,12 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
         }
         self.deleteView?.transform = CGAffineTransform(scaleX: self.isInEditMode ? MAXIMUM_TRANSOFRM : MINIMUM_TRANSFORM,
                                                        y: self.isInEditMode ? MAXIMUM_TRANSOFRM : MINIMUM_TRANSFORM)
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        self._game?.update {
+            self._game?.notes = textView.text
+        }
     }
     
     func addDetails() {
@@ -295,13 +369,18 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
         
         // Show minimal details bar
         if self.blurViewState == .hidden {
+            self.statsButtonBottomConstraint?.constant = 40
+            self.statsButtonLeadingConstraint?.constant = -40
             UIView.animate(withDuration: 0.4,
                            delay: 0.0,
                            usingSpringWithDamping: 1.0,
                            initialSpringVelocity: 0,
                            options: .curveEaseOut,
                            animations: {
-                               self.blurView?.center.y -= 65
+                            if self.didExpandDetails {
+                                self.blurView?.center.y -= 65
+                            }
+                               self.view.layoutIfNeeded()
                            },
                            completion: nil)
             self.blurViewState = .minimal
@@ -309,12 +388,15 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
         // Hide all details and just show cover art
         } else if self.blurViewState == .minimal {
             self.blurViewMinimalY = (self.blurView?.center.y)!
+            self.statsButtonBottomConstraint?.constant = 0
+            self.statsButtonLeadingConstraint?.constant = 0
             UIView.animate(withDuration: 0.4,
                            delay: 0.0,
                            usingSpringWithDamping: 1.0,
                            initialSpringVelocity: 0,
                            options: .curveEaseIn,
                            animations: {
+                               self.view.layoutIfNeeded()
                                self.blurView?.center.y += 65
                            },
                            completion: nil)
@@ -421,10 +503,13 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
                         self.animator.addBehavior(self.gravity)
                     }
                     self.blurViewState = .full
+                    self.didExpandDetails = true
                     
                 // If the view is below the middle, or if the user was swiping down when they ended, return to minimal state with a spring bounce
                 } else if (view.center.y > self.view.bounds.maxY && velocity > -300) || velocity > 300 {
                     let animationTime: TimeInterval = ((0.4 - 1.0) * (min(Double(velocity), 1000.0) - 300)/(1000 - 300) + 1.0)
+                    self.statsButtonBottomConstraint?.constant = 40
+                    self.statsButtonLeadingConstraint?.constant = -40
                     UIView.animate(withDuration: animationTime,
                                    delay: 0.0,
                                    usingSpringWithDamping: 0.6,
@@ -435,8 +520,6 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
                                    },
                                    completion: nil)
                     self.blurViewState = .minimal
-                    self.statsButtonBottomConstraint?.constant = 40
-                    self.statsButtonLeadingConstraint?.constant = -40
                     UIView.animate(withDuration: 0.2, animations: {
                         self.view.layoutIfNeeded()
                     })
@@ -579,6 +662,7 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
     @IBAction func ratingPanHandler(sender: UIPanGestureRecognizer) {
         let location = sender.location(in: self.ratingContainerView!)
         let starIndex = Int(location.x / ((self.ratingContainerView?.bounds.width)! / 5.0))
+        var rating = 0
         if starIndex < 0 {
             self.firstStar?.image  = #imageLiteral(resourceName: "star-white")
             self.secondStar?.image = #imageLiteral(resourceName: "star-white")
@@ -591,30 +675,38 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
             self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
             self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
             self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            rating = 1
         } else if starIndex == 1 {
             self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
             self.secondStar?.image = #imageLiteral(resourceName: "star-black")
             self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
             self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
             self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            rating = 2
         } else if starIndex == 2 {
             self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
             self.secondStar?.image = #imageLiteral(resourceName: "star-black")
             self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
             self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
             self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            rating = 3
         } else if starIndex == 3 {
             self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
             self.secondStar?.image = #imageLiteral(resourceName: "star-black")
             self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
             self.fourthStar?.image = #imageLiteral(resourceName: "star-black")
             self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            rating = 4
         } else {
             self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
             self.secondStar?.image = #imageLiteral(resourceName: "star-black")
             self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
             self.fourthStar?.image = #imageLiteral(resourceName: "star-black")
             self.fifthStar?.image  = #imageLiteral(resourceName: "star-black")
+            rating = 5
+        }
+        self._game?.update {
+            self._game?.rating = rating
         }
         self.notesTextView?.resignFirstResponder()
     }
@@ -622,37 +714,45 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
     @IBAction func ratingTapHandler(sender: UITapGestureRecognizer) {
         let location = sender.location(in: self.ratingContainerView!)
         let starIndex = Int(location.x / ((self.ratingContainerView?.bounds.width)! / 5.0))
-        
+        var rating = 0
         if starIndex <= 0 {
             self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
             self.secondStar?.image = #imageLiteral(resourceName: "star-white")
             self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
             self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
             self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            rating = 1
         } else if starIndex == 1 {
             self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
             self.secondStar?.image = #imageLiteral(resourceName: "star-black")
             self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
             self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
             self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            rating = 2
         } else if starIndex == 2 {
             self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
             self.secondStar?.image = #imageLiteral(resourceName: "star-black")
             self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
             self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
             self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            rating = 3
         } else if starIndex == 3 {
             self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
             self.secondStar?.image = #imageLiteral(resourceName: "star-black")
             self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
             self.fourthStar?.image = #imageLiteral(resourceName: "star-black")
             self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            rating = 4
         } else {
             self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
             self.secondStar?.image = #imageLiteral(resourceName: "star-black")
             self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
             self.fourthStar?.image = #imageLiteral(resourceName: "star-black")
             self.fifthStar?.image  = #imageLiteral(resourceName: "star-black")
+            rating = 5
+        }
+        self._game?.update {
+            self._game?.rating = rating
         }
         self.notesTextView?.resignFirstResponder()
     }

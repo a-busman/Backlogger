@@ -13,7 +13,7 @@ protocol GameDetailsViewControllerDelegate {
     func gamesCreated(gameField: GameField)
 }
 
-class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewControllerDelegate {
+class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewControllerDelegate, UITextViewDelegate {
     @IBOutlet weak var mainImageView:          UIImageView?
     @IBOutlet weak var titleLabel:             UILabel?
     @IBOutlet weak var yearLabel:              UILabel?
@@ -51,6 +51,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     @IBOutlet weak var completionImageView:    UIImageView?
     @IBOutlet weak var ratingContainerView:    UIView?
     @IBOutlet weak var notesTextView:          UITextView?
+    @IBOutlet weak var progressSlider:         UISlider?
 
     @IBOutlet weak var firstStar:  UIImageView?
     @IBOutlet weak var secondStar: UIImageView?
@@ -215,113 +216,16 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         var gameFields: GameField?
         gameFields = self._gameField ?? GameField()
         self.images = []
-        gameFields?.updateGameDetails { result in
-            if let error = result.error {
-                NSLog("error: \(error.localizedDescription)")
-                return
-            }
-            self.imageCollectionView?.reloadData()
-            if let images = gameFields?.images {
-                if images.count == 0 {
-                    self.imagesTitleLabel?.isHidden = true
-                    self.imageCollectionView?.isHidden = true
-                    self.informationTopConstraint?.isActive = false
-                    self.informationTopConstraint = NSLayoutConstraint(item: self.informationTitleLabel!, attribute: .top, relatedBy: .equal, toItem: self.descriptionView!, attribute: .bottom, multiplier: 1.0, constant: 5.0)
-                    self.informationTopConstraint?.isActive = true
+        if !(gameFields?.hasDetails)! {
+            gameFields?.updateGameDetails { result in
+                if let error = result.error {
+                    NSLog("error: \(error.localizedDescription)")
+                    return
                 }
-                for image in images {
-                    image.getImage(field: .MediumUrl, { results in
-                        if let error = results.error {
-                            NSLog("error getting images: \(error.localizedDescription)")
-                            return
-                        }
-                        self.images?.append(results.value!)
-                        self.imageCollectionView?.reloadData()
-                    })
-                }
-            } else {
-                self.imagesTitleLabel?.isHidden = true
-                self.imageCollectionView?.isHidden = true
-                self.informationTopConstraint?.isActive = false
-                self.informationTitleLabel?.removeConstraint(self.informationTopConstraint!)
-                self.informationTopConstraint = NSLayoutConstraint(item: self.informationTitleLabel!, attribute: .top, relatedBy: .equal, toItem: self.descriptionView!, attribute: .bottom, multiplier: 1.0, constant: 5.0)
-                self.informationTopConstraint?.isActive = true
+                self.updateGameDetails()
             }
-            var platformString = ""
-            if let platforms = gameFields?.platforms {
-                if platforms.count > 0 {
-                    if platforms.count > 1 {
-                        for platform in platforms[0..<platforms.endIndex - 1] {
-                            if platform.name!.characters.count < 10 {
-                                platformString += platform.name! + ", "
-                            } else {
-                                platformString += platform.abbreviation! + ", "
-                            }
-                        }
-                    }
-                    if platforms[platforms.endIndex - 1].name!.characters.count < 10 {
-                        platformString += (platforms.last?.name)!
-                    } else {
-                        platformString += (platforms.last?.abbreviation)!
-                    }
-                }
-            }
-            if platformString == "" {
-                platformString = "N/A"
-            }
-            self.platformsLabel?.text = platformString
-            
-            var developersString = ""
-            if let developers = gameFields?.developers {
-                if developers.count > 0 {
-                    if developers.count > 1 {
-                        for developer in developers[0..<developers.endIndex - 1] {
-                            developersString += developer.name! + ", "
-                        }
-                    }
-                    developersString += (developers.last?.name)!
-                }
-            }
-            if developersString == "" {
-                developersString = "N/A"
-            }
-            self.developerLabel?.text = developersString
-            
-            var publishersString = ""
-            if let publishers = gameFields?.publishers {
-                if publishers.count > 0 {
-                    if publishers.count > 1 {
-                        for publisher in publishers[0..<publishers.endIndex - 1] {
-                            publishersString += publisher.name! + ", "
-                        }
-                    }
-                    publishersString += (publishers.last?.name)!
-                }
-            }
-            if publishersString == "" {
-                publishersString = "N/A"
-            }
-            self.publisherLabel?.text = publishersString
-            
-            var genresString = ""
-            if let genres = gameFields?.genres {
-                if genres.count > 0 {
-                    if genres.count > 1 {
-                        for genre in genres[0..<genres.endIndex - 1] {
-                            genresString += genre.name! + ", "
-                        }
-                    }
-                    genresString += (genres.last?.name)!
-                }
-            }
-            if genresString == "" {
-                genresString = "N/A"
-            }
-            self.genresLabel?.text = genresString
-            
-            self.activityIndicator?.stopAnimating()
-            self.activityBackground?.isHidden = true
-            self.detailsScrollView?.isHidden = false
+        } else {
+            self.updateGameDetails()
         }
         if let titleString = gameFields?.name {
             self.titleLabel?.text = titleString
@@ -416,6 +320,90 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
                            multiplier: 1.0,
                            constant: 250.0
             ).isActive = true
+        if let game = self._game {
+            if !game.favourite {
+                self.favouriteButton?.setImage(#imageLiteral(resourceName: "heart-empty"), for: .normal)
+                self.favouriteButtonState = .normal
+            } else {
+                self.favouriteButton?.setImage(#imageLiteral(resourceName: "heart"), for: .normal)
+                self.favouriteButtonState = .selected
+            }
+            if !game.nowPlaying {
+                self.playPauseButton?.setImage(#imageLiteral(resourceName: "play-black"), for: .normal)
+                self.playButtonState = .normal
+                if self.finishedButtonState != .selected {
+                    self.completionLabel?.text = "Incomplete"
+                    self.completionImageView?.image = #imageLiteral(resourceName: "check-empty")
+                }
+            } else {
+                self.playPauseButton?.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
+                self.playButtonState = .selected
+                if self.finishedButtonState != .selected {
+                    self.completionLabel?.text = "In Progress"
+                    self.completionImageView?.image = #imageLiteral(resourceName: "check-filled")
+                }
+            }
+            if !game.finished {
+                self.finishedButton?.setImage(#imageLiteral(resourceName: "check-empty-black"), for: .normal)
+                self.finishedButtonState = .normal
+                if self.playButtonState != .selected {
+                    self.completionLabel?.text = "Incomplete"
+                    self.completionImageView?.image = #imageLiteral(resourceName: "check-empty")
+                } else {
+                    self.completionLabel?.text = "In Progress"
+                    self.completionImageView?.image = #imageLiteral(resourceName: "check-filled")
+                }
+            } else {
+                self.finishedButton?.setImage(#imageLiteral(resourceName: "check-black"), for: .normal)
+                self.finishedButtonState = .selected
+                self.completionLabel?.text = "Complete"
+                self.completionImageView?.image = #imageLiteral(resourceName: "check")
+            }
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-white")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            switch (game.rating) {
+            case 0:
+                self.firstStar?.image  = #imageLiteral(resourceName: "star-white")
+                self.secondStar?.image = #imageLiteral(resourceName: "star-white")
+                self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
+                self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
+                self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+                break
+            case 1:
+                self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
+                break
+            case 2:
+                self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
+                self.secondStar?.image = #imageLiteral(resourceName: "star-black")
+                break
+            case 3:
+                self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
+                self.secondStar?.image = #imageLiteral(resourceName: "star-black")
+                self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
+                break
+            case 4:
+                self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
+                self.secondStar?.image = #imageLiteral(resourceName: "star-black")
+                self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
+                self.fourthStar?.image = #imageLiteral(resourceName: "star-black")
+                break
+            case 5:
+                self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
+                self.secondStar?.image = #imageLiteral(resourceName: "star-black")
+                self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
+                self.fourthStar?.image = #imageLiteral(resourceName: "star-black")
+                self.fifthStar?.image  = #imageLiteral(resourceName: "star-black")
+                break
+            default:
+                break
+            }
+            self.progressSlider?.value = Float((self._game?.progress)!)
+            self.percentageLabel?.text = "\((self._game?.progress)!)%"
+            self.notesTextView?.text = self._game?.notes
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -444,7 +432,118 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         }
     }
     
-    
+    private func updateGameDetails() {
+        self.imageCollectionView?.reloadData()
+        let gameFields = self._gameField
+        if let images = gameFields?.images {
+            if images.count == 0 {
+                self.imagesTitleLabel?.isHidden = true
+                self.imageCollectionView?.isHidden = true
+                self.informationTopConstraint?.isActive = false
+                self.informationTopConstraint = NSLayoutConstraint(item: self.informationTitleLabel!, attribute: .top, relatedBy: .equal, toItem: self.descriptionView!, attribute: .bottom, multiplier: 1.0, constant: 5.0)
+                self.informationTopConstraint?.isActive = true
+            }
+            for image in images {
+                image.getImage(field: .MediumUrl, { results in
+                    if let error = results.error {
+                        NSLog("error getting images: \(error.localizedDescription)")
+                        return
+                    }
+                    self.images?.append(results.value!)
+                    self.imageCollectionView?.reloadData()
+                })
+            }
+        } else {
+            self.imagesTitleLabel?.isHidden = true
+            self.imageCollectionView?.isHidden = true
+            self.informationTopConstraint?.isActive = false
+            self.informationTitleLabel?.removeConstraint(self.informationTopConstraint!)
+            self.informationTopConstraint = NSLayoutConstraint(item: self.informationTitleLabel!, attribute: .top, relatedBy: .equal, toItem: self.descriptionView!, attribute: .bottom, multiplier: 1.0, constant: 5.0)
+            self.informationTopConstraint?.isActive = true
+        }
+        var platformString = ""
+        if let platforms = gameFields?.platforms {
+            if platforms.count > 0 {
+                if platforms.count > 1 {
+                    for platform in platforms[0..<platforms.endIndex - 1] {
+                        if platform.name!.characters.count < 10 {
+                            platformString += platform.name! + ", "
+                        } else {
+                            platformString += platform.abbreviation! + ", "
+                        }
+                    }
+                }
+                if platforms[platforms.endIndex - 1].name!.characters.count < 10 {
+                    platformString += (platforms.last?.name)!
+                } else {
+                    platformString += (platforms.last?.abbreviation)!
+                }
+            }
+        }
+        if platformString == "" {
+            platformString = "N/A"
+        }
+        self.platformsLabel?.text = platformString
+        
+        var developersString = ""
+        if let developers = gameFields?.developers {
+            if developers.count > 0 {
+                if developers.count > 1 {
+                    for developer in developers[0..<developers.endIndex - 1] {
+                        developersString += developer.name! + ", "
+                    }
+                }
+                developersString += (developers.last?.name)!
+            }
+        }
+        if developersString == "" {
+            developersString = "N/A"
+        }
+        self.developerLabel?.text = developersString
+        
+        var publishersString = ""
+        if let publishers = gameFields?.publishers {
+            if publishers.count > 0 {
+                if publishers.count > 1 {
+                    for publisher in publishers[0..<publishers.endIndex - 1] {
+                        publishersString += publisher.name! + ", "
+                    }
+                }
+                publishersString += (publishers.last?.name)!
+            }
+        }
+        if publishersString == "" {
+            publishersString = "N/A"
+        }
+        self.publisherLabel?.text = publishersString
+        
+        var genresString = ""
+        if let genres = gameFields?.genres {
+            if genres.count > 0 {
+                if genres.count > 1 {
+                    for genre in genres[0..<genres.endIndex - 1] {
+                        genresString += genre.name! + ", "
+                    }
+                }
+                genresString += (genres.last?.name)!
+            }
+        }
+        if genresString == "" {
+            genresString = "N/A"
+        }
+        self.genresLabel?.text = genresString
+        
+        self.activityIndicator?.stopAnimating()
+        self.activityBackground?.isHidden = true
+        self.detailsScrollView?.isHidden = false
+    }
+
+    func textViewDidChange(_ textView: UITextView) {
+        self._game?.update {
+            self._game?.notes = textView.text
+        }
+    }
+
     @IBAction func addTapped(sender: UITapGestureRecognizer?) {
         if self.state == .addToLibrary {
             let consoleSelection = ConsoleSelectionTableViewController()
@@ -812,7 +911,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y == 0{
-                self.view.frame.origin.y -= keyboardSize.height
+                self.view.frame.origin.y -= (keyboardSize.height - (self.tabBarController?.tabBar.frame.height)!)
             }
         }
         self.doneButton?.isEnabled = true
@@ -822,7 +921,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     func keyboardWillHide(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y != 0 {
-                self.view.frame.origin.y += keyboardSize.height
+                self.view.frame.origin.y += keyboardSize.height - (self.tabBarController?.tabBar.frame.height)!
             }
         }
         self.doneButton?.isEnabled = false

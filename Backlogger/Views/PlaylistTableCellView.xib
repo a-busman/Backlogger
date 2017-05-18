@@ -99,15 +99,15 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </view>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Playlist Title" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jpe-M1-BQq" userLabel="Title">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Playlist Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jpe-M1-BQq" userLabel="Title">
                     <rect key="frame" x="131" y="25.5" width="91.5" height="21"/>
                     <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Playlist Description" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bY4-wj-LhH" userLabel="Description">
-                    <rect key="frame" x="131" y="51.5" width="146" height="20"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <rect key="frame" x="131" y="51.5" width="229" height="18"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
@@ -116,6 +116,7 @@
             <constraints>
                 <constraint firstItem="b22-A0-ajC" firstAttribute="bottom" secondItem="kCF-aR-Xz2" secondAttribute="bottom" constant="-4.5" id="0Mt-sz-bIX"/>
                 <constraint firstItem="jpe-M1-BQq" firstAttribute="leading" secondItem="b22-A0-ajC" secondAttribute="trailing" constant="20" id="2zm-tS-H6T"/>
+                <constraint firstItem="bY4-wj-LhH" firstAttribute="trailing" secondItem="kCF-aR-Xz2" secondAttribute="trailing" constant="-15" id="4BM-YP-DGF"/>
                 <constraint firstItem="b22-A0-ajC" firstAttribute="leading" secondItem="kCF-aR-Xz2" secondAttribute="leading" constant="19" id="L0E-4u-BnH"/>
                 <constraint firstItem="b22-A0-ajC" firstAttribute="top" secondItem="kCF-aR-Xz2" secondAttribute="top" constant="4.5" id="PGY-KO-Jle"/>
                 <constraint firstItem="bY4-wj-LhH" firstAttribute="top" secondItem="jpe-M1-BQq" secondAttribute="bottom" constant="5" id="S3z-D6-LV1"/>

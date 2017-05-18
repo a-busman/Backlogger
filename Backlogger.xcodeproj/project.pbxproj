@@ -46,6 +46,9 @@
 		FA4B44A11E61E3FC006A843F /* ImageViewerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B44A01E61E3FC006A843F /* ImageViewerController.swift */; };
 		FA4B44A31E6262FB006A843F /* ToastOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA4B44A21E6262FB006A843F /* ToastOverlayView.xib */; };
 		FA5C623D1E760413008558BF /* ToastOverlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5C623C1E760413008558BF /* ToastOverlayViewController.swift */; };
+		FA68A8CF1EC4C2A500C9CE2E /* AddToPlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA68A8CE1EC4C2A500C9CE2E /* AddToPlaylistViewController.swift */; };
+		FA68A8EF1ECBB06900C9CE2E /* PlaylistFooter.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA68A8EE1ECBB06900C9CE2E /* PlaylistFooter.xib */; };
+		FA68A8F11ECBB18400C9CE2E /* PlaylistFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA68A8F01ECBB18400C9CE2E /* PlaylistFooter.swift */; };
 		FA8E71CD1E80E61800E7400B /* Publisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8E71CC1E80E61800E7400B /* Publisher.swift */; };
 		FA8E71CF1E80E66500E7400B /* Developer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8E71CE1E80E66500E7400B /* Developer.swift */; };
 		FAC778B11E3481A200944B6B /* GameDetailOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */; };
@@ -103,6 +106,9 @@
 		FA4B44A01E61E3FC006A843F /* ImageViewerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageViewerController.swift; path = "View Controllers/ImageViewerController.swift"; sourceTree = "<group>"; };
 		FA4B44A21E6262FB006A843F /* ToastOverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ToastOverlayView.xib; path = Views/ToastOverlayView.xib; sourceTree = "<group>"; };
 		FA5C623C1E760413008558BF /* ToastOverlayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ToastOverlayViewController.swift; path = "View Controllers/ToastOverlayViewController.swift"; sourceTree = "<group>"; };
+		FA68A8CE1EC4C2A500C9CE2E /* AddToPlaylistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AddToPlaylistViewController.swift; path = "View Controllers/AddToPlaylistViewController.swift"; sourceTree = "<group>"; };
+		FA68A8EE1ECBB06900C9CE2E /* PlaylistFooter.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PlaylistFooter.xib; path = Views/PlaylistFooter.xib; sourceTree = "<group>"; };
+		FA68A8F01ECBB18400C9CE2E /* PlaylistFooter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlaylistFooter.swift; path = "Table View/PlaylistFooter.swift"; sourceTree = "<group>"; };
 		FA8E71CC1E80E61800E7400B /* Publisher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Publisher.swift; path = Model/Publisher.swift; sourceTree = "<group>"; };
 		FA8E71CE1E80E66500E7400B /* Developer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Developer.swift; path = Model/Developer.swift; sourceTree = "<group>"; };
 		FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GameDetailOverlayView.xib; path = Views/GameDetailOverlayView.xib; sourceTree = "<group>"; };
@@ -199,6 +205,7 @@
 				FA4B449C1E6124CC006A843F /* GameDetailsViewController.swift */,
 				FA4B44A01E61E3FC006A843F /* ImageViewerController.swift */,
 				FA5C623C1E760413008558BF /* ToastOverlayViewController.swift */,
+				FA68A8CE1EC4C2A500C9CE2E /* AddToPlaylistViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -207,6 +214,7 @@
 			isa = PBXGroup;
 			children = (
 				FA0915911E2AEF2C0052BCEC /* NowPlayingGameView.xib */,
+				FA68A8EE1ECBB06900C9CE2E /* PlaylistFooter.xib */,
 				FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */,
 				FADA809B1E4FB2D20069943D /* TableViewCellView.xib */,
 				FA4B44961E5E9743006A843F /* ImageCell.xib */,
@@ -247,6 +255,7 @@
 				FA358A551EBADF5E001EE03D /* PlaylistTableCellView.swift */,
 				FA358A5B1EBC2BD2001EE03D /* PlaylistTitleView.swift */,
 				FA358A651EBFC015001EE03D /* PlaylistAddTableCellView.swift */,
+				FA68A8F01ECBB18400C9CE2E /* PlaylistFooter.swift */,
 			);
 			name = "Table View";
 			sourceTree = "<group>";
@@ -339,6 +348,7 @@
 				FADA809C1E4FB2D20069943D /* TableViewCellView.xib in Resources */,
 				FA0915791E2AA4210052BCEC /* LaunchScreen.storyboard in Resources */,
 				FA358A5A1EBC22F6001EE03D /* PlaylistTitleView.xib in Resources */,
+				FA68A8EF1ECBB06900C9CE2E /* PlaylistFooter.xib in Resources */,
 				FA358A541EBADF23001EE03D /* PlaylistTableCellView.xib in Resources */,
 				FA358A641EBFC001001EE03D /* PlaylistAddTableCellView.xib in Resources */,
 				FA4B449F1E61DF94006A843F /* ImageViewer.xib in Resources */,
@@ -407,6 +417,7 @@
 				FA358A661EBFC015001EE03D /* PlaylistAddTableCellView.swift in Sources */,
 				FA4B449D1E6124CC006A843F /* GameDetailsViewController.swift in Sources */,
 				FA8E71CF1E80E66500E7400B /* Developer.swift in Sources */,
+				FA68A8CF1EC4C2A500C9CE2E /* AddToPlaylistViewController.swift in Sources */,
 				FA358A561EBADF5E001EE03D /* PlaylistTableCellView.swift in Sources */,
 				FADA80901E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift in Sources */,
 				FA358A681EC27768001EE03D /* ConsoleSelectionTableViewController.swift in Sources */,
@@ -430,6 +441,7 @@
 				FA4B44891E5625E7006A843F /* SearchResults.swift in Sources */,
 				FADA808E1E4C0D680069943D /* NowPlayingGameViewCell.swift in Sources */,
 				FA0915971E2B367B0052BCEC /* NowPlayingGameViewController.swift in Sources */,
+				FA68A8F11ECBB18400C9CE2E /* PlaylistFooter.swift in Sources */,
 				FA4B448D1E5D3F04006A843F /* Company.swift in Sources */,
 				FA09156D1E2AA4210052BCEC /* AppDelegate.swift in Sources */,
 				FADA80981E4FA0EB0069943D /* GameTableViewController.swift in Sources */,

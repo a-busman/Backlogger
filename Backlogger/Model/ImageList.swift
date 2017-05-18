@@ -128,7 +128,7 @@ class ImageList: Object {
                     completionHandler(.success(image))
                 } else {
                     NSLog("Couldn't convert to UIImage")
-                    NSLog("URL: \(response.request?.url?.absoluteString)")
+                    NSLog("URL: \((response.request?.url?.absoluteString)!)")
                     completionHandler(.failure(BackendError.objectSerialization(reason: "Could not convert data to UIImage")))
                 }
         }
