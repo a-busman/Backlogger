@@ -196,7 +196,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         self.statsEffectView?.isHidden = true
         self.statsScrollView?.alpha = 0.0
         self.statsButton?.layer.borderWidth = 1.0
-        self.statsButton?.layer.borderColor = UIColor(colorLiteralRed: 0.0, green: 0.725, blue: 1.0, alpha: 1.0).cgColor
+        self.statsButton?.layer.borderColor = Util.appColor.cgColor
         
         self.percentageBlurView?.effect = nil
         self.percentageVibrancyView?.effect = nil
@@ -594,7 +594,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         self.addLabel?.text = "ADD"
         UIView.animate(withDuration: 0.2, animations: {
             self.addSymbolImage?.transform = CGAffineTransform(rotationAngle: 0.0)
-            self.addBackground?.backgroundColor = UIColor(colorLiteralRed: 0.0, green: 0.725, blue: 1.0, alpha: 1.0)
+            self.addBackground?.backgroundColor = Util.appColor
             self.statsButton?.alpha = 0.0
             self.progressIcon?.alpha = 0.0
             self.view.layoutIfNeeded()
@@ -602,7 +602,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         if self.statsState == .visible {
             UIView.animate(withDuration: 0.2,
                            animations: {
-                            self.statsButton?.backgroundColor = UIColor(colorLiteralRed: 0.0, green: 0.725, blue: 1.0, alpha: 1.0)
+                            self.statsButton?.backgroundColor = Util.appColor
                             self.statsLabel?.textColor = .white
                             self.statsScrollView?.alpha = 0.0
                             self.statsEffectView?.effect = nil
@@ -639,14 +639,14 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
             self.statsEffectView?.isHidden = false
             UIView.animate(withDuration: 0.2, animations: {
                 self.statsButton?.backgroundColor = .white
-                self.statsLabel?.textColor = UIColor(colorLiteralRed: 0.0, green: 0.725, blue: 1.0, alpha: 1.0)
+                self.statsLabel?.textColor = Util.appColor
                 self.statsScrollView?.alpha = 1.0
                 self.statsEffectView?.effect = UIBlurEffect(style: .extraLight)
             })
             self.statsState = .visible
         } else {
             UIView.animate(withDuration: 0.2, animations: {
-                self.statsButton?.backgroundColor = UIColor(colorLiteralRed: 0.0, green: 0.725, blue: 1.0, alpha: 1.0)
+                self.statsButton?.backgroundColor = Util.appColor
                 self.statsLabel?.textColor = .white
                 self.statsScrollView?.alpha = 0.0
                 self.statsEffectView?.effect = nil

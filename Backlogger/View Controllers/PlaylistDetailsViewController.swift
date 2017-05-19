@@ -38,6 +38,15 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     
     var playlistImage: UIImage?
     
+    enum ImageSource {
+        case custom
+        case loaded
+        case generated
+        case none
+    }
+    
+    var playlistImageSource: ImageSource = .none
+    
     var didEditField = false
     
     enum PlaylistState {
@@ -82,6 +91,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                 self.playlistTitleView.titleString = playlist.name ?? ""
                 self.playlistDescriptionView.descriptionString = playlist.descriptionText ?? ""
                 self.games.append(contentsOf: playlist.games)
+                self.loadPlaylistImage()
             }
             self.playlistFooterView.delegate = self
             self.playlistTitleView.isEditable = false
@@ -119,30 +129,57 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             self.playlistImage = self.imageCache[self.games[0].gameFields!.idNumber]
             break
         case 2:
-            if let image1 = self.imageCache[self.games[0].gameFields!.idNumber], let image2 = self.imageCache[self.games[1].gameFields!.idNumber] {
-                self.playlistImage = self.stitchImages(images: [image1, image2], isVertical: false)
+            if let image1 = self.imageCache[self.games[0].gameFields!.idNumber],
+               let image2 = self.imageCache[self.games[1].gameFields!.idNumber] {
+                self.playlistImage = self.stitch(images: [image1, image2], isVertical: false)
             }
             break
         case 3:
-            if let image1 = self.imageCache[self.games[0].gameFields!.idNumber], let image2 = self.imageCache[self.games[1].gameFields!.idNumber],
+            if let image1 = self.imageCache[self.games[0].gameFields!.idNumber],
+               let image2 = self.imageCache[self.games[1].gameFields!.idNumber],
                let image3 = self.imageCache[self.games[2].gameFields!.idNumber] {
-                let intermediate = self.stitchImages(images: [image1, image2], isVertical: false)
-                self.playlistImage = self.stitchImages(images: [intermediate, image3], isVertical: true)
+                let intermediate   = self.stitch(images: [image1, image2], isVertical: false)
+                self.playlistImage = self.stitch(images: [intermediate, image3], isVertical: true)
             }
             break
         default:
-            if let image1 = self.imageCache[self.games[0].gameFields!.idNumber], let image2 = self.imageCache[self.games[1].gameFields!.idNumber],
-               let image3 = self.imageCache[self.games[2].gameFields!.idNumber], let image4 = self.imageCache[self.games[3].gameFields!.idNumber] {
-                let intermediate1 = self.stitchImages(images: [image1, image2], isVertical: false)
-                let intermediate2 = self.stitchImages(images: [image3, image4], isVertical: false)
-                self.playlistImage = self.stitchImages(images: [intermediate1, intermediate2], isVertical: true)
+            if let image1 = self.imageCache[self.games[0].gameFields!.idNumber],
+               let image2 = self.imageCache[self.games[1].gameFields!.idNumber],
+               let image3 = self.imageCache[self.games[2].gameFields!.idNumber],
+               let image4 = self.imageCache[self.games[3].gameFields!.idNumber] {
+                let intermediate1  = self.stitch(images: [image1, image2], isVertical: false)
+                let intermediate2  = self.stitch(images: [image3, image4], isVertical: false)
+                self.playlistImage = self.stitch(images: [intermediate1, intermediate2], isVertical: true)
             }
         }
         self.playlistTitleView.image = self.playlistImage
+        self.savePlaylistImage()
         self.playlistTitleView.showImage()
     }
     
-    func stitchImages(images: [UIImage], isVertical: Bool) -> UIImage {
+    func savePlaylistImage() {
+        let filename = Util.getPlaylistImagesDirectory().appendingPathComponent("\(self.playlist!.uuid).png")
+        if self.playlistImage != nil {
+            let data = UIImagePNGRepresentation(self.playlistImage!)
+            try? data?.write(to: filename)
+        } else {
+            try? FileManager.default.removeItem(at: filename)
+        }
+    }
+    
+    func loadPlaylistImage() {
+        let filename = Util.getPlaylistImagesDirectory().appendingPathComponent("\(self.playlist!.uuid).png")
+        self.playlistImage = UIImage(contentsOfFile: filename.path)
+        if self.playlistImage != nil {
+            if self.playlist?.imageUrl != nil {
+                self.playlistImageSource = .custom
+            } else {
+                self.playlistImageSource = .loaded
+            }
+        }
+    }
+    
+    func stitch(images: [UIImage], isVertical: Bool) -> UIImage {
         var stitchedImages : UIImage!
         if images.count > 0 {
             var maxWidth = CGFloat(0), maxHeight = CGFloat(0)
@@ -165,7 +202,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             for image in images {
                 var croppedImage: UIImage?
                 if image.size.width < maxSize.width {
-                    croppedImage = self.imageWithImage(sourceImage: image, scaledToWidth: maxSize.width)
+                    croppedImage = self.image(with: image, scaledTo: maxSize.width)
                     croppedImage = self.cropToBounds(image: croppedImage!, width: maxSize.width, height: maxSize.height)
                 }
                 let offset = (CGFloat)(images.index(of: image)!)
@@ -202,9 +239,9 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         return image
     }
     
-    func imageWithImage (sourceImage: UIImage, scaledToWidth: CGFloat) -> UIImage {
+    func image(with sourceImage: UIImage, scaledTo width: CGFloat) -> UIImage {
         let oldWidth = sourceImage.size.width
-        let scaleFactor = scaledToWidth / oldWidth
+        let scaleFactor = width / oldWidth
         
         let newHeight = sourceImage.size.height * scaleFactor
         let newWidth = oldWidth * scaleFactor
@@ -279,12 +316,13 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                 self.playlist?.games.removeAll()
                 self.playlist?.games.append(contentsOf: self.games)
                 if self.playlistTitleView.titleTextView?.textColor != .lightGray {
-                    self.playlist?.name = self.playlistTitleView.titleTextView?.text
+                    self.playlist?.name = self.playlistTitleView.titleTextView.text
+                    self.playlistTitleView.titleLabel.text = self.playlistTitleView.titleTextView.text
                 } else {
                     self.playlist?.name = "Untitled Playlist"
                 }
                 if self.playlistDescriptionView.descriptionTextView?.textColor != .lightGray {
-                    self.playlist?.descriptionText = self.playlistDescriptionView.descriptionTextView?.text
+                    self.playlist?.descriptionText = self.playlistDescriptionView.descriptionTextView.text
                 }
             }
         } else {
@@ -337,7 +375,9 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             self.playlistDescriptionView.isEditable = false
             self.tableView.tableFooterView = self.playlistFooterView.view
             self.reloadDataWithCrossDissolve()
-            self.updatePlaylistImage()
+            if self.playlistImageSource != .custom {
+                self.updatePlaylistImage()
+            }
             self.tableView.setEditing(false, animated: false)
         } else {
             let newPlaylist = Playlist()
@@ -438,7 +478,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                         playlistView?.set(image: image)
                         playlistView?.imageSource = .Downloaded
                     } else {
-                        playlistView?.imageUrl = URL(string: game.image!.mediumUrl!)
+                        playlistView?.imageUrl = URL(string: game.image!.smallUrl!)
                         playlistView?.cacheCompletionHandler = {
                             (image, error, cacheType, imageUrl) in
                             if image != nil {
@@ -450,7 +490,9 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                                     playlistView?.set(image: image!)
                                 }
                                 self.imageCache[game.idNumber] = image!
-                                self.updatePlaylistImage()
+                                if self.playlistImageSource != .custom {
+                                    self.updatePlaylistImage()
+                                }
                             }
                         }
                     }
@@ -668,7 +710,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             //self.tableView.reloadRows(at: [indexPath], with: .automatic)
             self.tableView.deleteRows(at: [indexPath], with: .fade)
             self.tableView.endUpdates()
-            if indexPath.row < 4 {
+            if indexPath.row < 4 && self.playlistImageSource != .custom {
                 self.updatePlaylistImage()
             }
             //self.tableView.reloadData()

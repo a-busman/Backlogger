@@ -17,13 +17,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        self.createDirectories()
         var performShortcutDelegate = true
         self.compactRealm()
         
-        let appColor = UIColor(colorLiteralRed: 0.0, green: 0.725, blue: 1.0, alpha: 1.0)
-        (UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self])).tintColor = appColor
-        UISlider.appearance().tintColor = appColor
-        self.window?.tintColor = appColor
+        (UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self])).tintColor = Util.appColor
+        UISlider.appearance().tintColor = Util.appColor
+        self.window?.tintColor = Util.appColor
         
         if let shortcutItem = launchOptions?[UIApplicationLaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem {
             self.shortcutItem = shortcutItem
@@ -45,7 +45,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let libraryViewController = libraryNavigationViewController?.viewControllers.first as? LibraryViewController
             
             libraryViewController?.performSegue(withIdentifier: "add_game_to_library", sender: nil)
-            // Add your code here
 
             succeeded = true
             
@@ -53,6 +52,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         return succeeded
         
+    }
+    
+    func createDirectories() {
+        let playlistsFolder = Util.getPlaylistImagesDirectory()
+        
+        if !FileManager.default.fileExists(atPath: playlistsFolder.absoluteString) {
+            do {
+                try FileManager.default.createDirectory(at: playlistsFolder, withIntermediateDirectories: true, attributes: nil)
+            } catch let error as NSError {
+                NSLog(error.localizedDescription)
+            }
+        }
     }
     
     func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {

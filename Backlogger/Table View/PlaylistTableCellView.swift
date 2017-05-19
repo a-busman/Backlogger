@@ -16,6 +16,8 @@ class PlaylistTableCellView: UIViewController {
     
     @IBOutlet weak var titleCenterLayoutConstraint: NSLayoutConstraint?
     
+    var image: UIImage?
+    
     enum CellState {
         case new
         case title
@@ -24,29 +26,34 @@ class PlaylistTableCellView: UIViewController {
     
     private var _state: CellState = .new
     
+    var playlist: Playlist?
+    
     var state: CellState {
         get {
             return self._state
         }
         set(newState) {
-            if newState == .new {
-                self.titleLabel?.text = "New Playlist..."
-                self.titleLabel?.textColor = UIColor(colorLiteralRed: 0.0, green: 0.725, blue: 1.0, alpha: 1.0)
-                self.titleCenterLayoutConstraint?.constant = 0.0
-                self.descLabel?.text = ""
-                self.descLabel?.isHidden = true
-            } else if newState == .title {
-                self.titleLabel?.textColor = .black
-                self.titleCenterLayoutConstraint?.constant = 0.0
-                self.descLabel?.text = ""
-                self.descLabel?.isHidden = true
-            } else {
-                self.titleLabel?.textColor = .black
-                self.titleCenterLayoutConstraint?.constant = -14.0
-                self.descLabel?.isHidden = false
-            }
-            self.view.layoutIfNeeded()
             self._state = newState
+            if self.isViewLoaded {
+                if newState == .new {
+                    self.titleLabel?.text = "New Playlist..."
+                    self.titleLabel?.textColor = Util.appColor
+                    self.titleCenterLayoutConstraint?.constant = 0.0
+                    self.descLabel?.text = ""
+                    self.descLabel?.isHidden = true
+                } else if newState == .title {
+                    self.titleLabel?.textColor = .black
+                    self.titleCenterLayoutConstraint?.constant = 0.0
+                    self.descLabel?.text = ""
+                    self.descLabel?.isHidden = true
+                } else {
+                    self.titleLabel?.textColor = .black
+                    self.titleCenterLayoutConstraint?.constant = -14.0
+                    self.descLabel?.isHidden = false
+                }
+                
+                self.view.layoutIfNeeded()
+            }
         }
     }
     
@@ -61,21 +68,25 @@ class PlaylistTableCellView: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if self._state == .new {
-            self.titleLabel?.text = "New Playlist..."
-            self.titleLabel?.textColor = UIColor(colorLiteralRed: 0.0, green: 0.725, blue: 1.0, alpha: 1.0)
-            self.titleCenterLayoutConstraint?.constant = 0.0
-            self.descLabel?.text = ""
-            self.descLabel?.isHidden = true
-        } else if self._state == .title {
+        if let playlist = self.playlist {
+            self.titleLabel?.text = playlist.name
             self.titleLabel?.textColor = .black
-            self.titleCenterLayoutConstraint?.constant = 0.0
-            self.descLabel?.text = ""
-            self.descLabel?.isHidden = true
+            self.showImage()
+            if playlist.descriptionText == nil {
+                self.titleCenterLayoutConstraint?.constant = 0.0
+                self.descLabel?.text = ""
+                self.descLabel?.isHidden = true
+            } else {
+                self.titleCenterLayoutConstraint?.constant = -14.0
+                self.descLabel?.text = playlist.descriptionText
+                self.descLabel?.isHidden = false
+            }
         } else {
-            self.titleLabel?.textColor = .black
-            self.titleCenterLayoutConstraint?.constant = -14.0
-            self.descLabel?.isHidden = false
+            self.titleLabel?.text = "New Playlist..."
+            self.titleLabel?.textColor = Util.appColor
+            self.titleCenterLayoutConstraint?.constant = 0.0
+            self.descLabel?.text = ""
+            self.descLabel?.isHidden = true
         }
         self.view.setNeedsLayout()
     }
@@ -118,5 +129,17 @@ class PlaylistTableCellView: UIViewController {
                            multiplier: 1.0,
                            constant: 0.0
             ).isActive = true
+    }
+    
+    func showImage() {
+        if let image = self.image {
+            self.imageView?.image = image
+            self.blurView?.isHidden = true
+        }
+    }
+    
+    func hideImage() {
+        self.blurView?.isHidden = false
+        self.imageView?.image = #imageLiteral(resourceName: "new_playlist")
     }
 }

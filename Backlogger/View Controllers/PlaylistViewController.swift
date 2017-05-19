@@ -37,6 +37,12 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! TableViewCell
         let cellView = PlaylistTableCellView()
+        
+        if indexPath.row > 0 {
+            cellView.playlist = playlistList![indexPath.row - 1]
+            cellView.image = self.loadPlaylistImage(indexPath.row - 1)
+        }
+        
         cellView.view.translatesAutoresizingMaskIntoConstraints = false
         cell.contentView.addSubview(cellView.view)
         
@@ -72,18 +78,6 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
                            multiplier: 1.0,
                            constant: 0.0
             ).isActive = true
-        
-        if indexPath.row == 0 {
-            cellView.state = .new
-        } else {
-            cellView.titleLabel?.text = playlistList![indexPath.row - 1].name
-            if let desc = playlistList?[indexPath.row - 1].descriptionText {
-                cellView.descLabel?.text = desc
-                cellView.state = .full
-            } else {
-                cellView.state = .title
-            }
-        }
         return cell
     }
     
@@ -111,5 +105,10 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
             self.performSegue(withIdentifier: "viewPlaylist", sender: tableView.cellForRow(at: indexPath))
         }
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func loadPlaylistImage(_ row: Int) -> UIImage? {
+        let filename = Util.getPlaylistImagesDirectory().appendingPathComponent("\(self.playlistList![row].uuid).png")
+        return UIImage(contentsOfFile: filename.path)
     }
 }

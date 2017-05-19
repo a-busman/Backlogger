@@ -17,6 +17,7 @@
                 <outlet property="deleteImage" destination="akh-Me-C1q" id="r95-z1-yYM"/>
                 <outlet property="imageBorder" destination="Ofh-AL-noF" id="reY-L7-hCr"/>
                 <outlet property="imageView" destination="R4n-Bn-iBO" id="qJR-NI-BT1"/>
+                <outlet property="titleLabel" destination="9eV-cl-qgm" id="LI9-b3-DgT"/>
                 <outlet property="titleTextView" destination="dgA-6g-nKX" id="rp9-6d-Pdx"/>
                 <outlet property="view" destination="6TG-YZ-Va9" id="FxX-Go-xbM"/>
             </connections>
@@ -141,16 +142,25 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9eV-cl-qgm">
+                    <rect key="frame" x="172" y="8" width="193" height="19.5"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="KdE-yU-QGI" firstAttribute="bottom" secondItem="Ofh-AL-noF" secondAttribute="bottom" constant="7" id="6Nn-pD-ZI4"/>
                 <constraint firstItem="Ofh-AL-noF" firstAttribute="leading" secondItem="6TG-YZ-Va9" secondAttribute="leading" constant="15" id="6WD-mE-HH7"/>
+                <constraint firstItem="9eV-cl-qgm" firstAttribute="trailing" secondItem="dgA-6g-nKX" secondAttribute="trailing" id="Con-Oz-Pjx"/>
                 <constraint firstItem="KdE-yU-QGI" firstAttribute="leading" secondItem="Ofh-AL-noF" secondAttribute="trailing" constant="10" id="GWn-Es-dVa"/>
                 <constraint firstItem="dgA-6g-nKX" firstAttribute="top" secondItem="Ofh-AL-noF" secondAttribute="top" constant="-5" id="LU9-fI-XDJ"/>
                 <constraint firstItem="dgA-6g-nKX" firstAttribute="trailing" secondItem="6TG-YZ-Va9" secondAttribute="trailing" constant="-10" id="fUo-zt-JOO"/>
                 <constraint firstItem="dgA-6g-nKX" firstAttribute="leading" secondItem="Ofh-AL-noF" secondAttribute="trailing" constant="20" id="is5-ul-tY1"/>
                 <constraint firstItem="Ofh-AL-noF" firstAttribute="top" secondItem="6TG-YZ-Va9" secondAttribute="top" constant="4.5" id="qE1-BX-rzX"/>
+                <constraint firstItem="9eV-cl-qgm" firstAttribute="leading" secondItem="dgA-6g-nKX" secondAttribute="leading" constant="5" id="qc9-J0-0MQ"/>
+                <constraint firstItem="9eV-cl-qgm" firstAttribute="top" secondItem="dgA-6g-nKX" secondAttribute="top" constant="8.5" id="vD9-Jo-Kyu"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

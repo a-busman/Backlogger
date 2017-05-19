@@ -15,6 +15,7 @@ class PlaylistTitleView: UIViewController {
     @IBOutlet weak var deleteButton: UIView!
     @IBOutlet weak var deleteImage: UIImageView!
     @IBOutlet weak var imageBorder: UIView!
+    @IBOutlet weak var titleLabel: UILabel!
     
     var titleDelegate: UITextViewDelegate?
     var observer: NSObject?
@@ -31,6 +32,7 @@ class PlaylistTitleView: UIViewController {
         set(newValue) {
             self._titleString = newValue
             if self.isViewLoaded {
+                self.titleLabel.text = self._titleString
                 self.titleTextView.text = self._titleString
                 self.titleTextView.textColor = .black
             }
@@ -44,8 +46,8 @@ class PlaylistTitleView: UIViewController {
         set(newValue) {
             self._isEditable = newValue
             if self.isViewLoaded {
-                self.titleTextView.isEditable = newValue
-                self.titleTextView.isSelectable = newValue
+                self.titleTextView.isHidden = !self._isEditable
+                self.titleLabel.isHidden = self._isEditable
             }
         }
     }
@@ -75,12 +77,13 @@ class PlaylistTitleView: UIViewController {
             self.titleTextView.text = "Playlist Name"
             self.titleTextView.textColor = .lightGray
         } else {
+            self.titleLabel.text = self._titleString
             self.titleTextView.text = self._titleString
             self.titleTextView.textColor = .black
         }
         self.titleTextView.delegate = self.titleDelegate
-        self.titleTextView.isEditable = self._isEditable
-        self.titleTextView.isSelectable = self._isEditable
+        self.titleTextView.isHidden = !self._isEditable
+        self.titleLabel.isHidden = self._isEditable
         if self.observer != nil {
             self.titleTextView.addObserver(self.observer!, forKeyPath: "contentSize", options:[.new], context: nil)
         }

@@ -82,7 +82,7 @@ class PlaylistAddTableCellView: UIViewController {
             self.moveHandle?.isHidden = true
             self.rightLabel?.isHidden = true
             self.titleLabel?.text = "Add Games"
-            self.titleLabel?.textColor = UIColor(colorLiteralRed: 0.0, green: 0.725, blue: 1.0, alpha: 1.0)
+            self.titleLabel?.textColor = Util.appColor
             self.titleCenterLayoutConstraint?.constant = 0
             self.titleLeadingLayoutConstraint?.constant = 10
         } else {

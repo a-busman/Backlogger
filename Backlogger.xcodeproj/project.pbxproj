@@ -20,6 +20,7 @@
 		FA0915921E2AEF2C0052BCEC /* NowPlayingGameView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA0915911E2AEF2C0052BCEC /* NowPlayingGameView.xib */; };
 		FA0915971E2B367B0052BCEC /* NowPlayingGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0915961E2B367B0052BCEC /* NowPlayingGameViewController.swift */; };
 		FA0C48901EAC532100F82C7D /* keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = FA0C488F1EAC532100F82C7D /* keys.plist */; };
+		FA1854B81ECF22B30031087E /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1854B71ECF22B30031087E /* Util.swift */; };
 		FA358A521EB9AC4C001EE03D /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA358A511EB9AC4C001EE03D /* Playlist.swift */; };
 		FA358A541EBADF23001EE03D /* PlaylistTableCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA358A531EBADF23001EE03D /* PlaylistTableCellView.xib */; };
 		FA358A561EBADF5E001EE03D /* PlaylistTableCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA358A551EBADF5E001EE03D /* PlaylistTableCellView.swift */; };
@@ -80,6 +81,7 @@
 		FA0915911E2AEF2C0052BCEC /* NowPlayingGameView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = NowPlayingGameView.xib; path = Views/NowPlayingGameView.xib; sourceTree = "<group>"; };
 		FA0915961E2B367B0052BCEC /* NowPlayingGameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NowPlayingGameViewController.swift; path = "View Controllers/NowPlayingGameViewController.swift"; sourceTree = "<group>"; };
 		FA0C488F1EAC532100F82C7D /* keys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = keys.plist; sourceTree = "<group>"; };
+		FA1854B71ECF22B30031087E /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		FA358A511EB9AC4C001EE03D /* Playlist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Playlist.swift; path = Model/Playlist.swift; sourceTree = "<group>"; };
 		FA358A531EBADF23001EE03D /* PlaylistTableCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PlaylistTableCellView.xib; path = Views/PlaylistTableCellView.xib; sourceTree = "<group>"; };
 		FA358A551EBADF5E001EE03D /* PlaylistTableCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlaylistTableCellView.swift; path = "Table View/PlaylistTableCellView.swift"; sourceTree = "<group>"; };
@@ -179,6 +181,7 @@
 				FA0915931E2AEF400052BCEC /* Views */,
 				FA0915841E2AA9520052BCEC /* View Controllers */,
 				FA09156C1E2AA4210052BCEC /* AppDelegate.swift */,
+				FA1854B71ECF22B30031087E /* Util.swift */,
 				FA0915721E2AA4210052BCEC /* Main.storyboard */,
 				FA0915751E2AA4210052BCEC /* Assets.xcassets */,
 				FA0915771E2AA4210052BCEC /* LaunchScreen.storyboard */,
@@ -444,6 +447,7 @@
 				FA68A8F11ECBB18400C9CE2E /* PlaylistFooter.swift in Sources */,
 				FA4B448D1E5D3F04006A843F /* Company.swift in Sources */,
 				FA09156D1E2AA4210052BCEC /* AppDelegate.swift in Sources */,
+				FA1854B81ECF22B30031087E /* Util.swift in Sources */,
 				FADA80981E4FA0EB0069943D /* GameTableViewController.swift in Sources */,
 				FA8E71CD1E80E61800E7400B /* Publisher.swift in Sources */,
 				FA4B449B1E610E53006A843F /* TableViewCellView.swift in Sources */,
