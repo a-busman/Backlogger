@@ -15,6 +15,7 @@
                 <outlet property="blurView" destination="GLr-ne-YpV" id="GJF-i8-33z"/>
                 <outlet property="deleteButton" destination="KdE-yU-QGI" id="6fx-ix-DVG"/>
                 <outlet property="deleteImage" destination="akh-Me-C1q" id="r95-z1-yYM"/>
+                <outlet property="imageBorder" destination="Ofh-AL-noF" id="reY-L7-hCr"/>
                 <outlet property="imageView" destination="R4n-Bn-iBO" id="qJR-NI-BT1"/>
                 <outlet property="titleTextView" destination="dgA-6g-nKX" id="rp9-6d-Pdx"/>
                 <outlet property="view" destination="6TG-YZ-Va9" id="FxX-Go-xbM"/>

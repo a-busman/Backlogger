@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 import RealmSwift
 
 class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, PlaylistAddTableCellViewDelegate, AddToPlaylistViewControllerDelegate, PlaylistFooterDelegate {
@@ -33,6 +34,8 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     var selectedRow = -1
     
     var movingIndexPath: IndexPath?
+    
+    var playlistImage: UIImage?
     
     var didEditField = false
     
@@ -101,6 +104,115 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         DispatchQueue.main.async {
             self.tableView.reloadSections(set, with: .none)
         }
+    }
+    
+    func updatePlaylistImage() {
+        switch self.games.count {
+        case 0:
+            // reset to default
+            self.playlistImage = nil
+            self.playlistTitleView.image = nil
+            self.playlistTitleView.hideImage()
+            return
+        case 1:
+            self.playlistImage = self.imageCache[self.games[0].gameFields!.idNumber]
+            break
+        case 2:
+            if let image1 = self.imageCache[self.games[0].gameFields!.idNumber], let image2 = self.imageCache[self.games[1].gameFields!.idNumber] {
+                self.playlistImage = self.stitchImages(images: [image1, image2], isVertical: false)
+            }
+            break
+        case 3:
+            if let image1 = self.imageCache[self.games[0].gameFields!.idNumber], let image2 = self.imageCache[self.games[1].gameFields!.idNumber],
+               let image3 = self.imageCache[self.games[2].gameFields!.idNumber] {
+                let intermediate = self.stitchImages(images: [image1, image2], isVertical: false)
+                self.playlistImage = self.stitchImages(images: [intermediate, image3], isVertical: true)
+            }
+            break
+        default:
+            if let image1 = self.imageCache[self.games[0].gameFields!.idNumber], let image2 = self.imageCache[self.games[1].gameFields!.idNumber],
+               let image3 = self.imageCache[self.games[2].gameFields!.idNumber], let image4 = self.imageCache[self.games[3].gameFields!.idNumber] {
+                let intermediate1 = self.stitchImages(images: [image1, image2], isVertical: false)
+                let intermediate2 = self.stitchImages(images: [image3, image4], isVertical: false)
+                self.playlistImage = self.stitchImages(images: [intermediate1, intermediate2], isVertical: true)
+            }
+        }
+        self.playlistTitleView.image = self.playlistImage
+        self.playlistTitleView.showImage()
+    }
+    
+    func stitchImages(images: [UIImage], isVertical: Bool) -> UIImage {
+        var stitchedImages : UIImage!
+        if images.count > 0 {
+            var maxWidth = CGFloat(0), maxHeight = CGFloat(0)
+            for image in images {
+                if image.size.width > maxWidth {
+                    maxWidth = image.size.width
+                }
+                if image.size.height > maxHeight {
+                    maxHeight = image.size.height
+                }
+            }
+            var totalSize : CGSize
+            let maxSize = CGSize(width: maxWidth, height: maxHeight)
+            if isVertical {
+                totalSize = CGSize(width: maxSize.width, height: maxSize.height * (CGFloat)(images.count))
+            } else {
+                totalSize = CGSize(width: maxSize.width  * (CGFloat)(images.count), height:  maxSize.height)
+            }
+            UIGraphicsBeginImageContext(totalSize)
+            for image in images {
+                var croppedImage: UIImage?
+                if image.size.width < maxSize.width {
+                    croppedImage = self.imageWithImage(sourceImage: image, scaledToWidth: maxSize.width)
+                    croppedImage = self.cropToBounds(image: croppedImage!, width: maxSize.width, height: maxSize.height)
+                }
+                let offset = (CGFloat)(images.index(of: image)!)
+                if croppedImage == nil {
+                    let rect =  AVMakeRect(aspectRatio: image.size, insideRect: isVertical ?
+                        CGRect(x: 0, y: maxSize.height * offset, width: maxSize.width, height: maxSize.height) :
+                        CGRect(x: maxSize.width * offset, y: 0, width: maxSize.width, height: maxSize.height))
+                    image.draw(in: rect)
+                } else {
+                    let rect =  AVMakeRect(aspectRatio: croppedImage!.size, insideRect: isVertical ?
+                        CGRect(x: 0, y: maxSize.height * offset, width: maxSize.width, height: maxSize.height) :
+                        CGRect(x: maxSize.width * offset, y: 0, width: maxSize.width, height: maxSize.height))
+                    croppedImage!.draw(in: rect)
+                }
+            }
+            stitchedImages = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+        }
+        return stitchedImages
+    }
+    
+    func cropToBounds(image: UIImage, width: CGFloat, height: CGFloat) -> UIImage {
+        
+        let contextImage: UIImage = UIImage(cgImage: image.cgImage!)
+        
+        let rect: CGRect = CGRect(x: 0, y: 0, width: width, height: height)
+        
+        // Create bitmap image from context using the rect
+        let imageRef: CGImage = contextImage.cgImage!.cropping(to: rect)!
+        
+        // Create a new image based on the imageRef and rotate back to the original orientation
+        let image: UIImage = UIImage(cgImage: imageRef, scale: image.scale, orientation: image.imageOrientation)
+        
+        return image
+    }
+    
+    func imageWithImage (sourceImage: UIImage, scaledToWidth: CGFloat) -> UIImage {
+        let oldWidth = sourceImage.size.width
+        let scaleFactor = scaledToWidth / oldWidth
+        
+        let newHeight = sourceImage.size.height * scaleFactor
+        let newWidth = oldWidth * scaleFactor
+        
+        UIGraphicsBeginImageContext(CGSize(width:newWidth, height:newHeight))
+        sourceImage.draw(in: CGRect(x:0, y:0, width:newWidth, height:newHeight))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage!
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -224,6 +336,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             self.playlistDescriptionView.isEditable = false
             self.tableView.tableFooterView = self.playlistFooterView.view
             self.reloadDataWithCrossDissolve()
+            self.updatePlaylistImage()
             self.tableView.setEditing(false, animated: false)
         } else {
             let newPlaylist = Playlist()
@@ -274,27 +387,6 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         //return 3 + self.games.count
     }
     
-    func listSubviewsOfView(view: UIView?, pref: String){
-        
-        // Get the subviews of the view
-        if let newView = view {
-            let subviews = newView.subviews
-            print("\(pref)> \(type(of: newView))")
-
-            // Return if there are no subviews
-            if subviews.count == 0 {
-                return
-            }
-            
-            for subview : AnyObject in subviews {
-                
-                // Do what you want to do with the subview
-                // List the subviews of subview
-                listSubviewsOfView(view: subview as? UIView, pref: pref + "--")
-            }
-        }
-    }
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         /*********************************************************
          * FIXME: If a cell has been deleted by pressing the minus
@@ -338,29 +430,36 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                 self.playlistTableViews.append(playlistView!)
                 let game = self.games[indexPath.row].gameFields!
 
-                if playlistView!.imageSource == .Placeholder && self.imageCache[game.idNumber] == nil {
-                    game.getImage {
-                        result in
-                        if let error = result.error {
-                            NSLog("\(error)")
-                        } else {
-                            // Save the image so we won't have to keep fetching it if they scroll
-                            self.imageCache[game.idNumber] = result.value!
-                            if let cellToUpdate = self.tableView?.cellForRow(at: indexPath) {
-                                UIView.transition(with: playlistView!.artView!,
-                                                  duration:0.5,
-                                                  options: .transitionCrossDissolve,
-                                                  animations: { playlistView?.set(image: result.value!) },
-                                                  completion: nil)
-                                playlistView?.imageSource = .Downloaded
-                                cellToUpdate.setNeedsLayout() // need to reload the view, which won't happen otherwise since this is in an async call
+                if playlistView!.imageSource == .Placeholder {
+                    if let image = self.imageCache[game.idNumber] {
+                        playlistView?.set(image: image)
+                        playlistView?.imageSource = .Downloaded
+                    } else {
+                        playlistView?.set(image: #imageLiteral(resourceName: "table_placeholder_light"))
+                        game.image?.getImage(field: .MediumUrl) {
+                            result in
+                            if let error = result.error {
+                                NSLog("\(error)")
+                            } else {
+                                // Save the image so we won't have to keep fetching it if they scroll
+                                self.imageCache[game.idNumber] = result.value!
+                                if let cellToUpdate = self.tableView?.cellForRow(at: indexPath) {
+                                    UIView.transition(with: playlistView!.artView!,
+                                                      duration:0.5,
+                                                      options: .transitionCrossDissolve,
+                                                      animations: { playlistView?.set(image: result.value!) },
+                                                      completion: nil)
+                                    playlistView?.imageSource = .Downloaded
+                                    if indexPath.row < 4 {
+                                        self.updatePlaylistImage()
+                                    }
+                                    cellToUpdate.setNeedsLayout() // need to reload the view, which won't happen otherwise since this is in an async call
+                                }
                             }
                         }
                     }
-                } else if self.imageCache[game.idNumber] != nil {
-                    DispatchQueue.main.async {
-                        playlistView?.set(image: self.imageCache[game.idNumber]!)
-                    }
+                } else if let image = self.imageCache[game.idNumber] {
+                    playlistView?.set(image: image)
                     playlistView?.imageSource = .Downloaded
                 }
             } else {
@@ -576,6 +675,9 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             //self.tableView.reloadRows(at: [indexPath], with: .automatic)
             self.tableView.deleteRows(at: [indexPath], with: .fade)
             self.tableView.endUpdates()
+            if indexPath.row < 4 {
+                self.updatePlaylistImage()
+            }
             //self.tableView.reloadData()
             //_ = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.refreshTable), userInfo: nil, repeats: false)
         } else if editingStyle == .insert {

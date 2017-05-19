@@ -51,6 +51,8 @@ class PlaylistAddTableCellView: UIViewController {
     
     var game: Game?
     
+    var image: UIImage?
+    
     var playlistState: PlaylistState {
         get {
             return self._playlistState
@@ -87,6 +89,7 @@ class PlaylistAddTableCellView: UIViewController {
                 self.titleLabel?.text = self.game!.gameFields?.name
                 self.descriptionLabel?.text = self.game!.platform?.name
                 self.rightLabel?.text = "\(self.game!.progress)%"
+                self.artView?.image = self.image
             }
         }
     }
@@ -156,6 +159,7 @@ class PlaylistAddTableCellView: UIViewController {
     }
     
     func set(image: UIImage) {
+        self.image = image
         self.artView?.image = image
     }
     

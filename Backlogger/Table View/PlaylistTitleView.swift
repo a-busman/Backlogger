@@ -14,9 +14,12 @@ class PlaylistTitleView: UIViewController {
     @IBOutlet weak var blurView: UIVisualEffectView!
     @IBOutlet weak var deleteButton: UIView!
     @IBOutlet weak var deleteImage: UIImageView!
+    @IBOutlet weak var imageBorder: UIView!
     
     var titleDelegate: UITextViewDelegate?
     var observer: NSObject?
+    
+    var image: UIImage?
     
     private var _titleString: String = ""
     
@@ -52,6 +55,18 @@ class PlaylistTitleView: UIViewController {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func showImage() {
+        if let image = self.image {
+            self.imageView.image = image
+            self.blurView.isHidden = true
+        }
+    }
+    
+    func hideImage() {
+        self.blurView.isHidden = false
+        self.imageView.image = #imageLiteral(resourceName: "new_playlist")
     }
     
     override func viewDidLoad() {
