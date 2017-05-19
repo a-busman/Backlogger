@@ -68,20 +68,24 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
 //            } else {
 //                self.yearLabel?.text = "\(platform.company?.name ?? "")"
 //            }
-            self.platformImage?.kf.setImage(with: URL(string: platform.image!.superUrl!), placeholder: nil, completionHandler: {
-                (image, error, cacheType, imageUrl) in
-                if image != nil {
-                    if cacheType == .none {
-                        UIView.transition(with: self.platformImage!,
-                                          duration:0.5,
-                                          options: .transitionCrossDissolve,
-                                          animations: { self.platformImage?.image = image },
-                                          completion: nil)
-                    } else {
-                        self.platformImage?.image = image
+            if let superUrl = platform.image?.superUrl {
+                self.platformImage?.kf.setImage(with: URL(string: superUrl), placeholder: nil, completionHandler: {
+                    (image, error, cacheType, imageUrl) in
+                    if image != nil {
+                        if cacheType == .none {
+                            UIView.transition(with: self.platformImage!,
+                                              duration:0.5,
+                                              options: .transitionCrossDissolve,
+                                              animations: { self.platformImage?.image = image },
+                                              completion: nil)
+                        } else {
+                            self.platformImage?.image = image
+                        }
                     }
-                }
-            })
+                })
+            } else {
+                self.platformImage?.image = nil
+            }
         } else {
             NSLog("No platform during load")
         }

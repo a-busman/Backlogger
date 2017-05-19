@@ -250,20 +250,24 @@ extension GameDetailOverlayViewController: UICollectionViewDelegate, UICollectio
         let newBounds = cell.bounds
         cell.contentView.layer.shadowPath = UIBezierPath(rect: CGRect(x: newBounds.origin.x + 5, y: newBounds.origin.y + 5, width: newBounds.width - 10, height: newBounds.height - 10)).cgPath
         cell.contentView.layer.shadowOffset = .zero
-        cellView.kf.setImage(with: URL(string: self.game!.gameFields!.images[indexPath.item].mediumUrl!), placeholder: #imageLiteral(resourceName: "info_image_placeholder"), completionHandler: {
-            (image, error, cacheType, imageUrl) in
-            if image != nil {
-                if cacheType == .none {
-                    UIView.transition(with: cellView,
-                                      duration:0.5,
-                                      options: .transitionCrossDissolve,
-                                      animations: { cellView.image = image },
-                                      completion: nil)
-                } else {
-                    cellView.image = image
+        if let mediumUrl = self.game?.gameFields?.images[indexPath.item].mediumUrl {
+            cellView.kf.setImage(with: URL(string: mediumUrl), placeholder: #imageLiteral(resourceName: "info_image_placeholder"), completionHandler: {
+                (image, error, cacheType, imageUrl) in
+                if image != nil {
+                    if cacheType == .none {
+                        UIView.transition(with: cellView,
+                                          duration:0.5,
+                                          options: .transitionCrossDissolve,
+                                          animations: { cellView.image = image },
+                                          completion: nil)
+                    } else {
+                        cellView.image = image
+                    }
                 }
-            }
-        })
+            })
+        } else {
+            cellView.image = #imageLiteral(resourceName: "info_image_placeholder")
+        }
         
         return cell
     }

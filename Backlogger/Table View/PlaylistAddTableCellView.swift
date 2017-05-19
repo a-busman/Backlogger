@@ -93,7 +93,11 @@ class PlaylistAddTableCellView: UIViewController {
                 self.titleLabel?.text = self.game!.gameFields?.name
                 self.descriptionLabel?.text = self.game!.platform?.name
                 self.rightLabel?.text = "\(self.game!.progress)%"
-                self.artView?.kf.setImage(with: self.imageUrl, placeholder: #imageLiteral(resourceName: "table_placeholder_light"), completionHandler: self.cacheCompletionHandler)
+                if self.imageUrl != nil {
+                    self.artView?.kf.setImage(with: self.imageUrl, placeholder: #imageLiteral(resourceName: "table_placeholder_light"), completionHandler: self.cacheCompletionHandler)
+                } else {
+                    self.artView?.image = #imageLiteral(resourceName: "table_placeholder_light")
+                }
             }
         }
     }

@@ -273,19 +273,22 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         UIView.setAnimationsEnabled(false)
         self.platformButton?.setTitle(platformString, for: .normal)
         UIView.setAnimationsEnabled(true)
-        
-        self.mainImageView?.kf.setImage(with: URL(string: self._gameField!.image!.mediumUrl!), placeholder: #imageLiteral(resourceName: "info_image_placeholder"), completionHandler: {
-            (image, error, cacheType, imageUrl) in
-            if image != nil {
-                if cacheType == .none {
-                    UIView.transition(with: self.mainImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+        if let mediumUrl = self._gameField?.image?.mediumUrl {
+            self.mainImageView?.kf.setImage(with: URL(string: mediumUrl), placeholder: #imageLiteral(resourceName: "info_image_placeholder"), completionHandler: {
+                (image, error, cacheType, imageUrl) in
+                if image != nil {
+                    if cacheType == .none {
+                        UIView.transition(with: self.mainImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                            self.mainImageView?.image = image
+                        }, completion: nil)
+                    } else {
                         self.mainImageView?.image = image
-                    }, completion: nil)
-                } else {
-                    self.mainImageView?.image = image
+                    }
                 }
-            }
-        })
+            })
+        } else {
+            self.mainImageView?.image = #imageLiteral(resourceName: "info_image_placeholder")
+        }
 
         self.descriptionView?.text = gameFields?.deck
         self.toastOverlay.view.translatesAutoresizingMaskIntoConstraints = false
@@ -1109,17 +1112,20 @@ extension GameDetailsViewController: UICollectionViewDelegate, UICollectionViewD
                            multiplier: 1.0,
                            constant: -0.5
             ).isActive = true
-        
-        imageView.kf.setImage(with: URL(string: self.gameField!.images[indexPath.item].mediumUrl!), placeholder: #imageLiteral(resourceName: "info_image_placeholder"), completionHandler: {
-            (image, error, cacheType, imageUrl) in
-            if image != nil {
-                UIView.transition(with: imageView,
-                                  duration:0.5,
-                                  options: .transitionCrossDissolve,
-                                  animations: { imageView.image = image },
-                                  completion: nil)
-            }
-        })
+        if let mediumUrl = self.gameField?.images[indexPath.item].mediumUrl {
+            imageView.kf.setImage(with: URL(string: mediumUrl), placeholder: #imageLiteral(resourceName: "info_image_placeholder"), completionHandler: {
+                (image, error, cacheType, imageUrl) in
+                if image != nil {
+                    UIView.transition(with: imageView,
+                                      duration:0.5,
+                                      options: .transitionCrossDissolve,
+                                      animations: { imageView.image = image },
+                                      completion: nil)
+                }
+            })
+        } else {
+            imageView.image = #imageLiteral(resourceName: "info_image_placeholder")
+        }
         
         return cell
     }

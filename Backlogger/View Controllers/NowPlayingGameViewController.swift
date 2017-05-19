@@ -291,20 +291,24 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
             NSLog("no game to get details from")
             return
         }
-        self.coverImageView?.kf.setImage(with: URL(string: currentGame.gameFields!.image!.superUrl!), placeholder: #imageLiteral(resourceName: "now_playing_placeholder"), completionHandler: {
-            (image, error, cacheType, imageUrl) in
-            if image != nil {
-                if cacheType == .none {
-                    UIView.transition(with: self.coverImageView!,
-                                      duration:0.5,
-                                      options: .transitionCrossDissolve,
-                                      animations: { self.coverImageView?.image = image! },
-                                      completion: nil)
-                } else {
-                    self.coverImageView?.image = image!
+        if let superUrl = currentGame.gameFields?.image?.superUrl {
+            self.coverImageView?.kf.setImage(with: URL(string: superUrl), placeholder: #imageLiteral(resourceName: "now_playing_placeholder"), completionHandler: {
+                (image, error, cacheType, imageUrl) in
+                if image != nil {
+                    if cacheType == .none {
+                        UIView.transition(with: self.coverImageView!,
+                                          duration:0.5,
+                                          options: .transitionCrossDissolve,
+                                          animations: { self.coverImageView?.image = image! },
+                                          completion: nil)
+                    } else {
+                        self.coverImageView?.image = image!
+                    }
                 }
-            }
-        })
+            })
+        } else {
+            self.coverImageView?.image = #imageLiteral(resourceName: "now_playing_placeholder")
+        }
         self.gameDetailOverlayController.game = currentGame
     }
     
