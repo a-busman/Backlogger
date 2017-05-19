@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import Kingfisher
 
 protocol GameDetailsViewControllerDelegate {
     func gamesCreated(gameField: GameField)
@@ -146,18 +147,6 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
                 }
             }
             self.yearLabel?.text = yearLabelText
-            
-            newGame?.getImage(withSize: .MediumUrl, { result in
-                if let error = result.error {
-                    NSLog("\(error.localizedDescription)")
-                    return
-                }
-                UIView.transition(with: self.mainImageView!,
-                                  duration:0.5,
-                                  options: .transitionCrossDissolve,
-                                  animations: { self.mainImageView?.image = result.value! },
-                                  completion: nil)
-            })
         }
     }
     
@@ -284,6 +273,19 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         UIView.setAnimationsEnabled(false)
         self.platformButton?.setTitle(platformString, for: .normal)
         UIView.setAnimationsEnabled(true)
+        
+        self.mainImageView?.kf.setImage(with: URL(string: self._gameField!.image!.mediumUrl!), placeholder: #imageLiteral(resourceName: "info_image_placeholder"), completionHandler: {
+            (image, error, cacheType, imageUrl) in
+            if image != nil {
+                if cacheType == .none {
+                    UIView.transition(with: self.mainImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                        self.mainImageView?.image = image
+                    }, completion: nil)
+                } else {
+                    self.mainImageView?.image = image
+                }
+            }
+        })
 
         self.descriptionView?.text = gameFields?.deck
         self.toastOverlay.view.translatesAutoresizingMaskIntoConstraints = false
@@ -442,16 +444,6 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
                 self.informationTopConstraint?.isActive = false
                 self.informationTopConstraint = NSLayoutConstraint(item: self.informationTitleLabel!, attribute: .top, relatedBy: .equal, toItem: self.descriptionView!, attribute: .bottom, multiplier: 1.0, constant: 5.0)
                 self.informationTopConstraint?.isActive = true
-            }
-            for image in images {
-                image.getImage(field: .MediumUrl, { results in
-                    if let error = results.error {
-                        NSLog("error getting images: \(error.localizedDescription)")
-                        return
-                    }
-                    self.images?.append(results.value!)
-                    self.imageCollectionView?.reloadData()
-                })
             }
         } else {
             self.imagesTitleLabel?.isHidden = true
@@ -1118,19 +1110,16 @@ extension GameDetailsViewController: UICollectionViewDelegate, UICollectionViewD
                            constant: -0.5
             ).isActive = true
         
-        if indexPath.item >= (self.images?.count)! {
-            imageView.image = #imageLiteral(resourceName: "info_image_placeholder")
-        } else {
-            if (self.images?.count)! > 0 {
-                if let image = self.images?[indexPath.item] {
-                    UIView.transition(with: imageView,
-                                      duration:0.5,
-                                      options: .transitionCrossDissolve,
-                                      animations: { imageView.image = image },
-                                      completion: nil)
-                }
+        imageView.kf.setImage(with: URL(string: self.gameField!.images[indexPath.item].mediumUrl!), placeholder: #imageLiteral(resourceName: "info_image_placeholder"), completionHandler: {
+            (image, error, cacheType, imageUrl) in
+            if image != nil {
+                UIView.transition(with: imageView,
+                                  duration:0.5,
+                                  options: .transitionCrossDissolve,
+                                  animations: { imageView.image = image },
+                                  completion: nil)
             }
-        }
+        })
         
         return cell
     }

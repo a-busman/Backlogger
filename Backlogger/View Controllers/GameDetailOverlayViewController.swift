@@ -250,15 +250,20 @@ extension GameDetailOverlayViewController: UICollectionViewDelegate, UICollectio
         let newBounds = cell.bounds
         cell.contentView.layer.shadowPath = UIBezierPath(rect: CGRect(x: newBounds.origin.x + 5, y: newBounds.origin.y + 5, width: newBounds.width - 10, height: newBounds.height - 10)).cgPath
         cell.contentView.layer.shadowOffset = .zero
-        if (self.images?.count)! > 0 {
-            if let image = self.images?[indexPath.item] {
-                UIView.transition(with: cellView,
-                                  duration:0.5,
-                                  options: .transitionCrossDissolve,
-                                  animations: { cellView.image = image },
-                                  completion: nil)
+        cellView.kf.setImage(with: URL(string: self.game!.gameFields!.images[indexPath.item].mediumUrl!), placeholder: #imageLiteral(resourceName: "info_image_placeholder"), completionHandler: {
+            (image, error, cacheType, imageUrl) in
+            if image != nil {
+                if cacheType == .none {
+                    UIView.transition(with: cellView,
+                                      duration:0.5,
+                                      options: .transitionCrossDissolve,
+                                      animations: { cellView.image = image },
+                                      completion: nil)
+                } else {
+                    cellView.image = image
+                }
             }
-        }
+        })
         
         return cell
     }

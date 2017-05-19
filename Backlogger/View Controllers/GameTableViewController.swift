@@ -26,8 +26,6 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
     
     var games: [Game] = []
     
-    var imageCache: [Int: UIImage] = [:]
-    
     var platform: Platform?
     
     var currentlySelectedRow = 0
@@ -70,17 +68,19 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
 //            } else {
 //                self.yearLabel?.text = "\(platform.company?.name ?? "")"
 //            }
-            
-            platform.image?.getImage(field: .SuperUrl, { result in
-                if let error = result.error {
-                    NSLog("\(error.localizedDescription)")
-                    return
+            self.platformImage?.kf.setImage(with: URL(string: platform.image!.superUrl!), placeholder: nil, completionHandler: {
+                (image, error, cacheType, imageUrl) in
+                if image != nil {
+                    if cacheType == .none {
+                        UIView.transition(with: self.platformImage!,
+                                          duration:0.5,
+                                          options: .transitionCrossDissolve,
+                                          animations: { self.platformImage?.image = image },
+                                          completion: nil)
+                    } else {
+                        self.platformImage?.image = image
+                    }
                 }
-                UIView.transition(with: self.platformImage!,
-                                  duration:0.5,
-                                  options: .transitionCrossDissolve,
-                                  animations: { self.platformImage?.image = result.value! },
-                                  completion: nil)
             })
         } else {
             NSLog("No platform during load")
@@ -120,7 +120,6 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        self.imageCache = [:]
     }
 
     // MARK: - Table view data source
@@ -290,29 +289,22 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
         let index = game.gameFields?.releaseDate?.index((game.gameFields?.releaseDate?.startIndex)!, offsetBy: 4)
         cellView.descriptionLabel?.text = game.gameFields?.releaseDate?.substring(to: index!)
         cellView.rightLabel?.text = "\(game.progress)%"
-        if cellView.imageSource == .Placeholder && self.imageCache[(game.gameFields?.idNumber)!] == nil {
-            cellView.set(image: #imageLiteral(resourceName: "table_placeholder_light"))
-            game.gameFields?.getImage {
-                result in
-                if let error = result.error {
-                    NSLog("\(error)")
-                } else {
-                    // Save the image so we won't have to keep fetching it if they scroll
-                    if let cellToUpdate = self.tableView?.cellForRow(at: indexPath) {
-                        UIView.transition(with: cellView.artView!,
-                                          duration:0.5,
-                                          options: .transitionCrossDissolve,
-                                          animations: { cellView.set(image: result.value!) },
-                                          completion: nil)
-                        self.imageCache[(game.gameFields?.idNumber)!] = result.value
-                        cellView.imageSource = .Downloaded
-                        cellToUpdate.setNeedsLayout() // need to reload the view, which won't happen otherwise since this is in an async call
+        if cellView.imageSource == .Placeholder {
+            if let image = game.gameFields?.image {
+                cellView.imageUrl = URL(string: image.iconUrl!)
+            }
+            cellView.cacheCompletionHandler = {
+                (image, error, cacheType, imageUrl) in
+                if image != nil {
+                    if cacheType == .none {
+                        UIView.transition(with: cellView.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                            cellView.set(image: image!)
+                        }, completion: nil)
+                    } else {
+                        cellView.set(image: image!)
                     }
                 }
             }
-        } else if self.imageCache[(game.gameFields?.idNumber)!] != nil {
-            cellView.set(image: self.imageCache[(game.gameFields!.idNumber)]!)
-            cellView.imageSource = .Downloaded
         }
         return cell
     }

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 protocol PlaylistAddTableCellViewDelegate {
     func handleLongPress(sender: UILongPressGestureRecognizer)
@@ -53,6 +54,9 @@ class PlaylistAddTableCellView: UIViewController {
     
     var image: UIImage?
     
+    var imageUrl: URL?
+    var cacheCompletionHandler: CompletionHandler?
+    
     var playlistState: PlaylistState {
         get {
             return self._playlistState
@@ -89,7 +93,7 @@ class PlaylistAddTableCellView: UIViewController {
                 self.titleLabel?.text = self.game!.gameFields?.name
                 self.descriptionLabel?.text = self.game!.platform?.name
                 self.rightLabel?.text = "\(self.game!.progress)%"
-                self.artView?.image = self.image
+                self.artView?.kf.setImage(with: self.imageUrl, placeholder: #imageLiteral(resourceName: "table_placeholder_light"), completionHandler: self.cacheCompletionHandler)
             }
         }
     }

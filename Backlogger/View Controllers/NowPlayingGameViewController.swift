@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 protocol NowPlayingGameViewDelegate {
     func didDelete(viewController: NowPlayingGameViewController, uuid: String)
@@ -290,18 +291,17 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
             NSLog("no game to get details from")
             return
         }
-        currentGame.gameFields?.getImage(withSize: .SuperUrl, { result in
-            if let error = result.error {
-                NSLog("\(error)")
-            } else {
-                if let imageView = self.coverImageView {
-                    UIView.transition(with: imageView,
+        self.coverImageView?.kf.setImage(with: URL(string: currentGame.gameFields!.image!.superUrl!), placeholder: #imageLiteral(resourceName: "now_playing_placeholder"), completionHandler: {
+            (image, error, cacheType, imageUrl) in
+            if image != nil {
+                if cacheType == .none {
+                    UIView.transition(with: self.coverImageView!,
                                       duration:0.5,
                                       options: .transitionCrossDissolve,
-                                      animations: { imageView.image = result.value! },
+                                      animations: { self.coverImageView?.image = image! },
                                       completion: nil)
                 } else {
-                    self.coverImageView?.image = result.value!
+                    self.coverImageView?.image = image!
                 }
             }
         })

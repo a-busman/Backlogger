@@ -26,7 +26,6 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
     var isLoadingGames = false
     var currentPage = 0
     var query: String?
-    var imageCache: [Int : UIImage] = [:]
     
     var platformDict: [Int : Platform] = [:]
     
@@ -84,7 +83,6 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        self.imageCache = [:]
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -173,41 +171,6 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
     }
     
     // MARK: - Table view data source
-    
-    /*
-     // Override to support conditional editing of the table view.
-     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-     // Return false if you do not want the specified item to be editable.
-     return true
-     }
-     */
-    
-    /*
-     // Override to support editing the table view.
-     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-     if editingStyle == .delete {
-     // Delete the row from the data source
-     tableView.deleteRows(at: [indexPath], with: .fade)
-     } else if editingStyle == .insert {
-     // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-     }
-     }
-     */
-    
-    /*
-     // Override to support rearranging the table view.
-     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-     
-     }
-     */
-    
-    /*
-     // Override to support conditional rearranging of the table view.
-     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-     // Return false if you do not want the item to be re-orderable.
-     return true
-     }
-     */
     
     /*
      // MARK: - Navigation
@@ -452,29 +415,23 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
             }
             // this isn't ideal since it will keep running even if the cell scrolls off of the screen
             // if we had lots of cells we'd want to stop this process when the cell gets reused
-            if cellView.imageSource == .Placeholder && self.imageCache[gameToShow.idNumber] == nil {
+            if cellView.imageSource == .Placeholder {
 
-                gameToShow.getImage {
-                    result in
-                    if let error = result.error {
-                        NSLog("\(error)")
-                    } else {
-                        // Save the image so we won't have to keep fetching it if they scroll
-                        self.imageCache[gameToShow.idNumber] = result.value!
-                        if let cellToUpdate = self.tableView?.cellForRow(at: indexPath) {
-                            UIView.transition(with: cellView.artView!,
-                                                      duration:0.5,
-                                                      options: .transitionCrossDissolve,
-                                                      animations: { cellView.set(image: result.value!) },
-                                                      completion: nil)
-                            cellView.imageSource = .Downloaded
-                            cellToUpdate.setNeedsLayout() // need to reload the view, which won't happen otherwise since this is in an async call
+                if let image = gameToShow.image {
+                    cellView.imageUrl = URL(string: image.iconUrl!)
+                }
+                cellView.cacheCompletionHandler = {
+                    (image, error, cacheType, imageUrl) in
+                    if image != nil {
+                        if cacheType == .none {
+                            UIView.transition(with: cellView.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                                cellView.set(image: image!)
+                            }, completion: nil)
+                        } else {
+                            cellView.set(image: image!)
                         }
                     }
                 }
-            } else if self.imageCache[gameToShow.idNumber] != nil {
-                cellView.set(image: self.imageCache[gameToShow.idNumber]!)
-                cellView.imageSource = .Downloaded
             }
         }
         

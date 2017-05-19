@@ -20,8 +20,6 @@ class LibraryViewController: UIViewController {
     
     var platforms: Results<Platform>?
     
-    var imageCache: [Int: UIImage] = [:]
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableSearchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: 320, height: 44))
@@ -59,7 +57,6 @@ class LibraryViewController: UIViewController {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        self.imageCache = [:]
     }
     
     @IBAction func leftBarButtonTapped(sender: UIBarButtonItem) {
@@ -207,28 +204,22 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
             cellView.descriptionLabel?.text = platform.company?.name ?? ""
             cellView.rightLabel?.text = "\(platform.ownedGames.count)"
             
-            if cellView.imageSource == .Placeholder && self.imageCache[platform.idNumber] == nil {
-                cellView.set(image: #imageLiteral(resourceName: "table_placeholder_light"))
-                platform.image?.getImage(field: .IconUrl) {
-                    result in
-                    if let error = result.error {
-                        NSLog("\(error)")
-                    } else {
-                        // Save the image so we won't have to keep fetching it if they scroll
-                        self.imageCache[platform.idNumber] = result.value!
-                        if let cellToUpdate = self.tableView?.cellForRow(at: indexPath) {
-                            UIView.transition(with: cellView.artView!,
-                                              duration:0.5,
-                                              options: .transitionCrossDissolve,
-                                              animations: { cellView.set(image: result.value!) },
-                                              completion: nil)
-                            cellView.imageSource = .Downloaded
-                            cellToUpdate.setNeedsLayout() // need to reload the view, which won't happen otherwise since this is in an async call
+            if cellView.imageSource == .Placeholder {
+                if let image = platform.image {
+                    cellView.imageUrl = URL(string: image.iconUrl!)
+                }
+                cellView.cacheCompletionHandler = {
+                    (image, error, cacheType, imageUrl) in
+                    if image != nil {
+                        if cacheType == .none {
+                            UIView.transition(with: cellView.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                                cellView.set(image: image!)
+                            }, completion: nil)
+                        } else {
+                            cellView.set(image: image!)
                         }
                     }
                 }
-            } else if self.imageCache[platform.idNumber] != nil {
-                cellView.set(image: self.imageCache[platform.idNumber]!)
             }
         } else {
             

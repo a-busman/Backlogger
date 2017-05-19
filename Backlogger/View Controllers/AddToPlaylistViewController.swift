@@ -21,7 +21,6 @@ class AddToPlaylistViewController: UITableViewController, TableViewCellViewDeleg
     var query = ""
     var delegate: AddToPlaylistViewControllerDelegate?
     let reuseIdentifier = "add_to_cell"
-    var imageCache: [Int: UIImage] = [:]
     var gamesViewControllers: [TableViewCellView] = [TableViewCellView]()
     
     override func viewDidLoad() {
@@ -36,7 +35,6 @@ class AddToPlaylistViewController: UITableViewController, TableViewCellViewDeleg
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        self.imageCache = [:]
     }
     
     @IBAction func cancelTapped(sender: UIBarButtonItem) {
@@ -168,29 +166,22 @@ class AddToPlaylistViewController: UITableViewController, TableViewCellViewDeleg
             // this isn't ideal since it will keep running even if the cell scrolls off of the screen
             // if we had lots of cells we'd want to stop this process when the cell gets reused
             if let gameField = game.gameFields {
-                if cellView.imageSource == .Placeholder && self.imageCache[gameField.idNumber] == nil {
-                    cellView.set(image: #imageLiteral(resourceName: "table_placeholder_light"))
-                    gameField.getImage {
-                        result in
-                        if let error = result.error {
-                            NSLog("\(error)")
-                        } else {
-                            // Save the image so we won't have to keep fetching it if they scroll
-                            self.imageCache[gameField.idNumber] = result.value!
-                            if let cellToUpdate = self.tableView?.cellForRow(at: indexPath) {
-                                UIView.transition(with: cellView.artView!,
-                                                  duration: 0.5,
-                                                  options: .transitionCrossDissolve,
-                                                  animations: { cellView.set(image: result.value!) },
-                                                  completion: nil)
-                                cellView.imageSource = .Downloaded
-                                cellToUpdate.setNeedsLayout() // need to reload the view, which won't happen otherwise since this is in an async call
+                if cellView.imageSource == .Placeholder {                    
+                    if let image = gameField.image {
+                        cellView.imageUrl = URL(string: image.iconUrl!)
+                    }
+                    cellView.cacheCompletionHandler = {
+                        (image, error, cacheType, imageUrl) in
+                        if image != nil {
+                            if cacheType == .none {
+                                UIView.transition(with: cellView.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                                    cellView.set(image: image!)
+                                }, completion: nil)
+                            } else {
+                                cellView.set(image: image!)
                             }
                         }
                     }
-                } else if self.imageCache[gameField.idNumber] != nil {
-                    cellView.set(image: self.imageCache[gameField.idNumber]!)
-                    cellView.imageSource = .Downloaded
                 }
             }
         }

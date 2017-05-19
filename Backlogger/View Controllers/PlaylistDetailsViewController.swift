@@ -9,6 +9,7 @@
 import UIKit
 import AVFoundation
 import RealmSwift
+import Kingfisher
 
 class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, PlaylistAddTableCellViewDelegate, AddToPlaylistViewControllerDelegate, PlaylistFooterDelegate {
     
@@ -387,6 +388,8 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         //return 3 + self.games.count
     }
     
+    
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         /*********************************************************
          * FIXME: If a cell has been deleted by pressing the minus
@@ -435,32 +438,22 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                         playlistView?.set(image: image)
                         playlistView?.imageSource = .Downloaded
                     } else {
-                        playlistView?.set(image: #imageLiteral(resourceName: "table_placeholder_light"))
-                        game.image?.getImage(field: .MediumUrl) {
-                            result in
-                            if let error = result.error {
-                                NSLog("\(error)")
-                            } else {
-                                // Save the image so we won't have to keep fetching it if they scroll
-                                self.imageCache[game.idNumber] = result.value!
-                                if let cellToUpdate = self.tableView?.cellForRow(at: indexPath) {
-                                    UIView.transition(with: playlistView!.artView!,
-                                                      duration:0.5,
-                                                      options: .transitionCrossDissolve,
-                                                      animations: { playlistView?.set(image: result.value!) },
-                                                      completion: nil)
-                                    playlistView?.imageSource = .Downloaded
-                                    if indexPath.row < 4 {
-                                        self.updatePlaylistImage()
-                                    }
-                                    cellToUpdate.setNeedsLayout() // need to reload the view, which won't happen otherwise since this is in an async call
+                        playlistView?.imageUrl = URL(string: game.image!.mediumUrl!)
+                        playlistView?.cacheCompletionHandler = {
+                            (image, error, cacheType, imageUrl) in
+                            if image != nil {
+                                if cacheType == .none {
+                                    UIView.transition(with: playlistView!.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                                        playlistView?.set(image: image!)
+                                    }, completion: nil)
+                                } else {
+                                    playlistView?.set(image: image!)
                                 }
+                                self.imageCache[game.idNumber] = image!
+                                self.updatePlaylistImage()
                             }
                         }
                     }
-                } else if let image = self.imageCache[game.idNumber] {
-                    playlistView?.set(image: image)
-                    playlistView?.imageSource = .Downloaded
                 }
             } else {
                 playlistView = self.playlistTableViews[indexPath.row]

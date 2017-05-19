@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 protocol TableViewCellViewDelegate {
     func addTapped(_ row: Int)
@@ -45,6 +46,9 @@ class TableViewCellView: UIViewController {
     var imageSource: ImageSource = .Placeholder
     
     var row: Int!
+    
+    var imageUrl: URL?
+    var cacheCompletionHandler: CompletionHandler?
     
     var libraryState: LibraryState {
         get {
@@ -133,7 +137,7 @@ class TableViewCellView: UIViewController {
         self.truncGradient?.layer.addSublayer(self.truncateGradientLayer)
         self.view.bringSubview(toFront: self.addButton!)
         self.view.bringSubview(toFront: self.rightLabel!)
-        
+        self.artView?.kf.setImage(with: self.imageUrl, placeholder: #imageLiteral(resourceName: "table_placeholder_light"), completionHandler: self.cacheCompletionHandler)
     }
     
     @IBAction func addButtonTapped(sender: UIButton!) {
