@@ -173,6 +173,8 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        
+        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
         if self._state == .addToLibrary {
             self.statsButton?.alpha = 0.0
             self.progressIcon?.alpha = 0.0
