@@ -223,9 +223,16 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             UIGraphicsBeginImageContext(totalSize)
             for image in images {
                 var croppedImage: UIImage?
-                if image.size.width < maxSize.width {
-                    croppedImage = self.image(with: image, scaledTo: maxSize.width)
-                    croppedImage = self.cropToBounds(image: croppedImage!, width: maxSize.width, height: maxSize.height)
+                if image.size.height > image.size.width {
+                    if image.size.width < maxSize.width {
+                        croppedImage = self.image(with: image, scaledTo: maxSize.width / image.size.width)
+                        croppedImage = self.cropToBounds(image: croppedImage!, width: maxSize.width, height: maxSize.height)
+                    }
+                } else {
+                    if image.size.height < maxSize.height {
+                        croppedImage = self.image(with: image, scaledTo: maxSize.height / image.size.height)
+                        croppedImage = self.cropToBounds(image: croppedImage!, width: maxSize.width, height: maxSize.height)
+                    }
                 }
                 let offset = (CGFloat)(images.index(of: image)!)
                 if croppedImage == nil {
@@ -261,12 +268,9 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         return image
     }
     
-    func image(with sourceImage: UIImage, scaledTo width: CGFloat) -> UIImage {
-        let oldWidth = sourceImage.size.width
-        let scaleFactor = width / oldWidth
-        
-        let newHeight = sourceImage.size.height * scaleFactor
-        let newWidth = oldWidth * scaleFactor
+    func image(with sourceImage: UIImage, scaledTo factor: CGFloat) -> UIImage {
+        let newHeight = sourceImage.size.height * factor
+        let newWidth = sourceImage.size.width * factor
         
         UIGraphicsBeginImageContext(CGSize(width:newWidth, height:newHeight))
         sourceImage.draw(in: CGRect(x:0, y:0, width:newWidth, height:newHeight))
