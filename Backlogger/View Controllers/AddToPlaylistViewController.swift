@@ -13,19 +13,18 @@ protocol AddToPlaylistViewControllerDelegate {
     func didChoose(games: List<Game>)
 }
 
-class AddToPlaylistViewController: UITableViewController, TableViewCellViewDelegate {
+class AddToPlaylistViewController: UITableViewController, TableViewCellDelegate {
     
     var allGames: Results<Game>?
     var filteredGames: Results<Game>?
     var addedGames = List<Game>()
     var query = ""
     var delegate: AddToPlaylistViewControllerDelegate?
-    let reuseIdentifier = "add_to_cell"
-    var gamesViewControllers: [TableViewCellView] = [TableViewCellView]()
+    let reuseIdentifier = "table_cell"
     
     override func viewDidLoad() {
         self.navigationController?.navigationBar.tintColor = .white
-        self.tableView.register(TableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
+        self.tableView.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: self.reuseIdentifier)
         autoreleasepool {
             let realm = try! Realm()
             self.allGames = realm.objects(Game.self)
@@ -55,8 +54,9 @@ class AddToPlaylistViewController: UITableViewController, TableViewCellViewDeleg
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if self.gamesViewControllers[indexPath.row].libraryState == .addPlaylist {
-            self.gamesViewControllers[indexPath.row].libraryState = .inPlaylist
+        let cell = tableView.cellForRow(at: indexPath) as! TableViewCell
+        if cell.libraryState == .addPlaylist {
+            cell.libraryState = .inPlaylist
             self.addTapped(indexPath.row)
         }
         tableView.deselectRow(at: indexPath, animated: true)
@@ -64,29 +64,19 @@ class AddToPlaylistViewController: UITableViewController, TableViewCellViewDeleg
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! TableViewCell
+        cell.addButtonHidden = false
+        let cellView = cell.contentView
 
-        var cellView: TableViewCellView
-        if indexPath.row + 1 > gamesViewControllers.count {
-            cellView = TableViewCellView(indexPath.row)
-            cellView.addButtonHidden = false
-            cellView.libraryState = .addPlaylist
-            cellView.delegate = self
-            self.gamesViewControllers.append(cellView)
-        } else {
-            cellView = self.gamesViewControllers[indexPath.row]
-        }
-        cellView.view.translatesAutoresizingMaskIntoConstraints = false
-        cell.contentView.addSubview(cellView.view)
         let lineView = UIView()
         lineView.backgroundColor = .lightGray
         lineView.translatesAutoresizingMaskIntoConstraints = false
-        cellView.view.addSubview(lineView)
+        cellView.addSubview(lineView)
         
         if indexPath.row == self.filteredGames!.count - 1 {
             NSLayoutConstraint(item: lineView,
                                attribute: .leading,
                                relatedBy: .equal,
-                               toItem: cellView.view,
+                               toItem: cellView,
                                attribute: .leading,
                                multiplier: 1.0,
                                constant: 0.0
@@ -95,7 +85,7 @@ class AddToPlaylistViewController: UITableViewController, TableViewCellViewDeleg
             NSLayoutConstraint(item: lineView,
                                attribute: .leading,
                                relatedBy: .equal,
-                               toItem: cellView.titleLabel,
+                               toItem: cell.titleLabel,
                                attribute: .leading,
                                multiplier: 1.0,
                                constant: 0.0
@@ -104,7 +94,7 @@ class AddToPlaylistViewController: UITableViewController, TableViewCellViewDeleg
         NSLayoutConstraint(item: lineView,
                            attribute: .trailing,
                            relatedBy: .equal,
-                           toItem: cellView.view,
+                           toItem: cellView,
                            attribute: .trailing,
                            multiplier: 1.0,
                            constant: 0.0
@@ -112,7 +102,7 @@ class AddToPlaylistViewController: UITableViewController, TableViewCellViewDeleg
         NSLayoutConstraint(item: lineView,
                            attribute: .top,
                            relatedBy: .equal,
-                           toItem: cellView.view,
+                           toItem: cellView,
                            attribute: .bottom,
                            multiplier: 1.0,
                            constant: -0.5
@@ -120,66 +110,38 @@ class AddToPlaylistViewController: UITableViewController, TableViewCellViewDeleg
         NSLayoutConstraint(item: lineView,
                            attribute: .bottom,
                            relatedBy: .equal,
-                           toItem: cellView.view,
+                           toItem: cellView,
                            attribute: .bottom,
                            multiplier: 1.0,
                            constant: 0.0
             ).isActive = true
         
-        NSLayoutConstraint(item: cellView.view,
-                           attribute: .leading,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .leading,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: cellView.view,
-                           attribute: .trailing,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .trailing,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: cellView.view,
-                           attribute: .top,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .top,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: cellView.view,
-                           attribute: .bottom,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .bottom,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
+
         if let game = self.filteredGames?[indexPath.row] {
-            cellView.titleLabel?.text = (game.gameFields?.name)!
-            cellView.descriptionLabel?.text = (game.platform?.name)!
-            cellView.rightLabel?.text = ""
+            if self.addedGames.contains(game) {
+                cell.libraryState = .inPlaylist
+            } else {
+                cell.libraryState = .addPlaylist
+            }
+            cell.titleLabel?.text = (game.gameFields?.name)!
+            cell.descriptionLabel?.text = (game.platform?.name)!
+            cell.rightLabel?.text = ""
             
             // this isn't ideal since it will keep running even if the cell scrolls off of the screen
             // if we had lots of cells we'd want to stop this process when the cell gets reused
             if let gameField = game.gameFields {
-                if cellView.imageSource == .Placeholder {                    
-                    if let image = gameField.image {
-                        cellView.imageUrl = URL(string: image.iconUrl!)
-                    }
-                    cellView.cacheCompletionHandler = {
-                        (image, error, cacheType, imageUrl) in
-                        if image != nil {
-                            if cacheType == .none {
-                                UIView.transition(with: cellView.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                                    cellView.set(image: image!)
-                                }, completion: nil)
-                            } else {
-                                cellView.set(image: image!)
-                            }
+                if let image = gameField.image {
+                    cell.imageUrl = URL(string: image.iconUrl!)
+                }
+                cell.cacheCompletionHandler = {
+                    (image, error, cacheType, imageUrl) in
+                    if image != nil {
+                        if cacheType == .none {
+                            UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                                cell.set(image: image!)
+                            }, completion: nil)
+                        } else {
+                            cell.set(image: image!)
                         }
                     }
                 }

@@ -16,7 +16,7 @@ class LibraryViewController: UIViewController {
     
     var isSearching = false
     
-    let tableReuseIdentifier = "console_table_cell"
+    let tableReuseIdentifier = "table_cell"
     
     var platforms: Results<Platform>?
     
@@ -27,6 +27,7 @@ class LibraryViewController: UIViewController {
         self.tableSearchBar?.placeholder = "Library"
         self.tableSearchBar?.delegate = self
         self.tableView?.tableHeaderView = self.tableSearchBar
+        self.tableView?.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: tableReuseIdentifier)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -110,20 +111,31 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
         return self.platforms?.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: tableReuseIdentifier)!
-        let cellView = TableViewCellView()
+        let cell = tableView.dequeueReusableCell(withIdentifier: tableReuseIdentifier) as! TableViewCell
         let platform = self.platforms![indexPath.row]
+        cell.row = indexPath.row
+        cell.accessoryType = .disclosureIndicator
         
+        //cell.selectionStyle = .none
+        
+        let lineViewTag = 9001
+        let cellView = cell.contentView
         let lineView = UIView()
+        lineView.tag = lineViewTag
         lineView.backgroundColor = .lightGray
         lineView.translatesAutoresizingMaskIntoConstraints = false
-        cellView.view.addSubview(lineView)
+        
+        if let oldLineView = cellView.viewWithTag(lineViewTag) {
+            oldLineView.removeFromSuperview()
+        }
+        
+        cellView.addSubview(lineView)
         
         if indexPath.row == (self.platforms?.count)! - 1 {
             NSLayoutConstraint(item: lineView,
                                attribute: .leading,
                                relatedBy: .equal,
-                               toItem: cellView.view,
+                               toItem: cellView,
                                attribute: .leading,
                                multiplier: 1.0,
                                constant: 0.0
@@ -132,7 +144,7 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
             NSLayoutConstraint(item: lineView,
                                attribute: .leading,
                                relatedBy: .equal,
-                               toItem: cellView.titleLabel,
+                               toItem: cell.titleLabel,
                                attribute: .leading,
                                multiplier: 1.0,
                                constant: 0.0
@@ -141,15 +153,15 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
         NSLayoutConstraint(item: lineView,
                            attribute: .trailing,
                            relatedBy: .equal,
-                           toItem: cellView.view,
+                           toItem: cellView,
                            attribute: .trailing,
                            multiplier: 1.0,
-                           constant: 0.0
+                           constant: 34.0
             ).isActive = true
         NSLayoutConstraint(item: lineView,
                            attribute: .top,
                            relatedBy: .equal,
-                           toItem: cellView.view,
+                           toItem: cellView,
                            attribute: .bottom,
                            multiplier: 1.0,
                            constant: -0.5
@@ -157,67 +169,29 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
         NSLayoutConstraint(item: lineView,
                            attribute: .bottom,
                            relatedBy: .equal,
-                           toItem: cellView.view,
-                           attribute: .bottom,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        
-        cellView.view.translatesAutoresizingMaskIntoConstraints = false
-        cell.contentView.addSubview(cellView.view)
-        
-        NSLayoutConstraint(item: cellView.view,
-                           attribute: .leading,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .leading,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: cellView.view,
-                           attribute: .trailing,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .trailing,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: cellView.view,
-                           attribute: .top,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .top,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: cellView.view,
-                           attribute: .bottom,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
+                           toItem: cellView,
                            attribute: .bottom,
                            multiplier: 1.0,
                            constant: 0.0
             ).isActive = true
         
         if !self.isSearching {
-            cellView.titleLabel?.text = platform.name ?? ""
-            cellView.descriptionLabel?.text = platform.company?.name ?? ""
-            cellView.rightLabel?.text = "\(platform.ownedGames.count)"
+            cell.titleLabel?.text = platform.name ?? ""
+            cell.descriptionLabel?.text = platform.company?.name ?? ""
+            cell.rightLabel?.text = "\(platform.ownedGames.count)"
             
-            if cellView.imageSource == .Placeholder {
-                if let image = platform.image {
-                    cellView.imageUrl = URL(string: image.iconUrl!)
-                }
-                cellView.cacheCompletionHandler = {
-                    (image, error, cacheType, imageUrl) in
-                    if image != nil {
-                        if cacheType == .none {
-                            UIView.transition(with: cellView.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                                cellView.set(image: image!)
-                            }, completion: nil)
-                        } else {
-                            cellView.set(image: image!)
-                        }
+            if let image = platform.image {
+                cell.imageUrl = URL(string: image.iconUrl!)
+            }
+            cell.cacheCompletionHandler = {
+                (image, error, cacheType, imageUrl) in
+                if image != nil {
+                    if cacheType == .none {
+                        UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                            cell.set(image: image!)
+                        }, completion: nil)
+                    } else {
+                        cell.set(image: image!)
                     }
                 }
             }
@@ -233,5 +207,6 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        self.performSegue(withIdentifier: "table_game_list", sender: tableView.cellForRow(at: indexPath))
     }
 }

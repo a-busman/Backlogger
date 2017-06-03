@@ -18,6 +18,8 @@ class PlaylistViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView?.separatorStyle = .none
+        self.tableView?.register(UINib(nibName: "PlaylistTableCell", bundle: nil), forCellReuseIdentifier: self.cellReuseIdentifier)
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -35,49 +37,13 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! TableViewCell
-        let cellView = PlaylistTableCellView()
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! PlaylistTableCell
         
         if indexPath.row > 0 {
-            cellView.playlist = playlistList![indexPath.row - 1]
-            cellView.image = self.loadPlaylistImage(indexPath.row - 1)
+            cell.playlist = playlistList![indexPath.row - 1]
+            cell.artImage = self.loadPlaylistImage(indexPath.row - 1)
+            cell.accessoryType = .disclosureIndicator
         }
-        
-        cellView.view.translatesAutoresizingMaskIntoConstraints = false
-        cell.contentView.addSubview(cellView.view)
-        
-        NSLayoutConstraint(item: cellView.view,
-                           attribute: .leading,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .leading,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: cellView.view,
-                           attribute: .trailing,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .trailing,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: cellView.view,
-                           attribute: .top,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .top,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: cellView.view,
-                           attribute: .bottom,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .bottom,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
         return cell
     }
     

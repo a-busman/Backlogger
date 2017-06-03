@@ -11,17 +11,15 @@ import AVFoundation
 import RealmSwift
 import Kingfisher
 
-class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, PlaylistAddTableCellViewDelegate, AddToPlaylistViewControllerDelegate, PlaylistFooterDelegate {
+class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, PlaylistTitleCellDelegate, PlaylistAddTableCellDelegate, AddToPlaylistViewControllerDelegate, PlaylistFooterDelegate {
     
     @IBOutlet weak var noGamesView: UIView?
     
     let cellReuseIdentifier = "playlist_detail_cell"
-    var playlistTitleView = PlaylistTitleView()
-    var playlistDescriptionView = PlaylistDescriptionView()
-    var playlistAddTableView = PlaylistAddTableCellView()
+    let titleReuseIdentifier = "playlist_title_cell"
+    let descriptionReuseIdentifier = "playlist_description_cell"
+
     var playlistFooterView = PlaylistFooter()
-    
-    var playlistTableViews: [PlaylistAddTableCellView] = []
     
     var titleTextViewHeight: CGFloat = 0.0
     var descriptionTextViewHeight: CGFloat = 0.0
@@ -37,6 +35,17 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     var movingIndexPath: IndexPath?
     
     var playlistImage: UIImage?
+    
+    var titleCell = PlaylistTitleCell()
+    var descCell  = PlaylistDescriptionCell()
+    
+    var addCell: PlaylistAddTableCell?
+    
+    var titleInit = false
+    var descriptionInit = false
+    var addInit = false
+    
+    var descriptionVisible = false
     
     enum ImageSource {
         case custom
@@ -69,12 +78,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.tintColor = .white
-        self.playlistTitleView.titleDelegate = self
-        self.playlistTitleView.observer = self
-        self.playlistDescriptionView.descriptionDelegate = self
-        self.playlistDescriptionView.observer = self
-        self.playlistAddTableView.playlistState = .add
-        self.playlistAddTableView.delegate = self
+        
         self.tableView.allowsSelectionDuringEditing = true
         if self._playlistState == .new {
             let newRightButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(rightTapped))
@@ -82,21 +86,39 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             self.navigationController?.navigationBar.topItem?.rightBarButtonItem = newRightButton
             self.navigationController?.navigationBar.topItem?.leftBarButtonItem = newLeftButton
             self.tableView.setEditing(true, animated: false)
-            self.playlistTitleView.isEditable = true
-            self.playlistDescriptionView.isEditable = true
             self.navigationItem.title = "New Playlist"
             
         } else {
             if let playlist = self.playlist {
-                self.playlistTitleView.titleString = playlist.name ?? ""
-                self.playlistDescriptionView.descriptionString = playlist.descriptionText ?? ""
                 self.games.append(contentsOf: playlist.games)
                 self.loadPlaylistImage()
             }
             self.playlistFooterView.delegate = self
-            self.playlistTitleView.isEditable = false
-            self.playlistDescriptionView.isEditable = false
         }
+        self.tableView.register(UINib(nibName: "PlaylistAddTableCell", bundle: nil), forCellReuseIdentifier: self.cellReuseIdentifier)
+        
+        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: self.titleReuseIdentifier)
+        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: self.descriptionReuseIdentifier)
+
+        self.addCell = self.tableView.dequeueReusableCell(withIdentifier: self.cellReuseIdentifier) as? PlaylistAddTableCell
+        
+        self.titleCell.titleDelegate = self
+        self.titleCell.observer = self
+        self.titleCell.delegate = self
+        self.descCell.descriptionDelegate = self
+        self.descCell.observer = self
+
+        if self._playlistState == .new {
+            self.titleCell.isEditable = true
+            self.descCell.isEditable = true
+        } else {
+            self.titleCell.titleString = self.playlist?.name ?? ""
+            self.titleCell.isEditable = false
+            self.descCell.descriptionString = self.playlist?.descriptionText ?? ""
+            self.descCell.isEditable = false
+        }
+        self.titleCell.view.translatesAutoresizingMaskIntoConstraints = false
+        self.descCell.view.translatesAutoresizingMaskIntoConstraints = false
     }
     
     func refreshTable() {
@@ -122,8 +144,8 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         case 0:
             // reset to default
             self.playlistImage = nil
-            self.playlistTitleView.image = nil
-            self.playlistTitleView.hideImage()
+            self.titleCell.artImage = nil
+            self.titleCell.hideImage()
             return
         case 1:
             self.playlistImage = self.imageCache[self.games[0].gameFields!.idNumber]
@@ -152,9 +174,9 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                 self.playlistImage = self.stitch(images: [intermediate1, intermediate2], isVertical: true)
             }
         }
-        self.playlistTitleView.image = self.playlistImage
+        self.titleCell.artImage = self.playlistImage
         self.savePlaylistImage()
-        self.playlistTitleView.showImage()
+        self.titleCell.showImage()
     }
     
     func savePlaylistImage() {
@@ -277,21 +299,36 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if self.isMovingFromParentViewController {
-            self.playlistTitleView.titleTextView?.removeObserver(self, forKeyPath: "contentSize")
-            self.playlistDescriptionView.descriptionTextView?.removeObserver(self, forKeyPath: "contentSize")
+            self.titleCell.titleTextView?.removeObserver(self, forKeyPath: "contentSize")
+            self.descCell.descriptionTextView?.removeObserver(self, forKeyPath: "contentSize")
         }
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        self.playlistTableViews = []
         self.imageCache = [:]
+    }
+    
+    func moreTapped(sender: UITapGestureRecognizer) {
+        let actions = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let deleteAction = UIAlertAction(title: "Delete...", style: .default, handler: nil)
+        let playNextAction = UIAlertAction(title: "Play Next", style: .default, handler: nil)
+        let queueAction = UIAlertAction(title: "Play Later", style: .default, handler: nil)
+        deleteAction.setValue(#imageLiteral(resourceName: "trash"), forKey: "image")
+        playNextAction.setValue(#imageLiteral(resourceName: "play_next"), forKey: "image")
+        queueAction.setValue(#imageLiteral(resourceName: "add_to_queue"), forKey: "image")
+        
+        actions.addAction(deleteAction)
+        actions.addAction(playNextAction)
+        actions.addAction(queueAction)
+        actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present(actions, animated: true, completion: nil)
     }
     
     //Cancel or back
     func leftTapped(sender: UIBarButtonItem) {
-        self.playlistTitleView.titleTextView?.resignFirstResponder()
-        self.playlistDescriptionView.descriptionTextView?.resignFirstResponder()
+        self.titleCell.titleTextView?.resignFirstResponder()
+        self.descCell.descriptionTextView?.resignFirstResponder()
         if self._playlistState == .new {
             self.dismiss(animated: true, completion: nil)
         } else if self._playlistState == .editing {
@@ -303,7 +340,6 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             self.tableView.setEditing(false, animated: false)
             self.games.removeAll()
             self.games.append(contentsOf: self.playlist!.games)
-            self.playlistTableViews = []
             self.reloadDataWithCrossDissolve()
         } else {
             self.navigationController?.popViewController(animated: true)
@@ -315,45 +351,52 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             self.playlist?.update {
                 self.playlist?.games.removeAll()
                 self.playlist?.games.append(contentsOf: self.games)
-                if self.playlistTitleView.titleTextView?.textColor != .lightGray {
-                    self.playlist?.name = self.playlistTitleView.titleTextView.text
-                    self.playlistTitleView.titleLabel.text = self.playlistTitleView.titleTextView.text
+                if self.titleCell.titleTextView?.textColor != .lightGray {
+                    self.playlist?.name = self.titleCell.titleTextView?.text
+                    self.titleCell.titleLabel?.text = self.titleCell.titleTextView?.text
                 } else {
                     self.playlist?.name = "Untitled Playlist"
                 }
-                if self.playlistDescriptionView.descriptionTextView?.textColor != .lightGray {
-                    self.playlist?.descriptionText = self.playlistDescriptionView.descriptionTextView.text
+                if let descCell = self.descCell.descriptionTextView {
+                    if descCell.textColor != .lightGray {
+                        self.playlist?.descriptionText = descCell.text
+                    } else {
+                        self.playlist?.descriptionText = nil
+                    }
                 }
             }
         } else {
             playlist?.games.removeAll()
             playlist?.games.append(contentsOf: self.games)
-            if self.playlistTitleView.titleTextView?.textColor != .lightGray {
-                playlist?.name = self.playlistTitleView.titleTextView?.text
+            if self.titleCell.titleTextView?.textColor != .lightGray {
+                playlist?.name = self.titleCell.titleTextView?.text
             } else {
                 playlist?.name = "Untitled Playlist"
             }
-            if self.playlistDescriptionView.descriptionTextView?.textColor != .lightGray {
-                playlist?.descriptionText = self.playlistDescriptionView.descriptionTextView?.text
+            if let descCell = self.descCell.descriptionTextView {
+                if descCell.textColor != .lightGray {
+                    playlist?.descriptionText = descCell.text
+                } else {
+                    playlist?.descriptionText = nil
+                }
             }
         }
     }
     
     //Done or Edit
     @IBAction func rightTapped(sender: UIBarButtonItem) {
-        self.playlistTitleView.titleTextView?.resignFirstResponder()
-        self.playlistDescriptionView.descriptionTextView?.resignFirstResponder()
+        self.titleCell.titleTextView?.resignFirstResponder()
+        self.descCell.descriptionTextView?.resignFirstResponder()
         
         self.navigationController?.navigationBar.tintColor = .white
-        
         if self._playlistState == .default {
             self._playlistState = .editing
             let newRightButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(rightTapped))
             let newLeftButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(leftTapped))
             self.navigationItem.setRightBarButton(newRightButton, animated: true)
             self.navigationItem.setLeftBarButton(newLeftButton, animated: true)
-            self.playlistTitleView.isEditable = true
-            self.playlistDescriptionView.isEditable = true
+            self.titleCell.isEditable = true
+            self.descCell.isEditable = true
             self.reloadDataWithCrossDissolve()
             self.tableView.tableFooterView = nil
             self.tableView.setEditing(true, animated: false)
@@ -371,8 +414,8 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             let newRightButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(rightTapped))
             self.navigationItem.setRightBarButton(newRightButton, animated: true)
             self.navigationItem.setLeftBarButton(nil, animated: true)
-            self.playlistTitleView.isEditable = false
-            self.playlistDescriptionView.isEditable = false
+            self.titleCell.isEditable = false
+            self.descCell.isEditable = false
             self.tableView.tableFooterView = self.playlistFooterView.view
             self.reloadDataWithCrossDissolve()
             if self.playlistImageSource != .custom {
@@ -397,6 +440,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         if _playlistState == .default {
             self.saveCurrentState(playlist: nil)
         }
+        print(self.games.count)
     }
     /*
     // MARK: - Navigation
@@ -414,18 +458,21 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             if self._playlistState != .default {
+                self.descriptionVisible = true
                 return 3
             } else {
-                if self.playlist?.descriptionText != nil {
+                if self.playlist?.descriptionText != nil && self.playlist?.descriptionText != "" {
+                    print(self.playlist?.descriptionText)
+                    self.descriptionVisible = true
                     return 2
                 } else {
+                    self.descriptionVisible = false
                     return 1
                 }
             }
         } else {
             return self.games.count
         }
-        //return 3 + self.games.count
     }
     
     
@@ -439,113 +486,139 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
          * then there will be memory issues as cells won't be
          * reused, but instead created each time.
          *********************************************************/
-        
-        // discarding first reusable cell seems to solve the problem for now.
-        _ = tableView.dequeueReusableCell(withIdentifier: self.cellReuseIdentifier)
-        let cell = tableView.dequeueReusableCell(withIdentifier: self.cellReuseIdentifier) as! TableViewCell
-        //let cell = TableViewCell(style: .default, reuseIdentifier: self.cellReuseIdentifier)
-        var cellView = UIView()
+        var cell: UITableViewCell
         if indexPath.section == 0 {
-        
             switch indexPath.row {
             case 0:
-                cellView = self.playlistTitleView.view
+                cell = tableView.dequeueReusableCell(withIdentifier: self.titleReuseIdentifier)!
+                for view in cell.contentView.subviews {
+                    view.removeFromSuperview()
+                }
+                cell.contentView.addSubview(self.titleCell.view)
+                NSLayoutConstraint(item: self.titleCell.view,
+                                   attribute: .leading,
+                                   relatedBy: .equal,
+                                   toItem: cell.contentView,
+                                   attribute: .leading,
+                                   multiplier: 1.0,
+                                   constant: 0.0
+                    ).isActive = true
+                NSLayoutConstraint(item: self.titleCell.view,
+                                   attribute: .trailing,
+                                   relatedBy: .equal,
+                                   toItem: cell.contentView,
+                                   attribute: .trailing,
+                                   multiplier: 1.0,
+                                   constant: 0.0
+                    ).isActive = true
+                NSLayoutConstraint(item: self.titleCell.view,
+                                   attribute: .top,
+                                   relatedBy: .equal,
+                                   toItem: cell.contentView,
+                                   attribute: .top,
+                                   multiplier: 1.0,
+                                   constant: 0.0
+                    ).isActive = true
+                NSLayoutConstraint(item: self.titleCell.view,
+                                   attribute: .bottom,
+                                   relatedBy: .equal,
+                                   toItem: cell.contentView,
+                                   attribute: .bottom,
+                                   multiplier: 1.0,
+                                   constant: 0.0
+                    ).isActive = true
                 break
             case 1:
-                cellView = self.playlistDescriptionView.view
+                cell = tableView.dequeueReusableCell(withIdentifier: self.descriptionReuseIdentifier)!
+                for view in cell.contentView.subviews {
+                    view.removeFromSuperview()
+                }
+                cell.contentView.addSubview(self.descCell.view)
+                NSLayoutConstraint(item: self.descCell.view,
+                                   attribute: .leading,
+                                   relatedBy: .equal,
+                                   toItem: cell.contentView,
+                                   attribute: .leading,
+                                   multiplier: 1.0,
+                                   constant: 0.0
+                    ).isActive = true
+                NSLayoutConstraint(item: self.descCell.view,
+                                   attribute: .trailing,
+                                   relatedBy: .equal,
+                                   toItem: cell.contentView,
+                                   attribute: .trailing,
+                                   multiplier: 1.0,
+                                   constant: 0.0
+                    ).isActive = true
+                NSLayoutConstraint(item: self.descCell.view,
+                                   attribute: .top,
+                                   relatedBy: .equal,
+                                   toItem: cell.contentView,
+                                   attribute: .top,
+                                   multiplier: 1.0,
+                                   constant: 0.0
+                    ).isActive = true
+                NSLayoutConstraint(item: self.descCell.view,
+                                   attribute: .bottom,
+                                   relatedBy: .equal,
+                                   toItem: cell.contentView,
+                                   attribute: .bottom,
+                                   multiplier: 1.0,
+                                   constant: 0.0
+                    ).isActive = true
                 break
             case 2:
-                cellView = self.playlistAddTableView.view
+                let newCell = tableView.dequeueReusableCell(withIdentifier: self.cellReuseIdentifier) as! PlaylistAddTableCell
+                newCell.playlistState = .add
+                newCell.delegate = self
+                cell = newCell
                 break
             default:
-                break
+                cell = UITableViewCell()
             }
         } else {
-            var playlistView: PlaylistAddTableCellView?
-            if indexPath.row >= self.playlistTableViews.count {
-                playlistView = PlaylistAddTableCellView()
-                playlistView?.playlistState = .remove
-                playlistView?.delegate = self
-                playlistView?.game = self.games[indexPath.row]
-                if self._playlistState == .default {
-                    playlistView?.isHandleHidden = true
-                }
-                self.playlistTableViews.append(playlistView!)
-                let game = self.games[indexPath.row].gameFields!
+        
+            // discarding first reusable cell seems to solve the problem for now.
+            //_ = tableView.dequeueReusableCell(withIdentifier: self.cellReuseIdentifier)
+            
+            let gameCell = tableView.dequeueReusableCell(withIdentifier: self.cellReuseIdentifier) as! PlaylistAddTableCell
+            if self._playlistState == .default {
+                gameCell.playlistState = .default
+            } else if self._playlistState == .editing {
+                gameCell.playlistState = .remove
+            }
+            gameCell.delegate = self
+            gameCell.game = self.games[indexPath.row]
+            if self._playlistState == .default {
+                gameCell.isHandleHidden = true
+            }
+            let game = self.games[indexPath.row].gameFields!
 
-                if playlistView!.imageSource == .Placeholder {
-                    if let image = self.imageCache[game.idNumber] {
-                        playlistView?.set(image: image)
-                        playlistView?.imageSource = .Downloaded
-                    } else {
-                        playlistView?.imageUrl = URL(string: game.image!.smallUrl!)
-                        playlistView?.cacheCompletionHandler = {
-                            (image, error, cacheType, imageUrl) in
-                            if image != nil {
-                                if cacheType == .none {
-                                    UIView.transition(with: playlistView!.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                                        playlistView?.set(image: image!)
-                                    }, completion: nil)
-                                } else {
-                                    playlistView?.set(image: image!)
-                                }
-                                self.imageCache[game.idNumber] = image!
-                                if self.playlistImageSource != .custom {
-                                    self.updatePlaylistImage()
-                                }
-                            }
+            if imageCache[game.idNumber] != nil {
+                gameCell.set(image: imageCache[game.idNumber]!)
+            } else {
+                gameCell.imageUrl = URL(string: game.image!.smallUrl!)
+                gameCell.cacheCompletionHandler = {
+                    (image, error, cacheType, imageUrl) in
+                    if image != nil {
+                        if cacheType == .none {
+                            UIView.transition(with: gameCell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                                gameCell.set(image: image!)
+                            }, completion: nil)
+                        } else {
+                            gameCell.set(image: image!)
+                        }
+                        self.imageCache[game.idNumber] = image!
+                        if self.playlistImageSource != .custom {
+                            self.updatePlaylistImage()
                         }
                     }
                 }
-            } else {
-                playlistView = self.playlistTableViews[indexPath.row]
-                if self._playlistState == .default {
-                    playlistView?.hideHandle()
-                } else {
-                    playlistView?.showHandle()
-                }
             }
-
-            cellView = playlistView!.view
+            cell = gameCell
         }
-
         cell.selectionStyle = .none
 
-        cellView.translatesAutoresizingMaskIntoConstraints = false
-        cell.contentView.addSubview(cellView)
-        
-        NSLayoutConstraint(item: cellView,
-                           attribute: .leading,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .leading,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: cellView,
-                           attribute: .trailing,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .trailing,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: cellView,
-                           attribute: .top,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .top,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: cellView,
-                           attribute: .bottom,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .bottom,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
         return cell
     }
     
@@ -667,7 +740,6 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             My.cellSnapshot!.center = center
             if (indexPath != nil && indexPath != Path.initialIndexPath && indexPath!.section == 1) {
                 swap(&self.games[indexPath!.row], &self.games[Path.initialIndexPath!.row])
-                swap(&self.playlistTableViews[indexPath!.row], &self.playlistTableViews[Path.initialIndexPath!.row])
                 tableView.moveRow(at: Path.initialIndexPath!, to: indexPath!)
                 Path.initialIndexPath = indexPath
             }
@@ -703,7 +775,6 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         if editingStyle == .delete {
             self.tableView.beginUpdates()
             self.games.remove(at: indexPath.row)
-            self.playlistTableViews.remove(at: indexPath.row)
             //self.tableView.reloadRows(at: [indexPath], with: .automatic)
             //self.refreshSection(NSIndexSet(index: 1) as IndexSet)
             //self.tableView.reloadSections(IndexSet(integer: 1), with: .none)
@@ -722,9 +793,9 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     
     func textView(_ textView: UITextView?, sizeDidChange size: CGSize) {
         if self.didEditField {
-            if textView == self.playlistTitleView.titleTextView {
+            if textView == self.titleCell.titleTextView {
                 self.titleTextViewHeight = size.height
-            } else if textView == self.playlistDescriptionView.descriptionTextView {
+            } else if textView == self.descCell.descriptionTextView {
                 self.descriptionTextViewHeight = size.height
             }
             self.tableView.beginUpdates()
@@ -753,9 +824,9 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         // If updated text view will be empty, add the placeholder
         // and set the cursor to the beginning of the text view
         if updatedText.isEmpty {
-            if textView == self.playlistTitleView.titleTextView {
+            if textView == self.titleCell.titleTextView {
                 textView.text = "Playlist Name"
-            } else if textView == self.playlistDescriptionView.descriptionTextView {
+            } else if textView == self.descCell.descriptionTextView {
                 textView.text = "Description"
             }
             textView.textColor = UIColor.lightGray

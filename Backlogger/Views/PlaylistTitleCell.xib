@@ -10,16 +10,15 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PlaylistTitleView" customModule="Backlogger" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PlaylistTitleCell" customModule="Backlogger" customModuleProvider="target">
             <connections>
+                <outlet property="artView" destination="R4n-Bn-iBO" id="j2h-uc-J7x"/>
                 <outlet property="blurView" destination="GLr-ne-YpV" id="GJF-i8-33z"/>
-                <outlet property="deleteButton" destination="KdE-yU-QGI" id="6fx-ix-DVG"/>
-                <outlet property="deleteImage" destination="akh-Me-C1q" id="r95-z1-yYM"/>
                 <outlet property="imageBorder" destination="Ofh-AL-noF" id="reY-L7-hCr"/>
-                <outlet property="imageView" destination="R4n-Bn-iBO" id="qJR-NI-BT1"/>
+                <outlet property="moreButton" destination="9d2-N4-4F0" id="K7G-ZJ-EFg"/>
                 <outlet property="titleLabel" destination="9eV-cl-qgm" id="LI9-b3-DgT"/>
                 <outlet property="titleTextView" destination="dgA-6g-nKX" id="rp9-6d-Pdx"/>
-                <outlet property="view" destination="6TG-YZ-Va9" id="FxX-Go-xbM"/>
+                <outlet property="view" destination="6TG-YZ-Va9" id="p7L-cl-67Z"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -108,39 +107,31 @@
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" spellCheckingType="no"/>
                 </textView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KdE-yU-QGI">
-                    <rect key="frame" x="156.5" y="116.5" width="95.5" height="26"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9d2-N4-4F0" userLabel="More Button">
+                    <rect key="frame" x="339" y="109.5" width="26" height="26"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="add_symbol" translatesAutoresizingMaskIntoConstraints="NO" id="akh-Me-C1q">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="more" translatesAutoresizingMaskIntoConstraints="NO" id="vvL-tQ-PkS">
                             <rect key="frame" x="5" y="5" width="16" height="16"/>
-                            <constraints>
-                                <constraint firstAttribute="width" secondItem="akh-Me-C1q" secondAttribute="height" id="uB5-8o-ZxZ"/>
-                            </constraints>
                         </imageView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="DELETE" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mc0-ub-9yy">
-                            <rect key="frame" x="31" y="5" width="54.5" height="16"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <nil key="highlightedColor"/>
-                        </label>
                     </subviews>
-                    <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" red="0.0" green="0.72525911350000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <gestureRecognizers/>
                     <constraints>
-                        <constraint firstAttribute="trailing" secondItem="mc0-ub-9yy" secondAttribute="trailing" constant="10" id="4u7-84-GOn"/>
-                        <constraint firstAttribute="height" constant="26" id="7FW-zg-Gdu"/>
-                        <constraint firstItem="mc0-ub-9yy" firstAttribute="centerY" secondItem="KdE-yU-QGI" secondAttribute="centerY" id="Edj-v9-aQN"/>
-                        <constraint firstItem="mc0-ub-9yy" firstAttribute="height" secondItem="akh-Me-C1q" secondAttribute="height" id="INi-Cg-89X"/>
-                        <constraint firstItem="akh-Me-C1q" firstAttribute="leading" secondItem="KdE-yU-QGI" secondAttribute="leading" constant="5" id="cCR-4f-mW7"/>
-                        <constraint firstItem="akh-Me-C1q" firstAttribute="height" secondItem="KdE-yU-QGI" secondAttribute="height" constant="-10" id="cmp-Ol-uyp"/>
-                        <constraint firstItem="akh-Me-C1q" firstAttribute="centerY" secondItem="KdE-yU-QGI" secondAttribute="centerY" id="f3O-en-Vnz"/>
-                        <constraint firstItem="mc0-ub-9yy" firstAttribute="leading" secondItem="akh-Me-C1q" secondAttribute="trailing" constant="10" id="iB4-Nr-CbH"/>
+                        <constraint firstItem="vvL-tQ-PkS" firstAttribute="height" secondItem="9d2-N4-4F0" secondAttribute="height" constant="-10" id="3E1-uN-wYf"/>
+                        <constraint firstItem="vvL-tQ-PkS" firstAttribute="width" secondItem="9d2-N4-4F0" secondAttribute="width" constant="-10" id="8WY-ly-qV7"/>
+                        <constraint firstAttribute="height" constant="26" id="9gx-Jx-crq"/>
+                        <constraint firstItem="vvL-tQ-PkS" firstAttribute="centerY" secondItem="9d2-N4-4F0" secondAttribute="centerY" id="D5l-ZD-Mec"/>
+                        <constraint firstItem="vvL-tQ-PkS" firstAttribute="centerX" secondItem="9d2-N4-4F0" secondAttribute="centerX" id="RwE-2i-Urf"/>
+                        <constraint firstAttribute="width" secondItem="9d2-N4-4F0" secondAttribute="height" id="y2e-O0-XHU"/>
                     </constraints>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                             <integer key="value" value="13"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
+                    <connections>
+                        <outletCollection property="gestureRecognizers" destination="kGv-CI-1OL" appends="YES" id="Kgx-zW-e7k"/>
+                    </connections>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9eV-cl-qgm">
                     <rect key="frame" x="172" y="8" width="193" height="19.5"/>
@@ -151,10 +142,10 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="KdE-yU-QGI" firstAttribute="bottom" secondItem="Ofh-AL-noF" secondAttribute="bottom" constant="7" id="6Nn-pD-ZI4"/>
+                <constraint firstItem="9d2-N4-4F0" firstAttribute="bottom" secondItem="Ofh-AL-noF" secondAttribute="bottom" id="3XE-cd-JnF"/>
+                <constraint firstItem="9d2-N4-4F0" firstAttribute="trailing" secondItem="6TG-YZ-Va9" secondAttribute="trailing" constant="-10" id="5CM-LG-K38"/>
                 <constraint firstItem="Ofh-AL-noF" firstAttribute="leading" secondItem="6TG-YZ-Va9" secondAttribute="leading" constant="15" id="6WD-mE-HH7"/>
                 <constraint firstItem="9eV-cl-qgm" firstAttribute="trailing" secondItem="dgA-6g-nKX" secondAttribute="trailing" id="Con-Oz-Pjx"/>
-                <constraint firstItem="KdE-yU-QGI" firstAttribute="leading" secondItem="Ofh-AL-noF" secondAttribute="trailing" constant="10" id="GWn-Es-dVa"/>
                 <constraint firstItem="dgA-6g-nKX" firstAttribute="top" secondItem="Ofh-AL-noF" secondAttribute="top" constant="-5" id="LU9-fI-XDJ"/>
                 <constraint firstItem="dgA-6g-nKX" firstAttribute="trailing" secondItem="6TG-YZ-Va9" secondAttribute="trailing" constant="-10" id="fUo-zt-JOO"/>
                 <constraint firstItem="dgA-6g-nKX" firstAttribute="leading" secondItem="Ofh-AL-noF" secondAttribute="trailing" constant="20" id="is5-ul-tY1"/>
@@ -166,10 +157,15 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="33.5" y="192"/>
         </view>
+        <tapGestureRecognizer id="kGv-CI-1OL">
+            <connections>
+                <action selector="moreTappedWithSender:" destination="-1" id="fUf-Ai-wO1"/>
+            </connections>
+        </tapGestureRecognizer>
     </objects>
     <resources>
-        <image name="add_symbol" width="22" height="22"/>
         <image name="controller_icon_lg" width="170" height="170"/>
+        <image name="more" width="30" height="30"/>
         <image name="new_playlist" width="90" height="90"/>
     </resources>
 </document>

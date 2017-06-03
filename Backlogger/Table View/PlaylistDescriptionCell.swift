@@ -8,8 +8,8 @@
 
 import UIKit
 
-class PlaylistDescriptionView: UIViewController {
-    @IBOutlet weak var descriptionTextView: UITextView!
+class PlaylistDescriptionCell: UIViewController {
+    @IBOutlet weak var descriptionTextView: UITextView?
     
     var descriptionDelegate: UITextViewDelegate?
     var observer: NSObject?
@@ -23,10 +23,8 @@ class PlaylistDescriptionView: UIViewController {
         }
         set(newValue) {
             self._descriptionString = newValue
-            if self.isViewLoaded {
-                self.descriptionTextView.text = self._descriptionString
-                self.descriptionTextView.textColor = .black
-            }
+            self.descriptionTextView?.text = newValue
+            self.descriptionTextView?.textColor = .black
         }
     }
     
@@ -37,35 +35,25 @@ class PlaylistDescriptionView: UIViewController {
         }
         set(newValue) {
             self._isEditable = newValue
-            if self.isViewLoaded {
-                self.descriptionTextView.isEditable = newValue
-                self.descriptionTextView.isSelectable = newValue
-            }
+            self.descriptionTextView?.isEditable = newValue
+            self.descriptionTextView?.isSelectable = newValue
         }
-    }
-    
-    init() {
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         if self._descriptionString == "" {
-            self.descriptionTextView.text = "Description"
-            self.descriptionTextView.textColor = .lightGray
+            self.descriptionTextView?.text = "Description"
+            self.descriptionTextView?.textColor = .lightGray
         } else {
-            self.descriptionTextView.text = self._descriptionString
-            self.descriptionTextView.textColor = .black
+            self.descriptionTextView?.text = self._descriptionString
+            self.descriptionTextView?.textColor = .black
         }
-        self.descriptionTextView.delegate = self.descriptionDelegate
-        self.descriptionTextView.isEditable = self._isEditable
-        self.descriptionTextView.isSelectable = self._isEditable
+        self.descriptionTextView?.delegate = self.descriptionDelegate
+        self.descriptionTextView?.isEditable = self._isEditable
+        self.descriptionTextView?.isSelectable = self._isEditable
         if self.observer != nil {
-            self.descriptionTextView.addObserver(self.observer!, forKeyPath: "contentSize", options:[.new], context: nil)
+            self.descriptionTextView?.addObserver(self.observer!, forKeyPath: "contentSize", options:[.new], context: nil)
         }
         
         let lineView = UIView()
@@ -75,7 +63,7 @@ class PlaylistDescriptionView: UIViewController {
         NSLayoutConstraint(item: lineView,
                            attribute: .leading,
                            relatedBy: .equal,
-                           toItem: self.descriptionTextView,
+                           toItem: self.descriptionTextView!,
                            attribute: .leading,
                            multiplier: 1.0,
                            constant: 0.0

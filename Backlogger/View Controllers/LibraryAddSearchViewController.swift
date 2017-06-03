@@ -20,8 +20,7 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
     @IBOutlet weak var searchBar:          UISearchBar?
     @IBOutlet weak var cancelButton:       UIBarButtonItem?
     
-    var gameFields: [GameField] = [GameField]()
-    var gamesViewControllers: [TableViewCellView] = [TableViewCellView]()
+    var gameFields: [GameField] = []
     var searchResults: SearchResults?
     var isLoadingGames = false
     var currentPage = 0
@@ -35,7 +34,7 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
     
     var toastOverlay = ToastOverlayViewController()
     
-    let tableReuseIdentifier = "library_add_search_cell"
+    let tableReuseIdentifier = "table_cell"
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.tintColor = .white
@@ -79,6 +78,12 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
                            multiplier: 1.0,
                            constant: 250.0
             ).isActive = true
+        self.tableView?.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: self.tableReuseIdentifier)
+        if #available(iOS 9.0, *) {
+            if traitCollection.forceTouchCapability == .available {
+                self.registerForPreviewing(with: self, sourceView: self.tableView!)
+            }
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -205,10 +210,11 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
     }
     
     func gamesCreated(gameField: GameField) {
+        let cell = self.tableView?.cellForRow(at: IndexPath(row: self.currentlySelectedRow, section: 0)) as! TableViewCell
         if gameField.ownedGames.count > 0 {
-            self.gamesViewControllers[self.currentlySelectedRow].libraryState = .addPartial
+            cell.libraryState = .addPartial
         } else {
-            self.gamesViewControllers[self.currentlySelectedRow].libraryState = .add
+            cell.libraryState = .add
         }
     }
     
@@ -225,7 +231,7 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
         var currentPlatformList: [Platform] = [Platform]()
         var gameField: GameField = self.gameFields[selectedRow].deepCopy()
         var shouldDelete = true
-        
+        let cell = self.tableView?.cellForRow(at: IndexPath(row: selectedRow, section: 0)) as! TableViewCell
         if consoles.count > 0 {
             for (index, game) in gameList.enumerated() {
                 if !consoles.contains(game.platform!) {
@@ -248,7 +254,7 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
                     newGameList.append(newGameToSave)
                 }
             }
-            self.gamesViewControllers[selectedRow].libraryState = .addPartial
+            cell.libraryState = .addPartial
         } else {
             for (index, game) in gameList.enumerated() {
                 if index == (gameList.count - 1) {
@@ -257,38 +263,32 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
                     game.delete()
                 }
             }
-            self.gamesViewControllers[selectedRow].libraryState = .add
+            cell.libraryState = .add
         }        
     }
 }
 
-extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSource {
+extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSource, UIViewControllerPreviewingDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.gameFields.count
     }
     
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: self.tableReuseIdentifier, for: indexPath) as! TableViewCell
-        var cellView: TableViewCellView
-        if indexPath.row + 1 > gamesViewControllers.count {
-            cellView = TableViewCellView(indexPath.row)
-            cellView.addButtonHidden = false
-            cellView.delegate = self
-            self.gamesViewControllers.append(cellView)
-        } else {
-            cellView = self.gamesViewControllers[indexPath.row]
-        }
-        
+        cell.addButtonHidden = false
+        cell.delegate = self
+        cell.row = indexPath.row
+
+        let cellView = cell.contentView
         let lineView = UIView()
         lineView.backgroundColor = .lightGray
         lineView.translatesAutoresizingMaskIntoConstraints = false
-        cellView.view.addSubview(lineView)
+        cellView.addSubview(lineView)
         
         NSLayoutConstraint(item: lineView,
                            attribute: .leading,
                            relatedBy: .equal,
-                           toItem: cellView.titleLabel,
+                           toItem: cell.titleLabel,
                            attribute: .leading,
                            multiplier: 1.0,
                            constant: 0.0
@@ -296,7 +296,7 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
         NSLayoutConstraint(item: lineView,
                            attribute: .trailing,
                            relatedBy: .equal,
-                           toItem: cellView.view,
+                           toItem: cellView,
                            attribute: .trailing,
                            multiplier: 1.0,
                            constant: 0.0
@@ -304,7 +304,7 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
         NSLayoutConstraint(item: lineView,
                            attribute: .top,
                            relatedBy: .equal,
-                           toItem: cellView.view,
+                           toItem: cellView,
                            attribute: .bottom,
                            multiplier: 1.0,
                            constant: -0.5
@@ -312,55 +312,17 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
         NSLayoutConstraint(item: lineView,
                            attribute: .bottom,
                            relatedBy: .equal,
-                           toItem: cellView.view,
-                           attribute: .bottom,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-
-        cellView.view.translatesAutoresizingMaskIntoConstraints = false
-        cell.contentView.addSubview(cellView.view)
-        
-        NSLayoutConstraint(item: cellView.view,
-                           attribute: .leading,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .leading,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: cellView.view,
-                           attribute: .trailing,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .trailing,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: cellView.view,
-                           attribute: .top,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .top,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: cellView.view,
-                           attribute: .bottom,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
+                           toItem: cellView,
                            attribute: .bottom,
                            multiplier: 1.0,
                            constant: 0.0
             ).isActive = true
         
         if self.gameFields.count >= indexPath.row {
-            if cellView.imageSource == .Placeholder {
-                cellView.set(image: #imageLiteral(resourceName: "table_placeholder_light"))
-            }
+
             let gameToShow = self.gameFields[indexPath.row]
             
-            cellView.rightLabel?.text = ""
+            cell.rightLabel?.text = ""
             var inLibrary = false
             
             // Check if game is in library
@@ -371,7 +333,7 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
                 }
             }
             if inLibrary {
-                cellView.libraryState = .addPartial
+                cell.libraryState = .addPartial
             }
             if let name = gameToShow.name {
                 let attributedString = NSMutableAttributedString(string: name)
@@ -379,9 +341,9 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
                 
                 paragraphStyle.lineSpacing = 4
                 attributedString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attributedString.length))
-                cellView.titleLabel?.attributedText = attributedString
+                cell.titleLabel?.attributedText = attributedString
             } else {
-                cellView.titleLabel?.text = ""
+                cell.titleLabel?.text = ""
             }
             var platformString = ""
             let platforms = gameToShow.platforms
@@ -401,7 +363,7 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
                     platformString += platforms[platforms.endIndex - 1].abbreviation!
                 }
             }
-            cellView.descriptionLabel?.text = platformString
+            cell.descriptionLabel?.text = platformString
             
             // See if we need to load more games
             let rowsToLoadFromBottom = 5;
@@ -413,29 +375,54 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
                     self.loadMoreGames(withQuery: self.query!)
                 }
             }
-            // this isn't ideal since it will keep running even if the cell scrolls off of the screen
-            // if we had lots of cells we'd want to stop this process when the cell gets reused
-            if cellView.imageSource == .Placeholder {
 
-                if let image = gameToShow.image {
-                    cellView.imageUrl = URL(string: image.iconUrl!)
-                }
-                cellView.cacheCompletionHandler = {
-                    (image, error, cacheType, imageUrl) in
-                    if image != nil {
-                        if cacheType == .none {
-                            UIView.transition(with: cellView.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                                cellView.set(image: image!)
-                            }, completion: nil)
-                        } else {
-                            cellView.set(image: image!)
-                        }
+            if let image = gameToShow.image {
+                cell.imageUrl = URL(string: image.iconUrl!)
+            }
+            cell.cacheCompletionHandler = {
+                (image, error, cacheType, imageUrl) in
+                if image != nil {
+                    if cacheType == .none {
+                        UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                            cell.set(image: image!)
+                        }, completion: nil)
+                    } else {
+                        cell.set(image: image!)
                     }
                 }
             }
         }
         
         return cell
+    }
+    
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        guard let indexPath = self.tableView?.indexPathForRow(at: location),
+              let cell = self.tableView?.cellForRow(at: indexPath) else { return nil }
+        
+        let i = indexPath.row
+        let vc: GameDetailsViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "game_details") as! GameDetailsViewController
+        var gameField: GameField!
+        
+        self.searchBar?.resignFirstResponder()
+        autoreleasepool {
+            let realm = try? Realm()
+            gameField = realm?.object(ofType: GameField.self, forPrimaryKey: self.gameFields[i].idNumber)
+        }
+        if gameField == nil {
+            gameField = self.gameFields[i]
+        }
+        vc.gameField = gameField
+        vc.state = gameField.ownedGames.count > 0 ? .partialAddToLibrary : .addToLibrary
+        vc.delegate = self
+        
+        previewingContext.sourceRect = cell.frame
+        
+        return vc
+    }
+    
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
+        self.navigationController?.show(viewControllerToCommit, sender: nil)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -451,6 +438,7 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
         self.searchBar?.resignFirstResponder()
         self.tableView?.deselectRow(at: indexPath, animated: true)
         self.searchBar?.setShowsCancelButton(false, animated: true)
+        self.performSegue(withIdentifier: "add_show_details", sender: tableView.cellForRow(at: indexPath))
     }
 }
 
@@ -480,7 +468,6 @@ extension LibraryAddSearchViewController: UISearchBarDelegate {
         },
                        completion: nil)
         self.gameFields.removeAll()
-        self.gamesViewControllers.removeAll()
         self.searchLabel?.isHidden = true
         self.searchBackground?.isHidden = true
         self.activityIndicator?.startAnimating()
@@ -504,7 +491,6 @@ extension LibraryAddSearchViewController: UISearchBarDelegate {
             self.performSearch()
         } else {
             self.gameFields.removeAll()
-            self.gamesViewControllers.removeAll()
             self.searchLabel?.isHidden = false
             self.searchBackground?.isHidden = false
             self.activityIndicator?.stopAnimating()
@@ -537,7 +523,7 @@ extension LibraryAddSearchViewController: UISearchBarDelegate {
     }
 }
 
-extension LibraryAddSearchViewController: TableViewCellViewDelegate {
+extension LibraryAddSearchViewController: TableViewCellDelegate {
     func addTapped(_ row: Int) {
         self.currentlySelectedRow = row
         let consoleSelection = ConsoleSelectionTableViewController()
@@ -545,25 +531,5 @@ extension LibraryAddSearchViewController: TableViewCellViewDelegate {
         consoleSelection.delegate = self
         consoleSelection.gameField = self.gameFields[row]
         self.navigationController?.pushViewController(consoleSelection, animated: true)
-    }
-    func removeTapped(_ row: Int) {
-        
-        let gameList = Array(self.gameFields[row].ownedGames)
-        var newGameFieldCopy: GameField?
-        for (index, game) in gameList.enumerated() {
-            if index == (gameList.count - 1) {
-                newGameFieldCopy = game.deleteWithGameFieldCopy()
-            } else {
-                game.delete()
-            }
-        }
-        
-        // This is the deep copy from right before the last delete
-        // We should reduce its link count, and all the contained
-        // elements.
-        
-        self.gameFields[row] = newGameFieldCopy!
-        self.gamesViewControllers[row].libraryState = .add
-        self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "large_x"), text: "Removed from Library")
     }
 }

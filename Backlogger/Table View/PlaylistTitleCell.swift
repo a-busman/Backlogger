@@ -8,19 +8,26 @@
 
 import UIKit
 
-class PlaylistTitleView: UIViewController {
-    @IBOutlet weak var imageView:  UIImageView!
-    @IBOutlet weak var titleTextView: UITextView!
-    @IBOutlet weak var blurView: UIVisualEffectView!
-    @IBOutlet weak var deleteButton: UIView!
-    @IBOutlet weak var deleteImage: UIImageView!
-    @IBOutlet weak var imageBorder: UIView!
-    @IBOutlet weak var titleLabel: UILabel!
+protocol PlaylistTitleCellDelegate {
+    func moreTapped(sender: UITapGestureRecognizer)
+}
+
+class PlaylistTitleCell: UIViewController {
+    @IBOutlet weak var artView:       UIImageView?
+    @IBOutlet weak var titleTextView: UITextView?
+    @IBOutlet weak var blurView:      UIVisualEffectView?
+    @IBOutlet weak var moreButton:    UIView?
+    @IBOutlet weak var imageBorder:   UIView?
+    @IBOutlet weak var titleLabel:    UILabel?
+    
+    var tapRecognizer: UITapGestureRecognizer?
     
     var titleDelegate: UITextViewDelegate?
     var observer: NSObject?
     
-    var image: UIImage?
+    var delegate: PlaylistTitleCellDelegate?
+    
+    var artImage: UIImage?
     
     private var _titleString: String = ""
     
@@ -31,11 +38,9 @@ class PlaylistTitleView: UIViewController {
         }
         set(newValue) {
             self._titleString = newValue
-            if self.isViewLoaded {
-                self.titleLabel.text = self._titleString
-                self.titleTextView.text = self._titleString
-                self.titleTextView.textColor = .black
-            }
+            self.titleLabel?.text = newValue
+            self.titleTextView?.text = newValue
+            self.titleTextView?.textColor = .black
         }
     }
     private var _isEditable = false
@@ -45,50 +50,45 @@ class PlaylistTitleView: UIViewController {
         }
         set(newValue) {
             self._isEditable = newValue
-            if self.isViewLoaded {
-                self.titleTextView.isHidden = !self._isEditable
-                self.titleLabel.isHidden = self._isEditable
-            }
+            self.titleTextView?.isHidden = !self._isEditable
+            self.titleLabel?.isHidden = self._isEditable
         }
-    }
-    init() {
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     func showImage() {
-        if let image = self.image {
-            self.imageView.image = image
-            self.blurView.isHidden = true
+        if let image = self.artImage {
+            self.artView?.image = image
+            self.blurView?.isHidden = true
         }
     }
     
     func hideImage() {
-        self.blurView.isHidden = false
-        self.imageView.image = #imageLiteral(resourceName: "new_playlist")
+        self.blurView?.isHidden = false
+        self.artView?.image = #imageLiteral(resourceName: "new_playlist")
+    }
+    
+    func moreTapped(sender: UITapGestureRecognizer) {
+        self.delegate?.moreTapped(sender: sender)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tapRecognizer = UITapGestureRecognizer(target: self.moreButton!, action: #selector(self.moreTapped))
         if self._titleString == "" {
-            self.titleTextView.text = "Playlist Name"
-            self.titleTextView.textColor = .lightGray
+            self.titleTextView?.text = "Playlist Name"
+            self.titleTextView?.textColor = .lightGray
         } else {
-            self.titleLabel.text = self._titleString
-            self.titleTextView.text = self._titleString
-            self.titleTextView.textColor = .black
+            self.titleLabel?.text = self._titleString
+            self.titleTextView?.text = self._titleString
+            self.titleTextView?.textColor = .black
         }
-        self.titleTextView.delegate = self.titleDelegate
-        self.titleTextView.isHidden = !self._isEditable
-        self.titleLabel.isHidden = self._isEditable
+        self.titleTextView?.delegate = self.titleDelegate
+        self.titleTextView?.isHidden = !self._isEditable
+        self.titleLabel?.isHidden = self._isEditable
         if self.observer != nil {
-            self.titleTextView.addObserver(self.observer!, forKeyPath: "contentSize", options:[.new], context: nil)
+            self.titleTextView?.addObserver(self.observer!, forKeyPath: "contentSize", options:[.new], context: nil)
         }
         
-        self.deleteImage.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 4.0)
         let lineView = UIView()
         lineView.backgroundColor = .lightGray
         lineView.translatesAutoresizingMaskIntoConstraints = false
@@ -96,7 +96,7 @@ class PlaylistTitleView: UIViewController {
         NSLayoutConstraint(item: lineView,
                            attribute: .leading,
                            relatedBy: .equal,
-                           toItem: self.imageView,
+                           toItem: self.artView!,
                            attribute: .leading,
                            multiplier: 1.0,
                            constant: 0.0

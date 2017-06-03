@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import RealmSwift
 
-class GameTableViewController: UIViewController, GameDetailsViewControllerDelegate {
+class GameTableViewController: UIViewController, GameDetailsViewControllerDelegate, UIViewControllerPreviewingDelegate {
     
     @IBOutlet weak var tableView:     UITableView?
     @IBOutlet weak var headerView:    UIView?
@@ -46,7 +47,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
     fileprivate var headerTravelDistance: CGFloat = 0.0
     fileprivate var insetToHeader:        CGFloat = 0.0
     
-    fileprivate let tableReuseIdentifier = "game_cell"
+    fileprivate let tableReuseIdentifier = "table_cell"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,6 +89,13 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
             }
         } else {
             NSLog("No platform during load")
+        }
+        self.tableView?.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: tableReuseIdentifier)
+        
+        if #available(iOS 9.0, *) {
+            if traitCollection.forceTouchCapability == .available {
+                self.registerForPreviewing(with: self, sourceView: self.tableView!)
+            }
         }
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -191,6 +199,37 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
             self.games.remove(at: self.currentlySelectedRow)
         }*/
     }
+    
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        guard let indexPath = self.tableView?.indexPathForRow(at: location),
+            let cell = self.tableView?.cellForRow(at: indexPath),
+            let gameFields = self.games[indexPath.row].gameFields else { return nil }
+        
+        let vc: GameDetailsViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "game_details") as! GameDetailsViewController
+        var gameField: GameField!
+        
+        //self.searchBar?.resignFirstResponder()
+        
+        autoreleasepool {
+            let realm = try? Realm()
+            gameField = realm?.object(ofType: GameField.self, forPrimaryKey: gameFields.idNumber)
+        }
+        if gameField == nil {
+            gameField = gameFields
+        }
+        vc.gameField = gameField
+        vc.state = gameField.ownedGames.count > 0 ? .partialAddToLibrary : .addToLibrary
+        vc.delegate = self
+        
+        previewingContext.sourceRect = cell.frame
+        
+        return vc
+    }
+    
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
+        self.navigationController?.show(viewControllerToCommit, sender: nil)
+        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+    }
 }
 
 extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
@@ -201,19 +240,28 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: tableReuseIdentifier) as! TableViewCell
-        let cellView = TableViewCellView()
+        cell.row = indexPath.row
+        cell.accessoryType = .disclosureIndicator
         let game = self.games[indexPath.row]
+        let lineViewTag = 9001
         
         let lineView = UIView()
+        lineView.tag = lineViewTag
         lineView.backgroundColor = .lightGray
         lineView.translatesAutoresizingMaskIntoConstraints = false
-        cellView.view.addSubview(lineView)
+        let cellView = cell.contentView
+        
+        if let oldLineView = cellView.viewWithTag(lineViewTag) {
+            oldLineView.removeFromSuperview()
+        }
+        
+        cellView.addSubview(lineView)
         
         if indexPath.row == self.games.count - 1 {
             NSLayoutConstraint(item: lineView,
                                attribute: .leading,
                                relatedBy: .equal,
-                               toItem: cellView.view,
+                               toItem: cellView,
                                attribute: .leading,
                                multiplier: 1.0,
                                constant: 0.0
@@ -222,7 +270,7 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
             NSLayoutConstraint(item: lineView,
                                attribute: .leading,
                                relatedBy: .equal,
-                               toItem: cellView.titleLabel,
+                               toItem: cell.titleLabel,
                                attribute: .leading,
                                multiplier: 1.0,
                                constant: 0.0
@@ -231,15 +279,15 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
         NSLayoutConstraint(item: lineView,
                            attribute: .trailing,
                            relatedBy: .equal,
-                           toItem: cellView.view,
+                           toItem: cellView,
                            attribute: .trailing,
                            multiplier: 1.0,
-                           constant: 0.0
+                           constant: 34.0
             ).isActive = true
         NSLayoutConstraint(item: lineView,
                            attribute: .top,
                            relatedBy: .equal,
-                           toItem: cellView.view,
+                           toItem: cellView,
                            attribute: .bottom,
                            multiplier: 1.0,
                            constant: -0.5
@@ -247,66 +295,30 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
         NSLayoutConstraint(item: lineView,
                            attribute: .bottom,
                            relatedBy: .equal,
-                           toItem: cellView.view,
+                           toItem: cellView,
                            attribute: .bottom,
                            multiplier: 1.0,
                            constant: 0.0
             ).isActive = true
         
-        cellView.addButtonHidden = true
-        cellView.view.translatesAutoresizingMaskIntoConstraints = false
-        cell.contentView.addSubview(cellView.view)
+        cell.addButtonHidden = true
         
-        NSLayoutConstraint(item: cellView.view,
-                           attribute: .leading,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .leading,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: cellView.view,
-                           attribute: .trailing,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .trailing,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: cellView.view,
-                           attribute: .top,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .top,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: cellView.view,
-                           attribute: .bottom,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .bottom,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        cellView.titleLabel?.text = game.gameFields?.name
+        cell.titleLabel?.text = game.gameFields?.name
         let index = game.gameFields?.releaseDate?.index((game.gameFields?.releaseDate?.startIndex)!, offsetBy: 4)
-        cellView.descriptionLabel?.text = game.gameFields?.releaseDate?.substring(to: index!)
-        cellView.rightLabel?.text = "\(game.progress)%"
-        if cellView.imageSource == .Placeholder {
-            if let image = game.gameFields?.image {
-                cellView.imageUrl = URL(string: image.iconUrl!)
-            }
-            cellView.cacheCompletionHandler = {
-                (image, error, cacheType, imageUrl) in
-                if image != nil {
-                    if cacheType == .none {
-                        UIView.transition(with: cellView.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                            cellView.set(image: image!)
-                        }, completion: nil)
-                    } else {
-                        cellView.set(image: image!)
-                    }
+        cell.descriptionLabel?.text = game.gameFields?.releaseDate?.substring(to: index!)
+        cell.rightLabel?.text = "\(game.progress)%"
+        if let image = game.gameFields?.image {
+            cell.imageUrl = URL(string: image.iconUrl!)
+        }
+        cell.cacheCompletionHandler = {
+            (image, error, cacheType, imageUrl) in
+            if image != nil {
+                if cacheType == .none {
+                    UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                        cell.set(image: image!)
+                    }, completion: nil)
+                } else {
+                    cell.set(image: image!)
                 }
             }
         }
@@ -331,6 +343,13 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
             }
             self.tableView?.reloadData()
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //self.searchBar?.resignFirstResponder()
+        self.tableView?.deselectRow(at: indexPath, animated: true)
+        //self.searchBar?.setShowsCancelButton(false, animated: true)
+        self.performSegue(withIdentifier: "library_show_details", sender: tableView.cellForRow(at: indexPath))
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

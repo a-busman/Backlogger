@@ -8,15 +8,16 @@
 
 import UIKit
 
-class PlaylistTableCellView: UIViewController {
-    @IBOutlet weak var imageView:  UIImageView?
+class PlaylistTableCell: UITableViewCell {
+    @IBOutlet weak var artView:  UIImageView?
     @IBOutlet weak var titleLabel: UILabel?
     @IBOutlet weak var descLabel:  UILabel?
     @IBOutlet weak var blurView:   UIVisualEffectView?
+    @IBOutlet weak var blurImage:  UIImageView?
     
     @IBOutlet weak var titleCenterLayoutConstraint: NSLayoutConstraint?
     
-    var image: UIImage?
+    var artImage: UIImage?
     
     enum CellState {
         case new
@@ -34,39 +35,27 @@ class PlaylistTableCellView: UIViewController {
         }
         set(newState) {
             self._state = newState
-            if self.isViewLoaded {
-                if newState == .new {
-                    self.titleLabel?.text = "New Playlist..."
-                    self.titleLabel?.textColor = Util.appColor
-                    self.titleCenterLayoutConstraint?.constant = 0.0
-                    self.descLabel?.text = ""
-                    self.descLabel?.isHidden = true
-                } else if newState == .title {
-                    self.titleLabel?.textColor = .black
-                    self.titleCenterLayoutConstraint?.constant = 0.0
-                    self.descLabel?.text = ""
-                    self.descLabel?.isHidden = true
-                } else {
-                    self.titleLabel?.textColor = .black
-                    self.titleCenterLayoutConstraint?.constant = -14.0
-                    self.descLabel?.isHidden = false
-                }
-                
-                self.view.layoutIfNeeded()
+            if newState == .new {
+                self.titleLabel?.text = "New Playlist..."
+                self.titleLabel?.textColor = Util.appColor
+                self.titleCenterLayoutConstraint?.constant = 0.0
+                self.descLabel?.text = ""
+                self.descLabel?.isHidden = true
+            } else if newState == .title {
+                self.titleLabel?.textColor = .black
+                self.titleCenterLayoutConstraint?.constant = 0.0
+                self.descLabel?.text = ""
+                self.descLabel?.isHidden = true
+            } else {
+                self.titleLabel?.textColor = .black
+                self.titleCenterLayoutConstraint?.constant = -14.0
+                self.descLabel?.isHidden = false
             }
         }
     }
     
-    init() {
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func layoutSubviews() {
+        super.layoutSubviews()
 
         if let playlist = self.playlist {
             self.titleLabel?.text = playlist.name
@@ -88,14 +77,11 @@ class PlaylistTableCellView: UIViewController {
             self.descLabel?.text = ""
             self.descLabel?.isHidden = true
         }
-        self.view.setNeedsLayout()
-    }
     
-    override func viewDidLayoutSubviews() {
         let lineView = UIView()
         lineView.backgroundColor = .lightGray
         lineView.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(lineView)
+        self.contentView.addSubview(lineView)
         
         NSLayoutConstraint(item: lineView,
                            attribute: .leading,
@@ -108,15 +94,15 @@ class PlaylistTableCellView: UIViewController {
         NSLayoutConstraint(item: lineView,
                            attribute: .trailing,
                            relatedBy: .equal,
-                           toItem: self.view,
+                           toItem: self.contentView,
                            attribute: .trailing,
                            multiplier: 1.0,
-                           constant: 0.0
+                           constant: 34.0   // cover disclosure indicator
             ).isActive = true
         NSLayoutConstraint(item: lineView,
                            attribute: .top,
                            relatedBy: .equal,
-                           toItem: self.view,
+                           toItem: self.contentView,
                            attribute: .bottom,
                            multiplier: 1.0,
                            constant: -0.5
@@ -124,7 +110,7 @@ class PlaylistTableCellView: UIViewController {
         NSLayoutConstraint(item: lineView,
                            attribute: .bottom,
                            relatedBy: .equal,
-                           toItem: self.view,
+                           toItem: self.contentView,
                            attribute: .bottom,
                            multiplier: 1.0,
                            constant: 0.0
@@ -132,14 +118,23 @@ class PlaylistTableCellView: UIViewController {
     }
     
     func showImage() {
-        if let image = self.image {
-            self.imageView?.image = image
+        if let image = self.artImage {
+            self.artView?.image = image
             self.blurView?.isHidden = true
+        } else {
+            self.blurImage?.image = #imageLiteral(resourceName: "controller_icon_lg")
         }
     }
     
     func hideImage() {
         self.blurView?.isHidden = false
-        self.imageView?.image = #imageLiteral(resourceName: "new_playlist")
+        self.artView?.image = #imageLiteral(resourceName: "new_playlist")
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.playlist = nil
+        self._state = .new
+        self.artImage = nil
     }
 }

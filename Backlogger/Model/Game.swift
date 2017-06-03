@@ -739,7 +739,8 @@ class GameField: Field {
 }
 
 class Game: Object {
-    private(set) dynamic var uuid = NSUUID().uuidString
+    private(set) dynamic var uuid      = NSUUID().uuidString
+    private(set) dynamic var dateAdded = Date()
 
     dynamic var gameFields: GameField? = nil
     dynamic var platform:   Platform?  = nil
@@ -750,6 +751,7 @@ class Game: Object {
     dynamic var progress:   Int        = 0
     dynamic var finished:   Bool       = false
     dynamic var notes:      String?    = nil
+
     
     var linkedPlaylists: [Playlist] {
         if let objects = realm?.objects(Playlist.self).filter("%@ IN games", self) {

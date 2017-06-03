@@ -12,7 +12,8 @@ import Realm
 
 class Playlist: Object {
     
-    private(set) dynamic var uuid = NSUUID().uuidString
+    private(set) dynamic var uuid      = NSUUID().uuidString
+    private(set) dynamic var dateAdded = Date()
 
     dynamic var name:            String? = nil
     dynamic var imageUrl:        String? = nil
