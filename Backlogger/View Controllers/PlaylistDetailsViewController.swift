@@ -466,7 +466,6 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                 return 3
             } else {
                 if self.playlist?.descriptionText != nil && self.playlist?.descriptionText != "" {
-                    print(self.playlist?.descriptionText)
                     self.descriptionVisible = true
                     return 2
                 } else {

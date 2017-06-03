@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -118,7 +118,7 @@
                     </vibrancyEffect>
                 </visualEffectView>
                 <label opaque="NO" userInteractionEnabled="NO" alpha="0.80000001192092896" contentMode="left" verticalHuggingPriority="251" text="Nintendo GameCube" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AAw-mt-efn" userLabel="Platform Label">
-                    <rect key="frame" x="5" y="39" width="223" height="19"/>
+                    <rect key="frame" x="5" y="39" width="188.5" height="19"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="19" id="ORa-YD-ig4"/>
                     </constraints>
@@ -129,9 +129,8 @@
                     <size key="shadowOffset" width="-1" height="-1"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="100%" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="daT-CM-8mV">
-                    <rect key="frame" x="228" y="25" width="87" height="33"/>
+                    <rect key="frame" x="193.5" y="25" width="121.5" height="33"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="87" id="9SR-hr-bRF"/>
                         <constraint firstAttribute="height" constant="33" id="bBz-j9-whM"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" weight="thin" pointSize="35"/>
@@ -141,7 +140,7 @@
                     <size key="shadowOffset" width="-1" height="-1"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Super Smash Bros. Melee" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fb5-H8-6ns" userLabel="Game Title Label">
-                    <rect key="frame" x="5" y="20" width="223" height="16"/>
+                    <rect key="frame" x="5" y="20" width="188.5" height="16"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="16" id="hTY-ty-08N"/>
                     </constraints>

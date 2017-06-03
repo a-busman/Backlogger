@@ -42,7 +42,7 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-
+        self.navigationController?.navigationBar.tintColor = .white
         self.longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(NowPlayingViewController.handleLongGesture))
         self.collectionView?.addGestureRecognizer(longPressGesture!)
         self.longPressGesture?.isEnabled = false
@@ -52,8 +52,11 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
         }
         var newGameIds = [String]()
         if self.games.count > 0 {
+            let newButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(handleTapEdit))
+            self.navigationController?.navigationBar.topItem?.leftBarButtonItem = newButton
             self.addBackgroundView?.isHidden = true
         } else {
+            self.navigationController?.navigationBar.topItem?.leftBarButtonItem = nil
             self.addBackgroundView?.isHidden = false
         }
         
@@ -147,11 +150,15 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
     @IBAction func handleTapEdit(sender:UIBarButtonItem) {
         self.navigationController?.navigationBar.tintColor = .white
         if self.inEditMode == true {
-            let newButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(handleTapEdit))
             self.stopWiggle()
             self.longPressGesture?.isEnabled = false
             self.inEditMode = false
-            self.navigationController?.navigationBar.topItem?.leftBarButtonItem = newButton
+            if self.games.count > 0 {
+                let newButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(handleTapEdit))
+                self.navigationController?.navigationBar.topItem?.leftBarButtonItem = newButton
+            } else {
+                self.navigationController?.navigationBar.topItem?.leftBarButtonItem = nil
+            }
             self.addBarButtonItem?.isEnabled = true
         } else {
             let newButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(handleTapEdit))
@@ -245,14 +252,23 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
     }
     
     func didDelete(viewController: NowPlayingGameViewController, uuid: String) {
-        for i in 0..<orderedViewControllers.count {
-            if orderedViewControllers[i].game?.uuid == uuid {
-                orderedViewControllers.remove(at: i)
-                self.games.remove(at: i)
+        for i in 0..<self.orderedViewControllers.count {
+            if self.orderedViewControllers[i].game?.uuid == uuid {
+                self.orderedViewControllers.remove(at: i)
+                let game = self.games.remove(at: i)
+                game.update {
+                    game.nowPlaying = false
+                }
                 self.collectionView?.deleteItems(at: [IndexPath(item: i, section: 0)])
                 self.pageControl?.numberOfPages -= 1
                 break
             }
+        }
+        if self.games.count <= 0 {
+            self.handleTapEdit(sender: UIBarButtonItem())
+            UIView.transition(with: self.addBackgroundView!, duration: 0.25, options: .transitionCrossDissolve, animations: {
+                self.addBackgroundView?.isHidden = false
+            }, completion: nil)
         }
     }
 }
