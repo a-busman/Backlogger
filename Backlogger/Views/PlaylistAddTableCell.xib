@@ -58,42 +58,24 @@
                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qIi-fX-9Rz">
-                        <rect key="frame" x="278.5" y="0.0" width="96.5" height="54"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    </view>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="100%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rJ7-gm-RqE" userLabel="Right">
                         <rect key="frame" x="318.5" y="16" width="41.5" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="move_handle" translatesAutoresizingMaskIntoConstraints="NO" id="0LE-8N-qH6">
-                        <rect key="frame" x="343" y="16.5" width="22" height="22"/>
-                        <gestureRecognizers/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="22" id="R1S-Ff-Hxf"/>
-                            <constraint firstAttribute="width" secondItem="0LE-8N-qH6" secondAttribute="height" id="zuu-qj-J1u"/>
-                        </constraints>
-                    </imageView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="qIi-fX-9Rz" firstAttribute="leading" secondItem="rJ7-gm-RqE" secondAttribute="leading" constant="-40" id="5bC-C6-gk0"/>
                     <constraint firstItem="6fr-ab-qir" firstAttribute="trailing" secondItem="FJE-jo-daY" secondAttribute="trailing" id="9Ea-A0-bhe"/>
                     <constraint firstItem="6fr-ab-qir" firstAttribute="leading" secondItem="FJE-jo-daY" secondAttribute="leading" constant="67" id="E1k-ma-MqK"/>
                     <constraint firstItem="hl3-Wt-gH3" firstAttribute="top" secondItem="6fr-ab-qir" secondAttribute="bottom" id="Lcd-ll-vb3"/>
-                    <constraint firstItem="0LE-8N-qH6" firstAttribute="centerY" secondItem="FJE-jo-daY" secondAttribute="centerY" id="QQ6-Nn-IIh"/>
                     <constraint firstItem="rJ7-gm-RqE" firstAttribute="trailing" secondItem="FJE-jo-daY" secondAttribute="trailing" constant="-15" id="SaO-sV-ihz"/>
                     <constraint firstItem="hl3-Wt-gH3" firstAttribute="leading" secondItem="6fr-ab-qir" secondAttribute="leading" id="bKQ-o5-s2F"/>
                     <constraint firstItem="6fr-ab-qir" firstAttribute="centerY" secondItem="FJE-jo-daY" secondAttribute="centerY" constant="-10" id="cVp-ok-yce"/>
                     <constraint firstItem="jug-Fw-H83" firstAttribute="bottom" secondItem="FJE-jo-daY" secondAttribute="bottom" constant="-5" id="dzd-k6-Z0A"/>
-                    <constraint firstItem="qIi-fX-9Rz" firstAttribute="top" secondItem="FJE-jo-daY" secondAttribute="top" id="eIe-Ef-PlH"/>
-                    <constraint firstItem="0LE-8N-qH6" firstAttribute="trailing" secondItem="FJE-jo-daY" secondAttribute="trailing" constant="-10" id="fwk-xD-WqQ"/>
                     <constraint firstItem="jug-Fw-H83" firstAttribute="top" secondItem="FJE-jo-daY" secondAttribute="top" constant="5" id="gZG-YA-bY2"/>
                     <constraint firstItem="jug-Fw-H83" firstAttribute="leading" secondItem="FJE-jo-daY" secondAttribute="leading" constant="15" id="jwk-rT-9M9"/>
                     <constraint firstItem="rJ7-gm-RqE" firstAttribute="centerY" secondItem="FJE-jo-daY" secondAttribute="centerY" id="lq9-Kr-HnS"/>
-                    <constraint firstItem="qIi-fX-9Rz" firstAttribute="trailing" secondItem="FJE-jo-daY" secondAttribute="trailing" id="qVr-PK-eQl"/>
-                    <constraint firstItem="qIi-fX-9Rz" firstAttribute="bottom" secondItem="FJE-jo-daY" secondAttribute="bottom" id="xzU-09-0LZ"/>
                     <constraint firstItem="hl3-Wt-gH3" firstAttribute="trailing" secondItem="6fr-ab-qir" secondAttribute="trailing" id="zO1-9i-sK3"/>
                 </constraints>
             </tableViewCellContentView>
@@ -101,17 +83,15 @@
                 <outlet property="artView" destination="5Nz-Mp-Nn9" id="IRw-xf-cMq"/>
                 <outlet property="artViewBorder" destination="jug-Fw-H83" id="CdM-UG-GMh"/>
                 <outlet property="descriptionLabel" destination="hl3-Wt-gH3" id="Faw-lK-Rwo"/>
-                <outlet property="moveHandle" destination="0LE-8N-qH6" id="Qt3-1y-yS8"/>
                 <outlet property="rightLabel" destination="rJ7-gm-RqE" id="dMH-Rp-Mzl"/>
                 <outlet property="titleCenterLayoutConstraint" destination="cVp-ok-yce" id="NJn-g5-XuA"/>
                 <outlet property="titleLabel" destination="6fr-ab-qir" id="bKh-hL-Cuc"/>
                 <outlet property="titleLeadingLayoutConstraint" destination="E1k-ma-MqK" id="qLG-sO-CjP"/>
-                <outlet property="truncGradient" destination="qIi-fX-9Rz" id="iDQ-US-AAF"/>
+                <outlet property="titleTrailingLayoutConstraint" destination="9Ea-A0-bhe" id="OsK-hI-ilq"/>
             </connections>
         </tableViewCell>
     </objects>
     <resources>
-        <image name="move_handle" width="22" height="21"/>
         <image name="table_placeholder_light" width="96" height="96"/>
     </resources>
 </document>

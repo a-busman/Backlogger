@@ -39,6 +39,7 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
         super.viewDidLoad()
         self.navigationController?.navigationBar.tintColor = .white
         self.searchBar?.tintColor = .white
+        self.tableView?.tableFooterView = UIView(frame: .zero)
         //self.loadFirstGame(withQuery: self.query!)
         
         // Uncomment the following line to preserve selection between presentations
@@ -279,44 +280,19 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
         cell.delegate = self
         cell.row = indexPath.row
 
-        let cellView = cell.contentView
-        let lineView = UIView()
-        lineView.backgroundColor = .lightGray
-        lineView.translatesAutoresizingMaskIntoConstraints = false
-        cellView.addSubview(lineView)
-        
-        NSLayoutConstraint(item: lineView,
-                           attribute: .leading,
-                           relatedBy: .equal,
-                           toItem: cell.titleLabel,
-                           attribute: .leading,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: lineView,
-                           attribute: .trailing,
-                           relatedBy: .equal,
-                           toItem: cellView,
-                           attribute: .trailing,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: lineView,
-                           attribute: .top,
-                           relatedBy: .equal,
-                           toItem: cellView,
-                           attribute: .bottom,
-                           multiplier: 1.0,
-                           constant: -0.5
-            ).isActive = true
-        NSLayoutConstraint(item: lineView,
-                           attribute: .bottom,
-                           relatedBy: .equal,
-                           toItem: cellView,
-                           attribute: .bottom,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
+        var indent: CGFloat = 0.0
+        if indexPath.row < self.gameFields.count - 1 {
+            indent = 55.0
+        }
+        if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
+            cell.separatorInset = UIEdgeInsetsMake(0, indent, 0, 0)
+        }
+        if cell.responds(to: #selector(setter: UIView.layoutMargins)) {
+            cell.layoutMargins = .zero
+        }
+        if cell.responds(to: #selector(setter: UIView.preservesSuperviewLayoutMargins)) {
+            cell.preservesSuperviewLayoutMargins = false
+        }
         
         if self.gameFields.count >= indexPath.row {
 
@@ -336,12 +312,7 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
                 cell.libraryState = .addPartial
             }
             if let name = gameToShow.name {
-                let attributedString = NSMutableAttributedString(string: name)
-                let paragraphStyle = NSMutableParagraphStyle()
-                
-                paragraphStyle.lineSpacing = 4
-                attributedString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attributedString.length))
-                cell.titleLabel?.attributedText = attributedString
+                cell.titleLabel?.text = name
             } else {
                 cell.titleLabel?.text = ""
             }

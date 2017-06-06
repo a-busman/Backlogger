@@ -243,63 +243,20 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
         cell.row = indexPath.row
         cell.accessoryType = .disclosureIndicator
         let game = self.games[indexPath.row]
-        let lineViewTag = 9001
+        var indent: CGFloat = 0.0
         
-        let lineView = UIView()
-        lineView.tag = lineViewTag
-        lineView.backgroundColor = .lightGray
-        lineView.translatesAutoresizingMaskIntoConstraints = false
-        let cellView = cell.contentView
-        
-        if let oldLineView = cellView.viewWithTag(lineViewTag) {
-            oldLineView.removeFromSuperview()
+        if indexPath.row < self.games.count - 1 {
+            indent = 55.0
         }
-        
-        cellView.addSubview(lineView)
-        
-        if indexPath.row == self.games.count - 1 {
-            NSLayoutConstraint(item: lineView,
-                               attribute: .leading,
-                               relatedBy: .equal,
-                               toItem: cellView,
-                               attribute: .leading,
-                               multiplier: 1.0,
-                               constant: 0.0
-                ).isActive = true
-        } else {
-            NSLayoutConstraint(item: lineView,
-                               attribute: .leading,
-                               relatedBy: .equal,
-                               toItem: cell.titleLabel,
-                               attribute: .leading,
-                               multiplier: 1.0,
-                               constant: 0.0
-                ).isActive = true
+        if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
+            cell.separatorInset = UIEdgeInsetsMake(0, indent, 0, 0)
         }
-        NSLayoutConstraint(item: lineView,
-                           attribute: .trailing,
-                           relatedBy: .equal,
-                           toItem: cellView,
-                           attribute: .trailing,
-                           multiplier: 1.0,
-                           constant: 34.0
-            ).isActive = true
-        NSLayoutConstraint(item: lineView,
-                           attribute: .top,
-                           relatedBy: .equal,
-                           toItem: cellView,
-                           attribute: .bottom,
-                           multiplier: 1.0,
-                           constant: -0.5
-            ).isActive = true
-        NSLayoutConstraint(item: lineView,
-                           attribute: .bottom,
-                           relatedBy: .equal,
-                           toItem: cellView,
-                           attribute: .bottom,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
+        if cell.responds(to: #selector(setter: UIView.layoutMargins)) {
+            cell.layoutMargins = .zero
+        }
+        if cell.responds(to: #selector(setter: UIView.preservesSuperviewLayoutMargins)) {
+            cell.preservesSuperviewLayoutMargins = false
+        }
         
         cell.addButtonHidden = true
         

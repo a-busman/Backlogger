@@ -17,15 +17,14 @@ class PlaylistViewController: UIViewController {
     var selectedRow = -1
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView?.separatorStyle = .none
         self.tableView?.register(UINib(nibName: "PlaylistTableCell", bundle: nil), forCellReuseIdentifier: self.cellReuseIdentifier)
-
+        self.tableView?.tableFooterView = UIView(frame: .zero)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         autoreleasepool {
             let realm = try! Realm()
-            playlistList = realm.objects(Playlist.self)
+            playlistList = realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false")
         }
         self.tableView?.reloadData()
     }
@@ -38,6 +37,20 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! PlaylistTableCell
+        
+        var indent: CGFloat = 0.0
+        if indexPath.row < self.playlistList!.count {
+            indent = 129.5
+        }
+        if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
+            cell.separatorInset = UIEdgeInsetsMake(0, indent, 0, 0)
+        }
+        if cell.responds(to: #selector(setter: UIView.layoutMargins)) {
+            cell.layoutMargins = .zero
+        }
+        if cell.responds(to: #selector(setter: UIView.preservesSuperviewLayoutMargins)) {
+            cell.preservesSuperviewLayoutMargins = false
+        }
         
         if indexPath.row > 0 {
             cell.playlist = playlistList![indexPath.row - 1]

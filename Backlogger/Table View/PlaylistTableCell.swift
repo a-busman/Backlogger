@@ -77,44 +77,6 @@ class PlaylistTableCell: UITableViewCell {
             self.descLabel?.text = ""
             self.descLabel?.isHidden = true
         }
-    
-        let lineView = UIView()
-        lineView.backgroundColor = .lightGray
-        lineView.translatesAutoresizingMaskIntoConstraints = false
-        self.contentView.addSubview(lineView)
-        
-        NSLayoutConstraint(item: lineView,
-                           attribute: .leading,
-                           relatedBy: .equal,
-                           toItem: self.titleLabel,
-                           attribute: .leading,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: lineView,
-                           attribute: .trailing,
-                           relatedBy: .equal,
-                           toItem: self.contentView,
-                           attribute: .trailing,
-                           multiplier: 1.0,
-                           constant: 34.0   // cover disclosure indicator
-            ).isActive = true
-        NSLayoutConstraint(item: lineView,
-                           attribute: .top,
-                           relatedBy: .equal,
-                           toItem: self.contentView,
-                           attribute: .bottom,
-                           multiplier: 1.0,
-                           constant: -0.5
-            ).isActive = true
-        NSLayoutConstraint(item: lineView,
-                           attribute: .bottom,
-                           relatedBy: .equal,
-                           toItem: self.contentView,
-                           attribute: .bottom,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
     }
     
     func showImage() {

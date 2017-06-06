@@ -88,42 +88,5 @@ class PlaylistTitleCell: UIViewController {
         if self.observer != nil {
             self.titleTextView?.addObserver(self.observer!, forKeyPath: "contentSize", options:[.new], context: nil)
         }
-        
-        let lineView = UIView()
-        lineView.backgroundColor = .lightGray
-        lineView.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(lineView)
-        NSLayoutConstraint(item: lineView,
-                           attribute: .leading,
-                           relatedBy: .equal,
-                           toItem: self.artView!,
-                           attribute: .leading,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: lineView,
-                           attribute: .trailing,
-                           relatedBy: .equal,
-                           toItem: self.view,
-                           attribute: .trailing,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: lineView,
-                           attribute: .top,
-                           relatedBy: .equal,
-                           toItem: self.view,
-                           attribute: .bottom,
-                           multiplier: 1.0,
-                           constant: -0.5
-            ).isActive = true
-        NSLayoutConstraint(item: lineView,
-                           attribute: .bottom,
-                           relatedBy: .equal,
-                           toItem: self.view,
-                           attribute: .bottom,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
     }
 }

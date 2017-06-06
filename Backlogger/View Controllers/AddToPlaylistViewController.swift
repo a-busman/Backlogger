@@ -65,56 +65,22 @@ class AddToPlaylistViewController: UITableViewController, TableViewCellDelegate 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! TableViewCell
         cell.addButtonHidden = false
-        let cellView = cell.contentView
 
-        let lineView = UIView()
-        lineView.backgroundColor = .lightGray
-        lineView.translatesAutoresizingMaskIntoConstraints = false
-        cellView.addSubview(lineView)
+        cell.selectionStyle = .none
         
-        if indexPath.row == self.filteredGames!.count - 1 {
-            NSLayoutConstraint(item: lineView,
-                               attribute: .leading,
-                               relatedBy: .equal,
-                               toItem: cellView,
-                               attribute: .leading,
-                               multiplier: 1.0,
-                               constant: 0.0
-                ).isActive = true
-        } else {
-            NSLayoutConstraint(item: lineView,
-                               attribute: .leading,
-                               relatedBy: .equal,
-                               toItem: cell.titleLabel,
-                               attribute: .leading,
-                               multiplier: 1.0,
-                               constant: 0.0
-                ).isActive = true
+        var indent: CGFloat = 0.0
+        if indexPath.row < self.filteredGames!.count - 1 {
+            indent = 67.0
         }
-        NSLayoutConstraint(item: lineView,
-                           attribute: .trailing,
-                           relatedBy: .equal,
-                           toItem: cellView,
-                           attribute: .trailing,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: lineView,
-                           attribute: .top,
-                           relatedBy: .equal,
-                           toItem: cellView,
-                           attribute: .bottom,
-                           multiplier: 1.0,
-                           constant: -0.5
-            ).isActive = true
-        NSLayoutConstraint(item: lineView,
-                           attribute: .bottom,
-                           relatedBy: .equal,
-                           toItem: cellView,
-                           attribute: .bottom,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
+        if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
+            cell.separatorInset = UIEdgeInsetsMake(0, indent, 0, 0)
+        }
+        if cell.responds(to: #selector(setter: UIView.layoutMargins)) {
+            cell.layoutMargins = .zero
+        }
+        if cell.responds(to: #selector(setter: UIView.preservesSuperviewLayoutMargins)) {
+            cell.preservesSuperviewLayoutMargins = false
+        }
         
 
         if let game = self.filteredGames?[indexPath.row] {

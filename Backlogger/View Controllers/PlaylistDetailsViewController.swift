@@ -175,7 +175,9 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             }
         }
         self.titleCell.artImage = self.playlistImage
-        self.savePlaylistImage()
+        if self._playlistState != .new {
+            self.savePlaylistImage()
+        }
         self.titleCell.showImage()
     }
     
@@ -295,7 +297,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             self.playlistFooterView.showButton = self.games.count == 0
             self.tableView.tableFooterView = playlistFooterView.view
         } else {
-            self.tableView.tableFooterView = nil
+            self.tableView.tableFooterView = UIView(frame: .zero)
         }
         self.tableView.reloadData()
     }
@@ -315,9 +317,9 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     
     func moreTapped(sender: UITapGestureRecognizer) {
         let actions = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        let deleteAction = UIAlertAction(title: "Delete...", style: .default, handler: nil)
-        let playNextAction = UIAlertAction(title: "Play Next", style: .default, handler: nil)
-        let queueAction = UIAlertAction(title: "Play Later", style: .default, handler: nil)
+        let deleteAction = UIAlertAction(title: "Delete from Library", style: .default, handler: self.handleFirstDelete)
+        let playNextAction = UIAlertAction(title: "Play Next", style: .default, handler: self.handlePlayNext)
+        let queueAction = UIAlertAction(title: "Play Later", style: .default, handler: self.handlePlayLater)
         deleteAction.setValue(#imageLiteral(resourceName: "trash"), forKey: "image")
         playNextAction.setValue(#imageLiteral(resourceName: "play_next"), forKey: "image")
         queueAction.setValue(#imageLiteral(resourceName: "add_to_queue"), forKey: "image")
@@ -327,6 +329,49 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         actions.addAction(queueAction)
         actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         self.present(actions, animated: true, completion: nil)
+    }
+    
+    func handleFirstDelete(sender: UIAlertAction) {
+        let actions = UIAlertController(title: "Delete from Game Library", message: nil, preferredStyle: .actionSheet)
+        let deleteAction = UIAlertAction(title: "Delete Playlist", style: .destructive, handler: self.handleSecondDelete)
+        actions.addAction(deleteAction)
+        actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present(actions, animated: true, completion: nil)
+    }
+    
+    func handleSecondDelete(sender: UIAlertAction) {
+        self.playlist?.delete()
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    func handlePlayNext(sender: UIAlertAction) {
+        autoreleasepool {
+            let realm = try! Realm()
+            let upNextPlaylist = realm.objects(Playlist.self).filter("isUpNext = true").first
+            if upNextPlaylist != nil {
+                var currentGames = self.games
+                currentGames += upNextPlaylist!.games
+                upNextPlaylist!.update {
+                    upNextPlaylist?.games.removeAll()
+                    upNextPlaylist?.games.append(contentsOf: currentGames)
+                }
+            }
+        }
+    }
+    
+    func handlePlayLater(sender: UIAlertAction) {
+        autoreleasepool {
+            let realm = try! Realm()
+            let upNextPlaylist = realm.objects(Playlist.self).filter("isUpNext = true").first
+            if upNextPlaylist != nil {
+                var currentGames = Array(upNextPlaylist!.games)
+                currentGames += self.games
+                upNextPlaylist!.update {
+                    upNextPlaylist?.games.removeAll()
+                    upNextPlaylist?.games.append(contentsOf: currentGames)
+                }
+            }
+        }
     }
     
     //Cancel or back
@@ -402,7 +447,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             self.titleCell.isEditable = true
             self.descCell.isEditable = true
             self.reloadDataWithCrossDissolve()
-            self.tableView.tableFooterView = nil
+            self.tableView.tableFooterView = UIView(frame: .zero)
             self.tableView.setEditing(true, animated: false)
         } else if self._playlistState == .editing {
             self.saveCurrentState(playlist: nil)
@@ -430,6 +475,8 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             let newPlaylist = Playlist()
             self.saveCurrentState(playlist: newPlaylist)
             newPlaylist.add()
+            self.playlist = newPlaylist
+            self.savePlaylistImage()
             self.dismiss(animated: true, completion: nil)
         }
     }
@@ -575,19 +622,25 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                 newCell.playlistState = .add
                 newCell.delegate = self
                 cell = newCell
+                if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
+                    cell.separatorInset = UIEdgeInsetsMake(0, 47.5, 0, 0)
+                }
+                if cell.responds(to: #selector(setter: UIView.layoutMargins)) {
+                    cell.layoutMargins = .zero
+                }
+                if cell.responds(to: #selector(setter: UIView.preservesSuperviewLayoutMargins)) {
+                    cell.preservesSuperviewLayoutMargins = false
+                }
                 break
             default:
                 cell = UITableViewCell()
             }
         } else {
-        
-            // discarding first reusable cell seems to solve the problem for now.
-            //_ = tableView.dequeueReusableCell(withIdentifier: self.cellReuseIdentifier)
             
             let gameCell = tableView.dequeueReusableCell(withIdentifier: self.cellReuseIdentifier) as! PlaylistAddTableCell
             if self._playlistState == .default {
                 gameCell.playlistState = .default
-            } else if self._playlistState == .editing {
+            } else {
                 gameCell.playlistState = .remove
             }
             gameCell.delegate = self
@@ -619,6 +672,24 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                 }
             }
             cell = gameCell
+            var indent: CGFloat = 0.0
+            if self._playlistState == .default {
+                if indexPath.row < self.games.count - 1 {
+                    indent = 67.0
+                }
+            } else {
+                indent = 105.0
+            }
+            
+            if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
+                cell.separatorInset = UIEdgeInsetsMake(0, indent, 0, 0)
+            }
+            if cell.responds(to: #selector(setter: UIView.layoutMargins)) {
+                cell.layoutMargins = .zero
+            }
+            if cell.responds(to: #selector(setter: UIView.preservesSuperviewLayoutMargins)) {
+                cell.preservesSuperviewLayoutMargins = false
+            }
         }
         cell.selectionStyle = .none
 
@@ -659,6 +730,17 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         }
     }
     
+    override func tableView(_ tableView: UITableView, targetIndexPathForMoveFromRowAt sourceIndexPath: IndexPath, toProposedIndexPath proposedDestinationIndexPath: IndexPath) -> IndexPath {
+        if (sourceIndexPath.section != proposedDestinationIndexPath.section) {
+            var row = 0
+            if (sourceIndexPath.section < proposedDestinationIndexPath.section) {
+                row = tableView.numberOfRows(inSection: sourceIndexPath.section) - 1
+            }
+            return IndexPath(row: row, section: sourceIndexPath.section)
+        }
+        return proposedDestinationIndexPath;
+    }
+    
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         if indexPath.section == 1 || (indexPath.section == 0 && indexPath.row == 2) {
             return true
@@ -671,6 +753,11 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             return true
         }
         return false
+    }
+    
+    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let game = self.games.remove(at: sourceIndexPath.row)
+        self.games.insert(game, at: destinationIndexPath.row)
     }
     
     override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
@@ -701,70 +788,6 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         self.performSegue(withIdentifier: "addToPlaylist", sender: sender)
     }
     
-    func handleLongPress(sender: UILongPressGestureRecognizer) {
-        let state = sender.state
-        
-        let location = sender.location(in: self.tableView)
-        var indexPath = tableView.indexPathForRow(at: location)
-        self.movingIndexPath = indexPath
-        
-        struct My {
-            static var cellSnapshot : UIView? = nil
-        }
-        struct Path {
-            static var initialIndexPath : IndexPath? = nil
-        }
-        
-        switch state {
-        case .began:
-            if self.movingIndexPath != nil {
-                Path.initialIndexPath = self.movingIndexPath!
-                let cell = tableView.cellForRow(at: self.movingIndexPath!)! as UITableViewCell
-                My.cellSnapshot  = snapshotOfCell(cell)
-                var center = cell.center
-                My.cellSnapshot!.center = center
-                tableView.addSubview(My.cellSnapshot!)
-                cell.alpha = 0.0
-
-                UIView.animate(withDuration: 0.25, animations: { () -> Void in
-                    center.y = location.y
-                    My.cellSnapshot!.center = center
-                    
-                }, completion: { (finished) -> Void in
-                    if finished {
-                        cell.isHidden = true
-                    }
-                })
-            }
-            break
-        case .changed:
-            var center = My.cellSnapshot!.center
-            center.y = location.y
-            My.cellSnapshot!.center = center
-            if (indexPath != nil && indexPath != Path.initialIndexPath && indexPath!.section == 1) {
-                swap(&self.games[indexPath!.row], &self.games[Path.initialIndexPath!.row])
-                tableView.moveRow(at: Path.initialIndexPath!, to: indexPath!)
-                Path.initialIndexPath = indexPath
-            }
-            
-        default:
-            let cell = tableView.cellForRow(at: Path.initialIndexPath!)! as UITableViewCell
-            cell.isHidden = false
-            cell.alpha = 0.0
-            UIView.animate(withDuration: 0.25, animations: { () -> Void in
-                My.cellSnapshot!.center = cell.center
-            }, completion: { (finished) -> Void in
-                if finished {
-                    My.cellSnapshot!.alpha = 0.0
-                    cell.alpha = 1.0
-                    Path.initialIndexPath = nil
-                    My.cellSnapshot!.removeFromSuperview()
-                    My.cellSnapshot = nil
-                }
-            })
-        }
-    }
-    
     func snapshotOfCell(_ inputView: UIView) -> UIView {
         UIGraphicsBeginImageContextWithOptions(inputView.bounds.size, false, 0.0)
         inputView.layer.render(in: UIGraphicsGetCurrentContext()!)
@@ -778,17 +801,11 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         if editingStyle == .delete {
             self.tableView.beginUpdates()
             self.games.remove(at: indexPath.row)
-            //self.tableView.reloadRows(at: [indexPath], with: .automatic)
-            //self.refreshSection(NSIndexSet(index: 1) as IndexSet)
-            //self.tableView.reloadSections(IndexSet(integer: 1), with: .none)
-            //self.tableView.reloadRows(at: [indexPath], with: .automatic)
             self.tableView.deleteRows(at: [indexPath], with: .fade)
             self.tableView.endUpdates()
             if indexPath.row < 4 && self.playlistImageSource != .custom {
                 self.updatePlaylistImage()
             }
-            //self.tableView.reloadData()
-            //_ = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.refreshTable), userInfo: nil, repeats: false)
         } else if editingStyle == .insert {
             self.performSegue(withIdentifier: "addToPlaylist", sender: tableView.cellForRow(at: indexPath))
         }

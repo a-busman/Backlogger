@@ -8,6 +8,7 @@
 
 import UIKit
 import Kingfisher
+import RealmSwift
 
 protocol NowPlayingGameViewDelegate {
     func didDelete(viewController: NowPlayingGameViewController, uuid: String)
@@ -605,6 +606,20 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
                 self._game?.update {
                     self._game?.nowPlaying = false
                 }
+                // Update in Now Playing playlist
+                autoreleasepool {
+                    let realm = try! Realm()
+                    let nowPlayingPlaylist = realm.objects(Playlist.self).filter("isNowPlaying = true").first
+                    if nowPlayingPlaylist != nil {
+                        if let index = nowPlayingPlaylist?.games.index(where: { (item) -> Bool in
+                            item.uuid == self._game!.uuid
+                        }) {
+                            nowPlayingPlaylist?.update {
+                                nowPlayingPlaylist?.games.remove(objectAtIndex: index)
+                            }
+                        }
+                    }
+                }
                 let actions = UIAlertController(title: "Remove from Now Playing?", message: nil, preferredStyle: .alert)
                 actions.addAction(UIAlertAction(title: "Remove", style: .destructive, handler: { _ in self.delegate?.didDelete(viewController: self, uuid: (self.game?.uuid)!)}))
                 actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -618,6 +633,16 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
                 self.playButtonState = .selected
                 self._game?.update {
                     self._game?.nowPlaying = true
+                }
+                // Update in Now Playing playlist
+                autoreleasepool {
+                    let realm = try! Realm()
+                    let nowPlayingPlaylist = realm.objects(Playlist.self).filter("isNowPlaying = true").first
+                    if nowPlayingPlaylist != nil {
+                        nowPlayingPlaylist?.update {
+                            nowPlayingPlaylist?.games.append(self._game!)
+                        }
+                    }
                 }
                 if self.finishedButtonState != .selected {
                     self.gameDetailOverlayController.completionLabel?.text = "In Progress"

@@ -31,7 +31,6 @@ class GameDetailOverlayViewController: UIViewController {
     @IBOutlet weak var detailsGestureView:   UIView?
     @IBOutlet weak var pullTabView:          UIView?
     
-    var images:        [UIImage]?
     private var _game:  Game?
     
     let imageCellReuseIdentifier = "image_cell"
@@ -53,7 +52,6 @@ class GameDetailOverlayViewController: UIViewController {
             self._game = newGame
             self.titleLabel?.text = newGame?.gameFields?.name
             self.descriptionLabel?.text = newGame?.gameFields?.deck
-            self.images = []
             var platformString = ""
             if let platforms = newGame?.gameFields?.platforms {
                 if platforms.count > 0 {
@@ -115,18 +113,6 @@ class GameDetailOverlayViewController: UIViewController {
             }
             self.genresLabel?.text = genresString
             
-            if let images = newGame?.gameFields?.images {
-                for image in images {
-                    image.getImage(field: .MediumUrl, { results in
-                        if let error = results.error {
-                            NSLog("error getting images: \(error.localizedDescription)")
-                            return
-                        }
-                        self.images?.append(results.value!)
-                        self.imageCollectionView?.reloadData()
-                    })
-                }
-            }
             completionPercentage?.text = "\((newGame?.progress)!)%"
             progressSliderView?.value = Float((newGame?.progress)!)
             
@@ -189,7 +175,7 @@ extension GameDetailOverlayViewController: UIScrollViewDelegate {
 extension GameDetailOverlayViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     // tell the collection view how many cells to make
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.images?.count ?? 0
+        return self.game?.gameFields?.images.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

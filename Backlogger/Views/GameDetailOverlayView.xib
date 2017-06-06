@@ -117,8 +117,8 @@
                         <blurEffect style="dark"/>
                     </vibrancyEffect>
                 </visualEffectView>
-                <label opaque="NO" userInteractionEnabled="NO" alpha="0.80000001192092896" contentMode="left" verticalHuggingPriority="251" text="Nintendo GameCube" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AAw-mt-efn" userLabel="Platform Label">
-                    <rect key="frame" x="5" y="39" width="188.5" height="19"/>
+                <label opaque="NO" userInteractionEnabled="NO" alpha="0.80000001192092896" contentMode="left" verticalHuggingPriority="251" text="Platform" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AAw-mt-efn" userLabel="Platform Label">
+                    <rect key="frame" x="5" y="39" width="59.5" height="19"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="19" id="ORa-YD-ig4"/>
                     </constraints>
@@ -129,7 +129,7 @@
                     <size key="shadowOffset" width="-1" height="-1"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="100%" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="daT-CM-8mV">
-                    <rect key="frame" x="193.5" y="25" width="121.5" height="33"/>
+                    <rect key="frame" x="64.5" y="25" width="250.5" height="33"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="33" id="bBz-j9-whM"/>
                     </constraints>
@@ -139,8 +139,8 @@
                     <color key="shadowColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     <size key="shadowOffset" width="-1" height="-1"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Super Smash Bros. Melee" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fb5-H8-6ns" userLabel="Game Title Label">
-                    <rect key="frame" x="5" y="20" width="188.5" height="16"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fb5-H8-6ns" userLabel="Game Title Label">
+                    <rect key="frame" x="5" y="20" width="59.5" height="16"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="16" id="hTY-ty-08N"/>
                     </constraints>
@@ -160,7 +160,7 @@
                     <rect key="frame" x="0.0" y="108" width="320" height="325"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l7m-m4-UVD" userLabel="Content View">
-                            <rect key="frame" x="0.0" y="0.0" width="320" height="430"/>
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="301"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cS7-LB-VKu" userLabel="Description Title">
                                     <rect key="frame" x="5" y="0.0" width="87" height="18"/>
@@ -174,15 +174,14 @@
                                     <color key="shadowColor" cocoaTouchSystemColor="darkTextColor"/>
                                     <size key="shadowOffset" width="-1" height="-1"/>
                                 </label>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Scn-3Y-NvD" userLabel="Description">
-                                    <rect key="frame" x="5" y="23" width="310" height="129"/>
-                                    <string key="text">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</string>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Scn-3Y-NvD" userLabel="Description">
+                                    <rect key="frame" x="5" y="23" width="310" height="14.5"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Images" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y9K-mm-Acx" userLabel="Images Title">
-                                    <rect key="frame" x="5" y="157" width="54" height="18"/>
+                                    <rect key="frame" x="5" y="42.5" width="54" height="18"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="54" id="Fnr-Wq-Rmq"/>
                                         <constraint firstAttribute="height" constant="18" id="w7h-RA-gVQ"/>
@@ -194,7 +193,7 @@
                                     <size key="shadowOffset" width="-1" height="-1"/>
                                 </label>
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" indicatorStyle="white" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="CTV-JM-skx">
-                                    <rect key="frame" x="5" y="180" width="310" height="128"/>
+                                    <rect key="frame" x="5" y="65.5" width="310" height="128"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="128" id="L8X-Ob-BMA"/>
@@ -211,7 +210,7 @@
                                     </connections>
                                 </collectionView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Information" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HwO-Vi-zi3" userLabel="Information Title">
-                                    <rect key="frame" x="5" y="313" width="87" height="18"/>
+                                    <rect key="frame" x="5" y="198.5" width="87" height="18"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="87" id="FTF-yf-MMi"/>
                                         <constraint firstAttribute="height" constant="18" id="eF2-ap-S2d"/>
@@ -223,7 +222,7 @@
                                     <size key="shadowOffset" width="-1" height="-1"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Publisher" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LGi-ku-LhA" userLabel="Publisher Title">
-                                    <rect key="frame" x="5" y="336" width="70" height="14"/>
+                                    <rect key="frame" x="5" y="221.5" width="70" height="14"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="70" id="1Ir-hb-kba"/>
                                         <constraint firstAttribute="height" constant="14" id="sz8-3Z-KXc"/>
@@ -233,7 +232,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Developer" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AKu-Gl-VXB" userLabel="Developer Title">
-                                    <rect key="frame" x="5" y="356" width="70" height="14"/>
+                                    <rect key="frame" x="5" y="241.5" width="70" height="14"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="14" id="olY-3Y-O5U"/>
                                     </constraints>
@@ -242,7 +241,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Platforms" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AYM-dg-EWG" userLabel="Platforms Title">
-                                    <rect key="frame" x="5" y="376" width="70" height="14"/>
+                                    <rect key="frame" x="5" y="261.5" width="70" height="14"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="14" id="3hy-mI-RVZ"/>
                                     </constraints>
@@ -251,7 +250,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Genres" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uWb-bo-VJd" userLabel="Genres Title">
-                                    <rect key="frame" x="5" y="410" width="70" height="14"/>
+                                    <rect key="frame" x="5" y="281" width="70" height="14"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="14" id="CTT-TO-nbN"/>
                                     </constraints>
@@ -260,25 +259,25 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Publisher" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yo8-G7-lDS" userLabel="Publisher">
-                                    <rect key="frame" x="97" y="336" width="218" height="15"/>
+                                    <rect key="frame" x="97" y="221.5" width="218" height="15"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Developer" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eg2-Ef-moN" userLabel="Developer">
-                                    <rect key="frame" x="97" y="356" width="218" height="15"/>
+                                    <rect key="frame" x="97" y="241.5" width="218" height="15"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Platform1, Platform2, Platform3, Platform4" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SXy-uH-Wpa" userLabel="Platforms">
-                                    <rect key="frame" x="97" y="376" width="218" height="29"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Platforms" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SXy-uH-Wpa" userLabel="Platforms">
+                                    <rect key="frame" x="97" y="261.5" width="218" height="14.5"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Genre1, Genre2, Genre3" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2GJ-nl-q2C" userLabel="Genres">
-                                    <rect key="frame" x="97" y="410" width="218" height="15"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Genres" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2GJ-nl-q2C" userLabel="Genres">
+                                    <rect key="frame" x="97" y="281" width="218" height="15"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>

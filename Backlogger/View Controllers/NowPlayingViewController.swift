@@ -16,12 +16,21 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
     @IBOutlet weak var pageControl:       UIPageControl?
     @IBOutlet weak var collectionView:    UICollectionView?
     @IBOutlet weak var addBackgroundView: UIView?
+    @IBOutlet weak var visibleView:       UIView?
+    @IBOutlet weak var upNextTableView:   UITableView?
+    @IBOutlet weak var blurView:          UIVisualEffectView?
+    @IBOutlet weak var dimView:           UIView?
+    
+    @IBOutlet weak var blurTopLayoutConstraint: NSLayoutConstraint?
     
     var flowLayout: TopAlignedCollectionViewFlowLayout {
         return self.collectionView?.collectionViewLayout as! TopAlignedCollectionViewFlowLayout
     }
     
     static var shouldRefresh = false
+    
+    var nowPlayingPlaylist: Playlist!
+    var upNextPlaylist: Playlist!
     
     var currentIndex = 0
     var inEditMode = false
@@ -33,12 +42,48 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
     private var isWiggling = false
     private var movingIndexPath: IndexPath? = nil
     
+    var movingTableIndexPath: IndexPath?
+    
     var orderedViewControllers: [NowPlayingGameViewController] = []
     var games: [Game] = []
+    var gamesUpNext: [Game] = []
     var gameIds: [String] = []
+    
+    enum UpNextState {
+        case minimal
+        case full
+    }
+    
+    private var _blurViewState = UpNextState.minimal
+    
+    var blurViewState: UpNextState {
+        get {
+            return self._blurViewState
+        }
+        set(newValue) {
+            switch (newValue) {
+            case .minimal:
+                self.navigationController?.navigationBar.topItem?.rightBarButtonItem?.isEnabled = true
+                self.dimView?.isUserInteractionEnabled = false
+                break
+            case .full:
+                self.navigationController?.navigationBar.topItem?.rightBarButtonItem?.isEnabled = false
+                self.dimView?.isUserInteractionEnabled = true
+                break
+            }
+            self._blurViewState = newValue
+        }
+    }
+    private var blurViewMinimalY: CGFloat = 0.0
+    
+    let cellReuseIdentifier = "playlist_detail_cell"
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.upNextTableView?.register(UINib(nibName: "PlaylistAddTableCell", bundle: nil), forCellReuseIdentifier: self.cellReuseIdentifier)
+        self.upNextTableView?.separatorColor = .lightGray
+        //self.upNextTableView?.separatorInset = UIEdgeInsetsMake(0, 75, 0, 0)
+        self.upNextTableView?.tableFooterView = UIView(frame: .zero)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -47,8 +92,26 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
         self.collectionView?.addGestureRecognizer(longPressGesture!)
         self.longPressGesture?.isEnabled = false
         autoreleasepool {
-            let realm = try? Realm()
-            self.games = Array(realm!.objects(Game.self).filter("nowPlaying = true"))
+            let realm = try! Realm()
+            let playlists = realm.objects(Playlist.self)
+            let nowPlaying = playlists.filter("isNowPlaying = true")
+            let upNext = playlists.filter("isUpNext = true")
+            if nowPlaying.count == 0 {
+                self.nowPlayingPlaylist = Playlist()
+                self.nowPlayingPlaylist.isNowPlaying = true
+                self.nowPlayingPlaylist.add()
+            } else {
+                self.nowPlayingPlaylist = nowPlaying.first!
+            }
+            if upNext.count == 0 {
+                self.upNextPlaylist = Playlist()
+                self.upNextPlaylist.isUpNext = true
+                self.upNextPlaylist.add()
+            } else {
+                self.upNextPlaylist = upNext.first!
+            }
+            self.games = Array(self.nowPlayingPlaylist.games)
+            self.gamesUpNext = Array(self.upNextPlaylist.games)
         }
         var newGameIds = [String]()
         if self.games.count > 0 {
@@ -63,6 +126,8 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
         for game in self.games {
             newGameIds.append(game.uuid)
         }
+        
+        // Don't regenerate if games weren't changed.
         if !NowPlayingViewController.containSameElements(newGameIds, self.gameIds) {
             self.orderedViewControllers.removeAll()
             for game in self.games {
@@ -76,6 +141,8 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
             self.collectionView?.reloadData()
         }
         self.pageControl?.numberOfPages = orderedViewControllers.count
+        
+        self.upNextTableView?.reloadData()
     }
     
     override func viewDidLayoutSubviews() {
@@ -100,7 +167,7 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
         switch(gesture.state) {
             
         case .began:
-            guard let indexPath = movingIndexPath else { break }
+            guard let indexPath = self.movingIndexPath else { break }
             self.setEditing(true, animated: true)
             self.removeWiggleAnimation(from: cell)
             UIView.animate(withDuration: 0.25,
@@ -149,29 +216,35 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
     
     @IBAction func handleTapEdit(sender:UIBarButtonItem) {
         self.navigationController?.navigationBar.tintColor = .white
-        if self.inEditMode == true {
-            self.stopWiggle()
-            self.longPressGesture?.isEnabled = false
-            self.inEditMode = false
-            if self.games.count > 0 {
-                let newButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(handleTapEdit))
-                self.navigationController?.navigationBar.topItem?.leftBarButtonItem = newButton
-            } else {
-                self.navigationController?.navigationBar.topItem?.leftBarButtonItem = nil
-            }
-            self.addBarButtonItem?.isEnabled = true
-        } else {
-            let newButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(handleTapEdit))
-            newButton.tintColor = .white
-            self.startWiggle()
-            self.longPressGesture?.isEnabled = true
-            self.inEditMode = true
+        if self._blurViewState == .full {
+            let newButton = UIBarButtonItem(barButtonSystemItem: self.upNextTableView!.isEditing ? .edit : .done, target: self, action: #selector(handleTapEdit))
             self.navigationController?.navigationBar.topItem?.leftBarButtonItem = newButton
+            self.upNextTableView?.setEditing(!self.upNextTableView!.isEditing, animated: true)
+        } else {
+            if self.inEditMode == true {
+                self.stopWiggle()
+                self.longPressGesture?.isEnabled = false
+                self.inEditMode = false
+                if self.games.count > 0 {
+                    let newButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(handleTapEdit))
+                    self.navigationController?.navigationBar.topItem?.leftBarButtonItem = newButton
+                } else {
+                    self.navigationController?.navigationBar.topItem?.leftBarButtonItem = nil
+                }
+                self.addBarButtonItem?.isEnabled = true
+            } else {
+                let newButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(handleTapEdit))
+                newButton.tintColor = .white
+                self.startWiggle()
+                self.longPressGesture?.isEnabled = true
+                self.inEditMode = true
+                self.navigationController?.navigationBar.topItem?.leftBarButtonItem = newButton
 
-            self.addBarButtonItem?.isEnabled = false
-        }
-        for vc in orderedViewControllers {
-            vc.setEditMode(editMode: self.inEditMode, animated: true)
+                self.addBarButtonItem?.isEnabled = false
+            }
+            for vc in orderedViewControllers {
+                vc.setEditMode(editMode: self.inEditMode, animated: true)
+            }
         }
     }
     
@@ -265,14 +338,244 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
             }
         }
         if self.games.count <= 0 {
-            self.handleTapEdit(sender: UIBarButtonItem())
+            if self.inEditMode {
+                self.handleTapEdit(sender: UIBarButtonItem())
+            } else {
+                self.navigationController?.navigationBar.topItem?.leftBarButtonItem = nil
+            }
             UIView.transition(with: self.addBackgroundView!, duration: 0.25, options: .transitionCrossDissolve, animations: {
                 self.addBackgroundView?.isHidden = false
             }, completion: nil)
         }
+        self.updatePlaylist()
+    }
+    
+    func updatePlaylist() {
+        self.nowPlayingPlaylist.update {
+            self.nowPlayingPlaylist.games.removeAll()
+            self.nowPlayingPlaylist.games.append(contentsOf: self.games)
+        }
+    }
+    
+    // MARK: handleTapDetails
+    
+    @IBAction func handleTapDimView(sender: UITapGestureRecognizer) {
+        self.blurTopLayoutConstraint?.constant = -50.0
+        self.blurViewState = .minimal
+
+        UIView.animate(withDuration: 0.4,
+                       delay: 0.0,
+                       usingSpringWithDamping: 1.0,
+                       initialSpringVelocity: 0,
+                       options: .curveEaseIn,
+                       animations: {
+                        self.dimView?.alpha = 0.0
+                        self.visibleView?.layoutIfNeeded()
+        },
+                       completion: nil)
+    }
+    
+    @IBAction func handleTapDetails(sender: UITapGestureRecognizer) {
+        if self.inEditMode {
+            self.handleTapEdit(sender: UIBarButtonItem())
+        }
+        var newAlpha: CGFloat = 0.0
+        // Show percent slider
+        switch (self._blurViewState) {
+        case .minimal:
+            self.blurTopLayoutConstraint?.constant = -self.visibleView!.bounds.height * 0.75
+            self.blurViewState = .full
+            newAlpha = 0.5
+            break
+        case .full:
+            self.blurTopLayoutConstraint?.constant = -50.0
+            self.blurViewState = .minimal
+            break
+        }
+        UIView.animate(withDuration: 0.4,
+                       delay: 0.0,
+                       usingSpringWithDamping: 1.0,
+                       initialSpringVelocity: 0,
+                       options: .curveEaseIn,
+                       animations: {
+                        self.dimView?.alpha = newAlpha
+                        self.visibleView?.layoutIfNeeded()
+        },
+                       completion: nil)
+    }
+    
+    // MARK: handlePanDetails
+    
+    @IBAction func handlePanDetails(recognizer:UIPanGestureRecognizer) {
+        if self.inEditMode {
+            self.handleTapEdit(sender: UIBarButtonItem())
+        }
+        // Update view when user drags it around
+        if recognizer.state == .began || recognizer.state == .changed {
+            let translation = recognizer.translation(in: self.visibleView!)
+            var newY: CGFloat = 0.0
+            var newAlpha: CGFloat = 0.0
+            // If above the limit, resist pan
+            if self.blurTopLayoutConstraint!.constant + translation.y < (-self.visibleView!.bounds.height * 0.75) {
+                newY = self.blurTopLayoutConstraint!.constant + (translation.y / 2.0)
+                newAlpha = 0.5
+            } else {
+                newY = self.blurTopLayoutConstraint!.constant + translation.y
+                newAlpha = (newY / (-self.visibleView!.bounds.height * 0.75)) / 2.0
+            }
+            self.blurTopLayoutConstraint?.constant = newY
+            self.dimView?.alpha = newAlpha
+            recognizer.setTranslation(CGPoint.zero, in: self.visibleView!)
+            self.visibleView?.layoutIfNeeded()
+            self.dimView?.isUserInteractionEnabled = false
+            
+            // When the pan ends, determine where the view should go
+        } else if recognizer.state == .ended {
+            let velocity = recognizer.velocity(in: self.visibleView!).y
+            
+            // If the view is above the top, spring down to a full view
+            if self.blurTopLayoutConstraint!.constant < (-self.visibleView!.bounds.height * 0.75) {
+                self.blurTopLayoutConstraint?.constant = -self.visibleView!.bounds.height * 0.75
+                UIView.animate(withDuration: 0.4,
+                               delay: 0.0,
+                               usingSpringWithDamping: 0.6,
+                               initialSpringVelocity: 1.0,
+                               options: .curveEaseOut,
+                               animations: {
+                                self.dimView?.alpha = 0.5
+                                self.visibleView?.layoutIfNeeded()
+                },
+                               completion: nil)
+                self.blurViewState = .full
+                
+                // If the view is above middle, or if the user was swiping up when they ended, fling to top and collide with top boundary
+            } else if (self.blurTopLayoutConstraint!.constant < (-self.visibleView!.bounds.height * 0.375) && velocity < 300) || velocity < -300 {
+                self.blurTopLayoutConstraint?.constant = -self.visibleView!.bounds.height * 0.75
+                let animationTime: TimeInterval = ((0.4 - 1.0) * (min(Double(velocity * -1.0), 1000.0) - 300)/(1000 - 300) + 1.0)
+                UIView.animate(withDuration: animationTime,
+                               delay: 0.0,
+                               usingSpringWithDamping: 1.0,
+                               initialSpringVelocity: 1.0,
+                               options: .curveEaseOut,
+                               animations: {
+                                self.dimView?.alpha = 0.5
+                                self.visibleView?.layoutIfNeeded()
+                },
+                               completion: nil)
+                self.blurViewState = .full
+                
+                // If the view is below the middle, or if the user was swiping down when they ended, return to minimal state with a spring bounce
+            } else if (self.blurTopLayoutConstraint!.constant > (-self.visibleView!.bounds.height * 0.375) && velocity > -300) || velocity > 300 {
+                let animationTime: TimeInterval = ((0.4 - 1.0) * (min(Double(velocity), 1000.0) - 300)/(1000 - 300) + 1.0)
+                self.blurTopLayoutConstraint?.constant = -50
+                UIView.animate(withDuration: animationTime,
+                               delay: 0.0,
+                               usingSpringWithDamping: 0.6,
+                               initialSpringVelocity: 1.0,
+                               options: .curveEaseOut,
+                               animations: {
+                                self.dimView?.alpha = 0.0
+                                self.visibleView?.layoutIfNeeded()
+                },
+                               completion: nil)
+                self.blurViewState = .minimal
+            }
+        }
     }
 }
 
+extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate, PlaylistAddTableCellDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 55.0
+    }
+    
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.gamesUpNext.count
+    }
+    
+    func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
+        return false
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            self.gamesUpNext.remove(at: indexPath.row)
+            self.upNextPlaylist.update {
+                self.upNextPlaylist.games.removeAll()
+                self.upNextPlaylist.games.append(contentsOf: self.gamesUpNext)
+            }
+            self.upNextTableView?.reloadData()
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return .delete
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: self.cellReuseIdentifier) as! PlaylistAddTableCell
+        cell.showsReorderControl = true
+        cell.backgroundColor = .clear
+        var indent: CGFloat = 0.0
+        if indexPath.row < self.gamesUpNext.count - 1 {
+            indent = 67.0
+        }
+        if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
+            cell.separatorInset = UIEdgeInsetsMake(0, indent, 0, 0)
+        }
+        if cell.responds(to: #selector(setter: UIView.layoutMargins)) {
+            cell.layoutMargins = .zero
+        }
+        if cell.responds(to: #selector(setter: UIView.preservesSuperviewLayoutMargins)) {
+            cell.preservesSuperviewLayoutMargins = false
+        }
+
+        let game = self.gamesUpNext[indexPath.row]
+        cell.playlistState = .remove
+        cell.delegate = self
+        cell.game = game
+        cell.isHandleHidden = false
+        if let smallUrl = game.gameFields?.image?.smallUrl {
+            cell.imageUrl = URL(string: smallUrl)
+            cell.cacheCompletionHandler = {
+                (image, error, cacheType, imageUrl) in
+                if image != nil {
+                    if cacheType == .none {
+                        UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                            cell.set(image: image!)
+                        }, completion: nil)
+                    } else {
+                        cell.set(image: image!)
+                    }
+                }
+            }
+        }
+
+        return cell
+    }
+    
+    func handleTap(sender: UITapGestureRecognizer) {
+        return
+    }
+    
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let game = self.gamesUpNext.remove(at: sourceIndexPath.row)
+        self.gamesUpNext.insert(game, at: destinationIndexPath.row)
+    }
+    
+    func snapshotOfCell(_ inputView: UIView) -> UIView {
+        UIGraphicsBeginImageContextWithOptions(inputView.bounds.size, false, 0.0)
+        inputView.layer.render(in: UIGraphicsGetCurrentContext()!)
+        let image: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        let cellSnapshot : UIView = UIImageView(image: image)
+        return cellSnapshot
+    }
+    
+}
 
 extension NowPlayingViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     // MARK: - UICollectionViewDataSource protocol
@@ -372,6 +675,8 @@ extension NowPlayingViewController: UICollectionViewDataSource, UICollectionView
         let gameVc = self.orderedViewControllers.remove(at: source.item)
         let game = self.games.remove(at: source.item)
         self.games.insert(game, at: destination.item)
+        
+        self.updatePlaylist()
         
         self.orderedViewControllers.insert(gameVc, at: destination.item)
     }

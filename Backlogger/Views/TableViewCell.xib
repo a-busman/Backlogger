@@ -48,7 +48,7 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M86-Nr-Z7l" userLabel="Title">
-                        <rect key="frame" x="43.5" y="1.5" width="321.5" height="20.5"/>
+                        <rect key="frame" x="43.5" y="1.5" width="285" height="20.5"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="20.5" id="tKB-4K-c0m"/>
                         </constraints>
@@ -57,15 +57,11 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Developer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MYG-Sy-BgC" userLabel="Description">
-                        <rect key="frame" x="43.5" y="22" width="321.5" height="17"/>
+                        <rect key="frame" x="43.5" y="22" width="285" height="17"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m1Z-gm-KVz">
-                        <rect key="frame" x="293.5" y="-0.5" width="81.5" height="44"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    </view>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="100%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lPU-fk-BXR" userLabel="Right">
                         <rect key="frame" x="333.5" y="11" width="41.5" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -86,23 +82,19 @@
                     </button>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="m1Z-gm-KVz" firstAttribute="leading" secondItem="lPU-fk-BXR" secondAttribute="leading" constant="-40" id="8zL-GT-voe"/>
                     <constraint firstItem="MYG-Sy-BgC" firstAttribute="trailing" secondItem="M86-Nr-Z7l" secondAttribute="trailing" id="GT7-xP-QYO"/>
                     <constraint firstItem="lPU-fk-BXR" firstAttribute="centerY" secondItem="L7E-mH-Zl0" secondAttribute="centerY" id="JwR-dv-yZK"/>
                     <constraint firstItem="JUf-60-Ilm" firstAttribute="leading" secondItem="L7E-mH-Zl0" secondAttribute="leading" constant="5" id="Pmm-5o-zbj"/>
-                    <constraint firstItem="M86-Nr-Z7l" firstAttribute="trailing" secondItem="L7E-mH-Zl0" secondAttribute="trailing" constant="-10" id="UGy-1S-fiM"/>
                     <constraint firstItem="JUf-60-Ilm" firstAttribute="top" secondItem="L7E-mH-Zl0" secondAttribute="top" constant="5" id="a52-H7-KGg"/>
                     <constraint firstItem="M86-Nr-Z7l" firstAttribute="leading" secondItem="JUf-60-Ilm" secondAttribute="trailing" constant="5" id="bnK-s5-24Z"/>
                     <constraint firstItem="MYG-Sy-BgC" firstAttribute="leading" secondItem="M86-Nr-Z7l" secondAttribute="leading" id="dOb-VU-s1G"/>
                     <constraint firstItem="JUf-60-Ilm" firstAttribute="bottom" secondItem="L7E-mH-Zl0" secondAttribute="bottom" constant="-5" id="eA6-1e-6lH"/>
                     <constraint firstItem="okp-sa-rRu" firstAttribute="centerY" secondItem="L7E-mH-Zl0" secondAttribute="centerY" id="gqP-Cc-uVL"/>
-                    <constraint firstItem="m1Z-gm-KVz" firstAttribute="trailing" secondItem="L7E-mH-Zl0" secondAttribute="trailing" id="pEY-hd-0kV"/>
                     <constraint firstItem="M86-Nr-Z7l" firstAttribute="bottom" secondItem="L7E-mH-Zl0" secondAttribute="centerY" id="pek-Al-LCZ"/>
-                    <constraint firstItem="m1Z-gm-KVz" firstAttribute="height" secondItem="L7E-mH-Zl0" secondAttribute="height" id="uaa-9L-bhY"/>
                     <constraint firstItem="lPU-fk-BXR" firstAttribute="trailing" secondItem="L7E-mH-Zl0" secondAttribute="trailing" id="ufz-t7-QHT"/>
                     <constraint firstItem="okp-sa-rRu" firstAttribute="trailing" secondItem="L7E-mH-Zl0" secondAttribute="trailing" constant="-5" id="uh6-w7-29f"/>
+                    <constraint firstItem="M86-Nr-Z7l" firstAttribute="trailing" secondItem="lPU-fk-BXR" secondAttribute="leading" constant="-5" id="wse-c5-KgD"/>
                     <constraint firstItem="MYG-Sy-BgC" firstAttribute="top" secondItem="M86-Nr-Z7l" secondAttribute="bottom" id="zv5-dC-WEZ"/>
-                    <constraint firstItem="m1Z-gm-KVz" firstAttribute="centerY" secondItem="L7E-mH-Zl0" secondAttribute="centerY" id="zwQ-lf-XFP"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
@@ -112,7 +104,6 @@
                 <outlet property="rightLabel" destination="lPU-fk-BXR" id="lcN-Cm-GqZ"/>
                 <outlet property="rightTrailingLayoutConstraint" destination="ufz-t7-QHT" id="kPs-Ts-xRP"/>
                 <outlet property="titleLabel" destination="M86-Nr-Z7l" id="ei3-Jy-dtA"/>
-                <outlet property="truncGradient" destination="m1Z-gm-KVz" id="5ff-DJ-we0"/>
             </connections>
             <point key="canvasLocation" x="23" y="8"/>
         </tableViewCell>

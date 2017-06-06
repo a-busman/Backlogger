@@ -633,10 +633,53 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     
     @IBAction func moreTapped(sender: UITapGestureRecognizer) {
         let actions = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        actions.addAction(UIAlertAction(title: "Add to...", style: .default, handler: nil))
+        let addAction = UIAlertAction(title: "Add to Playlist", style: .default, handler: self.handleAddToPlaylist)
+        let playNextAction = UIAlertAction(title: "Play Next", style: .default, handler: self.handlePlayNext)
+        let queueAction = UIAlertAction(title: "Play Later", style: .default, handler: self.handlePlayLater)
+        addAction.setValue(#imageLiteral(resourceName: "add_to_playlist"), forKey: "image")
+        playNextAction.setValue(#imageLiteral(resourceName: "play_next"), forKey: "image")
+        queueAction.setValue(#imageLiteral(resourceName: "add_to_queue"), forKey: "image")
+        
+        actions.addAction(addAction)
+        actions.addAction(playNextAction)
+        actions.addAction(queueAction)
         actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         self.present(actions, animated: true, completion: nil)
 
+    }
+    
+    func handleAddToPlaylist(sender: UIAlertAction) {
+        return
+    }
+    
+    func handlePlayNext(sender: UIAlertAction) {
+        autoreleasepool {
+            let realm = try! Realm()
+            let upNextPlaylist = realm.objects(Playlist.self).filter("isUpNext = true").first
+            if upNextPlaylist != nil {
+                var currentGames = [self._game!]
+                currentGames += upNextPlaylist!.games
+                upNextPlaylist!.update {
+                    upNextPlaylist?.games.removeAll()
+                    upNextPlaylist?.games.append(contentsOf: currentGames)
+                }
+            }
+        }
+    }
+    
+    func handlePlayLater(sender: UIAlertAction) {
+        autoreleasepool {
+            let realm = try! Realm()
+            let upNextPlaylist = realm.objects(Playlist.self).filter("isUpNext = true").first
+            if upNextPlaylist != nil {
+                var currentGames = Array(upNextPlaylist!.games)
+                currentGames.append(self._game!)
+                upNextPlaylist!.update {
+                    upNextPlaylist?.games.removeAll()
+                    upNextPlaylist?.games.append(contentsOf: currentGames)
+                }
+            }
+        }
     }
     
     @IBAction func statsTapped(sender: UITapGestureRecognizer) {
@@ -711,6 +754,20 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
                 self._game?.update {
                     self._game?.nowPlaying = false
                 }
+                // Update in Now Playing playlist
+                autoreleasepool {
+                    let realm = try! Realm()
+                    let nowPlayingPlaylist = realm.objects(Playlist.self).filter("isNowPlaying = true").first
+                    if nowPlayingPlaylist != nil {
+                        if let index = nowPlayingPlaylist?.games.index(where: { (item) -> Bool in
+                            item.uuid == self._game!.uuid
+                        }) {
+                            nowPlayingPlaylist?.update {
+                                nowPlayingPlaylist?.games.remove(objectAtIndex: index)
+                            }
+                        }
+                    }
+                }
             } else {
                 self.playPauseButton?.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
                 self.playButtonState = .selected
@@ -720,6 +777,16 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
                 }
                 self._game?.update {
                     self._game?.nowPlaying = true
+                }
+                // Update in Now Playing playlist
+                autoreleasepool {
+                    let realm = try! Realm()
+                    let nowPlayingPlaylist = realm.objects(Playlist.self).filter("isNowPlaying = true").first
+                    if nowPlayingPlaylist != nil {
+                        nowPlayingPlaylist?.update {
+                            nowPlayingPlaylist?.games.append(self._game!)
+                        }
+                    }
                 }
             }
         case 3:
@@ -932,7 +999,6 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     func didSelectConsoles(_ consoles: [Platform]) {
         self._selectedPlatforms = consoles
         var currentPlatformList: [Platform] = [Platform]()
-        var newGameList = [Game]()
         var gameField = self._gameField?.deepCopy()
         
         if consoles.count > 0 {
@@ -940,7 +1006,6 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
                 if !consoles.contains(game.platform!) {
                     game.delete()
                 } else {
-                    newGameList.append(game)
                     currentPlatformList.append(game.platform!)
                 }
             }
@@ -954,7 +1019,6 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
                         let newGameToSave = Game()
                         newGameToSave.inLibrary = true
                         newGameToSave.add(gameField, platform)
-                        newGameList.append(newGameToSave)
                     }
                     if (platform.name?.characters.count)! < 10 {
                         platformString += platform.name! + " • "
@@ -969,7 +1033,11 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
                 let newGameToSave = Game()
                 newGameToSave.inLibrary = true
                 newGameToSave.add(gameField, platform)
-                newGameList.append(newGameToSave)
+                if consoles.count == 1 {
+                    self._game = newGameToSave
+                } else {
+                    self._game = nil
+                }
             }
             if (platform.name?.characters.count)! < 10 {
                 platformString += platform.name!
@@ -990,6 +1058,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
                 self.transitionToRemove()
                 if consoles.count == 1 {
                     self.showStatsButton()
+                    
                 }
             } else {
                 self.transitionToRemove()

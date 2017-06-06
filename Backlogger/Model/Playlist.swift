@@ -18,6 +18,8 @@ class Playlist: Object {
     dynamic var name:            String? = nil
     dynamic var imageUrl:        String? = nil
     dynamic var descriptionText: String? = nil
+    dynamic var isNowPlaying:    Bool    = false
+    dynamic var isUpNext:        Bool    = false
     
     var games: List<Game> = List<Game>()
     

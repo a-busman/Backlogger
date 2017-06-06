@@ -20,11 +20,9 @@ class TableViewCell: UITableViewCell {
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var rightLabel:       UILabel!
     @IBOutlet weak var addButton:        UIButton!
-    @IBOutlet weak var truncGradient:    UIView!
     
     @IBOutlet weak var rightTrailingLayoutConstraint: NSLayoutConstraint!
-    
-    let truncateGradientLayer = CAGradientLayer()
+    @IBOutlet weak var titleTrailingLayoutConstraint: NSLayoutConstraint!
     
     enum LibraryState {
         case add
@@ -37,6 +35,8 @@ class TableViewCell: UITableViewCell {
     var delegate: TableViewCellDelegate?
     var addButtonHidden = true
     private var _libraryState: LibraryState = .add
+    
+    var laidOut = false
     
     var row: Int!
     
@@ -93,9 +93,9 @@ class TableViewCell: UITableViewCell {
     
         self.addButton?.isHidden = self.addButtonHidden
         if self.addButtonHidden {
-            self.rightTrailingLayoutConstraint?.constant = -10.0
+            self.rightTrailingLayoutConstraint?.constant = 0.0
         } else {
-            self.rightTrailingLayoutConstraint?.constant = -38.0
+            self.rightTrailingLayoutConstraint?.constant = -28.0
         }
         switch self._libraryState {
         case .addPlaylist:
@@ -110,31 +110,12 @@ class TableViewCell: UITableViewCell {
         default:
             self.addButton?.setImage(#imageLiteral(resourceName: "add_symbol_blue"), for: .normal)
         }
-        
-        self.truncateGradientLayer.frame = CGRect(x: 0.0, y: 0.0, width: (self.truncGradient?.frame.width)!, height: (self.truncGradient?.frame.height)!)
-        var alternateColor: CGColor
-        var clearColor: CGColor
-        if !super.isHighlighted {
-            clearColor = UIColor(white: 1.0, alpha: 0.0).cgColor
-            alternateColor = UIColor.white.cgColor
-        } else {
-            clearColor = UIColor(white: 0.85, alpha: 0.0).cgColor
-            alternateColor = UIColor(white: 0.85, alpha: 1.0).cgColor
-        }
-        self.truncateGradientLayer.colors = [clearColor, alternateColor]
-        let newLocation = 35.0/(self.truncGradient?.frame.width)!
-        self.truncateGradientLayer.locations = [0.0, NSNumber(value: Float(newLocation))]
-        self.truncateGradientLayer.startPoint = .zero
-        self.truncateGradientLayer.endPoint = CGPoint(x: 1.0, y: 0.0)
-        self.truncGradient?.layer.addSublayer(self.truncateGradientLayer)
-        self.contentView.bringSubview(toFront: self.addButton!)
-        self.contentView.bringSubview(toFront: self.rightLabel!)
+
         if self.imageUrl != nil {
             self.artView?.kf.setImage(with: self.imageUrl, placeholder: #imageLiteral(resourceName: "table_placeholder_light"), completionHandler: self.cacheCompletionHandler)
         } else {
             self.artView?.image = #imageLiteral(resourceName: "table_placeholder_light")
         }
-        self.truncateGradientLayer.removeAllAnimations()
     }
     
     @IBAction func addButtonTapped(sender: UIButton!) {
@@ -158,5 +139,6 @@ class TableViewCell: UITableViewCell {
         super.prepareForReuse()
         self.libraryState = .add
         self.addButtonHidden = true
+        //self.laidOut = false
     }
 }
