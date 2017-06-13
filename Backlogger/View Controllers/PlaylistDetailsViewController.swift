@@ -154,7 +154,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     }
     
     func updatePlaylistImage() {
-        if self._playlistState != .default {
+        if self.firstLoaded {
             switch self.games.count {
             case 0:
                 // reset to default
@@ -347,6 +347,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             }
             self.tableView.tableFooterView = UIView(frame: .zero)
         }
+        self.imagesLoaded = 0
         self.tableView.reloadData()
     }
     
@@ -449,6 +450,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             self.tableView.setEditing(false, animated: false)
             self.games.removeAll()
             self.games.append(contentsOf: self.playlist!.games)
+            self.imagesLoaded = 0
             self.reloadDataWithCrossDissolve()
         } else {
             self.navigationController?.popViewController(animated: true)
@@ -506,6 +508,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             self.navigationItem.setLeftBarButton(newLeftButton, animated: true)
             self.titleCell.isEditable = true
             self.descCell.isEditable = true
+            self.imagesLoaded = 0
             self.reloadDataWithCrossDissolve()
             self.tableView.tableFooterView = UIView(frame: .zero)
             self.tableView.setEditing(true, animated: false)
@@ -529,6 +532,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             self.titleCell.isEditable = false
             self.descCell.isEditable = false
             self.tableView.tableFooterView = self.playlistFooterView.view
+            self.imagesLoaded = 0
             self.reloadDataWithCrossDissolve()
             
             self.tableView.setEditing(false, animated: false)
@@ -630,7 +634,9 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                                    multiplier: 1.0,
                                    constant: 0.0
                     ).isActive = true
-                self.updatePlaylistImage()
+                if !self.firstLoaded {
+                    self.updatePlaylistImage()
+                }
                 break
             case 1:
                 cell = tableView.dequeueReusableCell(withIdentifier: self.descriptionReuseIdentifier)!
@@ -706,8 +712,13 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
 
             if imageCache[game.idNumber] != nil {
                 gameCell.set(image: imageCache[game.idNumber]!)
+                if indexPath.row < 4 && (self.firstLoaded || self._playlistState == .new) {
+                    self.imagesLoaded += 1
+                    if self.imagesLoaded == (self.games.count < 4 ? self.games.count : 4) {
+                        self.updatePlaylistImage()
+                    }
+                }
             } else {
-                gameCell.imageUrl = URL(string: game.image!.smallUrl!)
                 gameCell.cacheCompletionHandler = {
                     (image, error, cacheType, imageUrl) in
                     if image != nil {
@@ -726,16 +737,19 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                         if indexPath.row < 4 && self.firstLoaded {
                             self.imagesLoaded += 1
                             if self.imagesLoaded == (self.games.count < 4 ? self.games.count : 4) {
-                                self._playlistState = .editing
                                 self.updatePlaylistImage()
-                                self._playlistState = .default
                             }
                         }
                     }
                 }
+                if let smallUrl = game.image?.smallUrl {
+                    if let url = URL(string: smallUrl) {
+                        gameCell.loadImage(url: url)
+                    }
+                }
             }
             cell = gameCell
-            if indexPath.row == (self.games.count - 1) {
+            if indexPath.row == (self.games.count - 1) || self._playlistState == .new{
                 self.firstLoaded = true
             }
             var indent: CGFloat = 0.0

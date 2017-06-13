@@ -567,7 +567,6 @@ extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate, 
         cell.game = game
         cell.isHandleHidden = false
         if let smallUrl = game.gameFields?.image?.smallUrl {
-            cell.imageUrl = URL(string: smallUrl)
             cell.cacheCompletionHandler = {
                 (image, error, cacheType, imageUrl) in
                 if image != nil {
@@ -579,6 +578,9 @@ extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate, 
                         cell.set(image: image!)
                     }
                 }
+            }
+            if let url = URL(string: smallUrl) {
+                cell.loadImage(url: url)
             }
         }
 

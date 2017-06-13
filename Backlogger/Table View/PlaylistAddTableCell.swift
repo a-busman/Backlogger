@@ -90,9 +90,6 @@ class PlaylistAddTableCell: UITableViewCell {
                 self.titleTrailingLayoutConstraint?.constant = self.isHandleHidden ? -55.0 : 0.0
                 self.descriptionLabel?.text = self.game!.platform?.name
                 self.rightLabel?.text = "\(self.game!.progress)%"
-                if self.imageUrl != nil {
-                    self.artView?.kf.setImage(with: self.imageUrl, placeholder: #imageLiteral(resourceName: "table_placeholder_light"), completionHandler: self.cacheCompletionHandler)
-                }
             }
         }
     }
@@ -100,6 +97,13 @@ class PlaylistAddTableCell: UITableViewCell {
     func set(image: UIImage) {
         self.artImage = image
         self.artView?.image = image
+    }
+    
+    func loadImage(url: URL) {
+        if self.imageUrl != url {
+            self.artView?.kf.setImage(with: url, placeholder: #imageLiteral(resourceName: "table_placeholder_light"), completionHandler: self.cacheCompletionHandler)
+            self.imageUrl = url
+        }
     }
     
     func handleTap(sender: UITapGestureRecognizer) {

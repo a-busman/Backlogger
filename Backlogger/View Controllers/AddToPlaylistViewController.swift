@@ -369,6 +369,11 @@ class AddToPlaylistViewController: UIViewController, UITableViewDelegate, UITabl
         }
         self.tableView?.reloadData()
     }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        self.searchBar?.resignFirstResponder()
+        self.searchBar?.setShowsCancelButton(false, animated: true)
+    }
 }
 
 extension AddToPlaylistViewController: UISearchBarDelegate {
