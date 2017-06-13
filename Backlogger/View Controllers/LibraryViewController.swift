@@ -11,7 +11,7 @@ import RealmSwift
 
 class LibraryViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView?
-    var tableSearchBar: UISearchBar?
+    @IBOutlet weak var searchBar: UISearchBar?
     @IBOutlet weak var addBackgroundView: UIView?
     
     var isSearching = false
@@ -22,11 +22,7 @@ class LibraryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableSearchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: 320, height: 44))
-        self.tableSearchBar?.tintColor = .white
-        self.tableSearchBar?.placeholder = "Library"
-        self.tableSearchBar?.delegate = self
-        self.tableView?.tableHeaderView = self.tableSearchBar
+        self.searchBar?.tintColor = .white
         self.tableView?.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: tableReuseIdentifier)
         self.tableView?.tableFooterView = UIView(frame: .zero)
     }
@@ -47,11 +43,6 @@ class LibraryViewController: UIViewController {
             self.tableView?.isHidden = true
             
         }
-        var contentOffset = (self.tableView?.contentOffset)!
-        if contentOffset.y == 0 {
-            contentOffset.y = (self.tableView?.tableHeaderView?.frame)!.height
-        }
-        self.tableView?.contentOffset = contentOffset
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
         //self.tableView?.contentInset.top = 165
         //self.tableView?.contentInset.bottom = 40
@@ -62,7 +53,7 @@ class LibraryViewController: UIViewController {
     }
     
     @IBAction func leftBarButtonTapped(sender: UIBarButtonItem) {
-        self.tableSearchBar?.resignFirstResponder()
+        self.searchBar?.resignFirstResponder()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any!) {

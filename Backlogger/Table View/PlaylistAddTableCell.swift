@@ -87,7 +87,7 @@ class PlaylistAddTableCell: UITableViewCell {
                 self.titleLabel?.textColor = .black
                 self.titleCenterLayoutConstraint?.constant = -10
                 self.titleLeadingLayoutConstraint?.constant = 67
-                self.titleTrailingLayoutConstraint?.constant = self.isHandleHidden ? 55.0 : 0.0
+                self.titleTrailingLayoutConstraint?.constant = self.isHandleHidden ? -55.0 : 0.0
                 self.descriptionLabel?.text = self.game!.platform?.name
                 self.rightLabel?.text = "\(self.game!.progress)%"
                 if self.imageUrl != nil {

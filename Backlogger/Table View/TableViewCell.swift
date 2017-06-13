@@ -123,7 +123,6 @@ class TableViewCell: UITableViewCell {
             self.delegate?.addTapped(self.row)
         } else if self.libraryState == .addPlaylist {
             self.delegate?.addTapped(self.row)
-            self.libraryState = .inPlaylist
         }
     }
     

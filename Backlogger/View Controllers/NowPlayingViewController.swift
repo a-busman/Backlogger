@@ -84,6 +84,7 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
         self.upNextTableView?.separatorColor = .lightGray
         //self.upNextTableView?.separatorInset = UIEdgeInsetsMake(0, 75, 0, 0)
         self.upNextTableView?.tableFooterView = UIView(frame: .zero)
+        self.upNextTableView?.contentInset.bottom = 55.0
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -123,7 +124,18 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
             self.addBackgroundView?.isHidden = false
         }
         
-        for game in self.games {
+        for (i, game) in self.games.enumerated() {
+            if let gameField = game.gameFields {
+                if !gameField.hasDetails {
+                    gameField.updateGameDetails { result in
+                        if let error = result.error {
+                            NSLog("error: \(error.localizedDescription)")
+                            return
+                        }
+                        self.orderedViewControllers[i].gameDetailOverlayController.imageCollectionView?.reloadData()
+                    }
+                }
+            }
             newGameIds.append(game.uuid)
         }
         
@@ -151,6 +163,13 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
         flowLayout.itemSize = size
         collectionView?.contentInset.top = 0.0
         collectionView?.contentInset.bottom = 0.0
+    }
+    
+    func saveNowPlaying() {
+        self.nowPlayingPlaylist.update {
+            self.nowPlayingPlaylist.games.removeAll()
+            self.nowPlayingPlaylist.games.append(contentsOf: self.games)
+        }
     }
     
     fileprivate class func containSameElements<T: Comparable>(_ array1: [T], _ array2: [T]) -> Bool {
@@ -214,12 +233,21 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
         }
     }
     
-    @IBAction func handleTapEdit(sender:UIBarButtonItem) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "addToNowPlaying" {
+            let newNavController = segue.destination as! UINavigationController
+            let addToPlaylistViewController = newNavController.topViewController as! AddToPlaylistViewController
+            addToPlaylistViewController.delegate = self
+        }
+    }
+    
+    @IBAction func handleTapEdit(sender: UIBarButtonItem) {
         self.navigationController?.navigationBar.tintColor = .white
         if self._blurViewState == .full {
             let newButton = UIBarButtonItem(barButtonSystemItem: self.upNextTableView!.isEditing ? .edit : .done, target: self, action: #selector(handleTapEdit))
             self.navigationController?.navigationBar.topItem?.leftBarButtonItem = newButton
             self.upNextTableView?.setEditing(!self.upNextTableView!.isEditing, animated: true)
+            self.inEditMode = self.upNextTableView!.isEditing
         } else {
             if self.inEditMode == true {
                 self.stopWiggle()
@@ -360,6 +388,9 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
     // MARK: handleTapDetails
     
     @IBAction func handleTapDimView(sender: UITapGestureRecognizer) {
+        if self.inEditMode {
+            self.handleTapEdit(sender: UIBarButtonItem())
+        }
         self.blurTopLayoutConstraint?.constant = -50.0
         self.blurViewState = .minimal
 
@@ -383,7 +414,7 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
         // Show percent slider
         switch (self._blurViewState) {
         case .minimal:
-            self.blurTopLayoutConstraint?.constant = -self.visibleView!.bounds.height * 0.75
+            self.blurTopLayoutConstraint?.constant = -self.visibleView!.bounds.height * 0.9
             self.blurViewState = .full
             newAlpha = 0.5
             break
@@ -416,12 +447,12 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
             var newY: CGFloat = 0.0
             var newAlpha: CGFloat = 0.0
             // If above the limit, resist pan
-            if self.blurTopLayoutConstraint!.constant + translation.y < (-self.visibleView!.bounds.height * 0.75) {
+            if self.blurTopLayoutConstraint!.constant + translation.y < (-self.visibleView!.bounds.height * 0.9) {
                 newY = self.blurTopLayoutConstraint!.constant + (translation.y / 2.0)
                 newAlpha = 0.5
             } else {
                 newY = self.blurTopLayoutConstraint!.constant + translation.y
-                newAlpha = (newY / (-self.visibleView!.bounds.height * 0.75)) / 2.0
+                newAlpha = (newY / (-self.visibleView!.bounds.height * 0.9)) / 2.0
             }
             self.blurTopLayoutConstraint?.constant = newY
             self.dimView?.alpha = newAlpha
@@ -434,8 +465,8 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
             let velocity = recognizer.velocity(in: self.visibleView!).y
             
             // If the view is above the top, spring down to a full view
-            if self.blurTopLayoutConstraint!.constant < (-self.visibleView!.bounds.height * 0.75) {
-                self.blurTopLayoutConstraint?.constant = -self.visibleView!.bounds.height * 0.75
+            if self.blurTopLayoutConstraint!.constant < (-self.visibleView!.bounds.height * 0.9) {
+                self.blurTopLayoutConstraint?.constant = -self.visibleView!.bounds.height * 0.9
                 UIView.animate(withDuration: 0.4,
                                delay: 0.0,
                                usingSpringWithDamping: 0.6,
@@ -449,8 +480,8 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
                 self.blurViewState = .full
                 
                 // If the view is above middle, or if the user was swiping up when they ended, fling to top and collide with top boundary
-            } else if (self.blurTopLayoutConstraint!.constant < (-self.visibleView!.bounds.height * 0.375) && velocity < 300) || velocity < -300 {
-                self.blurTopLayoutConstraint?.constant = -self.visibleView!.bounds.height * 0.75
+            } else if (self.blurTopLayoutConstraint!.constant < (-self.visibleView!.bounds.height * 0.45) && velocity < 300) || velocity < -300 {
+                self.blurTopLayoutConstraint?.constant = -self.visibleView!.bounds.height * 0.9
                 let animationTime: TimeInterval = ((0.4 - 1.0) * (min(Double(velocity * -1.0), 1000.0) - 300)/(1000 - 300) + 1.0)
                 UIView.animate(withDuration: animationTime,
                                delay: 0.0,
@@ -465,7 +496,7 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
                 self.blurViewState = .full
                 
                 // If the view is below the middle, or if the user was swiping down when they ended, return to minimal state with a spring bounce
-            } else if (self.blurTopLayoutConstraint!.constant > (-self.visibleView!.bounds.height * 0.375) && velocity > -300) || velocity > 300 {
+            } else if (self.blurTopLayoutConstraint!.constant > (-self.visibleView!.bounds.height * 0.45) && velocity > -300) || velocity > 300 {
                 let animationTime: TimeInterval = ((0.4 - 1.0) * (min(Double(velocity), 1000.0) - 300)/(1000 - 300) + 1.0)
                 self.blurTopLayoutConstraint?.constant = -50
                 UIView.animate(withDuration: animationTime,
@@ -519,12 +550,9 @@ extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate, 
         let cell = tableView.dequeueReusableCell(withIdentifier: self.cellReuseIdentifier) as! PlaylistAddTableCell
         cell.showsReorderControl = true
         cell.backgroundColor = .clear
-        var indent: CGFloat = 0.0
-        if indexPath.row < self.gamesUpNext.count - 1 {
-            indent = 67.0
-        }
+
         if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
-            cell.separatorInset = UIEdgeInsetsMake(0, indent, 0, 0)
+            cell.separatorInset = UIEdgeInsetsMake(0, 67.0, 0, 0)
         }
         if cell.responds(to: #selector(setter: UIView.layoutMargins)) {
             cell.layoutMargins = .zero
@@ -575,6 +603,21 @@ extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate, 
         return cellSnapshot
     }
     
+}
+
+extension NowPlayingViewController: AddToPlaylistViewControllerDelegate {
+    func didChoose(games: List<Game>) {
+        for game in games {
+            game.update {
+                game.nowPlaying = true
+            }
+        }
+        self.games += games.map{$0}
+        self.saveNowPlaying()
+    }
+    func dismissView(_ vc: AddToPlaylistViewController) {
+        vc.dismiss(animated: true, completion: nil)
+    }
 }
 
 extension NowPlayingViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
@@ -679,6 +722,7 @@ extension NowPlayingViewController: UICollectionViewDataSource, UICollectionView
         self.updatePlaylist()
         
         self.orderedViewControllers.insert(gameVc, at: destination.item)
+        self.pageControl?.currentPage = destination.item
     }
     
     //func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {

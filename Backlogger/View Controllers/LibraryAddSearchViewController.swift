@@ -18,7 +18,6 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
     @IBOutlet weak var activityIndicator:  UIActivityIndicatorView?
     @IBOutlet weak var activityBackground: UIView?
     @IBOutlet weak var searchBar:          UISearchBar?
-    @IBOutlet weak var cancelButton:       UIBarButtonItem?
     
     var gameFields: [GameField] = []
     var searchResults: SearchResults?
@@ -32,53 +31,13 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
     
     private var viewAlreadyLoaded = false
     
-    var toastOverlay = ToastOverlayViewController()
-    
     let tableReuseIdentifier = "table_cell"
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.tintColor = .white
         self.searchBar?.tintColor = .white
         self.tableView?.tableFooterView = UIView(frame: .zero)
-        //self.loadFirstGame(withQuery: self.query!)
-        
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-        
-        self.toastOverlay.view.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(self.toastOverlay.view)
-        NSLayoutConstraint(item: self.toastOverlay.view,
-                           attribute: .centerX,
-                           relatedBy: .equal,
-                           toItem: self.view,
-                           attribute: .centerX,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: self.toastOverlay.view,
-                           attribute: .centerY,
-                           relatedBy: .equal,
-                           toItem: self.view,
-                           attribute: .centerY,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: self.toastOverlay.view,
-                           attribute: .width,
-                           relatedBy: .equal,
-                           toItem: nil,
-                           attribute: .notAnAttribute,
-                           multiplier: 1.0,
-                           constant: 250.0
-            ).isActive = true
-        NSLayoutConstraint(item: self.toastOverlay.view,
-                           attribute: .height,
-                           relatedBy: .equal,
-                           toItem: nil,
-                           attribute: .notAnAttribute,
-                           multiplier: 1.0,
-                           constant: 250.0
-            ).isActive = true
+
         self.tableView?.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: self.tableReuseIdentifier)
         if #available(iOS 9.0, *) {
             if traitCollection.forceTouchCapability == .available {

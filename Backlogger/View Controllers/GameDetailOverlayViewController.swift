@@ -134,6 +134,7 @@ class GameDetailOverlayViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         self.scrollView?.contentSize = (self.contentView?.bounds.size)!
+        self.imageCollectionView?.reloadData()
     }
     
     func updateFinished() {

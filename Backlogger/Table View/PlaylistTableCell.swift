@@ -84,6 +84,8 @@ class PlaylistTableCell: UITableViewCell {
             self.artView?.image = image
             self.blurView?.isHidden = true
         } else {
+            self.artView?.image = #imageLiteral(resourceName: "new_playlist")
+            self.blurView?.isHidden = false
             self.blurImage?.image = #imageLiteral(resourceName: "controller_icon_lg")
         }
     }

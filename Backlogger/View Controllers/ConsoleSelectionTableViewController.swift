@@ -26,6 +26,8 @@ class ConsoleSelectionTableViewController: UITableViewController {
     
     var currentMaxId: Int = 0
     
+    var playlist = false
+    
     let reuseIdentifier = "console_selection_cell"
     
     weak var okAlertAction: UIAlertAction?
@@ -34,17 +36,17 @@ class ConsoleSelectionTableViewController: UITableViewController {
         super.viewDidLoad()
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
         self.navigationItem.title = "Select Platforms"
-        //self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel))
-        //self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
-        // Uncomment the following line to preserve selection between presentations
+
         self.clearsSelectionOnViewWillAppear = false
         
         if self.gameField != nil {
             autoreleasepool {
                 let realm = try! Realm()
                 if let dbGameField = realm.object(ofType: GameField.self, forPrimaryKey: gameField!.idNumber) {
-                    for game in dbGameField.ownedGames {
-                        selected.append(game.platform!)
+                    if !self.playlist {
+                        for game in dbGameField.ownedGames {
+                            selected.append(game.platform!)
+                        }
                     }
                     for platform in dbGameField.platforms {
                         consoles.append(platform)

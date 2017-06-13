@@ -317,15 +317,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
                            toItem: nil,
                            attribute: .notAnAttribute,
                            multiplier: 1.0,
-                           constant: 250.0
-            ).isActive = true
-        NSLayoutConstraint(item: toastOverlay.view,
-                           attribute: .height,
-                           relatedBy: .equal,
-                           toItem: nil,
-                           attribute: .notAnAttribute,
-                           multiplier: 1.0,
-                           constant: 250.0
+                           constant: 300.0
             ).isActive = true
         if let game = self._game {
             if !game.favourite {
@@ -576,7 +568,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     }
     
     private func transitionToRemove() {
-        self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), text: "Added to Library")
+        self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Library", description: nil)
         self.state = .inLibrary
         if game != nil || self._gameField?.ownedGames.count == 1 {
             self.addLabel?.text = "REMOVE"
@@ -649,10 +641,12 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     }
     
     func handleAddToPlaylist(sender: UIAlertAction) {
-        return
+        let playlist = "Awesome"
+        self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Playlist", description: "Added to \"\(playlist)\".")
     }
     
     func handlePlayNext(sender: UIAlertAction) {
+        self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Queue", description: "We'll play this one next.")
         autoreleasepool {
             let realm = try! Realm()
             let upNextPlaylist = realm.objects(Playlist.self).filter("isUpNext = true").first
@@ -668,6 +662,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     }
     
     func handlePlayLater(sender: UIAlertAction) {
+        self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Queue", description: nil)
         autoreleasepool {
             let realm = try! Realm()
             let upNextPlaylist = realm.objects(Playlist.self).filter("isUpNext = true").first
