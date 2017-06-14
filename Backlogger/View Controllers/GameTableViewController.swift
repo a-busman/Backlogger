@@ -204,7 +204,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         guard let indexPath = self.tableView?.indexPathForRow(at: location),
             let cell = self.tableView?.cellForRow(at: indexPath),
             let gameFields = self.games[indexPath.row].gameFields else { return nil }
-        
+        let game = self.games[indexPath.row]
         let vc: GameDetailsViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "game_details") as! GameDetailsViewController
         var gameField: GameField!
         
@@ -217,9 +217,11 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         if gameField == nil {
             gameField = gameFields
         }
-        vc.gameField = gameField
-        vc.state = gameField.ownedGames.count > 0 ? .partialAddToLibrary : .addToLibrary
+        
+        vc.game = game
+        vc.state = .inLibrary
         vc.delegate = self
+        vc.gameField = gameField
         
         previewingContext.sourceRect = cell.frame
         
