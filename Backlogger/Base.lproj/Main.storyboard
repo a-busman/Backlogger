@@ -153,7 +153,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="separatorColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                <searchBar key="tableHeaderView" contentMode="redraw" placeholder="Library" id="Swc-EL-BIb">
+                                <searchBar key="tableHeaderView" contentMode="redraw" searchBarStyle="minimal" placeholder="Library" id="Swc-EL-BIb">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                     <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardAppearance="alert"/>
@@ -256,7 +256,7 @@
                                 <rect key="frame" x="-0.5" y="-0.5" width="375" height="667"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="separatorColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                <searchBar key="tableHeaderView" contentMode="redraw" placeholder="Games" id="uGi-FX-aXT">
+                                <searchBar key="tableHeaderView" contentMode="redraw" searchBarStyle="minimal" placeholder="Games" id="uGi-FX-aXT">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                     <textInputTraits key="textInputTraits"/>
@@ -264,6 +264,39 @@
                                         <outlet property="delegate" destination="UYi-NC-pa4" id="W75-df-fCq"/>
                                     </connections>
                                 </searchBar>
+                                <view key="tableFooterView" contentMode="scaleToFill" id="tPy-tT-FrC">
+                                    <rect key="frame" x="0.0" y="603" width="375" height="44"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D8L-sD-1Ww">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="0.5"/>
+                                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="0.5" id="cA1-RF-PtJ"/>
+                                            </constraints>
+                                        </view>
+                                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6ke-GU-Zjv">
+                                            <rect key="frame" x="187.5" y="22" width="0.0" height="0.0"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="q0I-yi-gab">
+                                            <rect key="frame" x="177.5" y="10" width="20" height="24"/>
+                                        </activityIndicatorView>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    <constraints>
+                                        <constraint firstItem="D8L-sD-1Ww" firstAttribute="top" secondItem="tPy-tT-FrC" secondAttribute="top" id="Vrh-8m-AUK"/>
+                                        <constraint firstItem="q0I-yi-gab" firstAttribute="top" secondItem="tPy-tT-FrC" secondAttribute="top" constant="10" id="Y7j-AD-czO"/>
+                                        <constraint firstItem="6ke-GU-Zjv" firstAttribute="centerX" secondItem="tPy-tT-FrC" secondAttribute="centerX" id="abq-cs-mRg"/>
+                                        <constraint firstItem="6ke-GU-Zjv" firstAttribute="centerY" secondItem="tPy-tT-FrC" secondAttribute="centerY" id="hF8-4w-QRf"/>
+                                        <constraint firstItem="D8L-sD-1Ww" firstAttribute="leading" secondItem="tPy-tT-FrC" secondAttribute="leading" id="iTF-z7-qKI"/>
+                                        <constraint firstItem="q0I-yi-gab" firstAttribute="centerX" secondItem="tPy-tT-FrC" secondAttribute="centerX" id="wBK-K1-SUM"/>
+                                        <constraint firstAttribute="bottom" secondItem="q0I-yi-gab" secondAttribute="bottom" constant="10" id="wHI-h0-7Mw"/>
+                                        <constraint firstItem="D8L-sD-1Ww" firstAttribute="trailing" secondItem="tPy-tT-FrC" secondAttribute="trailing" id="xBM-Jh-Wxm"/>
+                                    </constraints>
+                                </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="library_add_search_cell" id="D6S-3v-TpQ" customClass="TableViewCell" customModule="Backlogger" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="72" width="375" height="44"/>
@@ -351,6 +384,8 @@
                     <connections>
                         <outlet property="activityBackground" destination="I2G-X2-t60" id="E8T-yH-99F"/>
                         <outlet property="activityIndicator" destination="lvr-bk-Txe" id="4NS-yQ-yg1"/>
+                        <outlet property="bottomActivity" destination="q0I-yi-gab" id="rge-0s-hA3"/>
+                        <outlet property="gameCountLabel" destination="6ke-GU-Zjv" id="R6D-Jh-Oq2"/>
                         <outlet property="searchBackground" destination="2xv-6C-h9b" id="BTF-eg-NbF"/>
                         <outlet property="searchBar" destination="uGi-FX-aXT" id="gYz-Mo-y0P"/>
                         <outlet property="searchLabel" destination="U5P-sU-0Ti" id="58H-Ub-y2P"/>
@@ -1149,9 +1184,10 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Tuc-dO-WwA">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <searchBar key="tableHeaderView" contentMode="redraw" placeholder="Library" showsScopeBar="YES" id="SH2-te-nAF">
+                                <searchBar key="tableHeaderView" contentMode="redraw" searchBarStyle="minimal" placeholder="Library" showsScopeBar="YES" id="SH2-te-nAF">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="88"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                    <color key="barTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <textInputTraits key="textInputTraits"/>
                                     <scopeButtonTitles>
                                         <string>Library</string>

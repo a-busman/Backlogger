@@ -42,7 +42,7 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.tintColor = .white
-        self.searchBar?.tintColor = .white
+        self.searchBar?.tintColor = Util.appColor
 
         self.tableView?.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: self.tableReuseIdentifier)
         if #available(iOS 9.0, *) {
@@ -255,12 +255,8 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
         cell.delegate = self
         cell.row = indexPath.row
 
-        var indent: CGFloat = 0.0
-        if indexPath.row < self.gameFields.count - 1 {
-            indent = 55.0
-        }
         if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
-            cell.separatorInset = UIEdgeInsetsMake(0, indent, 0, 0)
+            cell.separatorInset = UIEdgeInsetsMake(0, 58.0, 0, 0)
         }
         if cell.responds(to: #selector(setter: UIView.layoutMargins)) {
             cell.layoutMargins = .zero
@@ -448,6 +444,15 @@ extension LibraryAddSearchViewController: UISearchBarDelegate {
             self.query = searchBar.text
             self.performSearch()
         }
+        UIView.animate(withDuration: 0.5,
+                       delay: 0.0,
+                       usingSpringWithDamping: 1.0,
+                       initialSpringVelocity: 0,
+                       options: .curveEaseIn,
+                       animations: {
+                        self.searchTintView?.alpha = 0.0
+        },
+                       completion: nil)
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {

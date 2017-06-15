@@ -637,6 +637,15 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                 if !self.firstLoaded {
                     self.updatePlaylistImage()
                 }
+                if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
+                    cell.separatorInset = UIEdgeInsetsMake(0, 15.0, 0, 0)
+                }
+                if cell.responds(to: #selector(setter: UIView.layoutMargins)) {
+                    cell.layoutMargins = .zero
+                }
+                if cell.responds(to: #selector(setter: UIView.preservesSuperviewLayoutMargins)) {
+                    cell.preservesSuperviewLayoutMargins = false
+                }
                 break
             case 1:
                 cell = tableView.dequeueReusableCell(withIdentifier: self.descriptionReuseIdentifier)!
@@ -676,6 +685,15 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                                    multiplier: 1.0,
                                    constant: 0.0
                     ).isActive = true
+                if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
+                    cell.separatorInset = UIEdgeInsetsMake(0, 15.0, 0, 0)
+                }
+                if cell.responds(to: #selector(setter: UIView.layoutMargins)) {
+                    cell.layoutMargins = .zero
+                }
+                if cell.responds(to: #selector(setter: UIView.preservesSuperviewLayoutMargins)) {
+                    cell.preservesSuperviewLayoutMargins = false
+                }
                 break
             case 2:
                 let newCell = tableView.dequeueReusableCell(withIdentifier: self.cellReuseIdentifier) as! PlaylistAddTableCell

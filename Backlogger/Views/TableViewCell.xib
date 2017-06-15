@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -21,7 +21,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JUf-60-Ilm">
-                        <rect key="frame" x="5" y="5" width="33.5" height="33.5"/>
+                        <rect key="frame" x="8" y="5" width="33.5" height="33.5"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="table_placeholder_light" translatesAutoresizingMaskIntoConstraints="NO" id="vra-l8-XHu">
                                 <rect key="frame" x="0.0" y="0.0" width="33.5" height="32.5"/>
@@ -48,7 +48,7 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M86-Nr-Z7l" userLabel="Title">
-                        <rect key="frame" x="43.5" y="1.5" width="285" height="20.5"/>
+                        <rect key="frame" x="46.5" y="1.5" width="282" height="20.5"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="20.5" id="tKB-4K-c0m"/>
                         </constraints>
@@ -57,7 +57,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Developer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MYG-Sy-BgC" userLabel="Description">
-                        <rect key="frame" x="43.5" y="22" width="285" height="17"/>
+                        <rect key="frame" x="46.5" y="22" width="282" height="17"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
@@ -84,7 +84,7 @@
                 <constraints>
                     <constraint firstItem="MYG-Sy-BgC" firstAttribute="trailing" secondItem="M86-Nr-Z7l" secondAttribute="trailing" id="GT7-xP-QYO"/>
                     <constraint firstItem="lPU-fk-BXR" firstAttribute="centerY" secondItem="L7E-mH-Zl0" secondAttribute="centerY" id="JwR-dv-yZK"/>
-                    <constraint firstItem="JUf-60-Ilm" firstAttribute="leading" secondItem="L7E-mH-Zl0" secondAttribute="leading" constant="5" id="Pmm-5o-zbj"/>
+                    <constraint firstItem="JUf-60-Ilm" firstAttribute="leading" secondItem="L7E-mH-Zl0" secondAttribute="leading" constant="8" id="Pmm-5o-zbj"/>
                     <constraint firstItem="JUf-60-Ilm" firstAttribute="top" secondItem="L7E-mH-Zl0" secondAttribute="top" constant="5" id="a52-H7-KGg"/>
                     <constraint firstItem="M86-Nr-Z7l" firstAttribute="leading" secondItem="JUf-60-Ilm" secondAttribute="trailing" constant="5" id="bnK-s5-24Z"/>
                     <constraint firstItem="MYG-Sy-BgC" firstAttribute="leading" secondItem="M86-Nr-Z7l" secondAttribute="leading" id="dOb-VU-s1G"/>

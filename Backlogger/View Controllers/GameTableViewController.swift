@@ -248,7 +248,7 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
         var indent: CGFloat = 0.0
         
         if indexPath.row < self.games.count - 1 {
-            indent = 55.0
+            indent = 58.0
         }
         if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
             cell.separatorInset = UIEdgeInsetsMake(0, indent, 0, 0)

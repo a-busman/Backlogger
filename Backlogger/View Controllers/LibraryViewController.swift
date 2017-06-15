@@ -22,7 +22,7 @@ class LibraryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.searchBar?.tintColor = .white
+        self.searchBar?.tintColor = Util.appColor
         self.tableView?.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: tableReuseIdentifier)
         self.tableView?.tableFooterView = UIView(frame: .zero)
     }
@@ -110,7 +110,7 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
         
         var indent: CGFloat = 0.0
         if indexPath.row < self.platforms!.count - 1 {
-            indent = 55.0
+            indent = 58.0
         }
         if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
             cell.separatorInset = UIEdgeInsetsMake(0, indent, 0, 0)
