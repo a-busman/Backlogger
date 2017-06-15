@@ -515,7 +515,7 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
     }
 }
 
-extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate, PlaylistAddTableCellDelegate {
+extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 55.0
     }
@@ -563,7 +563,6 @@ extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate, 
 
         let game = self.gamesUpNext[indexPath.row]
         cell.playlistState = .remove
-        cell.delegate = self
         cell.game = game
         cell.isHandleHidden = false
         if let smallUrl = game.gameFields?.image?.smallUrl {
@@ -585,10 +584,6 @@ extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate, 
         }
 
         return cell
-    }
-    
-    func handleTap(sender: UITapGestureRecognizer) {
-        return
     }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {

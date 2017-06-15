@@ -9,18 +9,12 @@
 import UIKit
 import Kingfisher
 
-protocol PlaylistAddTableCellDelegate {
-    func handleTap(sender: UITapGestureRecognizer)
-}
-
 class PlaylistAddTableCell: UITableViewCell {
     @IBOutlet weak var artView:          UIImageView?
     @IBOutlet weak var artViewBorder:    UIView?
     @IBOutlet weak var titleLabel:       UILabel?
     @IBOutlet weak var descriptionLabel: UILabel?
     @IBOutlet weak var rightLabel:       UILabel?
-    
-    var tapRecognizer:       UITapGestureRecognizer!
     
     @IBOutlet weak var titleCenterLayoutConstraint:   NSLayoutConstraint?
     @IBOutlet weak var titleLeadingLayoutConstraint:  NSLayoutConstraint?
@@ -32,9 +26,7 @@ class PlaylistAddTableCell: UITableViewCell {
         case `default`
     }
     
-    var delegate: PlaylistAddTableCellDelegate?
     private var _playlistState = PlaylistState.add
-    
     
     var isHandleHidden = false
     
@@ -56,7 +48,6 @@ class PlaylistAddTableCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.delegate = nil
         self._playlistState = .add
         self.isHandleHidden = false
         self.game = nil
@@ -67,8 +58,6 @@ class PlaylistAddTableCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.handleTap))
-        self.contentView.addGestureRecognizer(self.tapRecognizer)
         if playlistState == .add {
             self.artViewBorder?.isHidden = true
             self.descriptionLabel?.isHidden = true
@@ -81,7 +70,6 @@ class PlaylistAddTableCell: UITableViewCell {
             self.artViewBorder?.isHidden = false
             self.descriptionLabel?.isHidden = false
             self.rightLabel?.isHidden = !self.isHandleHidden
-            self.tapRecognizer?.isEnabled = false
             if self.game != nil {
                 self.titleLabel?.text = self.game!.gameFields?.name
                 self.titleLabel?.textColor = .black
@@ -103,12 +91,6 @@ class PlaylistAddTableCell: UITableViewCell {
         if self.imageUrl != url {
             self.artView?.kf.setImage(with: url, placeholder: #imageLiteral(resourceName: "table_placeholder_light"), completionHandler: self.cacheCompletionHandler)
             self.imageUrl = url
-        }
-    }
-    
-    func handleTap(sender: UITapGestureRecognizer) {
-        if self.playlistState == .add {
-            self.delegate?.handleTap(sender: sender)
         }
     }
 }

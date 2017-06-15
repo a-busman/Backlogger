@@ -19,6 +19,9 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
     @IBOutlet weak var activityBackground: UIView?
     @IBOutlet weak var searchBar:          UISearchBar?
     
+    @IBOutlet weak var bottomActivity: UIActivityIndicatorView?
+    @IBOutlet weak var gameCountLabel: UILabel?
+    
     var gameFields: [GameField] = []
     var searchResults: SearchResults?
     var isLoadingGames = false
@@ -31,12 +34,15 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
     
     private var viewAlreadyLoaded = false
     
+    var nextOffset = 0
+    
     let tableReuseIdentifier = "table_cell"
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.tintColor = .white
         self.searchBar?.tintColor = .white
-        self.tableView?.tableFooterView = UIView(frame: .zero)
 
         self.tableView?.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: self.tableReuseIdentifier)
         if #available(iOS 9.0, *) {
@@ -61,11 +67,11 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
         self.isLoadingGames = true
         self.currentPage = 0
         GameField.getGames(withQuery: query, { result in
+            self.isLoadingGames = false
             if let error = result.error {
-                self.isLoadingGames = false
                 if error.localizedDescription != "cancelled" {
                     let alert = UIAlertController(title: "Error", message: "Could not load first game :( \(error.localizedDescription)", preferredStyle: UIAlertControllerStyle.alert)
-                    alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.default, handler: nil))
+                    alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
                     return
                 } else {
@@ -74,8 +80,16 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
             }
             let searchResults = result.value
             self.addGames(fromSearchResults: searchResults)
+            /*var lowestNumReviews: Int = self.gameFields.first!.numReviews
+            var offset = 0
+            for (i, gameField) in self.gameFields.enumerated() {
+                if gameField.numReviews < lowestNumReviews {
+                    lowestNumReviews = gameField.numReviews
+                    offset = i
+                }
+            }
+            self.nextOffset = offset*/
             self.currentPage = 1
-            self.isLoadingGames = false
             self.activityIndicator?.stopAnimating()
             self.activityBackground?.isHidden = true
             self.tableView?.reloadData()
@@ -91,11 +105,11 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
             // there are more games out there!
             self.currentPage += 1
             GameField.getGames(withPageNum: currentPage, query: query, prevResults: results, { result in
+                self.isLoadingGames = false
                 if let error = result.error {
-                    self.isLoadingGames = false
                     if error.localizedDescription != "cancelled" {
                         let alert = UIAlertController(title: "Error", message: "Could not load more games :( \(error.localizedDescription)", preferredStyle: UIAlertControllerStyle.alert)
-                        alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.default, handler: nil))
+                        alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
                         self.present(alert, animated: true, completion: nil)
                         return
                     } else {
@@ -104,7 +118,6 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
                 }
                 let searchResults = result.value
                 self.addGames(fromSearchResults: searchResults)
-                self.isLoadingGames = false
                 self.activityIndicator?.stopAnimating()
                 self.activityBackground?.isHidden = true
                 self.tableView?.reloadData()
@@ -230,6 +243,9 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
 
 extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSource, UIViewControllerPreviewingDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if self.gameFields.count == 0 {
+            self.gameCountLabel?.isHidden = true
+        }
         return self.gameFields.count
     }
     
@@ -302,12 +318,28 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
                 let totalRows = self.searchResults?.numberOfTotalResults ?? 0
                 let remainingGamesToLoad = totalRows - rowsLoaded;
                 if (remainingGamesToLoad > 0) {
+                    if !self.bottomActivity!.isAnimating {
+                        self.bottomActivity?.startAnimating()
+                    }
+                    if !self.gameCountLabel!.isHidden {
+                        self.gameCountLabel?.isHidden = true
+                    }
                     self.loadMoreGames(withQuery: self.query!)
+                } else {
+                    if self.gameCountLabel!.isHidden {
+                        self.gameCountLabel?.text = "\(totalRows) games found."
+                        self.gameCountLabel?.isHidden = false
+                    }
+                    if self.bottomActivity!.isAnimating {
+                        self.bottomActivity?.stopAnimating()
+                    }
                 }
             }
 
             if let image = gameToShow.image {
                 cell.imageUrl = URL(string: image.iconUrl!)
+            } else {
+                cell.imageUrl = nil
             }
             cell.cacheCompletionHandler = {
                 (image, error, cacheType, imageUrl) in
@@ -321,6 +353,7 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
                     }
                 }
             }
+            
         }
         
         return cell
@@ -402,6 +435,8 @@ extension LibraryAddSearchViewController: UISearchBarDelegate {
         self.searchBackground?.isHidden = true
         self.activityIndicator?.startAnimating()
         self.activityBackground?.isHidden = false
+        self.gameCountLabel?.isHidden = true
+        self.bottomActivity?.isHidden = true
         self.tableView?.reloadData()
         self.loadFirstGame(withQuery: self.query!)
     }

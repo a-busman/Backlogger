@@ -11,7 +11,7 @@ import AVFoundation
 import RealmSwift
 import Kingfisher
 
-class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, PlaylistTitleCellDelegate, PlaylistAddTableCellDelegate, AddToPlaylistViewControllerDelegate, PlaylistFooterDelegate {
+class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, PlaylistTitleCellDelegate, AddToPlaylistViewControllerDelegate, PlaylistFooterDelegate {
     
     @IBOutlet weak var noGamesView: UIView?
     
@@ -680,7 +680,6 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             case 2:
                 let newCell = tableView.dequeueReusableCell(withIdentifier: self.cellReuseIdentifier) as! PlaylistAddTableCell
                 newCell.playlistState = .add
-                newCell.delegate = self
                 cell = newCell
                 if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
                     cell.separatorInset = UIEdgeInsetsMake(0, 47.5, 0, 0)
@@ -695,6 +694,8 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             default:
                 cell = UITableViewCell()
             }
+            cell.selectionStyle = .none
+            cell.accessoryType = .none
         } else {
             
             let gameCell = tableView.dequeueReusableCell(withIdentifier: self.cellReuseIdentifier) as! PlaylistAddTableCell
@@ -703,7 +704,6 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             } else {
                 gameCell.playlistState = .remove
             }
-            gameCell.delegate = self
             gameCell.game = self.games[indexPath.row]
             if self._playlistState == .default {
                 gameCell.isHandleHidden = true
@@ -770,8 +770,9 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             if cell.responds(to: #selector(setter: UIView.preservesSuperviewLayoutMargins)) {
                 cell.preservesSuperviewLayoutMargins = false
             }
+            cell.selectionStyle = .default
+            cell.accessoryType = .disclosureIndicator
         }
-        cell.selectionStyle = .none
 
         return cell
     }
@@ -853,6 +854,8 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 && indexPath.row == 2 {
             self.performSegue(withIdentifier: "addToPlaylist", sender: tableView.cellForRow(at: indexPath))
+        } else if indexPath.section == 1 && self._playlistState == .default {
+            self.performSegue(withIdentifier: "playlist_show_game", sender: tableView.cellForRow(at: indexPath))
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -862,11 +865,16 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             let newNavController = segue.destination as! UINavigationController
             let addToPlaylistViewController = newNavController.topViewController as! AddToPlaylistViewController
             addToPlaylistViewController.delegate = self
+        } else if segue.identifier == "playlist_show_game" {
+            if let cell = sender as? UITableViewCell {
+                let i = (self.tableView?.indexPath(for: cell)?.row)!
+                let vc = segue.destination as! GameDetailsViewController
+
+                vc.gameField = self.games[i].gameFields
+                vc.game = self.games[i]
+                vc.state = .inLibrary
+            }
         }
-    }
-    
-    func handleTap(sender: UITapGestureRecognizer) {
-        self.performSegue(withIdentifier: "addToPlaylist", sender: sender)
     }
     
     func snapshotOfCell(_ inputView: UIView) -> UIView {

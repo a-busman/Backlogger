@@ -29,10 +29,13 @@ class AddToPlaylistViewController: UIViewController, UITableViewDelegate, UITabl
     var searchResults: SearchResults?
     var currentlySelectedRow = 0
     
-    @IBOutlet weak var searchBar: UISearchBar?
-    @IBOutlet weak var tableView: UITableView?
+    @IBOutlet weak var searchBar:          UISearchBar?
+    @IBOutlet weak var tableView:          UITableView?
     @IBOutlet weak var activityBackground: UIView?
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView?
+    @IBOutlet weak var activityIndicator:  UIActivityIndicatorView?
+    
+    @IBOutlet weak var bottomActivity: UIActivityIndicatorView?
+    @IBOutlet weak var gameCountLabel: UILabel?
     
     
     var registeredToSearch = false
@@ -40,13 +43,15 @@ class AddToPlaylistViewController: UIViewController, UITableViewDelegate, UITabl
     override func viewDidLoad() {
         self.navigationController?.navigationBar.tintColor = .white
         self.searchBar?.tintColor = .white
-        self.tableView?.tableFooterView = UIView(frame: .zero)
         self.tableView?.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: self.reuseIdentifier)
+        self.bottomActivity?.stopAnimating()
         autoreleasepool {
             let realm = try! Realm()
             self.allGames = realm.objects(Game.self)
             self.filteredGames = self.allGames
         }
+        self.gameCountLabel?.text = "\(self.filteredGames!.count) games found."
+        self.gameCountLabel?.isHidden = false
     }
     
     override func didReceiveMemoryWarning() {
@@ -316,7 +321,21 @@ class AddToPlaylistViewController: UIViewController, UITableViewDelegate, UITabl
                     let totalRows = self.searchResults?.numberOfTotalResults ?? 0
                     let remainingGamesToLoad = totalRows - rowsLoaded;
                     if (remainingGamesToLoad > 0) {
+                        if !self.bottomActivity!.isAnimating {
+                            self.bottomActivity?.startAnimating()
+                        }
+                        if !self.gameCountLabel!.isHidden {
+                            self.gameCountLabel?.isHidden = true
+                        }
                         self.loadMoreGames(withQuery: self.query)
+                    } else {
+                        if self.bottomActivity!.isAnimating {
+                            self.bottomActivity?.stopAnimating()
+                        }
+                        if self.gameCountLabel!.isHidden {
+                            self.gameCountLabel?.text = "\(totalRows) games found."
+                            self.gameCountLabel?.isHidden = false
+                        }
                     }
                 }
                 
@@ -382,10 +401,23 @@ extension AddToPlaylistViewController: UISearchBarDelegate {
         searchBar.placeholder = searchBar.scopeButtonTitles![selectedScope]
         if selectedScope == 0 {
             self.filterContent(for: searchBar.text!, scope: searchBar.scopeButtonTitles![selectedScope])
+            if self.bottomActivity!.isAnimating {
+                self.bottomActivity?.stopAnimating()
+            }
+            self.gameCountLabel?.text = "\(self.filteredGames!.count) games found."
+            if self.gameCountLabel!.isHidden {
+                self.gameCountLabel?.isHidden = false
+            }
         } else {
-            if self.query != searchBar.text! {
+            if self.query != searchBar.text && searchBar.text != nil && searchBar.text != ""{
                 self.query = searchBar.text!
                 self.performSearch(withQuery: searchBar.text!)
+            }
+            if self.bottomActivity!.isAnimating {
+                self.bottomActivity?.stopAnimating()
+            }
+            if !self.gameCountLabel!.isHidden {
+                self.gameCountLabel?.isHidden = true
             }
         }
         self.tableView?.reloadData()
@@ -405,10 +437,23 @@ extension AddToPlaylistViewController: UISearchBarDelegate {
         searchBar.resignFirstResponder()
         if searchBar.selectedScopeButtonIndex == 0 {
             self.filterContent(for: searchBar.text!)
+            if self.bottomActivity!.isAnimating {
+                self.bottomActivity?.stopAnimating()
+            }
+            self.gameCountLabel?.text = "\(self.filteredGames!.count) games found."
+            if self.gameCountLabel!.isHidden {
+                self.gameCountLabel?.isHidden = false
+            }
         } else {
-            if self.query != searchBar.text! {
+            if self.query != searchBar.text && searchBar.text != nil && searchBar.text != ""{
                 self.query = searchBar.text!
                 self.performSearch(withQuery: searchBar.text!)
+                if self.bottomActivity!.isAnimating {
+                    self.bottomActivity?.stopAnimating()
+                }
+                if !self.gameCountLabel!.isHidden {
+                    self.gameCountLabel?.isHidden = true
+                }
             }
         }
     }
@@ -420,10 +465,23 @@ extension AddToPlaylistViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.selectedScopeButtonIndex == 0 {
             self.filterContent(for: searchText)
+            if self.bottomActivity!.isAnimating {
+                self.bottomActivity?.stopAnimating()
+            }
+            self.gameCountLabel?.text = "\(self.filteredGames!.count) games found."
+            if self.gameCountLabel!.isHidden {
+                self.gameCountLabel?.isHidden = false
+            }
         } else {
-            if self.query != searchText {
+            if self.query != searchText && searchText != ""{
                 self.query = searchText
                 self.performSearch(withQuery: searchText)
+                if self.bottomActivity!.isAnimating {
+                    self.bottomActivity?.stopAnimating()
+                }
+                if !self.gameCountLabel!.isHidden {
+                    self.gameCountLabel?.isHidden = true
+                }
             }
         }
     }

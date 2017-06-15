@@ -62,6 +62,7 @@ class GameField: Field {
     dynamic var imageUrl:     String?         = nil
     dynamic var image:        ImageList?      = nil
     dynamic var hasDetails:   Bool            = false
+    dynamic var numReviews:   Int             = 0
             var images:       List<ImageList> = List<ImageList>()
             var developers:   List<Developer> = List<Developer>()
             var genres:       List<Genre>     = List<Genre>()
@@ -94,6 +95,7 @@ class GameField: Field {
             self.deck         = json[GameFields.Deck.rawValue]                as? String ?? ""
             self.releaseDate  = json[GameFields.OriginalReleaseDate.rawValue] as? String ?? ""
             self.expectedDate = json[GameFields.ExpectedReleaseYear.rawValue] as? Int ?? 0
+            self.numReviews   = json[GameFields.NumberOfUserReviews.rawValue] as? Int ?? 0
         }
         if fromDb {
             autoreleasepool {
@@ -456,7 +458,7 @@ class GameField: Field {
     }
     
     class func getGames(withQuery query:String, _ completionHandler: @escaping (Result<SearchResults>) -> Void) {
-        let queryUrl = SearchResults.endpointForSearch() + "&query=%22" + query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)! + "%22&resources=game"
+        let queryUrl = SearchResults.endpointForSearch() + "&filter=name%3A" + query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
         getGames(atPath:queryUrl, completionHandler)
     }
     
@@ -472,7 +474,7 @@ class GameField: Field {
             return
         }
         if (pageNum - 1) * limit < totalResults {
-            let queryUrl = SearchResults.endpointForSearch() + "&query=%22" + query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)! + "%22&resources=game&page=\(pageNum)"
+            let queryUrl = SearchResults.endpointForSearch() + "&filter=name%3A" + query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)! + "&offset=\((pageNum - 1) * limit)"
             getGames(atPath:queryUrl, completionHandler)
         } else {
             let error = BackendError.objectSerialization(reason: "Page index out of bounds")
