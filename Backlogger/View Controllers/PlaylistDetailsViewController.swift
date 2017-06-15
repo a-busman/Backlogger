@@ -893,6 +893,10 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             self.tableView.deleteRows(at: [indexPath], with: .fade)
             //self.tableView.endUpdates()
             self.imagesLoaded = 0
+            if self._playlistState == .default {
+                self.saveCurrentState(playlist: nil)
+                self.updatePlaylistImage()
+            }
             
         } else if editingStyle == .insert {
             self.performSegue(withIdentifier: "addToPlaylist", sender: tableView.cellForRow(at: indexPath))
