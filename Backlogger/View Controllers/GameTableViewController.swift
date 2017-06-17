@@ -32,6 +32,8 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
     
     var currentlySelectedRow = 0
     
+    var toastOverlay = ToastOverlayViewController()
+    
     fileprivate var didLayout = false
     
     fileprivate let titleBottomInitial:   CGFloat = -10.0
@@ -99,8 +101,32 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
                 self.registerForPreviewing(with: self, sourceView: self.tableView!)
             }
         }
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
+        self.toastOverlay.view.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(toastOverlay.view)
+        NSLayoutConstraint(item: toastOverlay.view,
+                           attribute: .centerX,
+                           relatedBy: .equal,
+                           toItem: self.view,
+                           attribute: .centerX,
+                           multiplier: 1.0,
+                           constant: 0.0
+            ).isActive = true
+        NSLayoutConstraint(item: toastOverlay.view,
+                           attribute: .centerY,
+                           relatedBy: .equal,
+                           toItem: self.view,
+                           attribute: .centerY,
+                           multiplier: 1.0,
+                           constant: 0.0
+            ).isActive = true
+        NSLayoutConstraint(item: toastOverlay.view,
+                           attribute: .width,
+                           relatedBy: .equal,
+                           toItem: nil,
+                           attribute: .notAnAttribute,
+                           multiplier: 1.0,
+                           constant: 300.0
+            ).isActive = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -277,6 +303,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
                     }
                 }
             }
+            self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Queue", description: nil)
         } else {
             autoreleasepool {
                 let realm = try! Realm()
@@ -290,6 +317,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
                     }
                 }
             }
+            self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Queue", description: "We'll play this one next.")
         }
     }
     
@@ -301,7 +329,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         }
         vc.presentingViewController?.dismiss(animated: true, completion: nil)
         vc.navigationController?.dismiss(animated: true, completion: nil)
-        //self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Playlist", description: "Added to \"\(playlist.name!)\".")
+        self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Playlist", description: "Added to \"\(playlist.name!)\".")
     }
     
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {

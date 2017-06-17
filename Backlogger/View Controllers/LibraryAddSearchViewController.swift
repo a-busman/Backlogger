@@ -29,6 +29,8 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
     var currentPage = 0
     var query: String?
     
+    var toastOverlay = ToastOverlayViewController()
+    
     var platformDict: [Int : Platform] = [:]
     
     var currentlySelectedRow = 0
@@ -55,6 +57,33 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
                 self.registerForPreviewing(with: self, sourceView: self.tableView!)
             }
         }
+        
+        self.toastOverlay.view.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(toastOverlay.view)
+        NSLayoutConstraint(item: toastOverlay.view,
+                           attribute: .centerX,
+                           relatedBy: .equal,
+                           toItem: self.view,
+                           attribute: .centerX,
+                           multiplier: 1.0,
+                           constant: 0.0
+            ).isActive = true
+        NSLayoutConstraint(item: toastOverlay.view,
+                           attribute: .centerY,
+                           relatedBy: .equal,
+                           toItem: self.view,
+                           attribute: .centerY,
+                           multiplier: 1.0,
+                           constant: 0.0
+            ).isActive = true
+        NSLayoutConstraint(item: toastOverlay.view,
+                           attribute: .width,
+                           relatedBy: .equal,
+                           toItem: nil,
+                           attribute: .notAnAttribute,
+                           multiplier: 1.0,
+                           constant: 300.0
+            ).isActive = true
     }
     
     override func didReceiveMemoryWarning() {
@@ -325,6 +354,7 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
                     }
                 }
             }
+            self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Queue", description: nil)
             self.isAddingToPlayLater = false
         } else {
             autoreleasepool {
@@ -339,6 +369,7 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
                     }
                 }
             }
+            self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Queue", description: "We'll play this one next.")
             self.isAddingToPlayNext = false
         }
     }
@@ -353,7 +384,7 @@ extension LibraryAddSearchViewController: PlaylistViewControllerDelegate {
         }
         vc.presentingViewController?.dismiss(animated: true, completion: nil)
         vc.navigationController?.dismiss(animated: true, completion: nil)
-        //self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Playlist", description: "Added to \"\(playlist.name!)\".")
+        self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Playlist", description: "Added to \"\(playlist.name!)\".")
     }
 }
 
