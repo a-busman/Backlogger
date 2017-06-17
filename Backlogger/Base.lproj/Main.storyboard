@@ -832,6 +832,7 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                                         <constraint firstItem="srX-AB-VRu" firstAttribute="top" secondItem="WPU-V0-T7e" secondAttribute="top" constant="20" id="T4v-wn-L58"/>
                                         <constraint firstItem="CZM-Bc-4S9" firstAttribute="height" secondItem="nOy-jF-hqi" secondAttribute="height" id="Vca-gn-yN9"/>
                                         <constraint firstItem="YfW-ZH-mUf" firstAttribute="top" secondItem="srX-AB-VRu" secondAttribute="top" id="aO4-Mv-nVh"/>
+                                        <constraint firstItem="w8J-Fc-HQw" firstAttribute="leading" secondItem="nOy-jF-hqi" secondAttribute="leading" id="bmx-1j-PbP"/>
                                         <constraint firstItem="Lto-Ap-7f7" firstAttribute="top" secondItem="I6P-eN-qcQ" secondAttribute="bottom" id="dyt-Ot-kp1"/>
                                         <constraint firstItem="I6P-eN-qcQ" firstAttribute="top" secondItem="YfW-ZH-mUf" secondAttribute="bottom" id="hIV-Le-HXQ"/>
                                         <constraint firstItem="I6P-eN-qcQ" firstAttribute="leading" secondItem="YfW-ZH-mUf" secondAttribute="leading" id="jj0-Hx-WM1"/>
@@ -844,6 +845,11 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                                         <constraint firstItem="Lto-Ap-7f7" firstAttribute="leading" secondItem="YfW-ZH-mUf" secondAttribute="leading" id="uft-7F-Wzp"/>
                                         <constraint firstItem="5gO-IU-wMV" firstAttribute="bottom" secondItem="WPU-V0-T7e" secondAttribute="bottom" constant="-3" id="xs2-hW-VI1"/>
                                     </constraints>
+                                    <variation key="default">
+                                        <mask key="constraints">
+                                            <exclude reference="bmx-1j-PbP"/>
+                                        </mask>
+                                    </variation>
                                 </view>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="175" id="eul-lZ-OV2"/>
@@ -1111,6 +1117,8 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                         <outlet property="statsButton" destination="w8J-Fc-HQw" id="btg-Ci-hwf"/>
                         <outlet property="statsEffectView" destination="thQ-co-ZR8" id="UCI-Wy-E1s"/>
                         <outlet property="statsLabel" destination="xtG-M1-Yqi" id="swP-wQ-3K8"/>
+                        <outlet property="statsLeadingToLeadingConstraint" destination="bmx-1j-PbP" id="HbX-Dn-wBq"/>
+                        <outlet property="statsLeadingToTrailingConstraint" destination="poY-7o-FMs" id="rMH-nm-QZx"/>
                         <outlet property="statsScrollView" destination="djC-wv-i8j" id="EeG-TN-mpR"/>
                         <outlet property="thirdStar" destination="AmH-P8-65M" id="xpQ-DK-xYQ"/>
                         <outlet property="titleLabel" destination="YfW-ZH-mUf" id="VnZ-0V-xlf"/>

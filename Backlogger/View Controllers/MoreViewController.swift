@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import Kingfisher
 
 class MoreViewController: UIViewController {
     let stringList: [String] = ["Delete All"]
@@ -38,6 +39,25 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
                         realm.deleteAll()
                     }
                 }
+                // Delete all playlist images
+                let fileManager = FileManager.default
+                let dirPath = Util.getPlaylistImagesDirectory()
+                var directoryContents: [String] = []
+                do {
+                    directoryContents = try fileManager.contentsOfDirectory(atPath: dirPath.path)
+                } catch {
+                    NSLog("Could not retrieve directory")
+                }
+                for path in directoryContents {
+                    let fullPath = dirPath.appendingPathComponent(path)
+                    do {
+                        try fileManager.removeItem(atPath: fullPath.path)
+                    } catch {
+                        NSLog("Could not delete file: \(fullPath)")
+                    }
+                }
+                // Delete all cached images
+                ImageCache.default.clearDiskCache()
             }))
             actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.present(actions, animated: true, completion: nil)

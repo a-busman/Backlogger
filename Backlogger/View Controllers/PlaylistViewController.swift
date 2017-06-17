@@ -14,6 +14,8 @@ class PlaylistViewController: UIViewController {
     let cellReuseIdentifier = "playlist_cell"
     var playlistList: Results<Playlist>?
     
+    var imageCache: [String: UIImage] = [:]
+    
     var selectedRow = -1
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +27,11 @@ class PlaylistViewController: UIViewController {
         autoreleasepool {
             let realm = try! Realm()
             playlistList = realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false")
+        }
+        if self.playlistList != nil {
+            for (_, playlist) in self.playlistList!.enumerated() {
+                let _ = self.loadImageFromFile(playlist.uuid)
+            }
         }
         self.tableView?.reloadData()
     }
@@ -87,7 +94,20 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func loadPlaylistImage(_ row: Int) -> UIImage? {
-        let filename = Util.getPlaylistImagesDirectory().appendingPathComponent("\(self.playlistList![row].uuid).png")
-        return UIImage(contentsOfFile: filename.path)
+        guard let uuid = self.playlistList?[row].uuid else {
+            return nil
+        }
+        if let image = self.imageCache[uuid] {
+            return image
+        } else {
+            return loadImageFromFile(uuid)
+        }
+    }
+    
+    func loadImageFromFile(_ uuid: String) -> UIImage? {
+        let filename = Util.getPlaylistImagesDirectory().appendingPathComponent("\(uuid).png")
+        let image = UIImage(contentsOfFile: filename.path)
+        self.imageCache[uuid] = image
+        return image
     }
 }

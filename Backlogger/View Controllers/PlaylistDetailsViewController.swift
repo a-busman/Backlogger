@@ -55,6 +55,8 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     
     var isDismissing = false
     
+    var shouldUpdateImage = true
+    
     enum ImageSource {
         case custom
         case loaded
@@ -97,8 +99,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             self.navigationItem.title = "New Playlist"
             
         } else {
-            if let playlist = self.playlist {
-                self.games.append(contentsOf: playlist.games)
+            if let _ = self.playlist {
                 self.loadPlaylistImage()
             }
             self.playlistFooterView.delegate = self
@@ -195,6 +196,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         }
         self.titleCell.artImage = self.playlistImage
         self.titleCell.showImage()
+        self.shouldUpdateImage = false
     }
     
     func savePlaylistImage() {
@@ -236,40 +238,43 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             if isVertical {
                 totalSize = CGSize(width: maxSize.width, height: maxSize.height * (CGFloat)(images.count))
             } else {
-                totalSize = CGSize(width: maxSize.width  * (CGFloat)(images.count), height:  maxSize.height)
+                totalSize = CGSize(width: maxSize.width  * (CGFloat)(images.count), height: maxSize.height)
             }
             UIGraphicsBeginImageContext(totalSize)
             for image in images {
                 var croppedImage: UIImage?
+                let imageHeight = image.size.height
+                let imageWidth = image.size.width
                 if isVertical {
-                    if image.size.width < maxSize.width {
-                        croppedImage = self.image(with: image, scaledTo: maxSize.width / image.size.width)
+                    if imageWidth < maxSize.width {
+                        croppedImage = self.image(with: image, scaledTo: maxSize.width / imageWidth)
                         croppedImage = self.cropToBounds(image: croppedImage!, width: maxSize.width, height: maxSize.height)
                     }
                     if croppedImage != nil {
-                        if croppedImage!.size.height < maxSize.height {
+                        
+                        if (maxSize.width / imageWidth) * imageHeight < maxSize.height {
                             croppedImage = self.image(with: croppedImage!, scaledTo: maxSize.height / croppedImage!.size.height)
                             croppedImage = self.cropToBounds(image: croppedImage!, width: maxSize.width, height: maxSize.height)
                         }
                     } else {
-                        if image.size.height < maxSize.height {
-                            croppedImage = self.image(with: image, scaledTo: maxSize.height / image.size.height)
+                        if imageHeight < maxSize.height {
+                            croppedImage = self.image(with: image, scaledTo: maxSize.height / imageHeight)
                             croppedImage = self.cropToBounds(image: croppedImage!, width: maxSize.width, height: maxSize.height)
                         }
                     }
                 } else {
-                    if image.size.width < maxSize.width {
-                        croppedImage = self.image(with: image, scaledTo: maxSize.width / image.size.width)
+                    if imageHeight < maxSize.height {
+                        croppedImage = self.image(with: image, scaledTo: maxSize.height / imageHeight)
                         croppedImage = self.cropToBounds(image: croppedImage!, width: maxSize.width, height: maxSize.height)
                     }
                     if croppedImage != nil {
-                        if croppedImage!.size.height < maxSize.height {
-                            croppedImage = self.image(with: croppedImage!, scaledTo: maxSize.height / croppedImage!.size.height)
+                        if (maxSize.height / imageHeight) * imageWidth < maxSize.width {
+                            croppedImage = self.image(with: croppedImage!, scaledTo: maxSize.width / croppedImage!.size.width)
                             croppedImage = self.cropToBounds(image: croppedImage!, width: maxSize.width, height: maxSize.height)
                         }
                     } else {
-                        if image.size.height < maxSize.height {
-                            croppedImage = self.image(with: image, scaledTo: maxSize.height / image.size.height)
+                        if imageWidth < maxSize.width {
+                            croppedImage = self.image(with: image, scaledTo: maxSize.width / imageWidth)
                             croppedImage = self.cropToBounds(image: croppedImage!, width: maxSize.width, height: maxSize.height)
                         }
                     }
@@ -296,13 +301,12 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     func cropToBounds(image: UIImage, width: CGFloat, height: CGFloat) -> UIImage {
         
         let contextImage: UIImage = UIImage(cgImage: image.cgImage!)
+        let xOffset: CGFloat = (image.size.width - width) / 2.0
         
-        let rect: CGRect = CGRect(x: 0, y: 0, width: width, height: height)
+        let rect: CGRect = CGRect(x: xOffset, y: 0, width: width, height: height)
         
-        // Create bitmap image from context using the rect
         let imageRef: CGImage = contextImage.cgImage!.cropping(to: rect)!
         
-        // Create a new image based on the imageRef and rotate back to the original orientation
         let image: UIImage = UIImage(cgImage: imageRef, scale: image.scale, orientation: image.imageOrientation)
         
         return image
@@ -328,6 +332,10 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         super.viewWillAppear(animated)
 
         if self._playlistState == .default {
+            if let playlist = self.playlist {
+                self.games.removeAll()
+                self.games.append(contentsOf: playlist.games)
+            }
             self.playlistFooterView.update(count: self.games.count)
             var percent = 0
             for game in self.games {
@@ -392,7 +400,19 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     }
     
     func handleSecondDelete(sender: UIAlertAction) {
+        let uuid = self.playlist!.uuid
         self.playlist?.delete()
+        
+        let filename = Util.getPlaylistImagesDirectory().appendingPathComponent("\(uuid).png")
+        
+        let fileManager = FileManager.default
+                
+        do {
+            try fileManager.removeItem(at: filename)
+        }
+        catch {
+            NSLog("Could not delete \(filename)")
+        }
         self.navigationController?.popViewController(animated: true)
     }
     
@@ -634,7 +654,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                                    multiplier: 1.0,
                                    constant: 0.0
                     ).isActive = true
-                if !self.firstLoaded {
+                if self.shouldUpdateImage {
                     self.updatePlaylistImage()
                 }
                 if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
@@ -645,6 +665,12 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                 }
                 if cell.responds(to: #selector(setter: UIView.preservesSuperviewLayoutMargins)) {
                     cell.preservesSuperviewLayoutMargins = false
+                }
+                
+                if self._playlistState == .new || self._playlistState == .editing {
+                    self.titleCell.moreButton?.isHidden = true
+                } else {
+                    self.titleCell.moreButton?.isHidden = false
                 }
                 break
             case 1:
@@ -767,7 +793,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                 }
             }
             cell = gameCell
-            if indexPath.row == (self.games.count - 1) || self._playlistState == .new{
+            if indexPath.row == (self.games.count - 1) || indexPath.row == 4 || self._playlistState == .new {
                 self.firstLoaded = true
             }
             var indent: CGFloat = 0.0
@@ -891,6 +917,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                 vc.gameField = self.games[i].gameFields
                 vc.game = self.games[i]
                 vc.state = .inLibrary
+                vc.showAddButton = false
             }
         }
     }

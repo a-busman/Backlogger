@@ -808,6 +808,20 @@ class Game: Object {
                 }
             }
         }
+        // Remove from all linked playlists.
+        
+        for playlist in self.linkedPlaylists {
+            var games: [Game] = []
+            for game in playlist.games {
+                if game.uuid != self.uuid {
+                    games.append(game)
+                }
+            }
+            playlist.update {
+                playlist.games.removeAll()
+                playlist.games.append(contentsOf: games)
+            }
+        }
     }
     
     func deleteWithGameFieldCopy() -> GameField {

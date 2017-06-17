@@ -64,7 +64,9 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     
     var toastOverlay = ToastOverlayViewController()
     
-    @IBOutlet weak var informationTopConstraint: NSLayoutConstraint?
+    @IBOutlet weak var informationTopConstraint:         NSLayoutConstraint?
+    @IBOutlet weak var statsLeadingToLeadingConstraint:  NSLayoutConstraint?
+    @IBOutlet weak var statsLeadingToTrailingConstraint: NSLayoutConstraint?
     
     var images: [UIImage]?
     
@@ -83,6 +85,8 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     var gameFieldId: Int?
     
     var delegate: GameDetailsViewControllerDelegate?
+    
+    var showAddButton = true
     
     enum State {
         case addToLibrary
@@ -174,6 +178,8 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
+        self.addBackground?.isHidden = !self.showAddButton
+
         if self._state == .addToLibrary {
             self.statsButton?.alpha = 0.0
             self.progressIcon?.alpha = 0.0
@@ -412,6 +418,9 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         bottomBorder.backgroundColor = UIColor(white: 0.9, alpha: 1.0).cgColor
         bottomBorder.frame = CGRect(x:0, y:(self.headerView?.frame.size.height)! - 0.5, width: (self.headerView?.frame.size.width)!, height: 0.5)
         self.headerView?.layer.addSublayer(bottomBorder)
+        
+        self.statsLeadingToTrailingConstraint?.isActive = self.showAddButton
+        self.statsLeadingToLeadingConstraint?.isActive = !self.showAddButton
     }
     override var previewActionItems: [UIPreviewActionItem] {
         if self._state != .inLibrary {
@@ -425,6 +434,9 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        if !self.showAddButton && self._game!.isInvalidated {
+            self.navigationController?.popViewController(animated: false)
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {

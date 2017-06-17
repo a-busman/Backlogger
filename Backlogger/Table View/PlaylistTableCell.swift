@@ -76,6 +76,7 @@ class PlaylistTableCell: UITableViewCell {
             self.titleCenterLayoutConstraint?.constant = 0.0
             self.descLabel?.text = ""
             self.descLabel?.isHidden = true
+            self.hideImage()
         }
     }
     
