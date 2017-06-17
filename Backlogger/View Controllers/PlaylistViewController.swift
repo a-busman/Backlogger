@@ -9,6 +9,10 @@
 import UIKit
 import RealmSwift
 
+protocol PlaylistViewControllerDelegate {
+    func chosePlaylist(vc: PlaylistViewController, playlist: Playlist, games: [Game], isNew: Bool)
+}
+
 class PlaylistViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView?
     let cellReuseIdentifier = "playlist_cell"
@@ -16,11 +20,25 @@ class PlaylistViewController: UIViewController {
     
     var imageCache: [String: UIImage] = [:]
     
+    var isAddingGames = false
+    
+    var addingGames: [Game] = []
+    
+    var delegate: PlaylistViewControllerDelegate?
+    
     var selectedRow = -1
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView?.register(UINib(nibName: "PlaylistTableCell", bundle: nil), forCellReuseIdentifier: self.cellReuseIdentifier)
         self.tableView?.tableFooterView = UIView(frame: .zero)
+        self.navigationController?.navigationBar.tintColor = .white
+        if self.isAddingGames {
+            self.navigationController?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
+        }
+    }
+    
+    func cancelTapped(sender: UIBarButtonItem) {
+        self.navigationController?.dismiss(animated: true, completion: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -60,7 +78,7 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         if indexPath.row > 0 {
-            cell.playlist = playlistList![indexPath.row - 1]
+            cell.playlist = self.playlistList![indexPath.row - 1]
             cell.artImage = self.loadPlaylistImage(indexPath.row - 1)
             cell.accessoryType = .disclosureIndicator
         }
@@ -76,9 +94,13 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
             let nav = segue.destination as! UINavigationController
             let details = nav.topViewController! as! PlaylistDetailsViewController
             details.playlistState = .new
+            if self.isAddingGames {
+                details.delegate = self
+                details.games.append(contentsOf: self.addingGames)
+            }
         } else {
             let details = segue.destination as! PlaylistDetailsViewController
-            details.playlist = playlistList![self.selectedRow - 1]
+            details.playlist = self.playlistList![self.selectedRow - 1]
             details.playlistState = .default
         }
     }
@@ -87,8 +109,12 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.row == 0 {
             self.performSegue(withIdentifier: "newPlaylist", sender: tableView.cellForRow(at: indexPath))
         } else {
-            self.selectedRow = indexPath.row
-            self.performSegue(withIdentifier: "viewPlaylist", sender: tableView.cellForRow(at: indexPath))
+            if self.isAddingGames {
+                self.delegate?.chosePlaylist(vc: self, playlist: self.playlistList![indexPath.row - 1], games: self.addingGames, isNew: false)
+            } else {
+                self.selectedRow = indexPath.row
+                self.performSegue(withIdentifier: "viewPlaylist", sender: tableView.cellForRow(at: indexPath))
+            }
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -109,5 +135,11 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
         let image = UIImage(contentsOfFile: filename.path)
         self.imageCache[uuid] = image
         return image
+    }
+}
+
+extension PlaylistViewController: PlaylistDetailsViewControllerDelegate {
+    func didFinish(vc: PlaylistDetailsViewController, playlist: Playlist) {
+        self.delegate?.chosePlaylist(vc: self, playlist: playlist, games: [], isNew: true)
     }
 }

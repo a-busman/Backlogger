@@ -1052,9 +1052,9 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                             <constraint firstItem="UB4-1H-riR" firstAttribute="width" secondItem="UB4-1H-riR" secondAttribute="height" id="20U-yD-sjM"/>
                             <constraint firstItem="thQ-co-ZR8" firstAttribute="width" secondItem="HOp-Pa-rLP" secondAttribute="width" id="4hn-Ny-GMX"/>
                             <constraint firstItem="8Yh-gY-jcp" firstAttribute="centerX" secondItem="HOp-Pa-rLP" secondAttribute="centerX" id="7PH-6A-WEl"/>
-                            <constraint firstItem="esg-nU-ufh" firstAttribute="top" secondItem="bn6-ck-75o" secondAttribute="bottom" id="7SU-oN-TeS"/>
                             <constraint firstItem="thQ-co-ZR8" firstAttribute="centerX" secondItem="HOp-Pa-rLP" secondAttribute="centerX" id="7nx-5X-dur"/>
                             <constraint firstItem="8Yh-gY-jcp" firstAttribute="width" secondItem="HOp-Pa-rLP" secondAttribute="width" id="CVC-wO-F75"/>
+                            <constraint firstItem="esg-nU-ufh" firstAttribute="top" secondItem="bn6-ck-75o" secondAttribute="bottom" id="Eaw-84-9bp"/>
                             <constraint firstItem="UB4-1H-riR" firstAttribute="leading" secondItem="HOp-Pa-rLP" secondAttribute="leading" constant="150" id="FwE-gt-ZPE"/>
                             <constraint firstItem="UB4-1H-riR" firstAttribute="centerY" secondItem="HOp-Pa-rLP" secondAttribute="centerY" id="G79-fr-twj"/>
                             <constraint firstItem="BlG-vb-kFs" firstAttribute="centerX" secondItem="HOp-Pa-rLP" secondAttribute="centerX" id="Hv0-fm-HY0"/>
@@ -1096,6 +1096,7 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                         <outlet property="genresLabel" destination="D9f-LF-gZq" id="zZa-F5-IDR"/>
                         <outlet property="headerContent" destination="WPU-V0-T7e" id="jNS-JF-hHh"/>
                         <outlet property="headerView" destination="esg-nU-ufh" id="5O8-DG-xdc"/>
+                        <outlet property="headingTopConstraint" destination="Eaw-84-9bp" id="4Bq-vp-2jB"/>
                         <outlet property="imageCollectionView" destination="bhc-DW-KkU" id="tQe-Hg-qXS"/>
                         <outlet property="imagesTitleLabel" destination="HxF-qE-sUD" id="Hn2-R1-jXG"/>
                         <outlet property="informationTitleLabel" destination="pQJ-KW-okR" id="hO5-6U-gFD"/>
@@ -1551,7 +1552,7 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
         <!--Playlists-->
         <scene sceneID="pmz-J8-nod">
             <objects>
-                <navigationController title="Playlists" id="RoH-L7-hIp" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="PlaylistNavigation" title="Playlists" id="RoH-L7-hIp" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Playlists" image="playlists" id="lHv-c8-gfK"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="bdw-u5-tBZ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>

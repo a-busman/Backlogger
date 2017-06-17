@@ -14,7 +14,7 @@ protocol GameDetailsViewControllerDelegate {
     func gamesCreated(gameField: GameField)
 }
 
-class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewControllerDelegate, UITextViewDelegate {
+class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewControllerDelegate, UITextViewDelegate, PlaylistViewControllerDelegate {
     @IBOutlet weak var mainImageView:          UIImageView?
     @IBOutlet weak var titleLabel:             UILabel?
     @IBOutlet weak var yearLabel:              UILabel?
@@ -67,6 +67,9 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     @IBOutlet weak var informationTopConstraint:         NSLayoutConstraint?
     @IBOutlet weak var statsLeadingToLeadingConstraint:  NSLayoutConstraint?
     @IBOutlet weak var statsLeadingToTrailingConstraint: NSLayoutConstraint?
+    @IBOutlet weak var headingTopConstraint:             NSLayoutConstraint?
+    
+    var peekHeadingTopConstraint: NSLayoutConstraint?
     
     var images: [UIImage]?
     
@@ -87,6 +90,15 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     var delegate: GameDetailsViewControllerDelegate?
     
     var showAddButton = true
+    
+    var isAddingToPlaylist  = false
+    var isAddingToPlayNext  = false
+    var isAddingToPlayLater = false
+    
+    var addRemoveClosure:      ((UIPreviewAction, UIViewController) -> Void)?
+    var addToPlaylistClosure:  ((UIPreviewAction, UIViewController) -> Void)?
+    var addToPlayNextClosure:  ((UIPreviewAction, UIViewController) -> Void)?
+    var addToPlayLaterClosure: ((UIPreviewAction, UIViewController) -> Void)?
     
     enum State {
         case addToLibrary
@@ -166,17 +178,26 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let setGameField = self._gameField?.deepCopy()
         autoreleasepool {
             let realm = try? Realm()
             if let gameFieldId = self.gameFieldId {
-                if self._gameField == nil {
-                    self._gameField = realm?.object(ofType: GameField.self, forPrimaryKey: gameFieldId)
+                self._gameField = realm?.object(ofType: GameField.self, forPrimaryKey: gameFieldId)
+                if self._gameField == nil && setGameField != nil{
+                    self._gameField = setGameField
                 }
             }
         }
+        if self._game == nil {
+            if self._gameField!.ownedGames.count > 0 {
+                self._state = .partialAddToLibrary
+            } else {
+                self._state = .addToLibrary
+            }
+        } else {
+            self._state = .inLibrary
+        }
         
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
         self.addBackground?.isHidden = !self.showAddButton
 
@@ -413,35 +434,68 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     override func viewDidLayoutSubviews() {
         self.detailsScrollView?.scrollIndicatorInsets = UIEdgeInsets(top: (self.headerView?.bounds.height)! + 25.0 + (self.navigationController?.navigationBar.bounds.height ?? -20.0), left: 0, bottom: self.tabBarController?.tabBar.bounds.height ?? 0.0, right: 0)
         self.detailsScrollView?.contentInset = UIEdgeInsets(top: (self.headerView?.bounds.height)! + 25.0 + (self.navigationController?.navigationBar.bounds.height ?? -20.0), left: 0.0, bottom: self.tabBarController?.tabBar.bounds.height ?? 0.0, right: 0.0)
-        
-        let bottomBorder = CALayer()
-        bottomBorder.backgroundColor = UIColor(white: 0.9, alpha: 1.0).cgColor
-        bottomBorder.frame = CGRect(x:0, y:(self.headerView?.frame.size.height)! - 0.5, width: (self.headerView?.frame.size.width)!, height: 0.5)
-        self.headerView?.layer.addSublayer(bottomBorder)
+        //let bottomBorder = CALayer()
+        //bottomBorder.backgroundColor = UIColor(white: 0.9, alpha: 1.0).cgColor
+        //bottomBorder.frame = CGRect(x:0, y:(self.headerView?.frame.size.height)! - 0.5, width: (self.headerView?.frame.size.width)!, height: 0.5)
+        //self.headerView?.layer.addSublayer(bottomBorder)
         
         self.statsLeadingToTrailingConstraint?.isActive = self.showAddButton
         self.statsLeadingToLeadingConstraint?.isActive = !self.showAddButton
     }
     override var previewActionItems: [UIPreviewActionItem] {
-        if self._state != .inLibrary {
-            return [UIPreviewAction(title: "Add", style: .default, handler: {[unowned self] (_, _) -> Void in
-            })]
-        } else {
-            return []
+        var addString: String
+        var style: UIPreviewActionStyle
+        switch self._state! {
+        case .addToLibrary:
+            addString = "Add"
+            style = .default
+            break
+        case .partialAddToLibrary:
+            addString = "Add More..."
+            style = .default
+            break
+        case .inLibrary:
+            addString = "Remove From Library"
+            style = .destructive
+            break
         }
+        let addRemove = UIPreviewAction(title: addString, style: style, handler: self.addRemoveClosure!)
+        if style == .destructive {
+            //addRemove.setValue(#imageLiteral(resourceName: "trash_red"), forKey: "image")
+        } else {
+            //addRemove.setValue(#imageLiteral(resourceName: "add_symbol_blue"), forKey: "image")
+        }
+        let addToPlaylist = UIPreviewAction(title: "Add to Playlist...", style: .default, handler: self.addToPlaylistClosure!)
+        addToPlaylist.setValue(#imageLiteral(resourceName: "add_to_playlist"), forKey: "image")
+        let playNext = UIPreviewAction(title: "Play Next", style: .default, handler: self.addToPlayNextClosure!)
+        playNext.setValue(#imageLiteral(resourceName: "play_next"), forKey: "image")
+        let playLater = UIPreviewAction(title: "Play Later", style: .default, handler: self.addToPlayLaterClosure!)
+        playLater.setValue(#imageLiteral(resourceName: "add_to_queue"), forKey: "image")
+        return [addRemove, addToPlaylist, playNext, playLater]
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
         if !self.showAddButton && self._game!.isInvalidated {
             self.navigationController?.popViewController(animated: false)
         }
+        if self.navigationController == nil {
+            self.headingTopConstraint?.isActive = false
+            self.peekHeadingTopConstraint = NSLayoutConstraint(item: self.headerView!, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .top, multiplier: 1.0, constant: 0.0)
+            self.peekHeadingTopConstraint?.isActive = true
+        } else {
+            self.peekHeadingTopConstraint?.isActive = false
+            self.headingTopConstraint = NSLayoutConstraint(item: self.headerView!, attribute: .top, relatedBy: .equal, toItem: self.topLayoutGuide, attribute: .bottom, multiplier: 1.0, constant: 0.0)
+            self.headingTopConstraint?.isActive = true
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: self.view.window)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: self.view.window)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         if self.isMovingFromParentViewController {
             self.delegate?.gamesCreated(gameField: self._gameField!)
         }
@@ -550,10 +604,13 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     }
 
     @IBAction func addTapped(sender: UITapGestureRecognizer?) {
-        if self.state == .addToLibrary {
+        if self.state == .addToLibrary || self.isAddingToPlayLater || self.isAddingToPlayNext || self.isAddingToPlaylist {
             let consoleSelection = ConsoleSelectionTableViewController()
             consoleSelection.delegate = self
             consoleSelection.gameField = self._gameField
+            if self.isAddingToPlayLater || self.isAddingToPlayNext || self.isAddingToPlaylist {
+                consoleSelection.playlist = true
+            }
             self.navigationController?.pushViewController(consoleSelection, animated: true)
         } else {
             var gameFieldCopy: GameField?
@@ -585,8 +642,8 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     
     private func transitionToRemove() {
         self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Library", description: nil)
-        self.state = .inLibrary
-        if game != nil || self._gameField?.ownedGames.count == 1 {
+        self.state = .partialAddToLibrary
+        if self._gameField?.ownedGames.count == 1 || (self._gameField == nil && self._game != nil) {
             self.addLabel?.text = "REMOVE"
         } else {
             self.addLabel?.text = "REMOVE ALL"
@@ -596,6 +653,8 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
             self.addBackground?.backgroundColor = .red
             if self._gameField?.ownedGames.count == 1 {
                 self.statsButton?.alpha = 1.0
+            } else {
+                self.statsButton?.alpha = 0.0
             }
             self.progressIcon?.alpha = 1.0
             self.view.layoutIfNeeded()
@@ -656,40 +715,82 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
 
     }
     
+    func chosePlaylist(vc: PlaylistViewController, playlist: Playlist, games: [Game], isNew: Bool) {
+        if !isNew {
+            playlist.update {
+                playlist.games.append(contentsOf: games)
+            }
+        }
+        vc.presentingViewController?.dismiss(animated: true, completion: nil)
+        vc.navigationController?.dismiss(animated: true, completion: nil)
+        self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Playlist", description: "Added to \"\(playlist.name!)\".")
+    }
+    
     func handleAddToPlaylist(sender: UIAlertAction) {
-        let playlist = "Awesome"
-        self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Playlist", description: "Added to \"\(playlist)\".")
+        self.isAddingToPlaylist = true
+        if self._state! == .addToLibrary {
+            self.addTapped(sender: nil)
+        } else if self._state! == .inLibrary {
+            let vc = self.storyboard?.instantiateViewController(withIdentifier: "PlaylistNavigation") as! UINavigationController
+            let playlistVc = vc.viewControllers.first as! PlaylistViewController
+            playlistVc.addingGames = [self._game!]
+            playlistVc.isAddingGames = true
+            playlistVc.delegate = self
+            self.present(vc, animated: true, completion: nil)
+        } else {
+            self.addTapped(sender: nil)
+        }
     }
     
     func handlePlayNext(sender: UIAlertAction) {
+        self.isAddingToPlayNext = true
         self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Queue", description: "We'll play this one next.")
-        autoreleasepool {
-            let realm = try! Realm()
-            let upNextPlaylist = realm.objects(Playlist.self).filter("isUpNext = true").first
-            if upNextPlaylist != nil {
-                var currentGames = [self._game!]
-                currentGames += upNextPlaylist!.games
-                upNextPlaylist!.update {
-                    upNextPlaylist?.games.removeAll()
-                    upNextPlaylist?.games.append(contentsOf: currentGames)
+        if self._state! != .inLibrary {
+            self.addTapped(sender: nil)
+        } else {
+            self.addToUpNext(games: [self._game!], later: false)
+        }
+    }
+    
+    func addToUpNext(games: [Game], later: Bool) {
+        if later {
+            autoreleasepool {
+                let realm = try! Realm()
+                let upNextPlaylist = realm.objects(Playlist.self).filter("isUpNext = true").first
+                if upNextPlaylist != nil {
+                    var currentGames = Array(upNextPlaylist!.games)
+                    currentGames.append(contentsOf: games)
+                    upNextPlaylist!.update {
+                        upNextPlaylist?.games.removeAll()
+                        upNextPlaylist?.games.append(contentsOf: currentGames)
+                    }
                 }
             }
+            self.isAddingToPlayLater = false
+        } else {
+            autoreleasepool {
+                let realm = try! Realm()
+                let upNextPlaylist = realm.objects(Playlist.self).filter("isUpNext = true").first
+                if upNextPlaylist != nil {
+                    var currentGames = games
+                    currentGames += upNextPlaylist!.games
+                    upNextPlaylist!.update {
+                        upNextPlaylist?.games.removeAll()
+                        upNextPlaylist?.games.append(contentsOf: currentGames)
+                    }
+                }
+            }
+            self.isAddingToPlayNext = false
         }
     }
     
     func handlePlayLater(sender: UIAlertAction) {
+        self.isAddingToPlayLater = true
         self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Queue", description: nil)
-        autoreleasepool {
-            let realm = try! Realm()
-            let upNextPlaylist = realm.objects(Playlist.self).filter("isUpNext = true").first
-            if upNextPlaylist != nil {
-                var currentGames = Array(upNextPlaylist!.games)
-                currentGames.append(self._game!)
-                upNextPlaylist!.update {
-                    upNextPlaylist?.games.removeAll()
-                    upNextPlaylist?.games.append(contentsOf: currentGames)
-                }
-            }
+        if self._state! != .inLibrary {
+            self.addTapped(sender: nil)
+        } else {
+            self.addToUpNext(games: [self._game!], later: true)
         }
     }
     
@@ -1008,91 +1109,147 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     }
     
     func didSelectConsoles(_ consoles: [Platform]) {
-        self._selectedPlatforms = consoles
-        var currentPlatformList: [Platform] = [Platform]()
-        var gameField = self._gameField?.deepCopy()
         
-        if consoles.count > 0 {
-            for game in (self._gameField?.ownedGames)! {
-                if !consoles.contains(game.platform!) {
-                    game.delete()
-                } else {
-                    currentPlatformList.append(game.platform!)
-                }
-            }
-
-            var platformString = ""
-
-            if consoles.count > 1 {
-                for platform in consoles[0..<consoles.endIndex - 1] {
-
-                    if !currentPlatformList.contains(platform) {
-                        let newGameToSave = Game()
-                        newGameToSave.inLibrary = true
-                        newGameToSave.add(gameField, platform)
-                    }
-                    if (platform.name?.characters.count)! < 10 {
-                        platformString += platform.name! + " • "
+        if !self.isAddingToPlaylist && !self.isAddingToPlayNext && !self.isAddingToPlayLater {
+            self._selectedPlatforms = consoles
+            var currentPlatformList: [Platform] = [Platform]()
+            let gameField = self._gameField?.deepCopy()
+            
+            if consoles.count > 0 {
+                for game in (self._gameField?.ownedGames)! {
+                    if !consoles.contains(game.platform!) {
+                        game.delete()
                     } else {
-                        platformString += platform.abbreviation! + " • "
+                        currentPlatformList.append(game.platform!)
                     }
                 }
-            }
-            let platform = consoles[consoles.endIndex - 1]
-            
-            if !currentPlatformList.contains(platform) {
-                let newGameToSave = Game()
-                newGameToSave.inLibrary = true
-                newGameToSave.add(gameField, platform)
-                if consoles.count == 1 {
-                    self._game = newGameToSave
-                } else {
-                    self._game = nil
-                }
-            }
-            if (platform.name?.characters.count)! < 10 {
-                platformString += platform.name!
-            } else {
-                platformString += platform.abbreviation!
-            }
-            UIView.setAnimationsEnabled(false)
-            self.platformButton?.setTitle(platformString, for: .normal)
-            UIView.setAnimationsEnabled(true)
-            self.platformButton?.isEnabled = true
-            
-            autoreleasepool {
-                let realm = try? Realm()
-                self._gameField = realm?.object(ofType: GameField.self, forPrimaryKey: (gameField?.idNumber)!) // get updated link
-            }
-            
-            if self._state == .addToLibrary {
-                self.transitionToRemove()
-                if consoles.count == 1 {
-                    self.showStatsButton()
-                    
-                }
-            } else {
-                self.transitionToRemove()
+
+                var platformString = ""
+
                 if consoles.count > 1 {
-                    self.hideStatsButton()
-                } else {
-                    self.showStatsButton()
+                    for platform in consoles[0..<consoles.endIndex - 1] {
+
+                        if !currentPlatformList.contains(platform) {
+                            let newGameToSave = Game()
+                            newGameToSave.inLibrary = true
+                            newGameToSave.add(gameField, platform)
+                        }
+                        if (platform.name?.characters.count)! < 10 {
+                            platformString += platform.name! + " • "
+                        } else {
+                            platformString += platform.abbreviation! + " • "
+                        }
+                    }
                 }
+                let platform = consoles[consoles.endIndex - 1]
+                
+                if !currentPlatformList.contains(platform) {
+                    let newGameToSave = Game()
+                    newGameToSave.inLibrary = true
+                    newGameToSave.add(gameField, platform)
+                    if consoles.count == 1 {
+                        self._game = newGameToSave
+                    } else {
+                        self._game = nil
+                    }
+                }
+                if (platform.name?.characters.count)! < 10 {
+                    platformString += platform.name!
+                } else {
+                    platformString += platform.abbreviation!
+                }
+                UIView.setAnimationsEnabled(false)
+                self.platformButton?.setTitle(platformString, for: .normal)
+                UIView.setAnimationsEnabled(true)
+                self.platformButton?.isEnabled = true
+                
+                autoreleasepool {
+                    let realm = try? Realm()
+                    self._gameField = realm?.object(ofType: GameField.self, forPrimaryKey: (gameField?.idNumber)!) // get updated link
+                }
+                self.transitionToRemove()
+            } else {
+
+                self._gameField = gameField
+                UIView.setAnimationsEnabled(false)
+                self.platformButton?.setTitle("", for: .normal)
+                UIView.setAnimationsEnabled(true)
+                self.platformButton?.isEnabled = false
+                self.transitionToAdd()
             }
         } else {
-            for (index, game) in (self._gameField?.ownedGames.enumerated())! {
-                if index == ((self._gameField?.ownedGames.count)! - 1) {
-                    gameField = game.deleteWithGameFieldCopy()
-                } else {
-                    game.delete()
+            if consoles.count > 0 {
+                var currentPlatformList: [Int] = []
+                var platformsToAdd: [Platform] = []
+                var consoleIds: [Int] = []
+                var gameField: GameField?
+                autoreleasepool {
+                    let realm = try? Realm()
+                    gameField = realm?.object(ofType: GameField.self, forPrimaryKey: (self._gameField?.idNumber)!)
+                }
+                if gameField == nil {
+                    gameField = self._gameField?.deepCopy()
+                }
+                for game in (gameField?.ownedGames)! {
+                    if consoles.contains(game.platform!) {
+                        currentPlatformList.append(game.platform!.idNumber)
+                    }
+                }
+                for console in consoles {
+                    if !currentPlatformList.contains(console.idNumber) {
+                        platformsToAdd.append(console)
+                    }
+                    consoleIds.append(console.idNumber)
+                }
+                for platform in platformsToAdd {
+                    let newGameToSave = Game()
+                    newGameToSave.inLibrary = true
+                    newGameToSave.add(gameField, platform)
+                }
+                
+                autoreleasepool {
+                    let realm = try? Realm()
+                    self._gameField = realm?.object(ofType: GameField.self, forPrimaryKey: (gameField?.idNumber)!) // get updated link
+                }
+                
+                var gamesToAdd: [Game] = []
+                var platformString: String = ""
+                for (i, game) in self._gameField!.ownedGames.enumerated() {
+                    let platform = game.platform!
+                    if consoleIds.contains(platform.idNumber) {
+                        gamesToAdd.append(game)
+                    }
+                    if (platform.name?.characters.count)! < 10 {
+                        platformString += platform.name! + (i == (self._gameField!.ownedGames.count - 1) ? "" : " • ")
+                    } else {
+                        platformString += platform.abbreviation! + (i == (self._gameField!.ownedGames.count - 1) ? "" : " • ")
+                    }
+                }
+                UIView.setAnimationsEnabled(false)
+                self.platformButton?.setTitle(platformString, for: .normal)
+                UIView.setAnimationsEnabled(true)
+                self.platformButton?.isEnabled = true
+                
+                self.transitionToRemove()
+                
+                if self.isAddingToPlaylist {
+                    let vc = self.storyboard?.instantiateViewController(withIdentifier: "PlaylistNavigation") as! UINavigationController
+                    let playlistVc = vc.viewControllers.first as! PlaylistViewController
+                    playlistVc.addingGames = gamesToAdd
+                    playlistVc.isAddingGames = true
+                    playlistVc.delegate = self
+                    self.present(vc, animated: true, completion: nil)
+                    self.isAddingToPlaylist = false
+                }
+                if self.isAddingToPlayNext {
+                    self.addToUpNext(games: gamesToAdd, later: false)
+                    self.isAddingToPlayNext = false
+                }
+                if self.isAddingToPlayLater {
+                    self.addToUpNext(games: gamesToAdd, later: true)
+                    self.isAddingToPlayLater = false
                 }
             }
-            self._gameField = gameField
-            UIView.setAnimationsEnabled(false)
-            self.platformButton?.setTitle("", for: .normal)
-            UIView.setAnimationsEnabled(true)
-            self.platformButton?.isEnabled = false
-            self.transitionToAdd()
         }
     }
 }

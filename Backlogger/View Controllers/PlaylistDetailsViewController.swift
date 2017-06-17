@@ -11,6 +11,10 @@ import AVFoundation
 import RealmSwift
 import Kingfisher
 
+protocol PlaylistDetailsViewControllerDelegate {
+    func didFinish(vc: PlaylistDetailsViewController, playlist: Playlist)
+}
+
 class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, PlaylistTitleCellDelegate, AddToPlaylistViewControllerDelegate, PlaylistFooterDelegate {
     
     @IBOutlet weak var noGamesView: UIView?
@@ -44,6 +48,8 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     var addCell: PlaylistAddTableCell?
     
     var toastOverlay = ToastOverlayViewController()
+    
+    var delegate: PlaylistDetailsViewControllerDelegate?
     
     var imagesLoaded = 0
 
@@ -156,7 +162,17 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     
     func updatePlaylistImage() {
         if self.firstLoaded {
-            switch self.games.count {
+            // Find first 4 unique ids
+            var ids: [Int] = []
+            for game in self.games {
+                if !ids.contains(game.gameFields!.idNumber) {
+                    ids.append(game.gameFields!.idNumber)
+                }
+                if ids.count > 3 {
+                    break
+                }
+            }
+            switch ids.count {
             case 0:
                 // reset to default
                 self.playlistImage = nil
@@ -164,27 +180,27 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                 self.titleCell.hideImage()
                 return
             case 1:
-                self.playlistImage = self.imageCache[self.games[0].gameFields!.idNumber]
+                self.playlistImage = self.imageCache[ids[0]]
                 break
             case 2:
-                if let image1 = self.imageCache[self.games[0].gameFields!.idNumber],
-                   let image2 = self.imageCache[self.games[1].gameFields!.idNumber] {
+                if let image1 = self.imageCache[ids[0]],
+                   let image2 = self.imageCache[ids[1]] {
                     self.playlistImage = self.stitch(images: [image1, image2], isVertical: false)
                 }
                 break
             case 3:
-                if let image1 = self.imageCache[self.games[0].gameFields!.idNumber],
-                   let image2 = self.imageCache[self.games[1].gameFields!.idNumber],
-                   let image3 = self.imageCache[self.games[2].gameFields!.idNumber] {
+                if let image1 = self.imageCache[ids[0]],
+                   let image2 = self.imageCache[ids[1]],
+                   let image3 = self.imageCache[ids[2]] {
                     let intermediate   = self.stitch(images: [image1, image2], isVertical: false)
                     self.playlistImage = self.stitch(images: [intermediate, image3], isVertical: true)
                 }
                 break
             default:
-                if let image1 = self.imageCache[self.games[0].gameFields!.idNumber],
-                   let image2 = self.imageCache[self.games[1].gameFields!.idNumber],
-                   let image3 = self.imageCache[self.games[2].gameFields!.idNumber],
-                   let image4 = self.imageCache[self.games[3].gameFields!.idNumber] {
+                if let image1 = self.imageCache[ids[0]],
+                   let image2 = self.imageCache[ids[1]],
+                   let image3 = self.imageCache[ids[2]],
+                   let image4 = self.imageCache[ids[3]] {
                     let intermediate1  = self.stitch(images: [image1, image2], isVertical: false)
                     let intermediate2  = self.stitch(images: [image3, image4], isVertical: false)
                     self.playlistImage = self.stitch(images: [intermediate1, intermediate2], isVertical: true)
@@ -561,8 +577,10 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             self.saveCurrentState(playlist: newPlaylist)
             newPlaylist.add()
             self.playlist = newPlaylist
+            self.firstLoaded = true
+            self.updatePlaylistImage()
             self.savePlaylistImage()
-            self.dismiss(animated: true, completion: nil)
+            self.delegate?.didFinish(vc: self, playlist: newPlaylist)
         }
     }
     

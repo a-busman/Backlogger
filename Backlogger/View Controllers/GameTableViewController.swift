@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class GameTableViewController: UIViewController, GameDetailsViewControllerDelegate, UIViewControllerPreviewingDelegate {
+class GameTableViewController: UIViewController, GameDetailsViewControllerDelegate, UIViewControllerPreviewingDelegate, PlaylistViewControllerDelegate {
     
     @IBOutlet weak var tableView:     UITableView?
     @IBOutlet weak var headerView:    UIView?
@@ -28,6 +28,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
     var games: [Game] = []
     
     var platform: Platform?
+    var platformId: Int?
     
     var currentlySelectedRow = 0
     
@@ -56,6 +57,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         self.headerTravelDistance = self.headerMaxHeight - self.headerMinHeight
         self.insetToHeader = startInset - headerMaxHeight
         if let platform = self.platform {
+            self.platformId = platform.idNumber
             self.titleLabel?.text = platform.name
             self.games = Array(platform.ownedGames)
             if platform.name!.characters.count < 10 {
@@ -103,6 +105,14 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        autoreleasepool {
+            let realm = try? Realm()
+            self.platform = realm?.object(ofType: Platform.self, forPrimaryKey: platformId)
+        }
+        if self.platform == nil {
+            let _ = self.navigationController?.popViewController(animated: true)
+            return
+        }
         self.games = Array((self.platform?.ownedGames)!)
         self.tableView?.reloadData()
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.clear]
@@ -200,6 +210,8 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         }*/
     }
     
+    
+    
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         guard let indexPath = self.tableView?.indexPathForRow(at: location),
             let cell = self.tableView?.cellForRow(at: indexPath),
@@ -225,7 +237,71 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         
         previewingContext.sourceRect = cell.frame
         
+        vc.addRemoveClosure = { (action, vc) -> Void in
+            let game = self.games.remove(at: indexPath.row)
+            game.delete()
+            //self.tableView?.deleteRows(at: [indexPath], with: .automatic)
+            if self.games.count < 1 {
+                let _ = self.navigationController?.popViewController(animated: true)
+            }
+            self.tableView?.reloadData()
+        }
+        vc.addToPlayLaterClosure = { (action, vc) -> Void in
+            self.addToUpNext(games: [game], later: true)
+        }
+        vc.addToPlaylistClosure = { (action, vc) -> Void in
+            let vc = self.storyboard?.instantiateViewController(withIdentifier: "PlaylistNavigation") as! UINavigationController
+            let playlistVc = vc.viewControllers.first as! PlaylistViewController
+            playlistVc.addingGames = [game]
+            playlistVc.isAddingGames = true
+            playlistVc.delegate = self
+            self.present(vc, animated: true, completion: nil)
+        }
+        vc.addToPlayNextClosure = { (action, vc) -> Void in
+            self.addToUpNext(games: [game], later: false)
+        }
         return vc
+    }
+    
+    func addToUpNext(games: [Game], later: Bool) {
+        if later {
+            autoreleasepool {
+                let realm = try! Realm()
+                let upNextPlaylist = realm.objects(Playlist.self).filter("isUpNext = true").first
+                if upNextPlaylist != nil {
+                    var currentGames = Array(upNextPlaylist!.games)
+                    currentGames.append(contentsOf: games)
+                    upNextPlaylist!.update {
+                        upNextPlaylist?.games.removeAll()
+                        upNextPlaylist?.games.append(contentsOf: currentGames)
+                    }
+                }
+            }
+        } else {
+            autoreleasepool {
+                let realm = try! Realm()
+                let upNextPlaylist = realm.objects(Playlist.self).filter("isUpNext = true").first
+                if upNextPlaylist != nil {
+                    var currentGames = games
+                    currentGames += upNextPlaylist!.games
+                    upNextPlaylist!.update {
+                        upNextPlaylist?.games.removeAll()
+                        upNextPlaylist?.games.append(contentsOf: currentGames)
+                    }
+                }
+            }
+        }
+    }
+    
+    func chosePlaylist(vc: PlaylistViewController, playlist: Playlist, games: [Game], isNew: Bool) {
+        if !isNew {
+            playlist.update {
+                playlist.games.append(contentsOf: games)
+            }
+        }
+        vc.presentingViewController?.dismiss(animated: true, completion: nil)
+        vc.navigationController?.dismiss(animated: true, completion: nil)
+        //self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Playlist", description: "Added to \"\(playlist.name!)\".")
     }
     
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
