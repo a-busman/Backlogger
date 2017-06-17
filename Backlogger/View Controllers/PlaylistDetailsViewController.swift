@@ -435,11 +435,11 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     func handleAddToPlaylist(sender: UIAlertAction) {
         let gameCount = 5
         let playlist = "Really long playlist name that allows me to see if this thing works correctly or not. Maybe it will."
-        self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Playlist", description: "\(gameCount) games added to \"\(playlist)\".")
+        self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "add_to_playlist_large"), title: "Added to Playlist", description: "\(gameCount) games added to \"\(playlist)\".")
     }
     
     func handlePlayNext(sender: UIAlertAction) {
-        self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Queue", description: "We'll play this next.")
+        self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "play_next_large"), title: "Added to Queue", description: "We'll play this next.")
         autoreleasepool {
             let realm = try! Realm()
             let upNextPlaylist = realm.objects(Playlist.self).filter("isUpNext = true").first
@@ -455,7 +455,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     }
     
     func handlePlayLater(sender: UIAlertAction) {
-        self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Queue", description: nil)
+        self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "add_to_queue_large"), title: "Added to Queue", description: nil)
 
         autoreleasepool {
             let realm = try! Realm()

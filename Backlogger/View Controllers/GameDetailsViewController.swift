@@ -721,9 +721,10 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
                 playlist.games.append(contentsOf: games)
             }
         }
-        vc.presentingViewController?.dismiss(animated: true, completion: nil)
+        vc.presentingViewController?.dismiss(animated: true, completion: {
+            self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "add_to_playlist_large"), title: "Added to Playlist", description: "Added to \"\(playlist.name!)\".")
+        })
         vc.navigationController?.dismiss(animated: true, completion: nil)
-        self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Playlist", description: "Added to \"\(playlist.name!)\".")
     }
     
     func handleAddToPlaylist(sender: UIAlertAction) {
@@ -744,7 +745,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     
     func handlePlayNext(sender: UIAlertAction) {
         self.isAddingToPlayNext = true
-        self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Queue", description: "We'll play this one next.")
+        self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "play_next_large"), title: "Added to Queue", description: "We'll play this one next.")
         if self._state! != .inLibrary {
             self.addTapped(sender: nil)
         } else {
@@ -786,7 +787,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     
     func handlePlayLater(sender: UIAlertAction) {
         self.isAddingToPlayLater = true
-        self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Queue", description: nil)
+        self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "add_to_queue_large"), title: "Added to Queue", description: nil)
         if self._state! != .inLibrary {
             self.addTapped(sender: nil)
         } else {

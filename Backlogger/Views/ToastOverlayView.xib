@@ -27,15 +27,15 @@
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checkmark" translatesAutoresizingMaskIntoConstraints="NO" id="w1C-nN-5l0">
-                        <rect key="frame" x="100" y="25" width="100" height="100"/>
+                        <rect key="frame" x="102" y="45" width="96" height="96"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="w1C-nN-5l0" secondAttribute="height" id="Ifw-Zs-zpL"/>
-                            <constraint firstAttribute="width" constant="100" id="bZ9-4s-2i6"/>
-                            <constraint firstAttribute="height" constant="100" id="t3o-bf-paH"/>
+                            <constraint firstAttribute="width" constant="96" id="bZ9-4s-2i6"/>
+                            <constraint firstAttribute="height" constant="96" id="t3o-bf-paH"/>
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Added to Library" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="g4Z-06-dO5">
-                        <rect key="frame" x="20" y="145" width="260" height="30"/>
+                        <rect key="frame" x="20" y="161" width="260" height="30"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="30" id="b3L-0h-Ohi"/>
                         </constraints>
@@ -44,16 +44,16 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aUN-S3-5P5">
-                        <rect key="frame" x="20" y="180" width="260" height="95"/>
+                        <rect key="frame" x="20" y="196" width="260" height="59"/>
                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="bottom" secondItem="aUN-S3-5P5" secondAttribute="bottom" constant="25" id="8a1-jC-4ML"/>
+                    <constraint firstAttribute="bottom" secondItem="aUN-S3-5P5" secondAttribute="bottom" constant="45" id="8a1-jC-4ML"/>
                     <constraint firstItem="g4Z-06-dO5" firstAttribute="leading" secondItem="l0g-bn-mdp" secondAttribute="leading" constant="20" id="AT9-gd-umO"/>
-                    <constraint firstAttribute="top" secondItem="w1C-nN-5l0" secondAttribute="top" constant="-25" id="Gn8-Ot-9Td"/>
+                    <constraint firstAttribute="top" secondItem="w1C-nN-5l0" secondAttribute="top" constant="-45" id="Gn8-Ot-9Td"/>
                     <constraint firstItem="w1C-nN-5l0" firstAttribute="centerX" secondItem="l0g-bn-mdp" secondAttribute="centerX" id="TLX-hl-UZR"/>
                     <constraint firstItem="aUN-S3-5P5" firstAttribute="trailing" secondItem="l0g-bn-mdp" secondAttribute="trailing" constant="-20" id="YcZ-UN-akH"/>
                     <constraint firstItem="aUN-S3-5P5" firstAttribute="top" secondItem="g4Z-06-dO5" secondAttribute="bottom" constant="5" id="bXh-G6-6cG"/>

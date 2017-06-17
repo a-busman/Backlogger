@@ -80,7 +80,11 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.row > 0 {
             cell.playlist = self.playlistList![indexPath.row - 1]
             cell.artImage = self.loadPlaylistImage(indexPath.row - 1)
-            cell.accessoryType = .disclosureIndicator
+            if !self.isAddingGames {
+                cell.accessoryType = .disclosureIndicator
+            } else {
+                cell.accessoryType = .none
+            }
         }
         return cell
     }

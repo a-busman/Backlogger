@@ -73,13 +73,9 @@ class LibraryViewController: UIViewController {
 }
 
 extension LibraryViewController: UISearchBarDelegate {
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        searchBar.setShowsCancelButton(true, animated: true)
-    }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(false, animated: true)
-        searchBar.resignFirstResponder()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
@@ -88,14 +84,31 @@ extension LibraryViewController: UISearchBarDelegate {
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.setShowsCancelButton(false, animated: true)
         searchBar.resignFirstResponder()
+        /*self.filterContent(for: searchBar.text!)
+        if self.bottomActivity!.isAnimating {
+            self.bottomActivity?.stopAnimating()
+        }
+        self.gameCountLabel?.text = "\(self.filteredGames!.count) games found."
+        if self.gameCountLabel!.isHidden {
+            self.gameCountLabel?.isHidden = false
+        }*/
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(true, animated: true)
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-
+        /*self.filterContent(for: searchText)
+        if self.bottomActivity!.isAnimating {
+            self.bottomActivity?.stopAnimating()
+        }
+        self.gameCountLabel?.text = "\(self.filteredGames!.count) games found."
+        if self.gameCountLabel!.isHidden {
+            self.gameCountLabel?.isHidden = false
+        }*/
     }
-    
 }
 
 extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {

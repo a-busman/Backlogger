@@ -303,7 +303,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
                     }
                 }
             }
-            self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Queue", description: nil)
+            self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "add_to_queue_large"), title: "Added to Queue", description: nil)
         } else {
             autoreleasepool {
                 let realm = try! Realm()
@@ -317,7 +317,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
                     }
                 }
             }
-            self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Queue", description: "We'll play this one next.")
+            self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "play_next_large"), title: "Added to Queue", description: "We'll play this one next.")
         }
     }
     
@@ -327,9 +327,10 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
                 playlist.games.append(contentsOf: games)
             }
         }
-        vc.presentingViewController?.dismiss(animated: true, completion: nil)
+        vc.presentingViewController?.dismiss(animated: true, completion: {
+            self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "add_to_playlist_large"), title: "Added to Playlist", description: "Added to \"\(playlist.name!)\".")
+        })
         vc.navigationController?.dismiss(animated: true, completion: nil)
-        self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Playlist", description: "Added to \"\(playlist.name!)\".")
     }
     
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
