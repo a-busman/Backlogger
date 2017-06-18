@@ -250,6 +250,8 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
             
             if let image = platform.image {
                 cell.imageUrl = URL(string: image.iconUrl!)
+            } else {
+                cell.set(image: #imageLiteral(resourceName: "table_placeholder_light"))
             }
             cell.cacheCompletionHandler = {
                 (image, error, cacheType, imageUrl) in

@@ -356,7 +356,7 @@ class AddToPlaylistViewController: UIViewController, UITableViewDelegate, UITabl
     
     func showConsoleSelection(_ row: Int) {
         self.currentlySelectedRow = row
-        let consoleSelection = ConsoleSelectionTableViewController()
+        let consoleSelection = ConsoleSelectionTableViewController(style: .grouped)
         self.searchBar?.resignFirstResponder()
         consoleSelection.delegate = self
         consoleSelection.gameField = self.gameFields[row]

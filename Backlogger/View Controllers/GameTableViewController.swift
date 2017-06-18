@@ -81,7 +81,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
 //                self.yearLabel?.text = "\(platform.company?.name ?? "")"
 //            }
             if let superUrl = platform.image?.superUrl {
-                self.platformImage?.kf.setImage(with: URL(string: superUrl), placeholder: nil, completionHandler: {
+                self.platformImage?.kf.setImage(with: URL(string: superUrl), placeholder: #imageLiteral(resourceName: "now_playing_placeholder"), completionHandler: {
                     (image, error, cacheType, imageUrl) in
                     if image != nil {
                         if cacheType == .none {
@@ -96,7 +96,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
                     }
                 })
             } else {
-                self.platformImage?.image = nil
+                self.platformImage?.image = #imageLiteral(resourceName: "now_playing_placeholder")
             }
         } else {
             NSLog("No platform during load")
@@ -443,7 +443,7 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
             game.delete()
             autoreleasepool {
                 let realm = try? Realm()
-                self.platform = realm?.object(ofType: Platform.self, forPrimaryKey: self.platform!.idNumber)
+                self.platform = realm?.object(ofType: Platform.self, forPrimaryKey: self.platformId)
             }
             if self.platform != nil {
                 self.games = self.platform?.ownedGames.filter("platform.name = \"\(self.platform!.name!)\"")

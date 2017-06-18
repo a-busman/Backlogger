@@ -643,7 +643,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
 
     @IBAction func addTapped(sender: UITapGestureRecognizer?) {
         if self.state == .addToLibrary || self.isAddingToPlayLater || self.isAddingToPlayNext || self.isAddingToPlaylist {
-            let consoleSelection = ConsoleSelectionTableViewController()
+            let consoleSelection = ConsoleSelectionTableViewController(style: .grouped)
             consoleSelection.delegate = self
             consoleSelection.gameField = self._gameField
             if self.isAddingToPlayLater || self.isAddingToPlayNext || self.isAddingToPlaylist {
@@ -672,7 +672,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     }
     
     @IBAction func platformsTapped(sender: UIButton!) {
-        let consoleSelection = ConsoleSelectionTableViewController()
+        let consoleSelection = ConsoleSelectionTableViewController(style: .grouped)
         consoleSelection.delegate = self
         consoleSelection.gameField = self._gameField
         self.navigationController?.pushViewController(consoleSelection, animated: true)
