@@ -26,9 +26,23 @@ class PlaylistViewController: UIViewController {
     
     var delegate: PlaylistViewControllerDelegate?
     
+    enum SortType: Int {
+        case alphabetical = 0
+        case dateAdded = 1
+    }
+    
+    var sortType: SortType?
+    
     var selectedRow = -1
     override func viewDidLoad() {
         super.viewDidLoad()
+        let sort = UserDefaults.standard.value(forKey: "playlistSortType")
+        if sort == nil {
+            self.sortType = .dateAdded
+            UserDefaults.standard.set(self.sortType!.rawValue, forKey: "playlistSortType")
+        } else {
+            self.sortType = SortType.init(rawValue: sort as! Int)
+        }
         self.tableView?.register(UINib(nibName: "PlaylistTableCell", bundle: nil), forCellReuseIdentifier: self.cellReuseIdentifier)
         self.tableView?.tableFooterView = UIView(frame: .zero)
         self.navigationController?.navigationBar.tintColor = .white
@@ -37,6 +51,40 @@ class PlaylistViewController: UIViewController {
         }
     }
     
+    @IBAction func sortTapped(sender: UIBarButtonItem) {
+        let actions = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let alphaAction = UIAlertAction(title: "Alphabetical", style: .default, handler: { _ in
+            self.sortType = .alphabetical
+            if self.playlistList != nil {
+                self.playlistList = self.playlistList!.sorted(byKeyPath: "name", ascending: true)
+            }
+            UserDefaults.standard.set(self.sortType!.rawValue, forKey: "playlistSortType")
+            self.tableView?.reloadData()
+        })
+        let dateAction = UIAlertAction(title: "Recently Added", style: .default, handler: { _ in
+            self.sortType = .dateAdded
+            if self.playlistList != nil {
+                self.playlistList = self.playlistList!.sorted(byKeyPath: "dateAdded", ascending: false)
+            }
+            UserDefaults.standard.set(self.sortType!.rawValue, forKey: "playlistSortType")
+            self.tableView?.reloadData()
+        })
+        
+        switch self.sortType! {
+        case .alphabetical:
+            alphaAction.setValue(true, forKey: "checked")
+            dateAction.setValue(false, forKey: "checked")
+            break
+        case .dateAdded:
+            alphaAction.setValue(false, forKey: "checked")
+            dateAction.setValue(true, forKey: "checked")
+            break
+        }
+        actions.addAction(alphaAction)
+        actions.addAction(dateAction)
+        actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present(actions, animated: true, completion: nil)
+    }
     func cancelTapped(sender: UIBarButtonItem) {
         self.navigationController?.dismiss(animated: true, completion: nil)
     }
@@ -44,7 +92,14 @@ class PlaylistViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         autoreleasepool {
             let realm = try! Realm()
-            playlistList = realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false")
+            switch self.sortType! {
+            case .alphabetical:
+                playlistList = realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false").sorted(byKeyPath: "name", ascending: true)
+                break
+            case .dateAdded:
+                playlistList = realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false").sorted(byKeyPath: "dateAdded", ascending: false)
+                break
+            }
         }
         if self.playlistList != nil {
             for (_, playlist) in self.playlistList!.enumerated() {

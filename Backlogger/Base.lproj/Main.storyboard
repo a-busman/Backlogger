@@ -60,6 +60,9 @@
                     <navigationItem key="navigationItem" title="Playlists" id="bhX-8J-HOA">
                         <barButtonItem key="rightBarButtonItem" title="Sort" id="3T0-WP-QbY">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <action selector="sortTappedWithSender:" destination="VuG-Nz-qef" id="hoe-ZH-PJR"/>
+                            </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>

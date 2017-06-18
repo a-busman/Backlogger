@@ -43,10 +43,11 @@ class LibraryViewController: UIViewController {
         super.viewWillAppear(animated)
         
         let sort = UserDefaults.standard.value(forKey: "librarySortType")
-        self.sortType = SortType.init(rawValue: sort as! Int)
-        if self.sortType == nil {
+        if sort == nil {
             self.sortType = .dateAdded
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
+        } else {
+            self.sortType = SortType.init(rawValue: sort as! Int)
         }
         self.tableView?.reloadData()
         autoreleasepool {
