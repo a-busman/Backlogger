@@ -9,6 +9,7 @@
 import UIKit
 import RealmSwift
 import Kingfisher
+import ImageViewer
 
 protocol GameDetailsViewControllerDelegate {
     func gamesCreated(gameField: GameField)
@@ -71,7 +72,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     
     var peekHeadingTopConstraint: NSLayoutConstraint?
     
-    var images: [UIImage]?
+    var images: [Int: DataItem] = [:]
     
     let imageCellReuseIdentifier = "image_cell"
 
@@ -232,7 +233,6 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         
         var gameFields: GameField?
         gameFields = self._gameField ?? GameField()
-        self.images = []
         if !(gameFields?.hasDetails)! {
             gameFields?.updateGameDetails { result in
                 if let error = result.error {
@@ -502,6 +502,44 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     }
     
     private func updateGameDetails() {
+        // Download all images at once
+        if let game = self._game {
+            for (i, image) in game.gameFields!.images.enumerated() {
+                let imageView = UIImageView()
+                var newUrl: String
+                if let url = image.superUrl {
+                    newUrl = url
+                } else if let url = image.mediumUrl {
+                    newUrl = url
+                } else if let url = image.screenUrl {
+                    newUrl = url
+                } else {
+                    newUrl = ""
+                    imageView.image = #imageLiteral(resourceName: "info_image_placeholder")
+                }
+                let image = imageView.image ?? UIImage()
+                let galleryItem = GalleryItem.image { $0(image) }
+                let item: DataItem = DataItem(imageView: imageView, galleryItem: galleryItem)
+                self.images[i] = item
+                if imageView.image == nil {
+                    imageView.kf.setImage(with: URL(string: newUrl), placeholder: #imageLiteral(resourceName: "info_image_placeholder"), completionHandler: {
+                        (image, error, cacheType, imageUrl) in
+                        if image != nil {
+                            if cacheType == .none {
+                                UIView.transition(with: imageView,
+                                                  duration:0.5,
+                                                  options: .transitionCrossDissolve,
+                                                  animations: { imageView.image = image },
+                                                  completion: nil)
+                            } else {
+                                imageView.image = image
+                            }
+                            self.images[i]?.galleryItem = GalleryItem.image { $0(image) }
+                        }
+                    })
+                }
+            }
+        }
         self.imageCollectionView?.reloadData()
         let gameFields = self._gameField
         if let images = gameFields?.images {
@@ -1255,6 +1293,28 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     }
 }
 
+extension GameDetailsViewController: GalleryItemsDataSource {
+    func itemCount() -> Int {
+        return self.game?.gameFields?.images.count ?? 0
+    }
+    
+    func provideGalleryItem(_ index: Int) -> GalleryItem {
+        return self.images[index]!.galleryItem
+    }
+}
+
+extension GameDetailsViewController: GalleryItemsDelegate {
+    func removeGalleryItem(at index: Int) {
+        print("remove item at \(index)")
+    }
+}
+
+extension GameDetailsViewController: GalleryDisplacedViewsDataSource {
+    func provideDisplacementItem(atIndex index: Int) -> DisplaceableView? {
+        return index < self.images.count ? self.images[index]?.imageView : nil
+    }
+}
+
 extension GameDetailsViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     // tell the collection view how many cells to make
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -1279,6 +1339,10 @@ extension GameDetailsViewController: UICollectionViewDelegate, UICollectionViewD
         cellView.layer.cornerRadius = 5.0
         cell.clipsToBounds = false
         cellView.translatesAutoresizingMaskIntoConstraints = false
+        
+        for subview in cell.contentView.subviews {
+            subview.removeFromSuperview()
+        }
         
         cell.contentView.addSubview(cellView)
         NSLayoutConstraint(item: cellView,
@@ -1313,64 +1377,107 @@ extension GameDetailsViewController: UICollectionViewDelegate, UICollectionViewD
                            multiplier: 1.0,
                            constant: -5.0
             ).isActive = true
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.layer.cornerRadius = 5.0
-        imageView.clipsToBounds = true
         
-        cellView.addSubview(imageView)
-        NSLayoutConstraint(item: imageView,
-                           attribute: .leading,
-                           relatedBy: .equal,
-                           toItem: cellView,
-                           attribute: .leading,
-                           multiplier: 1.0,
-                           constant: 0.5
-            ).isActive = true
-        NSLayoutConstraint(item: imageView,
-                           attribute: .trailing,
-                           relatedBy: .equal,
-                           toItem: cellView,
-                           attribute: .trailing,
-                           multiplier: 1.0,
-                           constant: -0.5
-            ).isActive = true
-        NSLayoutConstraint(item: imageView,
-                           attribute: .top,
-                           relatedBy: .equal,
-                           toItem: cellView,
-                           attribute: .top,
-                           multiplier: 1.0,
-                           constant: 0.5
-            ).isActive = true
-        NSLayoutConstraint(item: imageView,
-                           attribute: .bottom,
-                           relatedBy: .equal,
-                           toItem: cellView,
-                           attribute: .bottom,
-                           multiplier: 1.0,
-                           constant: -0.5
-            ).isActive = true
-        if let mediumUrl = self.gameField?.images[indexPath.item].mediumUrl {
-            imageView.kf.setImage(with: URL(string: mediumUrl), placeholder: #imageLiteral(resourceName: "info_image_placeholder"), completionHandler: {
-                (image, error, cacheType, imageUrl) in
-                if image != nil {
-                    UIView.transition(with: imageView,
-                                      duration:0.5,
-                                      options: .transitionCrossDissolve,
-                                      animations: { imageView.image = image },
-                                      completion: nil)
-                }
-            })
-        } else {
-            imageView.image = #imageLiteral(resourceName: "info_image_placeholder")
+        if let imageView = self.images[indexPath.row]?.imageView {
+            imageView.contentMode = .scaleAspectFill
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            imageView.layer.cornerRadius = 5.0
+            imageView.clipsToBounds = true
+            
+            cellView.addSubview(imageView)
+            NSLayoutConstraint(item: imageView,
+                               attribute: .leading,
+                               relatedBy: .equal,
+                               toItem: cellView,
+                               attribute: .leading,
+                               multiplier: 1.0,
+                               constant: 0.5
+                ).isActive = true
+            NSLayoutConstraint(item: imageView,
+                               attribute: .trailing,
+                               relatedBy: .equal,
+                               toItem: cellView,
+                               attribute: .trailing,
+                               multiplier: 1.0,
+                               constant: -0.5
+                ).isActive = true
+            NSLayoutConstraint(item: imageView,
+                               attribute: .top,
+                               relatedBy: .equal,
+                               toItem: cellView,
+                               attribute: .top,
+                               multiplier: 1.0,
+                               constant: 0.5
+                ).isActive = true
+            NSLayoutConstraint(item: imageView,
+                               attribute: .bottom,
+                               relatedBy: .equal,
+                               toItem: cellView,
+                               attribute: .bottom,
+                               multiplier: 1.0,
+                               constant: -0.5
+                ).isActive = true
         }
-        
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let displacedViewIndex = indexPath.item
         
+        let galleryViewController = GalleryViewController(startIndex: displacedViewIndex, itemsDataSource: self, itemsDelegate: self, displacedViewsDataSource: self, configuration: galleryConfiguration())
+        
+        self.presentImageGallery(galleryViewController)
+    }
+    
+    func galleryConfiguration() -> GalleryConfiguration {
+        
+        return [
+            
+            GalleryConfigurationItem.closeButtonMode(.builtIn),
+            
+            GalleryConfigurationItem.pagingMode(.standard),
+            GalleryConfigurationItem.presentationStyle(.displacement),
+            GalleryConfigurationItem.hideDecorationViewsOnLaunch(false),
+            
+            GalleryConfigurationItem.swipeToDismissMode(.vertical),
+            GalleryConfigurationItem.toggleDecorationViewsBySingleTap(true),
+            
+            GalleryConfigurationItem.overlayColor(UIColor(white: 0.035, alpha: 1)),
+            GalleryConfigurationItem.overlayColorOpacity(1),
+            GalleryConfigurationItem.overlayBlurOpacity(1),
+            GalleryConfigurationItem.overlayBlurStyle(UIBlurEffectStyle.light),
+            
+            GalleryConfigurationItem.videoControlsColor(.white),
+            
+            GalleryConfigurationItem.maximumZoomScale(8),
+            GalleryConfigurationItem.swipeToDismissThresholdVelocity(500),
+            
+            GalleryConfigurationItem.doubleTapToZoomDuration(0.25),
+            
+            GalleryConfigurationItem.blurPresentDuration(0.5),
+            GalleryConfigurationItem.blurPresentDelay(0),
+            GalleryConfigurationItem.colorPresentDuration(0.25),
+            GalleryConfigurationItem.colorPresentDelay(0),
+            
+            GalleryConfigurationItem.blurDismissDuration(0.1),
+            GalleryConfigurationItem.blurDismissDelay(0.4),
+            GalleryConfigurationItem.colorDismissDuration(0.45),
+            GalleryConfigurationItem.colorDismissDelay(0),
+            
+            GalleryConfigurationItem.itemFadeDuration(0.3),
+            GalleryConfigurationItem.decorationViewsFadeDuration(0.15),
+            GalleryConfigurationItem.rotationDuration(0.15),
+            
+            GalleryConfigurationItem.displacementDuration(0.55),
+            GalleryConfigurationItem.reverseDisplacementDuration(0.25),
+            GalleryConfigurationItem.displacementTransitionStyle(.springBounce(0.7)),
+            GalleryConfigurationItem.displacementTimingCurve(.linear),
+            
+            GalleryConfigurationItem.statusBarHidden(true),
+            GalleryConfigurationItem.displacementKeepOriginalInPlace(false),
+            GalleryConfigurationItem.displacementInsetMargin(50),
+            
+            GalleryConfigurationItem.deleteButtonMode(.none)
+        ]
     }
 }

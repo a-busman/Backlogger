@@ -7,9 +7,17 @@
 //
 
 import UIKit
+import ImageViewer
+
+extension UIImageView: DisplaceableView {}
 
 protocol GameDetailOverlayViewControllerDelegate {
     func didTapDetails()
+}
+
+struct DataItem {
+    let imageView: UIImageView
+    var galleryItem: GalleryItem
 }
 
 class GameDetailOverlayViewController: UIViewController {
@@ -39,6 +47,8 @@ class GameDetailOverlayViewController: UIViewController {
         case finished
         case inProgress
     }
+    
+    var images: [Int: DataItem] = [:]
     
     var delegate: GameDetailOverlayViewControllerDelegate?
 
@@ -128,8 +138,47 @@ class GameDetailOverlayViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        scrollView?.delegate = self
-        scrollView?.scrollIndicatorInsets = UIEdgeInsetsMake(0.0, 0.0, 5.0, 0.0)
+        self.scrollView?.delegate = self
+        self.scrollView?.scrollIndicatorInsets = UIEdgeInsetsMake(0.0, 0.0, 5.0, 0.0)
+        
+        // Download all images at once
+        if let game = self._game {
+            for (i, image) in game.gameFields!.images.enumerated() {
+                let imageView = UIImageView()
+                var newUrl: String
+                if let url = image.superUrl {
+                    newUrl = url
+                } else if let url = image.mediumUrl {
+                    newUrl = url
+                } else if let url = image.screenUrl {
+                    newUrl = url
+                } else {
+                    newUrl = ""
+                    imageView.image = #imageLiteral(resourceName: "info_image_placeholder")
+                }
+                let image = imageView.image ?? UIImage()
+                let galleryItem = GalleryItem.image { $0(image) }
+                let item: DataItem = DataItem(imageView: imageView, galleryItem: galleryItem)
+                self.images[i] = item
+                if imageView.image == nil {
+                    imageView.kf.setImage(with: URL(string: newUrl), placeholder: #imageLiteral(resourceName: "info_image_placeholder"), completionHandler: {
+                        (image, error, cacheType, imageUrl) in
+                        if image != nil {
+                            if cacheType == .none {
+                                UIView.transition(with: imageView,
+                                                  duration:0.5,
+                                                  options: .transitionCrossDissolve,
+                                                  animations: { imageView.image = image },
+                                                  completion: nil)
+                            } else {
+                                imageView.image = image
+                            }
+                            self.images[i]?.galleryItem = GalleryItem.image { $0(image) }
+                        }
+                    })
+                }
+            }
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -168,8 +217,30 @@ class GameDetailOverlayViewController: UIViewController {
     }
 }
 
+extension GameDetailOverlayViewController: GalleryItemsDataSource {
+    func itemCount() -> Int {
+        return self.game?.gameFields?.images.count ?? 0
+    }
+    
+    func provideGalleryItem(_ index: Int) -> GalleryItem {
+        return self.images[index]!.galleryItem
+    }
+}
+
+extension GameDetailOverlayViewController: GalleryItemsDelegate {
+    func removeGalleryItem(at index: Int) {
+        print("remove item at \(index)")
+    }
+}
+
 extension GameDetailOverlayViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    }
+}
+
+extension GameDetailOverlayViewController: GalleryDisplacedViewsDataSource {
+    func provideDisplacementItem(atIndex index: Int) -> DisplaceableView? {
+        return index < self.images.count ? self.images[index]?.imageView : nil
     }
 }
 
@@ -191,7 +262,10 @@ extension GameDetailOverlayViewController: UICollectionViewDelegate, UICollectio
         // get a reference to our storyboard cell
         self.imageCollectionView?.register(UINib(nibName: "ImageCell", bundle: Bundle.main), forCellWithReuseIdentifier: imageCellReuseIdentifier)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: imageCellReuseIdentifier, for: indexPath)
-        let cellView = UIImageView()
+        let cellView = self.images[indexPath.row]!.imageView
+        for subview in cell.contentView.subviews {
+            subview.removeFromSuperview()
+        }
         cellView.clipsToBounds = true
         cell.clipsToBounds = false
         cellView.contentMode = .scaleAspectFill
@@ -237,29 +311,67 @@ extension GameDetailOverlayViewController: UICollectionViewDelegate, UICollectio
         let newBounds = cell.bounds
         cell.contentView.layer.shadowPath = UIBezierPath(rect: CGRect(x: newBounds.origin.x + 5, y: newBounds.origin.y + 5, width: newBounds.width - 10, height: newBounds.height - 10)).cgPath
         cell.contentView.layer.shadowOffset = .zero
-        if let mediumUrl = self.game?.gameFields?.images[indexPath.item].mediumUrl {
-            cellView.kf.setImage(with: URL(string: mediumUrl), placeholder: #imageLiteral(resourceName: "info_image_placeholder"), completionHandler: {
-                (image, error, cacheType, imageUrl) in
-                if image != nil {
-                    if cacheType == .none {
-                        UIView.transition(with: cellView,
-                                          duration:0.5,
-                                          options: .transitionCrossDissolve,
-                                          animations: { cellView.image = image },
-                                          completion: nil)
-                    } else {
-                        cellView.image = image
-                    }
-                }
-            })
-        } else {
-            cellView.image = #imageLiteral(resourceName: "info_image_placeholder")
-        }
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
+        let displacedViewIndex = indexPath.item
+        
+        let galleryViewController = GalleryViewController(startIndex: displacedViewIndex, itemsDataSource: self, itemsDelegate: self, displacedViewsDataSource: self, configuration: galleryConfiguration())
+        
+        self.presentImageGallery(galleryViewController)
+    }
+    
+    func galleryConfiguration() -> GalleryConfiguration {
+        
+        return [
+            
+            GalleryConfigurationItem.closeButtonMode(.builtIn),
+            
+            GalleryConfigurationItem.pagingMode(.standard),
+            GalleryConfigurationItem.presentationStyle(.displacement),
+            GalleryConfigurationItem.hideDecorationViewsOnLaunch(false),
+            
+            GalleryConfigurationItem.swipeToDismissMode(.vertical),
+            GalleryConfigurationItem.toggleDecorationViewsBySingleTap(true),
+            
+            GalleryConfigurationItem.overlayColor(UIColor(white: 0.035, alpha: 1)),
+            GalleryConfigurationItem.overlayColorOpacity(1),
+            GalleryConfigurationItem.overlayBlurOpacity(1),
+            GalleryConfigurationItem.overlayBlurStyle(UIBlurEffectStyle.light),
+            
+            GalleryConfigurationItem.videoControlsColor(.white),
+            
+            GalleryConfigurationItem.maximumZoomScale(8),
+            GalleryConfigurationItem.swipeToDismissThresholdVelocity(500),
+            
+            GalleryConfigurationItem.doubleTapToZoomDuration(0.25),
+            
+            GalleryConfigurationItem.blurPresentDuration(0.5),
+            GalleryConfigurationItem.blurPresentDelay(0),
+            GalleryConfigurationItem.colorPresentDuration(0.25),
+            GalleryConfigurationItem.colorPresentDelay(0),
+            
+            GalleryConfigurationItem.blurDismissDuration(0.1),
+            GalleryConfigurationItem.blurDismissDelay(0.4),
+            GalleryConfigurationItem.colorDismissDuration(0.45),
+            GalleryConfigurationItem.colorDismissDelay(0),
+            
+            GalleryConfigurationItem.itemFadeDuration(0.3),
+            GalleryConfigurationItem.decorationViewsFadeDuration(0.15),
+            GalleryConfigurationItem.rotationDuration(0.15),
+            
+            GalleryConfigurationItem.displacementDuration(0.55),
+            GalleryConfigurationItem.reverseDisplacementDuration(0.25),
+            GalleryConfigurationItem.displacementTransitionStyle(.springBounce(0.7)),
+            GalleryConfigurationItem.displacementTimingCurve(.linear),
+            
+            GalleryConfigurationItem.statusBarHidden(true),
+            GalleryConfigurationItem.displacementKeepOriginalInPlace(false),
+            GalleryConfigurationItem.displacementInsetMargin(50),
+            
+            GalleryConfigurationItem.deleteButtonMode(.none)
+        ]
     }
 }
