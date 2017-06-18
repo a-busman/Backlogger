@@ -243,7 +243,7 @@
         <!--Add Game-->
         <scene sceneID="LYV-SZ-Y1W">
             <objects>
-                <viewController title="Add Game" id="UYi-NC-pa4" customClass="LibraryAddSearchViewController" customModule="Backlogger" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="add_game" title="Add Game" id="UYi-NC-pa4" customClass="LibraryAddSearchViewController" customModule="Backlogger" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="U8o-Z3-hzz"/>
                         <viewControllerLayoutGuide type="bottom" id="q43-Hk-Erf"/>
@@ -1323,13 +1323,13 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
         <scene sceneID="eW9-7N-0Gf">
             <objects>
                 <tableViewController storyboardIdentifier="Console Selection" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hKz-dl-lyd" userLabel="Console Selection Table View Controller" customClass="ConsoleSelectionTableViewController" customModule="Backlogger" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="nVI-sE-POF">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="nVI-sE-POF">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="console_selection_cell" id="M6U-6b-l3J">
-                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="M6U-6b-l3J" id="VLs-jD-CFP">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -1524,10 +1524,10 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="VbX-aS-wuD">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="azw-un-AHI">
+                        <barButtonItem key="rightBarButtonItem" title="More" id="azw-un-AHI">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
-                                <segue destination="bAv-CL-BdL" kind="presentation" id="I95-sA-tJG"/>
+                                <action selector="moreTappedWithSender:" destination="wfS-Ip-fau" id="LjD-fN-qdF"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -1882,9 +1882,8 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
         <image name="star-white" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="4UJ-d8-tRw"/>
         <segue reference="wid-M9-uTf"/>
-        <segue reference="bAt-KP-orA"/>
+        <segue reference="4UJ-d8-tRw"/>
         <segue reference="io8-Qh-LNs"/>
     </inferredMetricsTieBreakers>
 </document>

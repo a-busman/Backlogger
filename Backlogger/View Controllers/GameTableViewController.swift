@@ -25,7 +25,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
     
     let shadowGradientLayer = CAGradientLayer()
     
-    var games: [Game] = []
+    var games: Results<Game>?
     
     var platform: Platform?
     var platformId: Int?
@@ -52,6 +52,13 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
     
     fileprivate let tableReuseIdentifier = "table_cell"
     
+    enum SortType: Int {
+        case alphabetical = 0
+        case dateAdded = 1
+    }
+    
+    var sortType: SortType?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.tintColor = .white
@@ -61,7 +68,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         if let platform = self.platform {
             self.platformId = platform.idNumber
             self.titleLabel?.text = platform.name
-            self.games = Array(platform.ownedGames)
+            self.games = platform.ownedGames.filter("platform.name = \"\(platform.name!)\"")
             if platform.name!.characters.count < 10 {
                 self.title = platform.name
             } else {
@@ -131,6 +138,12 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        let sort = UserDefaults.standard.value(forKey: "librarySortType")
+        self.sortType = SortType.init(rawValue: sort as! Int)
+        if self.sortType == nil {
+            self.sortType = .dateAdded
+            UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
+        }
         autoreleasepool {
             let realm = try? Realm()
             self.platform = realm?.object(ofType: Platform.self, forPrimaryKey: platformId)
@@ -139,10 +152,22 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
             let _ = self.navigationController?.popViewController(animated: true)
             return
         }
-        self.games = Array((self.platform?.ownedGames)!)
+        var sortString: String
+        var ascending: Bool
+        switch self.sortType! {
+        case .alphabetical:
+            sortString = "gameFields.name"
+            ascending = true
+            break
+        case .dateAdded:
+            sortString = "dateAdded"
+            ascending = false
+            break
+        }
+        self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: ascending)
         self.tableView?.reloadData()
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.clear]
-        if self.games.count < 1 {
+        if self.games!.count < 1 {
             let _ = self.navigationController?.popViewController(animated: true)
             return
         }
@@ -170,47 +195,6 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         super.didReceiveMemoryWarning()
     }
 
-    // MARK: - Table view data source
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "library_show_details" {
             if let cell = sender as? UITableViewCell {
@@ -221,8 +205,8 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
                 
                 //self.searchBar?.resignFirstResponder()
                 
-                vc.gameField = self.games[i].gameFields
-                vc.game = self.games[i]
+                vc.gameField = self.games![i].gameFields
+                vc.game = self.games![i]
                 vc.state = .inLibrary
                 vc.delegate = self
             }
@@ -236,13 +220,68 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         }*/
     }
     
+    @IBAction func moreTapped(sender: UIBarButtonItem) {
+        let actions = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let addAction = UIAlertAction(title: "Add Games", style: .default, handler: self.addGames)
+        let sortAction = UIAlertAction(title: "Sort...", style: .default, handler: self.sortTapped)
+        
+        actions.addAction(addAction)
+        actions.addAction(sortAction)
+        actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present(actions, animated: true, completion: nil)
+    }
     
+    func sortTapped(sender: UIAlertAction) {
+        let actions = UIAlertController(title: "Sort games", message: nil, preferredStyle: .actionSheet)
+
+        let alphaAction = UIAlertAction(title: "Alphabetical", style: .default, handler: { _ in
+            self.sortType = .alphabetical
+            if self.games != nil {
+                self.games = self.games!.sorted(byKeyPath: "gameFields.name", ascending: true)
+            }
+            UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
+            self.tableView?.reloadData()
+        })
+        let dateAction = UIAlertAction(title: "Recently Added", style: .default, handler: { _ in
+            self.sortType = .dateAdded
+            
+            if self.games != nil {
+                self.games = self.games!.sorted(byKeyPath: "dateAdded", ascending: false)
+            }
+            UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
+            self.tableView?.reloadData()
+        })
+        
+        switch self.sortType! {
+        case .alphabetical:
+            alphaAction.setValue(true, forKey: "checked")
+            dateAction.setValue(false, forKey: "checked")
+            break
+        case .dateAdded:
+            alphaAction.setValue(false, forKey: "checked")
+            dateAction.setValue(true, forKey: "checked")
+            break
+        }
+        actions.addAction(alphaAction)
+        actions.addAction(dateAction)
+        actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present(actions, animated: true, completion: nil)
+    }
+    
+    func addGames(sender: UIAlertAction) {
+        let vc: LibraryAddSearchViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "add_game") as! LibraryAddSearchViewController
+        let navVc = UINavigationController(rootViewController: vc)
+        navVc.navigationBar.barStyle = .black
+        navVc.navigationBar.isTranslucent = true
+        navVc.navigationBar.barTintColor = Util.appColor
+        self.present(navVc, animated: true, completion: nil)
+    }
     
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         guard let indexPath = self.tableView?.indexPathForRow(at: location),
             let cell = self.tableView?.cellForRow(at: indexPath),
-            let gameFields = self.games[indexPath.row].gameFields else { return nil }
-        let game = self.games[indexPath.row]
+            let gameFields = self.games![indexPath.row].gameFields else { return nil }
+        let game = self.games![indexPath.row]
         let vc: GameDetailsViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "game_details") as! GameDetailsViewController
         var gameField: GameField!
         
@@ -264,13 +303,18 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         previewingContext.sourceRect = cell.frame
         
         vc.addRemoveClosure = { (action, vc) -> Void in
-            let game = self.games.remove(at: indexPath.row)
+            let game = self.games![indexPath.row]
             game.delete()
-            //self.tableView?.deleteRows(at: [indexPath], with: .automatic)
-            if self.games.count < 1 {
+            autoreleasepool {
+                let realm = try? Realm()
+                self.platform = realm?.object(ofType: Platform.self, forPrimaryKey: self.platform!.idNumber)
+            }
+            if self.platform != nil {
+                self.games = self.platform?.ownedGames.filter("platform.name = \"\(self.platform!.name!)\"")
+                self.tableView?.reloadData()
+            } else {
                 let _ = self.navigationController?.popViewController(animated: true)
             }
-            self.tableView?.reloadData()
         }
         vc.addToPlayLaterClosure = { (action, vc) -> Void in
             self.addToUpNext(games: [game], later: true)
@@ -342,17 +386,17 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
 extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return games.count
+        return self.games?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: tableReuseIdentifier) as! TableViewCell
         cell.row = indexPath.row
         cell.accessoryType = .disclosureIndicator
-        let game = self.games[indexPath.row]
+        let game = self.games![indexPath.row]
         var indent: CGFloat = 0.0
         
-        if indexPath.row < self.games.count - 1 {
+        if indexPath.row < self.games!.count - 1 {
             indent = 58.0
         }
         if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
@@ -399,13 +443,19 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == UITableViewCellEditingStyle.delete) {
-            let game = games.remove(at: indexPath.row)
+            let game = games![indexPath.row]
             game.delete()
-            self.tableView?.deleteRows(at: [indexPath], with: .automatic)
-            if games.count < 1 {
+            autoreleasepool {
+                let realm = try? Realm()
+                self.platform = realm?.object(ofType: Platform.self, forPrimaryKey: self.platform!.idNumber)
+            }
+            if self.platform != nil {
+                self.games = self.platform?.ownedGames.filter("platform.name = \"\(self.platform!.name!)\"")
+                self.tableView?.deleteRows(at: [indexPath], with: .automatic)
+                self.tableView?.reloadData()
+            } else {
                 let _ = self.navigationController?.popViewController(animated: true)
             }
-            self.tableView?.reloadData()
         }
     }
     
