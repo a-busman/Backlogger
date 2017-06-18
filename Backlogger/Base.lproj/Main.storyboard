@@ -64,7 +64,6 @@
                     </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="yUb-vs-tlU" id="Z70-1C-RHX"/>
-                        <segue destination="jcV-33-EHh" kind="presentation" identifier="newPlaylist" id="YeQ-qT-VPI"/>
                         <segue destination="MPi-Yo-5w4" kind="show" identifier="viewPlaylist" id="4UJ-d8-tRw"/>
                     </connections>
                 </tableViewController>
@@ -857,13 +856,13 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                                 <blurEffect style="extraLight"/>
                             </visualEffectView>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="thQ-co-ZR8">
-                                <rect key="frame" x="0.0" y="239" width="375" height="428"/>
+                                <rect key="frame" x="0.0" y="239" width="375" height="379"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="ydf-rd-4fg">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="428"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="379"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="djC-wv-i8j">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="428"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="379"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zpl-ms-vop">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="371.5"/>
@@ -1350,7 +1349,7 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
         <!--Playlist Details View Controller-->
         <scene sceneID="6Vj-Rn-5Gd">
             <objects>
-                <tableViewController id="MPi-Yo-5w4" customClass="PlaylistDetailsViewController" customModule="Backlogger" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="playlist_details" id="MPi-Yo-5w4" customClass="PlaylistDetailsViewController" customModule="Backlogger" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" allowsSelectionDuringEditing="YES" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="e1n-u7-4D7">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1882,8 +1881,8 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
         <image name="star-white" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="wid-M9-uTf"/>
+        <segue reference="mln-hY-fhQ"/>
         <segue reference="4UJ-d8-tRw"/>
-        <segue reference="io8-Qh-LNs"/>
+        <segue reference="UJU-Xa-f5C"/>
     </inferredMetricsTieBreakers>
 </document>

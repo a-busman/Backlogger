@@ -111,7 +111,19 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
-            self.performSegue(withIdentifier: "newPlaylist", sender: tableView.cellForRow(at: indexPath))
+            let vc = self.storyboard?.instantiateViewController(withIdentifier: "playlist_details") as! PlaylistDetailsViewController
+            let navVc = UINavigationController(rootViewController: vc)
+            vc.playlistState = .new
+            if self.isAddingGames {
+                vc.delegate = self
+                vc.games.append(contentsOf: self.addingGames)
+            }
+            navVc.navigationBar.barTintColor = Util.appColor
+            navVc.navigationBar.barStyle = .black
+            navVc.navigationBar.isTranslucent = true
+            self.present(navVc, animated: true, completion: {
+                vc.showCamera()
+            })
         } else {
             if self.isAddingGames {
                 self.delegate?.chosePlaylist(vc: self, playlist: self.playlistList![indexPath.row - 1], games: self.addingGames, isNew: false)

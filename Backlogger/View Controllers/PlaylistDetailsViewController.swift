@@ -15,7 +15,7 @@ protocol PlaylistDetailsViewControllerDelegate {
     func didFinish(vc: PlaylistDetailsViewController, playlist: Playlist)
 }
 
-class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, PlaylistTitleCellDelegate, AddToPlaylistViewControllerDelegate, PlaylistFooterDelegate {
+class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, PlaylistTitleCellDelegate, AddToPlaylistViewControllerDelegate, PlaylistFooterDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet weak var noGamesView: UIView?
     
@@ -52,6 +52,8 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     var delegate: PlaylistDetailsViewControllerDelegate?
     
     var imagesLoaded = 0
+    
+    var didPickImage = false
 
     var titleInit = false
     var descriptionInit = false
@@ -151,7 +153,13 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     func reloadDataWithCrossDissolve() {
         UIView.transition(with: self.tableView, duration: 0.15, options: .transitionCrossDissolve, animations: {
             self.tableView.reloadData()
-        }, completion: nil)
+        }, completion: { _ in
+            if self._playlistState == .default {
+                self.hideCamera()
+            } else {
+                self.showCamera()
+            }
+        })
     }
     
     func refreshSection(_ set: IndexSet) {
@@ -161,7 +169,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     }
     
     func updatePlaylistImage() {
-        if self.firstLoaded {
+        if self.firstLoaded && self.playlistImageSource != .custom {
             // Find first 4 unique ids
             var ids: [Int] = []
             for game in self.games {
@@ -344,33 +352,44 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         vc.dismiss(animated: true, completion: nil)
     }
     
+    func showCamera() {
+        self.titleCell.showCamera()
+    }
+    
+    func hideCamera() {
+        self.titleCell.hideCamera()
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        if self._playlistState == .default {
-            if let playlist = self.playlist {
-                self.games.removeAll()
-                self.games.append(contentsOf: playlist.games)
+        
+        if !self.didPickImage {
+            if self._playlistState == .default {
+                if let playlist = self.playlist {
+                    self.games.removeAll()
+                    self.games.append(contentsOf: playlist.games)
+                }
+                self.playlistFooterView.update(count: self.games.count)
+                var percent = 0
+                for game in self.games {
+                    percent += game.progress
+                }
+                
+                percent /= self.games.count == 0 ? 1 : self.games.count
+                
+                self.playlistFooterView.update(percent: percent)
+                self.playlistFooterView.showButton = self.games.count == 0
+                self.tableView.tableFooterView = playlistFooterView.view
+            } else {
+                if self._playlistState == .editing && !self.isDismissing {
+                    self.rightTapped(sender: UIBarButtonItem())
+                } else if self.isDismissing {
+                    self.isDismissing = false
+                }
+                self.tableView.tableFooterView = UIView(frame: .zero)
             }
-            self.playlistFooterView.update(count: self.games.count)
-            var percent = 0
-            for game in self.games {
-                percent += game.progress
-            }
-            
-            percent /= self.games.count == 0 ? 1 : self.games.count
-            
-            self.playlistFooterView.update(percent: percent)
-            self.playlistFooterView.showButton = self.games.count == 0
-            self.tableView.tableFooterView = playlistFooterView.view
-        } else {
-            if self._playlistState == .editing && !self.isDismissing {
-                self.rightTapped(sender: UIBarButtonItem())
-            } else if self.isDismissing {
-                self.isDismissing = false
-            }
-            self.tableView.tableFooterView = UIView(frame: .zero)
         }
+        self.didPickImage = false
         self.imagesLoaded = 0
         self.tableView.reloadData()
     }
@@ -405,6 +424,50 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         actions.addAction(queueAction)
         actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         self.present(actions, animated: true, completion: nil)
+    }
+    
+    func artTapped(sender: UITapGestureRecognizer) {
+        let actions = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let takeAction = UIAlertAction(title: "Take Photo", style: .default, handler: self.takePhoto)
+        let chooseAction = UIAlertAction(title: "Choose Photo", style: .default, handler: self.choosePhoto)
+        
+        actions.addAction(takeAction)
+        actions.addAction(chooseAction)
+        actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+
+        self.present(actions, animated: true, completion: nil)
+    }
+    
+    func takePhoto(action: UIAlertAction) {
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.allowsEditing = true
+        imagePicker.sourceType = .camera
+        self.present(imagePicker, animated: true, completion: nil)
+    }
+    
+    func choosePhoto(action: UIAlertAction) {
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.allowsEditing = true
+        imagePicker.sourceType = .photoLibrary
+        self.present(imagePicker, animated: true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        self.didPickImage = true
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        if let editedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
+            self.playlistImage = editedImage
+            self.playlistImageSource = .custom
+            self.titleCell.artImage = editedImage
+            self.titleCell.showImage()
+        }
+        self.didPickImage = true
+        picker.dismiss(animated: true, completion: nil)
     }
     
     func handleFirstDelete(sender: UIAlertAction) {
@@ -479,6 +542,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             self.dismiss(animated: true, completion: nil)
         } else if self._playlistState == .editing {
             self._playlistState = .default
+            self.loadPlaylistImage()
             let newRightButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(rightTapped))
             self.navigationItem.setRightBarButton(newRightButton, animated: true)
             self.navigationItem.setLeftBarButton(nil, animated: true)
@@ -558,9 +622,9 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             percent /= self.games.count == 0 ? 1 : self.games.count
             self.playlistFooterView.update(percent: percent)
             self.playlistFooterView.showButton = self.games.count == 0
-            if self.playlistImageSource != .custom {
-                self.updatePlaylistImage()
-            }
+            self.updatePlaylistImage()
+            self.savePlaylistImage()
+            
             self._playlistState = .default
             let newRightButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(rightTapped))
             self.navigationItem.setRightBarButton(newRightButton, animated: true)
@@ -570,15 +634,19 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             self.tableView.tableFooterView = self.playlistFooterView.view
             self.imagesLoaded = 0
             self.reloadDataWithCrossDissolve()
-            
             self.tableView.setEditing(false, animated: false)
         } else {
             let newPlaylist = Playlist()
             self.saveCurrentState(playlist: newPlaylist)
+            if self.playlistImageSource == .custom {
+                newPlaylist.imageUrl = "custom"
+            }
             newPlaylist.add()
             self.playlist = newPlaylist
             self.firstLoaded = true
-            self.updatePlaylistImage()
+            if self.playlistImageSource != .custom {
+                self.updatePlaylistImage()
+            }
             self.savePlaylistImage()
             self.delegate?.didFinish(vc: self, playlist: newPlaylist)
         }
@@ -767,7 +835,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                 gameCell.set(image: imageCache[game.idNumber]!)
                 if indexPath.row < 4 && (self.firstLoaded || self._playlistState == .new) {
                     self.imagesLoaded += 1
-                    if self.imagesLoaded == (self.games.count < 4 ? self.games.count : 4) {
+                    if self.imagesLoaded == (self.games.count < 4 ? self.games.count : 4) && self.playlistImageSource != .custom {
                         self.updatePlaylistImage()
                     }
                 }
@@ -789,7 +857,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                         self.imageCache[game.idNumber] = image!
                         if indexPath.row < 4 && self.firstLoaded {
                             self.imagesLoaded += 1
-                            if self.imagesLoaded == (self.games.count < 4 ? self.games.count : 4) {
+                            if self.imagesLoaded == (self.games.count < 4 ? self.games.count : 4) && self.playlistImageSource != .custom {
                                 self.updatePlaylistImage()
                             }
                         }
@@ -947,7 +1015,9 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             self.imagesLoaded = 0
             if self._playlistState == .default {
                 self.saveCurrentState(playlist: nil)
-                self.updatePlaylistImage()
+                if self.playlistImageSource != .custom {
+                    self.updatePlaylistImage()
+                }
             }
             
         } else if editingStyle == .insert {

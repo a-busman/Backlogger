@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -14,6 +14,8 @@
             <connections>
                 <outlet property="artView" destination="R4n-Bn-iBO" id="j2h-uc-J7x"/>
                 <outlet property="blurView" destination="GLr-ne-YpV" id="GJF-i8-33z"/>
+                <outlet property="cameraBorder" destination="ZIc-EF-gAi" id="5VO-we-N79"/>
+                <outlet property="cameraView" destination="h0Z-ch-yz1" id="8vI-NK-JO2"/>
                 <outlet property="imageBorder" destination="Ofh-AL-noF" id="reY-L7-hCr"/>
                 <outlet property="moreButton" destination="9d2-N4-4F0" id="K7G-ZJ-EFg"/>
                 <outlet property="titleLabel" destination="9eV-cl-qgm" id="LI9-b3-DgT"/>
@@ -37,15 +39,15 @@
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </imageView>
-                        <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GLr-ne-YpV">
+                        <visualEffectView opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GLr-ne-YpV">
                             <rect key="frame" x="1" y="1" width="129.5" height="129.5"/>
-                            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="flg-nh-9a5">
+                            <view key="contentView" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" id="flg-nh-9a5">
                                 <rect key="frame" x="0.0" y="0.0" width="129.5" height="129.5"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
-                                    <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="agr-sR-1kn">
+                                    <visualEffectView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="agr-sR-1kn">
                                         <rect key="frame" x="0.0" y="0.0" width="129.5" height="129.5"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="lIf-Z6-0gB">
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" id="lIf-Z6-0gB">
                                             <rect key="frame" x="0.0" y="0.0" width="129.5" height="129.5"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
@@ -81,8 +83,56 @@
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </visualEffectView>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZIc-EF-gAi">
+                            <rect key="frame" x="45" y="45" width="40" height="40"/>
+                            <subviews>
+                                <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wWm-5m-Rjh">
+                                    <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                                    <view key="contentView" opaque="NO" clipsSubviews="YES" contentMode="center" id="h0Z-ch-yz1">
+                                        <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="camera" translatesAutoresizingMaskIntoConstraints="NO" id="GYP-rn-i4j">
+                                                <rect key="frame" x="12" y="12" width="16" height="16"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="16" id="2K9-PQ-vnd"/>
+                                                    <constraint firstAttribute="width" secondItem="GYP-rn-i4j" secondAttribute="height" id="lIh-mu-2ir"/>
+                                                </constraints>
+                                            </imageView>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="GYP-rn-i4j" firstAttribute="centerY" secondItem="h0Z-ch-yz1" secondAttribute="centerY" id="3YD-Y2-36t"/>
+                                            <constraint firstItem="GYP-rn-i4j" firstAttribute="centerX" secondItem="h0Z-ch-yz1" secondAttribute="centerX" id="Uix-Av-tVP"/>
+                                        </constraints>
+                                    </view>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="wWm-5m-Rjh" secondAttribute="height" id="Vn4-Vc-E6a"/>
+                                        <constraint firstAttribute="width" constant="40" id="ZBX-HU-PQ8"/>
+                                    </constraints>
+                                    <blurEffect style="extraLight"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                            <integer key="value" value="20"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </visualEffectView>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstItem="wWm-5m-Rjh" firstAttribute="centerX" secondItem="ZIc-EF-gAi" secondAttribute="centerX" id="51e-kK-jZa"/>
+                                <constraint firstItem="wWm-5m-Rjh" firstAttribute="centerY" secondItem="ZIc-EF-gAi" secondAttribute="centerY" id="bSQ-Lb-ii6"/>
+                                <constraint firstAttribute="width" secondItem="ZIc-EF-gAi" secondAttribute="height" id="bie-7c-vR6"/>
+                                <constraint firstAttribute="width" constant="40" id="odq-95-rTB"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="20"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
                     </subviews>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <gestureRecognizers/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="Ofh-AL-noF" secondAttribute="height" id="65c-hY-AkK"/>
                         <constraint firstItem="R4n-Bn-iBO" firstAttribute="bottom" secondItem="Ofh-AL-noF" secondAttribute="bottom" constant="-0.5" id="8em-Nd-D5R"/>
@@ -91,8 +141,10 @@
                         <constraint firstItem="GLr-ne-YpV" firstAttribute="bottom" secondItem="Ofh-AL-noF" secondAttribute="bottom" constant="-0.5" id="IQA-j9-eZ1"/>
                         <constraint firstItem="GLr-ne-YpV" firstAttribute="leading" secondItem="Ofh-AL-noF" secondAttribute="leading" constant="0.5" id="P93-pw-ebm"/>
                         <constraint firstItem="R4n-Bn-iBO" firstAttribute="trailing" secondItem="Ofh-AL-noF" secondAttribute="trailing" constant="-0.5" id="SqT-ql-t7x"/>
+                        <constraint firstItem="ZIc-EF-gAi" firstAttribute="centerX" secondItem="Ofh-AL-noF" secondAttribute="centerX" id="Z7h-IT-2vw"/>
                         <constraint firstItem="GLr-ne-YpV" firstAttribute="trailing" secondItem="Ofh-AL-noF" secondAttribute="trailing" constant="-0.5" id="a5P-Q9-Vn2"/>
                         <constraint firstItem="R4n-Bn-iBO" firstAttribute="top" secondItem="Ofh-AL-noF" secondAttribute="top" constant="0.5" id="jd2-op-DkE"/>
+                        <constraint firstItem="ZIc-EF-gAi" firstAttribute="centerY" secondItem="Ofh-AL-noF" secondAttribute="centerY" id="s7F-ZZ-kss"/>
                         <constraint firstItem="GLr-ne-YpV" firstAttribute="top" secondItem="Ofh-AL-noF" secondAttribute="top" constant="0.5" id="w8D-ki-Oue"/>
                     </constraints>
                     <userDefinedRuntimeAttributes>
@@ -129,9 +181,6 @@
                             <integer key="value" value="13"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
-                    <connections>
-                        <outletCollection property="gestureRecognizers" destination="kGv-CI-1OL" appends="YES" id="Kgx-zW-e7k"/>
-                    </connections>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9eV-cl-qgm">
                     <rect key="frame" x="172" y="8" width="193" height="19.5"/>
@@ -157,13 +206,9 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="33.5" y="192"/>
         </view>
-        <tapGestureRecognizer id="kGv-CI-1OL">
-            <connections>
-                <action selector="moreTappedWithSender:" destination="-1" id="fUf-Ai-wO1"/>
-            </connections>
-        </tapGestureRecognizer>
     </objects>
     <resources>
+        <image name="camera" width="16" height="12"/>
         <image name="controller_icon_lg" width="170" height="170"/>
         <image name="more" width="30" height="30"/>
         <image name="new_playlist" width="90" height="90"/>

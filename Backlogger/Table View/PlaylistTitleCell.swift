@@ -10,6 +10,7 @@ import UIKit
 
 protocol PlaylistTitleCellDelegate {
     func moreTapped(sender: UITapGestureRecognizer)
+    func artTapped(sender: UITapGestureRecognizer)
 }
 
 class PlaylistTitleCell: UIViewController {
@@ -19,8 +20,11 @@ class PlaylistTitleCell: UIViewController {
     @IBOutlet weak var moreButton:    UIView?
     @IBOutlet weak var imageBorder:   UIView?
     @IBOutlet weak var titleLabel:    UILabel?
+    @IBOutlet weak var cameraBorder:  UIView?
+    @IBOutlet weak var cameraView:    UIView?
     
-    var tapRecognizer: UITapGestureRecognizer?
+    var tapRecognizer:    UITapGestureRecognizer?
+    var cameraTapRecognizer: UITapGestureRecognizer?
     
     var titleDelegate: UITextViewDelegate?
     var observer: NSObject?
@@ -67,13 +71,35 @@ class PlaylistTitleCell: UIViewController {
         self.artView?.image = #imageLiteral(resourceName: "new_playlist")
     }
     
+    func showCamera() {
+        self.cameraBorder?.isHidden = false
+        UIView.animate(withDuration: 0.25, animations: {
+            self.cameraBorder?.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+        })
+    }
+    
+    func hideCamera() {
+        UIView.animate(withDuration: 0.25, animations: {
+            self.cameraBorder?.transform = CGAffineTransform(scaleX: 0.00000001, y: 0.00000001)
+        }, completion: { _ in
+            self.cameraBorder?.isHidden = true
+        })
+    }
+    
     func moreTapped(sender: UITapGestureRecognizer) {
         self.delegate?.moreTapped(sender: sender)
     }
     
+    func artTapped(sender: UITapGestureRecognizer) {
+        self.delegate?.artTapped(sender: sender)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tapRecognizer = UITapGestureRecognizer(target: self.moreButton!, action: #selector(self.moreTapped))
+        self.tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.moreTapped))
+        self.cameraTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.artTapped))
+        self.moreButton?.addGestureRecognizer(self.tapRecognizer!)
+        self.cameraBorder?.addGestureRecognizer(self.cameraTapRecognizer!)
         if self._titleString == "" {
             self.titleTextView?.text = "Playlist Name"
             self.titleTextView?.textColor = .lightGray
@@ -88,5 +114,11 @@ class PlaylistTitleCell: UIViewController {
         if self.observer != nil {
             self.titleTextView?.addObserver(self.observer!, forKeyPath: "contentSize", options:[.new], context: nil)
         }
+        self.cameraBorder?.transform = CGAffineTransform(scaleX: 0.00000001, y: 0.00000001)
+        self.cameraBorder?.isHidden = true
+        self.cameraBorder?.layer.shadowColor = UIColor.black.cgColor
+        self.cameraBorder?.layer.shadowOffset = CGSize(width: 0.0, height: 10.0)
+        self.cameraBorder?.layer.shadowOpacity = 1.0
+        self.cameraBorder?.layer.shadowRadius = 20.0
     }
 }
