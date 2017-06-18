@@ -434,10 +434,10 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     override func viewDidLayoutSubviews() {
         self.detailsScrollView?.scrollIndicatorInsets = UIEdgeInsets(top: (self.headerView?.bounds.height)! + 25.0 + (self.navigationController?.navigationBar.bounds.height ?? -20.0), left: 0, bottom: self.tabBarController?.tabBar.bounds.height ?? 0.0, right: 0)
         self.detailsScrollView?.contentInset = UIEdgeInsets(top: (self.headerView?.bounds.height)! + 25.0 + (self.navigationController?.navigationBar.bounds.height ?? -20.0), left: 0.0, bottom: self.tabBarController?.tabBar.bounds.height ?? 0.0, right: 0.0)
-        //let bottomBorder = CALayer()
-        //bottomBorder.backgroundColor = UIColor(white: 0.9, alpha: 1.0).cgColor
-        //bottomBorder.frame = CGRect(x:0, y:(self.headerView?.frame.size.height)! - 0.5, width: (self.headerView?.frame.size.width)!, height: 0.5)
-        //self.headerView?.layer.addSublayer(bottomBorder)
+        let bottomBorder = CALayer()
+        bottomBorder.backgroundColor = UIColor(white: 0.9, alpha: 1.0).cgColor
+        bottomBorder.frame = CGRect(x:0, y:(self.headerView?.frame.size.height)! - 0.5, width: (self.headerView?.frame.size.width)!, height: 0.5)
+        self.headerView?.layer.addSublayer(bottomBorder)
         
         self.statsLeadingToTrailingConstraint?.isActive = self.showAddButton
         self.statsLeadingToLeadingConstraint?.isActive = !self.showAddButton
@@ -461,7 +461,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         }
         let addRemove = UIPreviewAction(title: addString, style: style, handler: self.addRemoveClosure!)
         if style == .destructive {
-            //addRemove.setValue(#imageLiteral(resourceName: "trash_red"), forKey: "image")
+            addRemove.setValue(#imageLiteral(resourceName: "trash_red"), forKey: "image")
         } else {
             //addRemove.setValue(#imageLiteral(resourceName: "add_symbol_blue"), forKey: "image")
         }

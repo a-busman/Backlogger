@@ -721,8 +721,4 @@ extension NowPlayingViewController: UICollectionViewDataSource, UICollectionView
         self.orderedViewControllers.insert(gameVc, at: destination.item)
         self.pageControl?.currentPage = destination.item
     }
-    
-    //func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-    //    NSLog("moved")
-    //}
 }

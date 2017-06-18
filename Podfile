@@ -6,6 +6,7 @@ target 'Backlogger' do
     pod 'Alamofire'
     pod 'RealmSwift'
     pod 'Kingfisher'
+    pod 'ImageViewer'
 end
 
 post_install do |installer|

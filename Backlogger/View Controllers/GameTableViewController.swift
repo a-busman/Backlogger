@@ -203,8 +203,6 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
                 
                 self.currentlySelectedRow = i
                 
-                //self.searchBar?.resignFirstResponder()
-                
                 vc.gameField = self.games![i].gameFields
                 vc.game = self.games![i]
                 vc.state = .inLibrary
@@ -284,9 +282,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         let game = self.games![indexPath.row]
         let vc: GameDetailsViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "game_details") as! GameDetailsViewController
         var gameField: GameField!
-        
-        //self.searchBar?.resignFirstResponder()
-        
+
         autoreleasepool {
             let realm = try? Realm()
             gameField = realm?.object(ofType: GameField.self, forPrimaryKey: gameFields.idNumber)
@@ -460,9 +456,7 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //self.searchBar?.resignFirstResponder()
         self.tableView?.deselectRow(at: indexPath, animated: true)
-        //self.searchBar?.setShowsCancelButton(false, animated: true)
         self.performSegue(withIdentifier: "library_show_details", sender: tableView.cellForRow(at: indexPath))
     }
     

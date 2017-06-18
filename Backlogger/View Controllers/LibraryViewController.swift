@@ -79,8 +79,6 @@ class LibraryViewController: UIViewController {
             self.tableView?.isHidden = true
         }
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
-        //self.tableView?.contentInset.top = 165
-        //self.tableView?.contentInset.bottom = 40
     }
     
     override func didReceiveMemoryWarning() {
@@ -141,7 +139,6 @@ class LibraryViewController: UIViewController {
             if let cell = sender as? UITableViewCell {
                 let i = (self.tableView?.indexPath(for: cell)?.row)!
                 let vc = segue.destination as! GameTableViewController
-                //vc.title = self.platforms?[i].name
                 vc.platform = self.platforms?[i]
             }
         }

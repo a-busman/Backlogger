@@ -9,6 +9,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>ImageViewer.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Kingfisher.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -32,17 +37,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>27038BDB62111A63D9A47E386A63F1F4</key>
+		<key>0826D0EE89BE51424483A416AB3AC420</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>59DBED9E50CA21CF6E926056077D37CD</key>
+		<key>2F0C0F810568D3E82219429D9D870F04</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>72A0E8BE646EEF5EEC7DDC6CE3D4DF71</key>
+		<key>6B8C259C200F75123A23A8A65022397B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>83548DB259CDDAF1722C21C80CD1F343</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -52,22 +62,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>B9DBA2A7EB21BC20539B093625F2D3B0</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>C4944FEC314D1A66588651D006273ADE</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>C7FC607E06FDB4A2FAFD3FBBAE0E5E6D</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>DC6A1F5BF17DE7787768E9CBFFF9F250</key>
+		<key>99B8FC473DF735FBC27AE07991988BEA</key>
 		<dict>
 			<key>primary</key>
 			<true/>

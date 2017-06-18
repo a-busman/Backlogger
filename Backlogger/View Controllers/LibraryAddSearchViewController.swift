@@ -183,18 +183,7 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
         }
         self.dismiss(animated: true, completion: nil)
     }
-    
-    // MARK: - Table view data source
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "add_show_details" {
             if let cell = sender as? UITableViewCell {

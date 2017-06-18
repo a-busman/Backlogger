@@ -596,15 +596,6 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             self.saveCurrentState(playlist: nil)
         }
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 2
@@ -951,10 +942,8 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            //self.tableView.beginUpdates()
             self.games.remove(at: indexPath.row)
             self.tableView.deleteRows(at: [indexPath], with: .fade)
-            //self.tableView.endUpdates()
             self.imagesLoaded = 0
             if self._playlistState == .default {
                 self.saveCurrentState(playlist: nil)
