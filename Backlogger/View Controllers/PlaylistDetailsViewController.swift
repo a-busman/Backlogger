@@ -15,7 +15,7 @@ protocol PlaylistDetailsViewControllerDelegate {
     func didFinish(vc: PlaylistDetailsViewController, playlist: Playlist)
 }
 
-class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, PlaylistTitleCellDelegate, AddToPlaylistViewControllerDelegate, PlaylistFooterDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, PlaylistTitleCellDelegate, AddToPlaylistViewControllerDelegate, PlaylistFooterDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, PlaylistViewControllerDelegate {
     
     @IBOutlet weak var noGamesView: UIView?
     
@@ -419,9 +419,11 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         queueAction.setValue(#imageLiteral(resourceName: "add_to_queue"), forKey: "image")
         
         actions.addAction(deleteAction)
-        actions.addAction(addToAction)
-        actions.addAction(playNextAction)
-        actions.addAction(queueAction)
+        if self.games.count > 0 {
+            actions.addAction(addToAction)
+            actions.addAction(playNextAction)
+            actions.addAction(queueAction)
+        }
         actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         self.present(actions, animated: true, completion: nil)
     }
@@ -496,9 +498,31 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     }
     
     func handleAddToPlaylist(sender: UIAlertAction) {
-        let gameCount = 5
-        let playlist = "Really long playlist name that allows me to see if this thing works correctly or not. Maybe it will."
-        self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "add_to_playlist_large"), title: "Added to Playlist", description: "\(gameCount) games added to \"\(playlist)\".")
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "PlaylistNavigation") as! UINavigationController
+        let playlistVc = vc.viewControllers.first as! PlaylistViewController
+        playlistVc.addingGames = Array(self.games)
+        playlistVc.isAddingGames = true
+        playlistVc.delegate = self
+        self.present(vc, animated: true, completion: nil)
+    }
+    
+    func chosePlaylist(vc: PlaylistViewController, playlist: Playlist, games: [Game], isNew: Bool) {
+        if !isNew {
+            playlist.update {
+                playlist.games.append(contentsOf: games)
+            }
+        }
+        vc.presentingViewController?.dismiss(animated: true, completion: {
+            var descString: String
+            if games.count == 1 {
+                descString = "Added 1 game to \"\(playlist.name!)\"."
+            } else {
+                descString = "Added \(games.count) games to \"\(playlist.name!)\"."
+            }
+            self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "add_to_playlist_large"), title: "Added to Playlist", description: descString)
+        })
+        vc.navigationController?.dismiss(animated: true, completion: nil)
+        self.tableView.reloadData()
     }
     
     func handlePlayNext(sender: UIAlertAction) {
@@ -507,7 +531,19 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             let realm = try! Realm()
             let upNextPlaylist = realm.objects(Playlist.self).filter("isUpNext = true").first
             if upNextPlaylist != nil {
-                var currentGames = self.games
+                var currentGames = List<Game>()
+                for game in self.games {
+                    var isNowPlaying = false
+                    for playlist in game.linkedPlaylists {
+                        if playlist.isNowPlaying || playlist.isUpNext {
+                            isNowPlaying = true
+                            break
+                        }
+                    }
+                    if !isNowPlaying {
+                        currentGames.append(game)
+                    }
+                }
                 currentGames += upNextPlaylist!.games
                 upNextPlaylist!.update {
                     upNextPlaylist?.games.removeAll()
@@ -525,7 +561,18 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             let upNextPlaylist = realm.objects(Playlist.self).filter("isUpNext = true").first
             if upNextPlaylist != nil {
                 var currentGames = Array(upNextPlaylist!.games)
-                currentGames += self.games
+                for game in self.games {
+                    var isNowPlaying = false
+                    for playlist in game.linkedPlaylists {
+                        if playlist.isNowPlaying || playlist.isUpNext {
+                            isNowPlaying = true
+                            break
+                        }
+                    }
+                    if !isNowPlaying {
+                        currentGames.append(game)
+                    }
+                }
                 upNextPlaylist!.update {
                     upNextPlaylist?.games.removeAll()
                     upNextPlaylist?.games.append(contentsOf: currentGames)
@@ -1019,7 +1066,13 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                     self.updatePlaylistImage()
                 }
             }
-            
+            self.playlistFooterView.update(count: self.games.count)
+            var percent = 0
+            for game in self.games {
+                percent += game.progress
+            }
+            percent /= self.games.count == 0 ? 1 : self.games.count
+            self.playlistFooterView.update(percent: percent)
         } else if editingStyle == .insert {
             self.performSegue(withIdentifier: "addToPlaylist", sender: tableView.cellForRow(at: indexPath))
         }

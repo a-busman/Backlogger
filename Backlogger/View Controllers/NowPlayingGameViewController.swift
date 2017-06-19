@@ -53,6 +53,8 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
     
     private var isInEditMode = false
     
+    var mainImage: UIImage?
+    
     var game: Game? {
         get {
             return self._game
@@ -287,28 +289,77 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
         }
     }
     
+    func hideView() {
+        self.view.mask = UIView(frame: .zero)
+    }
+    
+    func showView() {
+        let view = UIView(frame: self.view.frame)
+        view.backgroundColor = .white
+        self.view.mask = view
+    }
+    
+    func animateGrowing(initialFrame: CGRect) {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = CGRect(x: 0.0, y: self.view.center.y - (initialFrame.height / 2), width: initialFrame.width, height: initialFrame.height)
+        gradientLayer.colors = [UIColor.clear.cgColor, UIColor.black.cgColor, UIColor.black.cgColor, UIColor.clear.cgColor]
+        gradientLayer.locations = [0.0, 0.1, 0.9, 1.0]
+        //gradientLayer.anchorPoint = self.view.center
+        let gradientAnimation = CABasicAnimation(keyPath: "bounds.size.height")
+        gradientAnimation.fromValue = initialFrame.height
+        gradientAnimation.toValue = self.view.bounds.size.height + 300
+        gradientAnimation.duration = 0.5
+        gradientAnimation.isRemovedOnCompletion = false
+        gradientAnimation.fillMode = kCAFillModeForwards
+        let maskView = UIView(frame: self.view.frame)
+        maskView.backgroundColor = .clear
+
+        maskView.layer.addSublayer(gradientLayer)
+        
+        let whiteView = UIView(frame: self.view.frame)
+        whiteView.backgroundColor = .white
+        self.view.addSubview(whiteView)
+        self.view.mask = maskView
+        CATransaction.begin()
+        CATransaction.setCompletionBlock({
+            self.view.mask = nil
+        })
+        gradientLayer.add(gradientAnimation, forKey: "bounds.size.height")
+        CATransaction.commit()
+        UIView.animate(withDuration: 0.5, animations: {
+            whiteView.alpha = 0.0
+        }, completion: { _ in
+            whiteView.removeFromSuperview()
+        })
+    }
+    
     func addDetails() {
         guard let currentGame = self.game else {
             NSLog("no game to get details from")
             return
         }
-        if let superUrl = currentGame.gameFields?.image?.superUrl {
-            self.coverImageView?.kf.setImage(with: URL(string: superUrl), placeholder: #imageLiteral(resourceName: "now_playing_placeholder"), completionHandler: {
-                (image, error, cacheType, imageUrl) in
-                if image != nil {
-                    if cacheType == .none {
-                        UIView.transition(with: self.coverImageView!,
-                                          duration:0.5,
-                                          options: .transitionCrossDissolve,
-                                          animations: { self.coverImageView?.image = image! },
-                                          completion: nil)
-                    } else {
-                        self.coverImageView?.image = image!
-                    }
-                }
-            })
+        if let image = self.mainImage {
+            self.coverImageView?.image = image
         } else {
-            self.coverImageView?.image = #imageLiteral(resourceName: "now_playing_placeholder")
+            if let superUrl = currentGame.gameFields?.image?.superUrl {
+                self.coverImageView?.kf.setImage(with: URL(string: superUrl), placeholder: #imageLiteral(resourceName: "now_playing_placeholder"), completionHandler: {
+                    (image, error, cacheType, imageUrl) in
+                    if image != nil {
+                        if cacheType == .none {
+                            UIView.transition(with: self.coverImageView!,
+                                              duration:0.5,
+                                              options: .transitionCrossDissolve,
+                                              animations: { self.coverImageView?.image = image! },
+                                              completion: nil)
+                        } else {
+                            self.coverImageView?.image = image!
+                        }
+                        self.mainImage = image!
+                    }
+                })
+            } else {
+                self.coverImageView?.image = #imageLiteral(resourceName: "now_playing_placeholder")
+            }
         }
         self.gameDetailOverlayController.game = currentGame
     }

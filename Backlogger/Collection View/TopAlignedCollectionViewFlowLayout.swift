@@ -26,13 +26,11 @@ class TopAlignedCollectionViewFlowLayout: UICollectionViewFlowLayout
                     if abs(centerY - baseline) > 1
                     {
                         baseline = centerY
-                        TopAlignedCollectionViewFlowLayout.alignToTopForSameLineElements(sameLineElements: sameLineElements)
                         sameLineElements.removeAll()
                     }
                     sameLineElements.append(element)
                 }
             }
-            TopAlignedCollectionViewFlowLayout.alignToTopForSameLineElements(sameLineElements: sameLineElements) // align one more time for the last line
             return attrs
         }
         return nil
@@ -67,27 +65,5 @@ class TopAlignedCollectionViewFlowLayout: UICollectionViewFlowLayout
     
     var flickVelocity: CGFloat {
         return 2.0
-    }
-    
-    private class func alignToTopForSameLineElements(sameLineElements: [UICollectionViewLayoutAttributes])
-    {
-        if sameLineElements.count < 1
-        {
-            return
-        }
-        let sorted = sameLineElements.sorted { (obj1: UICollectionViewLayoutAttributes, obj2: UICollectionViewLayoutAttributes) -> Bool in
-            
-            let height1 = obj1.frame.size.height
-            let height2 = obj2.frame.size.height
-            let delta = height1 - height2
-            return delta <= 0
-        }
-        if let tallest = sorted.last
-        {
-            for obj in sameLineElements
-            {
-                obj.frame = obj.frame.offsetBy(dx: 0, dy: tallest.frame.origin.y - obj.frame.origin.y)
-            }
-        }
     }
 }

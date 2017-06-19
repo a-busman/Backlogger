@@ -169,8 +169,8 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
             let vc = self.storyboard?.instantiateViewController(withIdentifier: "playlist_details") as! PlaylistDetailsViewController
             let navVc = UINavigationController(rootViewController: vc)
             vc.playlistState = .new
+            vc.delegate = self
             if self.isAddingGames {
-                vc.delegate = self
                 vc.games.append(contentsOf: self.addingGames)
             }
             navVc.navigationBar.barTintColor = Util.appColor
@@ -211,6 +211,9 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension PlaylistViewController: PlaylistDetailsViewControllerDelegate {
     func didFinish(vc: PlaylistDetailsViewController, playlist: Playlist) {
+        if !self.isAddingGames {
+            vc.dismiss(animated: true, completion: nil)
+        }
         self.delegate?.chosePlaylist(vc: self, playlist: playlist, games: [], isNew: true)
     }
 }

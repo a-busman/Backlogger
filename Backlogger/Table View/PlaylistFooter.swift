@@ -27,6 +27,7 @@ class PlaylistFooter: UIViewController {
         set(newValue) {
             self._showButton = newValue
             if self.isViewLoaded {
+                self.view.frame = CGRect(x: self.view.frame.minX, y: self.view.frame.minY, width: self.view.frame.width, height: self.showButton ? 136.0 : 40.0)
                 self.addView?.isHidden = !newValue
             }
         }
@@ -44,6 +45,7 @@ class PlaylistFooter: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.addView?.isHidden = !self._showButton
+        self.view.frame = CGRect(x: self.view.frame.minX, y: self.view.frame.minY, width: self.view.frame.width, height: self.showButton ? 136.0 : 40.0)
         self.update(count: self.count)
     }
     

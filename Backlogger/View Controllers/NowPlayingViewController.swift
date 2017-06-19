@@ -83,7 +83,6 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
         self.upNextTableView?.register(UINib(nibName: "PlaylistAddTableCell", bundle: nil), forCellReuseIdentifier: self.cellReuseIdentifier)
         self.upNextTableView?.separatorColor = .lightGray
         //self.upNextTableView?.separatorInset = UIEdgeInsetsMake(0, 75, 0, 0)
-        self.upNextTableView?.tableFooterView = UIView(frame: .zero)
         self.upNextTableView?.contentInset.bottom = 55.0
     }
     
@@ -92,6 +91,22 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
         self.longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(NowPlayingViewController.handleLongGesture))
         self.collectionView?.addGestureRecognizer(longPressGesture!)
         self.longPressGesture?.isEnabled = false
+        
+        self.loadPlaylists()
+
+        if self.games.count > 0 {
+            let newButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(handleTapEdit))
+            self.navigationController?.navigationBar.topItem?.leftBarButtonItem = newButton
+            self.addBackgroundView?.isHidden = true
+        } else {
+            self.navigationController?.navigationBar.topItem?.leftBarButtonItem = nil
+            self.addBackgroundView?.isHidden = false
+        }
+        
+        self.pageControl?.numberOfPages = orderedViewControllers.count
+    }
+    
+    func loadPlaylists() {
         autoreleasepool {
             let realm = try! Realm()
             let playlists = realm.objects(Playlist.self)
@@ -115,15 +130,6 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
             self.gamesUpNext = Array(self.upNextPlaylist.games)
         }
         var newGameIds = [String]()
-        if self.games.count > 0 {
-            let newButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(handleTapEdit))
-            self.navigationController?.navigationBar.topItem?.leftBarButtonItem = newButton
-            self.addBackgroundView?.isHidden = true
-        } else {
-            self.navigationController?.navigationBar.topItem?.leftBarButtonItem = nil
-            self.addBackgroundView?.isHidden = false
-        }
-        
         for (i, game) in self.games.enumerated() {
             if let gameField = game.gameFields {
                 if !gameField.hasDetails {
@@ -138,7 +144,6 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
             }
             newGameIds.append(game.uuid)
         }
-        
         // Don't regenerate if games weren't changed.
         if !NowPlayingViewController.containSameElements(newGameIds, self.gameIds) {
             self.orderedViewControllers.removeAll()
@@ -152,8 +157,6 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
             self.gameIds = newGameIds
             self.collectionView?.reloadData()
         }
-        self.pageControl?.numberOfPages = orderedViewControllers.count
-        
         self.upNextTableView?.reloadData()
     }
     
@@ -407,14 +410,19 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
     }
     
     @IBAction func handleTapDetails(sender: UITapGestureRecognizer) {
+        if self.gamesUpNext.count == 0 {
+            return
+        }
         if self.inEditMode {
             self.handleTapEdit(sender: UIBarButtonItem())
         }
+        let maxHeight = max(-self.visibleView!.bounds.height * 0.9, 55.0 * CGFloat(-self.gamesUpNext.count) - 50.0)
+
         var newAlpha: CGFloat = 0.0
         // Show percent slider
         switch (self._blurViewState) {
         case .minimal:
-            self.blurTopLayoutConstraint?.constant = -self.visibleView!.bounds.height * 0.9
+            self.blurTopLayoutConstraint?.constant = maxHeight
             self.blurViewState = .full
             newAlpha = 0.5
             break
@@ -441,21 +449,24 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
         if self.inEditMode {
             self.handleTapEdit(sender: UIBarButtonItem())
         }
+        let maxHeight = max(-self.visibleView!.bounds.height * 0.9, 55.0 * CGFloat(-self.gamesUpNext.count) - 50.0)
         // Update view when user drags it around
         if recognizer.state == .began || recognizer.state == .changed {
             let translation = recognizer.translation(in: self.visibleView!)
             var newY: CGFloat = 0.0
             var newAlpha: CGFloat = 0.0
             // If above the limit, resist pan
-            if self.blurTopLayoutConstraint!.constant + translation.y < (-self.visibleView!.bounds.height * 0.9) {
+            if self.blurTopLayoutConstraint!.constant + translation.y < maxHeight {
                 newY = self.blurTopLayoutConstraint!.constant + (translation.y / 2.0)
                 newAlpha = 0.5
             } else {
                 newY = self.blurTopLayoutConstraint!.constant + translation.y
-                newAlpha = (newY / (-self.visibleView!.bounds.height * 0.9)) / 2.0
+                newAlpha = (newY / maxHeight) / 2.0
             }
             self.blurTopLayoutConstraint?.constant = newY
-            self.dimView?.alpha = newAlpha
+            if self.gamesUpNext.count > 0 {
+                self.dimView?.alpha = newAlpha
+            }
             recognizer.setTranslation(CGPoint.zero, in: self.visibleView!)
             self.visibleView?.layoutIfNeeded()
             self.dimView?.isUserInteractionEnabled = false
@@ -465,23 +476,30 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
             let velocity = recognizer.velocity(in: self.visibleView!).y
             
             // If the view is above the top, spring down to a full view
-            if self.blurTopLayoutConstraint!.constant < (-self.visibleView!.bounds.height * 0.9) {
-                self.blurTopLayoutConstraint?.constant = -self.visibleView!.bounds.height * 0.9
+            if self.blurTopLayoutConstraint!.constant < maxHeight {
+                self.blurTopLayoutConstraint?.constant = maxHeight
+
                 UIView.animate(withDuration: 0.4,
                                delay: 0.0,
                                usingSpringWithDamping: 0.6,
                                initialSpringVelocity: 1.0,
                                options: .curveEaseOut,
                                animations: {
-                                self.dimView?.alpha = 0.5
+                                if self.gamesUpNext.count > 0 {
+                                    self.dimView?.alpha = 0.5
+                                }
                                 self.visibleView?.layoutIfNeeded()
                 },
                                completion: nil)
-                self.blurViewState = .full
+                if self.gamesUpNext.count == 0 {
+                    self.blurViewState = .minimal
+                } else {
+                    self.blurViewState = .full
+                }
                 
                 // If the view is above middle, or if the user was swiping up when they ended, fling to top and collide with top boundary
-            } else if (self.blurTopLayoutConstraint!.constant < (-self.visibleView!.bounds.height * 0.45) && velocity < 300) || velocity < -300 {
-                self.blurTopLayoutConstraint?.constant = -self.visibleView!.bounds.height * 0.9
+            } else if (self.blurTopLayoutConstraint!.constant < (maxHeight / 2.0) && velocity < 300) || velocity < -300 {
+                self.blurTopLayoutConstraint?.constant = maxHeight
                 let animationTime: TimeInterval = ((0.4 - 1.0) * (min(Double(velocity * -1.0), 1000.0) - 300)/(1000 - 300) + 1.0)
                 UIView.animate(withDuration: animationTime,
                                delay: 0.0,
@@ -489,14 +507,20 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
                                initialSpringVelocity: 1.0,
                                options: .curveEaseOut,
                                animations: {
-                                self.dimView?.alpha = 0.5
+                                if self.gamesUpNext.count > 0 {
+                                    self.dimView?.alpha = 0.5
+                                }
                                 self.visibleView?.layoutIfNeeded()
                 },
                                completion: nil)
-                self.blurViewState = .full
+                if self.gamesUpNext.count == 0 {
+                    self.blurViewState = .minimal
+                } else {
+                    self.blurViewState = .full
+                }
                 
                 // If the view is below the middle, or if the user was swiping down when they ended, return to minimal state with a spring bounce
-            } else if (self.blurTopLayoutConstraint!.constant > (-self.visibleView!.bounds.height * 0.45) && velocity > -300) || velocity > 300 {
+            } else if (self.blurTopLayoutConstraint!.constant > (maxHeight / 2.0) && velocity > -300) || velocity > 300 {
                 let animationTime: TimeInterval = ((0.4 - 1.0) * (min(Double(velocity), 1000.0) - 300)/(1000 - 300) + 1.0)
                 self.blurTopLayoutConstraint?.constant = -50
                 UIView.animate(withDuration: animationTime,
@@ -591,13 +615,114 @@ extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate {
         self.gamesUpNext.insert(game, at: destinationIndexPath.row)
     }
     
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if self.gamesUpNext.count > 0 {
+            return 0.0
+        } else {
+            return 30.0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        if self.gamesUpNext.count > 0 {
+            return UIView(frame: .zero)
+        } else {
+            let gamesLabel = UILabel(frame: CGRect(x: 0.0, y: 0.0, width: tableView.frame.width, height: 30.0))
+            gamesLabel.text = "Add games to Up Next from your library."
+            gamesLabel.textAlignment = .center
+            gamesLabel.textColor = .lightGray
+            return gamesLabel
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath) as! PlaylistAddTableCell
+        tableView.deselectRow(at: indexPath, animated: true)
+        let center = CGPoint(x: cell.center.x, y: cell.center.y + self.navigationController!.navigationBar.frame.maxY + self.blurView!.frame.minY + tableView.frame.minY)
+        let snapshotView = self.snapshotOfCell(cell.contentView)
+        let whiteView = UIView(frame: snapshotView.frame)
+        let shadowView = UIView(frame: snapshotView.frame)
+        whiteView.backgroundColor = .white
+        whiteView.alpha = 0.0
+        snapshotView.addSubview(whiteView)
+        shadowView.addSubview(snapshotView)
+        shadowView.layer.shadowRadius = 20.0
+        shadowView.layer.shadowOffset = CGSize(width: 0.0, height: 20.0)
+        shadowView.layer.shadowColor = UIColor.black.cgColor
+        shadowView.layer.shadowOpacity = 0.5
+        shadowView.backgroundColor = .white
+        shadowView.center = center
+        self.view.addSubview(shadowView)
+        
+        self.handleTapDimView(sender: UITapGestureRecognizer())
+        var game: Game?
+        self.upNextPlaylist?.update {
+            game = self.upNextPlaylist!.games.remove(at: indexPath.row)
+        }
+        self.nowPlayingPlaylist?.update {
+            self.nowPlayingPlaylist!.games.append(game!)
+        }
+        self.loadPlaylists()
+        let newCell = self.orderedViewControllers.last
+        newCell?.hideView()
+        
+        snapshotView.clipsToBounds = true
+        
+        let cornerRadiusAnimation = CABasicAnimation(keyPath: "cornerRadius")
+        cornerRadiusAnimation.fromValue = 0.0
+        cornerRadiusAnimation.toValue = 5.0
+        cornerRadiusAnimation.duration = 0.5
+        cornerRadiusAnimation.isRemovedOnCompletion = false
+        cornerRadiusAnimation.fillMode = kCAFillModeForwards
+        
+        snapshotView.layer.add(cornerRadiusAnimation, forKey: "cornerRadius")
+        shadowView.layer.add(cornerRadiusAnimation, forKey: "cornerRadius")
+        
+        let distanceAnimation = CABasicAnimation(keyPath: "shadowOffset")
+        distanceAnimation.fromValue = CGSize(width: 0.0, height: 20.0)
+        distanceAnimation.toValue = CGSize(width: 0.0, height: 0.0)
+        distanceAnimation.duration = 0.5
+        distanceAnimation.isRemovedOnCompletion = false
+        distanceAnimation.fillMode = kCAFillModeForwards
+        
+        let shadowRadiusAnimation = CABasicAnimation(keyPath: "shadowRadius")
+        shadowRadiusAnimation.fromValue = 20.0
+        shadowRadiusAnimation.toValue = 1.0
+        shadowRadiusAnimation.duration = 0.5
+        shadowRadiusAnimation.isRemovedOnCompletion = false
+        shadowRadiusAnimation.fillMode = kCAFillModeForwards
+
+        
+        UIView.animate(withDuration: 0.5, animations: {
+            shadowView.center = self.view.center
+            shadowView.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+        }, completion: { _ in
+            shadowView.layer.add(distanceAnimation, forKey: "shadowOffset")
+            shadowView.layer.add(shadowRadiusAnimation, forKey: "shadowRadius")
+            UIView.animate(withDuration: 0.5, animations: {
+                whiteView.alpha = 1.0
+                shadowView.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+            }, completion: { _ in
+                newCell?.animateGrowing(initialFrame: shadowView.frame)
+                shadowView.removeFromSuperview()
+            })
+        })
+        self.pageControl?.numberOfPages = self.orderedViewControllers.count
+        self.pageControl?.currentPage = self.orderedViewControllers.count
+        self.collectionView?.scrollToItem(at: IndexPath(item: self.orderedViewControllers.count - 1, section: 0), at: .centeredHorizontally, animated: true)
+    }
+    
     func snapshotOfCell(_ inputView: UIView) -> UIView {
+        let visualView = UIVisualEffectView(frame: inputView.frame)
+        visualView.effect = UIBlurEffect(style: .extraLight)
+        
         UIGraphicsBeginImageContextWithOptions(inputView.bounds.size, false, 0.0)
         inputView.layer.render(in: UIGraphicsGetCurrentContext()!)
         let image: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         let cellSnapshot : UIView = UIImageView(image: image)
-        return cellSnapshot
+        visualView.addSubview(cellSnapshot)
+        return visualView
     }
     
 }
@@ -638,7 +763,8 @@ extension NowPlayingViewController: UICollectionViewDataSource, UICollectionView
         let nowPlayingView = (nowPlayingViewController.view)!
         nowPlayingView.setNeedsLayout()
         nowPlayingView.translatesAutoresizingMaskIntoConstraints = false
-
+        cell.layer.shouldRasterize = true
+        cell.layer.rasterizationScale = UIScreen.main.scale
         cell.contentView.addSubview(nowPlayingView)
 
         NSLayoutConstraint(item: nowPlayingView,
