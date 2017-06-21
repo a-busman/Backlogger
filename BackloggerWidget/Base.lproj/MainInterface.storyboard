@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="M4Y-Lb-cyx">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Today View Controller-->
+        <scene sceneID="cwh-vc-ff4">
+            <objects>
+                <viewController id="M4Y-Lb-cyx" customClass="TodayViewController" customModule="BackloggerWidget" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Ft6-oW-KC0"/>
+                        <viewControllerLayoutGuide type="bottom" id="FKl-LY-JtV"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" simulatedAppContext="notificationCenter" id="S3S-Oj-5AN">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="115"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Zbq-cw-Hrd">
+                                <rect key="frame" x="16" y="19.5" width="76" height="76"/>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="76" id="BaB-pg-fTc"/>
+                                    <constraint firstAttribute="width" secondItem="Zbq-cw-Hrd" secondAttribute="height" id="eqn-6Y-K5Q"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="JiT-t2-lle" appends="YES" id="IES-ZB-yVW"/>
+                                </connections>
+                            </imageView>
+                            <view clipsSubviews="YES" alpha="0.75" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0j2-8b-X67">
+                                <rect key="frame" x="142" y="19.5" width="25" height="25"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="25" id="xcG-Lx-pIH"/>
+                                    <constraint firstAttribute="width" secondItem="0j2-8b-X67" secondAttribute="height" id="yUi-O6-Yql"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <real key="value" value="12.5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="lUq-ZZ-k9o" appends="YES" id="4v7-f9-VPO"/>
+                                </connections>
+                            </view>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xzl-vv-cfk">
+                                <rect key="frame" x="177" y="21.5" width="42" height="21"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="GLc-O4-FtE">
+                                    <rect key="frame" x="0.0" y="0.0" width="42" height="21"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="100%" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Flt-2l-g8a">
+                                            <rect key="frame" x="0.0" y="0.0" width="42" height="21"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="42" id="qwB-7Z-9Bx"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="height" secondItem="Flt-2l-g8a" secondAttribute="height" id="5EZ-SI-X6L"/>
+                                        <constraint firstItem="Flt-2l-g8a" firstAttribute="centerY" secondItem="GLc-O4-FtE" secondAttribute="centerY" id="FOR-4t-lXa"/>
+                                        <constraint firstItem="Flt-2l-g8a" firstAttribute="centerX" secondItem="GLc-O4-FtE" secondAttribute="centerX" id="IWT-dk-fzo"/>
+                                        <constraint firstAttribute="width" secondItem="Flt-2l-g8a" secondAttribute="width" id="JSX-ND-5I0"/>
+                                    </constraints>
+                                </view>
+                                <vibrancyEffect>
+                                    <blurEffect style="light"/>
+                                </vibrancyEffect>
+                            </visualEffectView>
+                            <view clipsSubviews="YES" alpha="0.75" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6aC-Qi-c4n">
+                                <rect key="frame" x="229" y="19.5" width="25" height="25"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="25" id="6ir-Ve-0pJ"/>
+                                    <constraint firstAttribute="width" secondItem="6aC-Qi-c4n" secondAttribute="height" id="szp-Ld-un5"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <real key="value" value="12.5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="NUK-cl-dQ9" appends="YES" id="r40-vP-s8H"/>
+                                </connections>
+                            </view>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S4Y-qG-3qu">
+                                <rect key="frame" x="177" y="70.5" width="42" height="25"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Cjn-RG-mBN">
+                                    <rect key="frame" x="0.0" y="0.0" width="42" height="25"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="asQ-64-JcI">
+                                            <rect key="frame" x="0.0" y="2" width="42" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="asQ-64-JcI" secondAttribute="width" id="8Fa-ls-zdj"/>
+                                        <constraint firstItem="asQ-64-JcI" firstAttribute="centerX" secondItem="Cjn-RG-mBN" secondAttribute="centerX" id="Xff-2H-8sm"/>
+                                        <constraint firstItem="asQ-64-JcI" firstAttribute="centerY" secondItem="Cjn-RG-mBN" secondAttribute="centerY" id="j4b-xm-uvC"/>
+                                    </constraints>
+                                </view>
+                                <vibrancyEffect>
+                                    <blurEffect style="light"/>
+                                </vibrancyEffect>
+                            </visualEffectView>
+                            <view alpha="0.75" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YOL-th-bIK">
+                                <rect key="frame" x="142" y="70.5" width="25" height="25"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="25" id="XMr-4o-mTo"/>
+                                    <constraint firstAttribute="width" secondItem="YOL-th-bIK" secondAttribute="height" id="iEu-gb-kJZ"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <real key="value" value="12.5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="rsR-xN-719" appends="YES" id="bjg-Kb-bHS"/>
+                                </connections>
+                            </view>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="0j2-8b-X67" firstAttribute="top" secondItem="Zbq-cw-Hrd" secondAttribute="top" id="8LU-d8-cJZ"/>
+                            <constraint firstItem="xzl-vv-cfk" firstAttribute="leading" secondItem="0j2-8b-X67" secondAttribute="trailing" constant="10" id="8SF-zS-BKH"/>
+                            <constraint firstItem="0j2-8b-X67" firstAttribute="leading" secondItem="Zbq-cw-Hrd" secondAttribute="trailing" constant="50" id="AV9-OO-PM8"/>
+                            <constraint firstItem="xzl-vv-cfk" firstAttribute="centerY" secondItem="0j2-8b-X67" secondAttribute="centerY" id="AZs-CR-vej"/>
+                            <constraint firstItem="6aC-Qi-c4n" firstAttribute="width" secondItem="6aC-Qi-c4n" secondAttribute="height" id="Kn7-Cz-Hic"/>
+                            <constraint firstItem="S4Y-qG-3qu" firstAttribute="centerY" secondItem="YOL-th-bIK" secondAttribute="centerY" id="Kvb-Dh-rjN"/>
+                            <constraint firstItem="Zbq-cw-Hrd" firstAttribute="centerY" secondItem="S3S-Oj-5AN" secondAttribute="centerY" id="Wnn-5I-RJa"/>
+                            <constraint firstItem="6aC-Qi-c4n" firstAttribute="top" secondItem="0j2-8b-X67" secondAttribute="top" id="bqe-Eh-VUX"/>
+                            <constraint firstItem="YOL-th-bIK" firstAttribute="bottom" secondItem="Zbq-cw-Hrd" secondAttribute="bottom" id="bzM-iG-KMk"/>
+                            <constraint firstItem="YOL-th-bIK" firstAttribute="centerX" secondItem="0j2-8b-X67" secondAttribute="centerX" id="ddd-Fg-Nkk"/>
+                            <constraint firstItem="S4Y-qG-3qu" firstAttribute="height" secondItem="YOL-th-bIK" secondAttribute="height" id="e46-7x-vyD"/>
+                            <constraint firstItem="6aC-Qi-c4n" firstAttribute="leading" secondItem="xzl-vv-cfk" secondAttribute="trailing" constant="10" id="gaP-hh-2Cm"/>
+                            <constraint firstItem="Zbq-cw-Hrd" firstAttribute="leading" secondItem="S3S-Oj-5AN" secondAttribute="leadingMargin" id="xMx-nZ-wmJ"/>
+                            <constraint firstItem="S4Y-qG-3qu" firstAttribute="leading" secondItem="YOL-th-bIK" secondAttribute="trailing" constant="10" id="zj6-8F-oMg"/>
+                        </constraints>
+                    </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="320" height="115"/>
+                    <connections>
+                        <outlet property="artView" destination="Zbq-cw-Hrd" id="vMY-c9-Vso"/>
+                        <outlet property="completeButton" destination="YOL-th-bIK" id="kUI-dd-aFh"/>
+                        <outlet property="completeLabel" destination="asQ-64-JcI" id="BPX-qg-O1c"/>
+                        <outlet property="completeVibrancy" destination="S4Y-qG-3qu" id="9iF-EB-4m5"/>
+                        <outlet property="minusView" destination="0j2-8b-X67" id="h87-ml-tJi"/>
+                        <outlet property="percentLabel" destination="Flt-2l-g8a" id="agk-0M-ZH6"/>
+                        <outlet property="plusView" destination="6aC-Qi-c4n" id="dsE-Rc-WVk"/>
+                        <outlet property="vibrancyView" destination="xzl-vv-cfk" id="bFf-RZ-uGZ"/>
+                        <outlet property="view" destination="S3S-Oj-5AN" id="Vth-BF-U3P"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vXp-U4-Rya" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="lUq-ZZ-k9o">
+                    <connections>
+                        <action selector="minusTappedWithSender:" destination="M4Y-Lb-cyx" id="xjG-F8-Oia"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="NUK-cl-dQ9">
+                    <connections>
+                        <action selector="plusTappedWithSender:" destination="M4Y-Lb-cyx" id="N5z-F2-Fb1"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="JiT-t2-lle">
+                    <connections>
+                        <action selector="artTappedWithSender:" destination="M4Y-Lb-cyx" id="Asg-4K-l3Q"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="rsR-xN-719">
+                    <connections>
+                        <action selector="completeTappedWithSender:" destination="M4Y-Lb-cyx" id="QDy-mS-LXQ"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="33.600000000000001" y="38.23088455772114"/>
+        </scene>
+    </scenes>
+</document>

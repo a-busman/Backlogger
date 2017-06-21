@@ -72,6 +72,7 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
                     }
                 }
             }
+            self.gameDetailOverlayController.game = newGame
         }
     }
     
@@ -212,7 +213,7 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
                 self.finishedButton?.setImage(#imageLiteral(resourceName: "check-empty-black"), for: .normal)
                 self.finishedButtonState = .normal
             } else {
-                self.finishedButton?.setImage(#imageLiteral(resourceName: "check-black"), for: .normal)
+                self.finishedButton?.setImage(#imageLiteral(resourceName: "check-green"), for: .normal)
                 self.finishedButtonState = .selected
             }
             self.firstStar?.image  = #imageLiteral(resourceName: "star-white")
@@ -715,12 +716,12 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
                     self.gameDetailOverlayController.completionCheckImage?.image = #imageLiteral(resourceName: "check_light_filled")
                 }
             } else {
-                self.finishedButton?.setImage(#imageLiteral(resourceName: "check-black"), for: .normal)
+                self.finishedButton?.setImage(#imageLiteral(resourceName: "check-green"), for: .normal)
                 self.finishedButtonState = .selected
                 self._game?.update {
                     self._game?.finished = true
                 }
-                self.gameDetailOverlayController.completionLabel?.text = "Complete"
+                self.gameDetailOverlayController.completionLabel?.text = "Finished"
                 self.gameDetailOverlayController.completionCheckImage?.image = #imageLiteral(resourceName: "check_light")
             }
         default:

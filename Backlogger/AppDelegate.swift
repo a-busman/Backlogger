@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Realm
 import RealmSwift
 
 @UIApplicationMain
@@ -19,7 +20,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         self.createDirectories()
         var performShortcutDelegate = true
-        self.compactRealm()
+        let dir: URL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.BackloggerWidgetSharing")!
+        let realmPath = dir.appendingPathComponent("db.realm")
+        
+        let config = Realm.Configuration(fileURL: realmPath, schemaVersion: 1, migrationBlock: {
+            migration, oldSchemaVersion in
+            if oldSchemaVersion < 1 {
+                // auto migrate
+            }
+        })
+        Realm.Configuration.defaultConfiguration = config
+        self.compactRealm(at: realmPath)
         
         (UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self])).tintColor = Util.appColor
         UISlider.appearance().tintColor = Util.appColor
@@ -96,15 +107,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
-    func compactRealm() {
-        let defaultURL = Realm.Configuration.defaultConfiguration.fileURL!
-        let defaultParentURL = defaultURL.deletingLastPathComponent()
+    func compactRealm(at realmPath: URL) {
+        let defaultParentURL = realmPath.deletingLastPathComponent()
         let compactedURL = defaultParentURL.appendingPathComponent("default-compact.realm")
         autoreleasepool {
             let realm = try? Realm()
             try! realm?.writeCopy(toFile: compactedURL)
-            try! FileManager.default.removeItem(at: defaultURL)
-            try! FileManager.default.moveItem(at: compactedURL, to: defaultURL)
+            try! FileManager.default.removeItem(at: realmPath)
+            try! FileManager.default.moveItem(at: compactedURL, to: realmPath)
         }
     }
     

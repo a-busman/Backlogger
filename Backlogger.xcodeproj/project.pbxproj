@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		867947D6F7A70750129C871C /* Pods_BackloggerWidget.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E967FDBF8E4F3EEDD70F5F51 /* Pods_BackloggerWidget.framework */; };
 		F5EE7A022B3CAD2DD1FF320A /* Pods_Backlogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC8BBA1C96900E3F30355A5F /* Pods_Backlogger.framework */; };
 		FA09156D1E2AA4210052BCEC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA09156C1E2AA4210052BCEC /* AppDelegate.swift */; };
 		FA0915741E2AA4210052BCEC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA0915721E2AA4210052BCEC /* Main.storyboard */; };
@@ -53,6 +54,21 @@
 		FA8E71CF1E80E66500E7400B /* Developer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8E71CE1E80E66500E7400B /* Developer.swift */; };
 		FAC778B11E3481A200944B6B /* GameDetailOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */; };
 		FAC778B51E3481E200944B6B /* GameDetailOverlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC778B41E3481E200944B6B /* GameDetailOverlayViewController.swift */; };
+		FACCA64E1EF82CD8005F1021 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FACCA64D1EF82CD8005F1021 /* NotificationCenter.framework */; };
+		FACCA6511EF82CD8005F1021 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACCA6501EF82CD8005F1021 /* TodayViewController.swift */; };
+		FACCA6541EF82CD8005F1021 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FACCA6521EF82CD8005F1021 /* MainInterface.storyboard */; };
+		FACCA6581EF82CD8005F1021 /* BackloggerWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = FACCA64C1EF82CD8005F1021 /* BackloggerWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FACCA65E1EF840AA005F1021 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA358A511EB9AC4C001EE03D /* Playlist.swift */; };
+		FACCA65F1EF840B2005F1021 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA80A11E5252DB0069943D /* Game.swift */; };
+		FACCA6601EF840B8005F1021 /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B44901E5D3F5A006A843F /* Platform.swift */; };
+		FACCA6611EF840BF005F1021 /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B448A1E5D3DC2006A843F /* Field.swift */; };
+		FACCA6621EF84379005F1021 /* SearchResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B44881E5625E7006A843F /* SearchResults.swift */; };
+		FACCA6631EF8437C005F1021 /* Company.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B448C1E5D3F04006A843F /* Company.swift */; };
+		FACCA6641EF8437F005F1021 /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B448E1E5D3F2D006A843F /* Genre.swift */; };
+		FACCA6651EF84382005F1021 /* ImageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B44921E5D405E006A843F /* ImageList.swift */; };
+		FACCA6661EF84386005F1021 /* Publisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8E71CC1E80E61800E7400B /* Publisher.swift */; };
+		FACCA6671EF8438A005F1021 /* Developer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8E71CE1E80E66500E7400B /* Developer.swift */; };
+		FACCA66B1EF8E837005F1021 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FACCA66A1EF8E837005F1021 /* Assets.xcassets */; };
 		FADA808B1E4C07570069943D /* PanDirectionGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808A1E4C07570069943D /* PanDirectionGestureRecognizer.swift */; };
 		FADA808E1E4C0D680069943D /* NowPlayingGameViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808D1E4C0D680069943D /* NowPlayingGameViewCell.swift */; };
 		FADA80901E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808F1E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift */; };
@@ -62,10 +78,37 @@
 		FADA80A21E5252DB0069943D /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA80A11E5252DB0069943D /* Game.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		FACCA6561EF82CD8005F1021 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FA0915611E2AA4210052BCEC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FACCA64B1EF82CD8005F1021;
+			remoteInfo = BackloggerWidget;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FACCA65C1EF82CD8005F1021 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				FACCA6581EF82CD8005F1021 /* BackloggerWidget.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		399E243301191BDB4908E382 /* Pods-BackloggerWidget.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BackloggerWidget.release.xcconfig"; path = "Pods/Target Support Files/Pods-BackloggerWidget/Pods-BackloggerWidget.release.xcconfig"; sourceTree = "<group>"; };
+		3E74F9518AB01F066EA69FD5 /* Pods-BackloggerWidget.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BackloggerWidget.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BackloggerWidget/Pods-BackloggerWidget.debug.xcconfig"; sourceTree = "<group>"; };
 		9AAD962DF395F2D66FEC110A /* Pods-Backlogger.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Backlogger.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Backlogger/Pods-Backlogger.debug.xcconfig"; sourceTree = "<group>"; };
 		D199AF38A366A54E48258FDF /* Pods-Backlogger.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Backlogger.release.xcconfig"; path = "Pods/Target Support Files/Pods-Backlogger/Pods-Backlogger.release.xcconfig"; sourceTree = "<group>"; };
 		DC8BBA1C96900E3F30355A5F /* Pods_Backlogger.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Backlogger.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E967FDBF8E4F3EEDD70F5F51 /* Pods_BackloggerWidget.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BackloggerWidget.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA0915691E2AA4210052BCEC /* Backlogger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Backlogger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA09156C1E2AA4210052BCEC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FA0915731E2AA4210052BCEC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -113,6 +156,14 @@
 		FA8E71CE1E80E66500E7400B /* Developer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Developer.swift; path = Model/Developer.swift; sourceTree = "<group>"; };
 		FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GameDetailOverlayView.xib; path = Views/GameDetailOverlayView.xib; sourceTree = "<group>"; };
 		FAC778B41E3481E200944B6B /* GameDetailOverlayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameDetailOverlayViewController.swift; path = "View Controllers/GameDetailOverlayViewController.swift"; sourceTree = "<group>"; };
+		FACCA64C1EF82CD8005F1021 /* BackloggerWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = BackloggerWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		FACCA64D1EF82CD8005F1021 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
+		FACCA6501EF82CD8005F1021 /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
+		FACCA6531EF82CD8005F1021 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		FACCA6551EF82CD8005F1021 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FACCA65D1EF8303B005F1021 /* Backlogger.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Backlogger.entitlements; sourceTree = "<group>"; };
+		FACCA6681EF8BAD7005F1021 /* BackloggerWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BackloggerWidget.entitlements; sourceTree = "<group>"; };
+		FACCA66A1EF8E837005F1021 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FADA808A1E4C07570069943D /* PanDirectionGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PanDirectionGestureRecognizer.swift; path = "Gesture Recognizers/PanDirectionGestureRecognizer.swift"; sourceTree = "<group>"; };
 		FADA808D1E4C0D680069943D /* NowPlayingGameViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NowPlayingGameViewCell.swift; path = "Collection View/NowPlayingGameViewCell.swift"; sourceTree = "<group>"; };
 		FADA808F1E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TopAlignedCollectionViewFlowLayout.swift; path = "Collection View/TopAlignedCollectionViewFlowLayout.swift"; sourceTree = "<group>"; };
@@ -131,6 +182,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FACCA6491EF82CD8005F1021 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FACCA64E1EF82CD8005F1021 /* NotificationCenter.framework in Frameworks */,
+				867947D6F7A70750129C871C /* Pods_BackloggerWidget.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -139,6 +199,8 @@
 			children = (
 				9AAD962DF395F2D66FEC110A /* Pods-Backlogger.debug.xcconfig */,
 				D199AF38A366A54E48258FDF /* Pods-Backlogger.release.xcconfig */,
+				3E74F9518AB01F066EA69FD5 /* Pods-BackloggerWidget.debug.xcconfig */,
+				399E243301191BDB4908E382 /* Pods-BackloggerWidget.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -147,6 +209,8 @@
 			isa = PBXGroup;
 			children = (
 				DC8BBA1C96900E3F30355A5F /* Pods_Backlogger.framework */,
+				FACCA64D1EF82CD8005F1021 /* NotificationCenter.framework */,
+				E967FDBF8E4F3EEDD70F5F51 /* Pods_BackloggerWidget.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -155,6 +219,7 @@
 			isa = PBXGroup;
 			children = (
 				FA09156B1E2AA4210052BCEC /* Backlogger */,
+				FACCA64F1EF82CD8005F1021 /* BackloggerWidget */,
 				FA09156A1E2AA4210052BCEC /* Products */,
 				D42009BDAD157796B99BA222 /* Pods */,
 				D89C49BAE2CAA1BC26041695 /* Frameworks */,
@@ -165,6 +230,7 @@
 			isa = PBXGroup;
 			children = (
 				FA0915691E2AA4210052BCEC /* Backlogger.app */,
+				FACCA64C1EF82CD8005F1021 /* BackloggerWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -172,6 +238,7 @@
 		FA09156B1E2AA4210052BCEC /* Backlogger */ = {
 			isa = PBXGroup;
 			children = (
+				FACCA65D1EF8303B005F1021 /* Backlogger.entitlements */,
 				FADA80A01E5252C20069943D /* Model */,
 				FADA809D1E4FB64E0069943D /* Table View */,
 				FADA808C1E4C0D440069943D /* Collection View */,
@@ -227,6 +294,18 @@
 				FA358A631EBFC001001EE03D /* PlaylistAddTableCell.xib */,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		FACCA64F1EF82CD8005F1021 /* BackloggerWidget */ = {
+			isa = PBXGroup;
+			children = (
+				FACCA6681EF8BAD7005F1021 /* BackloggerWidget.entitlements */,
+				FACCA6501EF82CD8005F1021 /* TodayViewController.swift */,
+				FACCA6521EF82CD8005F1021 /* MainInterface.storyboard */,
+				FACCA6551EF82CD8005F1021 /* Info.plist */,
+				FACCA66A1EF8E837005F1021 /* Assets.xcassets */,
+			);
+			path = BackloggerWidget;
 			sourceTree = "<group>";
 		};
 		FADA80891E4C072E0069943D /* Gesture Recognizers */ = {
@@ -290,15 +369,36 @@
 				FA0915671E2AA4210052BCEC /* Resources */,
 				4AF8E8992E4F9638814F71F4 /* [CP] Embed Pods Frameworks */,
 				4C5FDF5FB9DB89EF0DF988BF /* [CP] Copy Pods Resources */,
+				FACCA65C1EF82CD8005F1021 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				FACCA6571EF82CD8005F1021 /* PBXTargetDependency */,
 			);
 			name = Backlogger;
 			productName = Backlogger;
 			productReference = FA0915691E2AA4210052BCEC /* Backlogger.app */;
 			productType = "com.apple.product-type.application";
+		};
+		FACCA64B1EF82CD8005F1021 /* BackloggerWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FACCA65B1EF82CD8005F1021 /* Build configuration list for PBXNativeTarget "BackloggerWidget" */;
+			buildPhases = (
+				DBC0412A1692CC6EAEFEC282 /* [CP] Check Pods Manifest.lock */,
+				FACCA6481EF82CD8005F1021 /* Sources */,
+				FACCA6491EF82CD8005F1021 /* Frameworks */,
+				FACCA64A1EF82CD8005F1021 /* Resources */,
+				DFC2D37BE33FA3801610DBFB /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BackloggerWidget;
+			productName = BackloggerWidget;
+			productReference = FACCA64C1EF82CD8005F1021 /* BackloggerWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -306,7 +406,7 @@
 		FA0915611E2AA4210052BCEC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0820;
+				LastSwiftUpdateCheck = 0830;
 				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Alex Busman";
 				TargetAttributes = {
@@ -314,6 +414,21 @@
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = RJTCSD68GK;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
+					};
+					FACCA64B1EF82CD8005F1021 = {
+						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = RJTCSD68GK;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -331,6 +446,7 @@
 			projectRoot = "";
 			targets = (
 				FA0915681E2AA4210052BCEC /* Backlogger */,
+				FACCA64B1EF82CD8005F1021 /* BackloggerWidget */,
 			);
 		};
 /* End PBXProject section */
@@ -355,6 +471,15 @@
 				FA0915761E2AA4210052BCEC /* Assets.xcassets in Resources */,
 				FA4B44A31E6262FB006A843F /* ToastOverlayView.xib in Resources */,
 				FA0915741E2AA4210052BCEC /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FACCA64A1EF82CD8005F1021 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FACCA66B1EF8E837005F1021 /* Assets.xcassets in Resources */,
+				FACCA6541EF82CD8005F1021 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -406,6 +531,36 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
+		DBC0412A1692CC6EAEFEC282 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		DFC2D37BE33FA3801610DBFB /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BackloggerWidget/Pods-BackloggerWidget-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -453,7 +608,33 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FACCA6481EF82CD8005F1021 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FACCA6651EF84382005F1021 /* ImageList.swift in Sources */,
+				FACCA6611EF840BF005F1021 /* Field.swift in Sources */,
+				FACCA6511EF82CD8005F1021 /* TodayViewController.swift in Sources */,
+				FACCA65F1EF840B2005F1021 /* Game.swift in Sources */,
+				FACCA6661EF84386005F1021 /* Publisher.swift in Sources */,
+				FACCA6601EF840B8005F1021 /* Platform.swift in Sources */,
+				FACCA6631EF8437C005F1021 /* Company.swift in Sources */,
+				FACCA6621EF84379005F1021 /* SearchResults.swift in Sources */,
+				FACCA65E1EF840AA005F1021 /* Playlist.swift in Sources */,
+				FACCA6671EF8438A005F1021 /* Developer.swift in Sources */,
+				FACCA6641EF8437F005F1021 /* Genre.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FACCA6571EF82CD8005F1021 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FACCA64B1EF82CD8005F1021 /* BackloggerWidget */;
+			targetProxy = FACCA6561EF82CD8005F1021 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		FA0915721E2AA4210052BCEC /* Main.storyboard */ = {
@@ -470,6 +651,14 @@
 				FA0915781E2AA4210052BCEC /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		FACCA6521EF82CD8005F1021 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FACCA6531EF82CD8005F1021 /* Base */,
+			);
+			name = MainInterface.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -572,7 +761,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9AAD962DF395F2D66FEC110A /* Pods-Backlogger.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Backlogger/Backlogger.entitlements;
 				DEVELOPMENT_TEAM = RJTCSD68GK;
 				INFOPLIST_FILE = Backlogger/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
@@ -587,13 +778,49 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D199AF38A366A54E48258FDF /* Pods-Backlogger.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Backlogger/Backlogger.entitlements;
 				DEVELOPMENT_TEAM = RJTCSD68GK;
 				INFOPLIST_FILE = Backlogger/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.a-busman.Backlogger";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		FACCA6591EF82CD8005F1021 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3E74F9518AB01F066EA69FD5 /* Pods-BackloggerWidget.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = BackloggerWidget/BackloggerWidget.entitlements;
+				DEVELOPMENT_TEAM = RJTCSD68GK;
+				INFOPLIST_FILE = BackloggerWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.a-busman.Backlogger.BackloggerWidget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		FACCA65A1EF82CD8005F1021 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 399E243301191BDB4908E382 /* Pods-BackloggerWidget.release.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = BackloggerWidget/BackloggerWidget.entitlements;
+				DEVELOPMENT_TEAM = RJTCSD68GK;
+				INFOPLIST_FILE = BackloggerWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.a-busman.Backlogger.BackloggerWidget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
@@ -615,6 +842,15 @@
 			buildConfigurations = (
 				FA09157E1E2AA4210052BCEC /* Debug */,
 				FA09157F1E2AA4210052BCEC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FACCA65B1EF82CD8005F1021 /* Build configuration list for PBXNativeTarget "BackloggerWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FACCA6591EF82CD8005F1021 /* Debug */,
+				FACCA65A1EF82CD8005F1021 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

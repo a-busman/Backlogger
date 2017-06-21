@@ -11,7 +11,7 @@ import RealmSwift
 import Kingfisher
 
 class MoreViewController: UIViewController {
-    let stringList: [String] = ["Delete All"]
+    let stringList: [String] = ["Delete All", "About"]
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -28,10 +28,25 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 40.0
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let versionLabel = UILabel(frame: CGRect(x: 0.0, y: 0.0, width: tableView.frame.width, height: 30.0))
+        guard let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String else {
+            return UIView(frame: .zero)
+        }
+        versionLabel.text = "Version \(version)"
+        versionLabel.textAlignment = .center
+        versionLabel.textColor = .lightGray
+        return versionLabel
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch(indexPath.row) {
         case 0:
-            let actions = UIAlertController(title: "Delete all games?", message: nil, preferredStyle: .alert)
+            let actions = UIAlertController(title: "Delete all games?", message: "This will delete all games and playlists in your library.", preferredStyle: .alert)
             actions.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
                 autoreleasepool {
                     let realm = try! Realm()
@@ -61,6 +76,11 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
             }))
             actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.present(actions, animated: true, completion: nil)
+        case 1:
+            let vc = self.storyboard!.instantiateViewController(withIdentifier: "about")
+            self.navigationController?.pushViewController(vc, animated: true)
+            self.navigationController?.navigationBar.tintColor = .white
+            print("About")
         default:
             break
         }

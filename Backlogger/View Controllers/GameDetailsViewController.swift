@@ -379,7 +379,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
                     self.completionImageView?.image = #imageLiteral(resourceName: "check-filled")
                 }
             } else {
-                self.finishedButton?.setImage(#imageLiteral(resourceName: "check-black"), for: .normal)
+                self.finishedButton?.setImage(#imageLiteral(resourceName: "check-green"), for: .normal)
                 self.finishedButtonState = .selected
                 self.completionLabel?.text = "Complete"
                 self.completionImageView?.image = #imageLiteral(resourceName: "check")
@@ -974,7 +974,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
                     self._game?.finished = false
                 }
             } else {
-                self.finishedButton?.setImage(#imageLiteral(resourceName: "check-black"), for: .normal)
+                self.finishedButton?.setImage(#imageLiteral(resourceName: "check-green"), for: .normal)
                 self.finishedButtonState = .selected
                 self.completionLabel?.text = "Complete"
                 self.completionImageView?.image = #imageLiteral(resourceName: "check")

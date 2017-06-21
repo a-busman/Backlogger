@@ -24,6 +24,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Pods-BackloggerWidget.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Realm.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -63,6 +68,11 @@
 			<true/>
 		</dict>
 		<key>99B8FC473DF735FBC27AE07991988BEA</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FC3E452D9DCA8764D456A432BCC61C1B</key>
 		<dict>
 			<key>primary</key>
 			<true/>

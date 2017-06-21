@@ -60,79 +60,7 @@ class GameDetailOverlayViewController: UIViewController {
         }
         set(newGame) {
             self._game = newGame
-            self.titleLabel?.text = newGame?.gameFields?.name
-            self.descriptionLabel?.text = newGame?.gameFields?.deck
-            var platformString = ""
-            if let platforms = newGame?.gameFields?.platforms {
-                if platforms.count > 0 {
-                    if platforms.count > 1 {
-                        for platform in platforms[0..<platforms.endIndex - 1] {
-                            if platform.name!.characters.count < 10 {
-                                platformString += platform.name! + ", "
-                            } else {
-                                platformString += platform.abbreviation! + ", "
-                            }
-                        }
-                    }
-                    if platforms[platforms.endIndex - 1].name!.characters.count < 10 {
-                        platformString += (platforms.last?.name)!
-                    } else {
-                        platformString += (platforms.last?.abbreviation)!
-                    }
-                }
-                self.platformLabel?.text = (self._game?.platform?.name)!
-            }
-            self.platformsLabel?.text = platformString
-            
-            var developersString = ""
-            if let developers = newGame?.gameFields?.developers {
-                if developers.count > 0 {
-                    if developers.count > 1 {
-                        for developer in developers[0..<developers.endIndex - 1] {
-                            developersString += developer.name! + ", "
-                        }
-                    }
-                    developersString += (developers.last?.name)!
-                }
-            }
-            self.developerLabel?.text = developersString
-            
-            var publishersString = ""
-            if let publishers = newGame?.gameFields?.publishers {
-                if publishers.count > 0 {
-                    if publishers.count > 1 {
-                        for publisher in publishers[0..<publishers.endIndex - 1] {
-                            publishersString += publisher.name! + ", "
-                        }
-                    }
-                    publishersString += (publishers.last?.name)!
-                }
-            }
-            self.publisherLabel?.text = publishersString
-            
-            var genresString = ""
-            if let genres = newGame?.gameFields?.genres {
-                if genres.count > 0 {
-                    if genres.count > 1 {
-                        for genre in genres[0..<genres.endIndex - 1] {
-                            genresString += genre.name! + ", "
-                        }
-                    }
-                    genresString += (genres.last?.name)!
-                }
-            }
-            self.genresLabel?.text = genresString
-            
-            completionPercentage?.text = "\((newGame?.progress)!)%"
-            progressSliderView?.value = Float((newGame?.progress)!)
-            
-            if (newGame?.finished)! == true {
-                self.completionCheckImage?.image = #imageLiteral(resourceName: "check_light")
-                self.completionLabel?.text = "Finished"
-            } else {
-                self.completionCheckImage?.image = #imageLiteral(resourceName: "check_light_filled")
-                self.completionLabel?.text = "In Progress"
-            }
+            self.updateStats()
         }
     }
     
@@ -140,7 +68,88 @@ class GameDetailOverlayViewController: UIViewController {
         super.viewDidLoad()
         self.scrollView?.delegate = self
         self.scrollView?.scrollIndicatorInsets = UIEdgeInsetsMake(0.0, 0.0, 5.0, 0.0)
+        self.updateStats()
+        self.updateImages()
         
+    }
+    
+    func updateStats() {
+        self.titleLabel?.text = self._game?.gameFields?.name
+        self.descriptionLabel?.text = self._game?.gameFields?.deck
+        var platformString = ""
+        if let platforms = self._game?.gameFields?.platforms {
+            if platforms.count > 0 {
+                if platforms.count > 1 {
+                    for platform in platforms[0..<platforms.endIndex - 1] {
+                        if platform.name!.characters.count < 10 {
+                            platformString += platform.name! + ", "
+                        } else {
+                            platformString += platform.abbreviation! + ", "
+                        }
+                    }
+                }
+                if platforms[platforms.endIndex - 1].name!.characters.count < 10 {
+                    platformString += (platforms.last?.name)!
+                } else {
+                    platformString += (platforms.last?.abbreviation)!
+                }
+            }
+            self.platformLabel?.text = (self._game?.platform?.name)!
+        }
+        self.platformsLabel?.text = platformString
+        
+        var developersString = ""
+        if let developers = self._game?.gameFields?.developers {
+            if developers.count > 0 {
+                if developers.count > 1 {
+                    for developer in developers[0..<developers.endIndex - 1] {
+                        developersString += developer.name! + ", "
+                    }
+                }
+                developersString += (developers.last?.name)!
+            }
+        }
+        self.developerLabel?.text = developersString
+        
+        var publishersString = ""
+        if let publishers = self._game?.gameFields?.publishers {
+            if publishers.count > 0 {
+                if publishers.count > 1 {
+                    for publisher in publishers[0..<publishers.endIndex - 1] {
+                        publishersString += publisher.name! + ", "
+                    }
+                }
+                publishersString += (publishers.last?.name)!
+            }
+        }
+        self.publisherLabel?.text = publishersString
+        
+        var genresString = ""
+        if let genres = self._game?.gameFields?.genres {
+            if genres.count > 0 {
+                if genres.count > 1 {
+                    for genre in genres[0..<genres.endIndex - 1] {
+                        genresString += genre.name! + ", "
+                    }
+                }
+                genresString += (genres.last?.name)!
+            }
+        }
+        self.genresLabel?.text = genresString
+        
+        completionPercentage?.text = "\(self._game!.progress)%"
+        progressSliderView?.value = Float(self._game!.progress)
+        
+        if self._game!.finished == true {
+            self.completionCheckImage?.image = #imageLiteral(resourceName: "check_light")
+            self.completionLabel?.text = "Finished"
+        } else {
+            self.completionCheckImage?.image = #imageLiteral(resourceName: "check_light_filled")
+            self.completionLabel?.text = "In Progress"
+        }
+    }
+
+    func updateImages() {
         // Download all images at once
         if let game = self._game {
             for (i, image) in game.gameFields!.images.enumerated() {
@@ -262,7 +271,7 @@ extension GameDetailOverlayViewController: UICollectionViewDelegate, UICollectio
         // get a reference to our storyboard cell
         self.imageCollectionView?.register(UINib(nibName: "ImageCell", bundle: Bundle.main), forCellWithReuseIdentifier: imageCellReuseIdentifier)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: imageCellReuseIdentifier, for: indexPath)
-        let cellView = self.images[indexPath.row]!.imageView
+        let cellView = self.images[indexPath.item]!.imageView
         for subview in cell.contentView.subviews {
             subview.removeFromSuperview()
         }

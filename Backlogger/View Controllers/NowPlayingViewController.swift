@@ -84,6 +84,7 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
         self.upNextTableView?.separatorColor = .lightGray
         //self.upNextTableView?.separatorInset = UIEdgeInsetsMake(0, 75, 0, 0)
         self.upNextTableView?.contentInset.bottom = 55.0
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshFirstGame), name: .UIApplicationWillEnterForeground, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -104,6 +105,17 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
         }
         
         self.pageControl?.numberOfPages = orderedViewControllers.count
+    }
+    
+    func refreshFirstGame() {
+        let _ = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { _ in
+            let firstGameController = self.orderedViewControllers.first
+            autoreleasepool {
+                let realm = try! Realm()
+                let game = realm.object(ofType: Game.self, forPrimaryKey: firstGameController!.game!.uuid)
+                firstGameController?.game = game
+            }}
+        )
     }
     
     func loadPlaylists() {
@@ -138,25 +150,24 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
                             NSLog("error: \(error.localizedDescription)")
                             return
                         }
+                        self.orderedViewControllers[i].gameDetailOverlayController.updateImages()
                         self.orderedViewControllers[i].gameDetailOverlayController.imageCollectionView?.reloadData()
                     }
                 }
             }
             newGameIds.append(game.uuid)
         }
-        // Don't regenerate if games weren't changed.
-        if !NowPlayingViewController.containSameElements(newGameIds, self.gameIds) {
-            self.orderedViewControllers.removeAll()
-            for game in self.games {
-                let vc = NowPlayingGameViewController()
-                vc.game = game
-                
-                self.orderedViewControllers.append(vc)
-                vc.addDetails()
-            }
-            self.gameIds = newGameIds
-            self.collectionView?.reloadData()
+        self.orderedViewControllers.removeAll()
+        for game in self.games {
+            let vc = NowPlayingGameViewController()
+            vc.game = game
+            
+            self.orderedViewControllers.append(vc)
+            vc.addDetails()
         }
+        self.gameIds = newGameIds
+        self.collectionView?.reloadData()
+        
         self.upNextTableView?.reloadData()
     }
     
@@ -617,7 +628,7 @@ extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if self.gamesUpNext.count > 0 {
-            return 0.0
+            return 0.5
         } else {
             return 30.0
         }
@@ -661,6 +672,9 @@ extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate {
         }
         self.nowPlayingPlaylist?.update {
             self.nowPlayingPlaylist!.games.append(game!)
+        }
+        game?.update {
+            game?.nowPlaying = true
         }
         self.loadPlaylists()
         let newCell = self.orderedViewControllers.last
@@ -715,6 +729,7 @@ extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate {
     func snapshotOfCell(_ inputView: UIView) -> UIView {
         let visualView = UIVisualEffectView(frame: inputView.frame)
         visualView.effect = UIBlurEffect(style: .extraLight)
+        visualView.translatesAutoresizingMaskIntoConstraints = false
         
         UIGraphicsBeginImageContextWithOptions(inputView.bounds.size, false, 0.0)
         inputView.layer.render(in: UIGraphicsGetCurrentContext()!)

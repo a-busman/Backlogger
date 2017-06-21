@@ -369,10 +369,10 @@ class GameField: Field {
         if self.request != nil {
             self.request!.cancel()
         }
-        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        //UIApplication.shared.isNetworkActivityIndicatorVisible = true
         self.request = Alamofire.request(url)
             .responseJSON { response in
-                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                //UIApplication.shared.isNetworkActivityIndicatorVisible = false
                 if let error = response.result.error {
                     completionHandler(.failure(error))
                     return
