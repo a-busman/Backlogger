@@ -416,11 +416,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Backlogger/View Controllers/PlaylistDetailsViewController.swift"
-            timestampString = "519540465.208224"
+            timestampString = "519779497.173134"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "915"
-            endingLineNumber = "915"
+            startingLineNumber = "918"
+            endingLineNumber = "918"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -432,11 +432,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Backlogger/View Controllers/PlaylistDetailsViewController.swift"
-            timestampString = "519540465.208224"
+            timestampString = "519779497.173134"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1032"
-            endingLineNumber = "1032"
+            startingLineNumber = "1035"
+            endingLineNumber = "1035"
             landmarkName = "prepare(for:sender:)"
             landmarkType = "7">
          </BreakpointContent>

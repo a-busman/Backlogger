@@ -615,6 +615,9 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                 } else {
                     self.playlist?.name = "Untitled Playlist"
                 }
+                if self.playlistImageSource == .custom {
+                    self.playlist?.imageUrl = "custom"
+                }
                 if let descCell = self.descCell.descriptionTextView {
                     if descCell.textColor != .lightGray {
                         self.playlist?.descriptionText = descCell.text
@@ -630,6 +633,9 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                 playlist?.name = self.titleCell.titleTextView?.text
             } else {
                 playlist?.name = "Untitled Playlist"
+            }
+            if self.playlistImageSource == .custom {
+                self.playlist?.imageUrl = "custom"
             }
             if let descCell = self.descCell.descriptionTextView {
                 if descCell.textColor != .lightGray {
@@ -685,9 +691,6 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         } else {
             let newPlaylist = Playlist()
             self.saveCurrentState(playlist: newPlaylist)
-            if self.playlistImageSource == .custom {
-                newPlaylist.imageUrl = "custom"
-            }
             newPlaylist.add()
             self.playlist = newPlaylist
             self.firstLoaded = true
