@@ -16,7 +16,7 @@ protocol PlaylistViewControllerDelegate {
 class PlaylistViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView?
     let cellReuseIdentifier = "playlist_cell"
-    var playlistList: Results<Playlist>?
+    var playlistList: [Playlist] = []
     
     var imageCache: [String: UIImage] = [:]
     
@@ -29,6 +29,8 @@ class PlaylistViewController: UIViewController {
     enum SortType: Int {
         case alphabetical = 0
         case dateAdded = 1
+        case percentComplete = 2
+        case completed = 3
     }
     
     var sortType: SortType?
@@ -53,18 +55,44 @@ class PlaylistViewController: UIViewController {
     
     @IBAction func sortTapped(sender: UIBarButtonItem) {
         let actions = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        let alphaAction = UIAlertAction(title: "Alphabetical", style: .default, handler: { _ in
+        let alphaAction = UIAlertAction(title: "Title", style: .default, handler: { _ in
             self.sortType = .alphabetical
-            if self.playlistList != nil {
-                self.playlistList = self.playlistList!.sorted(byKeyPath: "name", ascending: true)
+            autoreleasepool {
+                let realm = try! Realm()
+                self.playlistList = Array(realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false").sorted(byKeyPath: "name", ascending: true))
             }
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "playlistSortType")
             self.tableView?.reloadData()
         })
         let dateAction = UIAlertAction(title: "Recently Added", style: .default, handler: { _ in
             self.sortType = .dateAdded
-            if self.playlistList != nil {
-                self.playlistList = self.playlistList!.sorted(byKeyPath: "dateAdded", ascending: false)
+            autoreleasepool {
+                let realm = try! Realm()
+                self.playlistList = Array(realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false").sorted(byKeyPath: "dateAdded", ascending: false))
+            }
+            UserDefaults.standard.set(self.sortType!.rawValue, forKey: "playlistSortType")
+            self.tableView?.reloadData()
+        })
+        let progressAction = UIAlertAction(title: "Progress", style: .default, handler: { _ in
+            self.sortType = .percentComplete
+            autoreleasepool {
+                let realm = try! Realm()
+                self.playlistList = realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false").sorted { (p1, p2) in
+                    let ret = p1.progress < p2.progress
+                    return ret
+                }
+            }
+            UserDefaults.standard.set(self.sortType!.rawValue, forKey: "playlistSortType")
+            self.tableView?.reloadData()
+        })
+        let completedAction = UIAlertAction(title: "Finished", style: .default, handler: { _ in
+            self.sortType = .completed
+            autoreleasepool {
+                let realm = try! Realm()
+                self.playlistList = realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false").sorted { (p1, p2) in
+                    let ret = p1.finished < p2.finished
+                    return ret
+                }
             }
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "playlistSortType")
             self.tableView?.reloadData()
@@ -74,14 +102,32 @@ class PlaylistViewController: UIViewController {
         case .alphabetical:
             alphaAction.setValue(true, forKey: "checked")
             dateAction.setValue(false, forKey: "checked")
+            progressAction.setValue(false, forKey: "checked")
+            completedAction.setValue(false, forKey: "checked")
             break
         case .dateAdded:
             alphaAction.setValue(false, forKey: "checked")
             dateAction.setValue(true, forKey: "checked")
+            progressAction.setValue(false, forKey: "checked")
+            completedAction.setValue(false, forKey: "checked")
+            break
+        case .percentComplete:
+            alphaAction.setValue(false, forKey: "checked")
+            dateAction.setValue(false, forKey: "checked")
+            progressAction.setValue(true, forKey: "checked")
+            completedAction.setValue(false, forKey: "checked")
+            break
+        case .completed:
+            alphaAction.setValue(false, forKey: "checked")
+            dateAction.setValue(false, forKey: "checked")
+            progressAction.setValue(false, forKey: "checked")
+            completedAction.setValue(true, forKey: "checked")
             break
         }
         actions.addAction(alphaAction)
         actions.addAction(dateAction)
+        actions.addAction(progressAction)
+        actions.addAction(completedAction)
         actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         self.present(actions, animated: true, completion: nil)
     }
@@ -94,17 +140,26 @@ class PlaylistViewController: UIViewController {
             let realm = try! Realm()
             switch self.sortType! {
             case .alphabetical:
-                playlistList = realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false").sorted(byKeyPath: "name", ascending: true)
+                self.playlistList = Array(realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false").sorted(byKeyPath: "name", ascending: true))
                 break
             case .dateAdded:
-                playlistList = realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false").sorted(byKeyPath: "dateAdded", ascending: false)
+                self.playlistList = Array(realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false").sorted(byKeyPath: "dateAdded", ascending: false))
                 break
+            case .percentComplete:
+                self.playlistList = realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false").sorted { (p1, p2) in
+                    let ret = p1.progress < p2.progress
+                    return ret
+                }
+                break
+            case .completed:
+                self.playlistList = realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false").sorted { (p1, p2) in
+                    let ret = p1.finished < p2.finished
+                    return ret
+                }
             }
         }
-        if self.playlistList != nil {
-            for (_, playlist) in self.playlistList!.enumerated() {
-                let _ = self.loadImageFromFile(playlist.uuid)
-            }
+        for (_, playlist) in self.playlistList.enumerated() {
+            let _ = self.loadImageFromFile(playlist.uuid)
         }
         self.tableView?.reloadData()
     }
@@ -112,14 +167,14 @@ class PlaylistViewController: UIViewController {
 
 extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (self.playlistList?.count ?? 0) + 1
+        return self.playlistList.count + 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! PlaylistTableCell
         
         var indent: CGFloat = 0.0
-        if indexPath.row < self.playlistList!.count {
+        if indexPath.row < self.playlistList.count {
             indent = 129.5
         }
         if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
@@ -133,7 +188,7 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         if indexPath.row > 0 {
-            cell.playlist = self.playlistList![indexPath.row - 1]
+            cell.playlist = self.playlistList[indexPath.row - 1]
             cell.artImage = self.loadPlaylistImage(indexPath.row - 1)
             if !self.isAddingGames {
                 cell.accessoryType = .disclosureIndicator
@@ -159,7 +214,7 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
             }
         } else {
             let details = segue.destination as! PlaylistDetailsViewController
-            details.playlist = self.playlistList![self.selectedRow - 1]
+            details.playlist = self.playlistList[self.selectedRow - 1]
             details.playlistState = .default
         }
     }
@@ -181,7 +236,7 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
             })
         } else {
             if self.isAddingGames {
-                self.delegate?.chosePlaylist(vc: self, playlist: self.playlistList![indexPath.row - 1], games: self.addingGames, isNew: false)
+                self.delegate?.chosePlaylist(vc: self, playlist: self.playlistList[indexPath.row - 1], games: self.addingGames, isNew: false)
             } else {
                 self.selectedRow = indexPath.row
                 self.performSegue(withIdentifier: "viewPlaylist", sender: tableView.cellForRow(at: indexPath))
@@ -191,9 +246,7 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func loadPlaylistImage(_ row: Int) -> UIImage? {
-        guard let uuid = self.playlistList?[row].uuid else {
-            return nil
-        }
+        let uuid = self.playlistList[row].uuid
         if let image = self.imageCache[uuid] {
             return image
         } else {

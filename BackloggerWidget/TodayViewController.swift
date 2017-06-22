@@ -32,7 +32,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         let dir: URL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.BackloggerWidgetSharing")!
         let realmPath = dir.appendingPathComponent("db.realm")
         
-        let config = Realm.Configuration(fileURL: realmPath, schemaVersion: 2, migrationBlock: {
+        let config = Realm.Configuration(fileURL: realmPath, schemaVersion: 3, migrationBlock: {
             migration, oldSchemaVersion in
             if oldSchemaVersion < 1 {
                 // auto migrate

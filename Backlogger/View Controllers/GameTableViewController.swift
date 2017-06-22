@@ -55,7 +55,11 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
     enum SortType: Int {
         case alphabetical = 0
         case dateAdded = 1
+        case releaseYear = 2
+        case percentComplete = 3
+        case completed = 4
     }
+
     
     var sortType: SortType?
     
@@ -192,6 +196,17 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
             sortString = "dateAdded"
             ascending = false
             break
+        case .releaseYear:
+            sortString = "gameFields.releaseDate"
+            ascending = true
+            break
+        case .percentComplete:
+            sortString = "progress"
+            ascending = true
+            break
+        case .completed:
+            sortString = "finished"
+            ascending = true
         }
         self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: ascending)
         self.tableView?.reloadData()
@@ -261,7 +276,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
     func sortTapped(sender: UIAlertAction) {
         let actions = UIAlertController(title: "Sort games", message: nil, preferredStyle: .actionSheet)
 
-        let alphaAction = UIAlertAction(title: "Alphabetical", style: .default, handler: { _ in
+        let alphaAction = UIAlertAction(title: "Title", style: .default, handler: { _ in
             self.sortType = .alphabetical
             if self.games != nil {
                 self.games = self.games!.sorted(byKeyPath: "gameFields.name", ascending: true)
@@ -271,9 +286,32 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         })
         let dateAction = UIAlertAction(title: "Recently Added", style: .default, handler: { _ in
             self.sortType = .dateAdded
-            
             if self.games != nil {
-                self.games = self.games!.sorted(byKeyPath: "dateAdded", ascending: false)
+                self.games = self.games!.sorted(byKeyPath: "dateAdded", ascending: true)
+            }
+            UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
+            self.tableView?.reloadData()
+        })
+        let releaseAction = UIAlertAction(title: "Release Date", style: .default, handler: { _ in
+            self.sortType = .releaseYear
+            if self.games != nil {
+                self.games = self.games!.sorted(byKeyPath: "gameFields.releaseDate", ascending: true)
+            }
+            UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
+            self.tableView?.reloadData()
+        })
+        let percentAction = UIAlertAction(title: "Progress", style: .default, handler: { _ in
+            self.sortType = .percentComplete
+            if self.games != nil {
+                self.games = self.games!.sorted(byKeyPath: "progress", ascending: true)
+            }
+            UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
+            self.tableView?.reloadData()
+        })
+        let completeAction = UIAlertAction(title: "Finished", style: .default, handler: { _ in
+            self.sortType = .completed
+            if self.games != nil {
+                self.games = self.games!.sorted(byKeyPath: "finished", ascending: true)
             }
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
             self.tableView?.reloadData()
@@ -283,14 +321,44 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         case .alphabetical:
             alphaAction.setValue(true, forKey: "checked")
             dateAction.setValue(false, forKey: "checked")
+            releaseAction.setValue(false, forKey: "checked")
+            percentAction.setValue(false, forKey: "checked")
+            completeAction.setValue(false, forKey: "checked")
             break
         case .dateAdded:
             alphaAction.setValue(false, forKey: "checked")
             dateAction.setValue(true, forKey: "checked")
+            releaseAction.setValue(false, forKey: "checked")
+            percentAction.setValue(false, forKey: "checked")
+            completeAction.setValue(false, forKey: "checked")
+            break
+        case .releaseYear:
+            alphaAction.setValue(false, forKey: "checked")
+            dateAction.setValue(false, forKey: "checked")
+            releaseAction.setValue(true, forKey: "checked")
+            percentAction.setValue(false, forKey: "checked")
+            completeAction.setValue(false, forKey: "checked")
+            break
+        case .percentComplete:
+            alphaAction.setValue(false, forKey: "checked")
+            dateAction.setValue(false, forKey: "checked")
+            releaseAction.setValue(false, forKey: "checked")
+            percentAction.setValue(true, forKey: "checked")
+            completeAction.setValue(false, forKey: "checked")
+            break
+        case .completed:
+            alphaAction.setValue(false, forKey: "checked")
+            dateAction.setValue(false, forKey: "checked")
+            releaseAction.setValue(false, forKey: "checked")
+            percentAction.setValue(false, forKey: "checked")
+            completeAction.setValue(true, forKey: "checked")
             break
         }
         actions.addAction(alphaAction)
         actions.addAction(dateAction)
+        actions.addAction(releaseAction)
+        actions.addAction(percentAction)
+        actions.addAction(completeAction)
         actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         self.present(actions, animated: true, completion: nil)
     }

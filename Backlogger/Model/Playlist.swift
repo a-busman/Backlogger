@@ -23,6 +23,22 @@ class Playlist: Object {
     
     var games: List<Game> = List<Game>()
     
+    var progress: Int {
+        var progressSum = 0
+        for game in self.games {
+            progressSum += game.progress
+        }
+        return progressSum / self.games.count
+    }
+    
+    var finished: Int {
+        var finishedSum = 0
+        for game in self.games {
+            finishedSum += game.finished ? 1 : 0
+        }
+        return finishedSum
+    }
+    
     override static func primaryKey() -> String? {
         return "uuid"
     }

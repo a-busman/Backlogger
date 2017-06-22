@@ -36,6 +36,22 @@ class Platform: Field {
         }
     }
     
+    var progress: Int {
+        var progressSum = 0
+        for game in self.ownedGames {
+            progressSum += game.progress
+        }
+        return progressSum / self.ownedGames.count
+    }
+    
+    var finished: Int {
+        var finishedSum = 0
+        for game in self.ownedGames {
+            finishedSum += game.finished ? 1 : 0
+        }
+        return finishedSum
+    }
+    
     override init(json: [String : Any]) {
         self.abbreviation  = json[PlatformFields.Abbreviation.rawValue] as? String
         super.init(json: json)

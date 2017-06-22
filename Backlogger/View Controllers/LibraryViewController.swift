@@ -18,7 +18,7 @@ class LibraryViewController: UIViewController {
     
     let tableReuseIdentifier = "table_cell"
     
-    var platforms: Results<Platform>?
+    var platforms: [Platform] = []
     
     var allGames: Results<Game>?
     
@@ -27,6 +27,9 @@ class LibraryViewController: UIViewController {
     enum SortType: Int {
         case alphabetical = 0
         case dateAdded = 1
+        case releaseYear = 2
+        case percentComplete = 3
+        case completed = 4
     }
     
     var sortType: SortType?
@@ -51,28 +54,46 @@ class LibraryViewController: UIViewController {
         }
         self.tableView?.reloadData()
         autoreleasepool {
-            let realm = try? Realm()
+            let realm = try! Realm()
             var sortString: String
             var ascending: Bool
             switch self.sortType! {
             case .alphabetical:
                 sortString = "gameFields.name"
                 ascending = true
-                self.platforms = realm?.objects(Platform.self).filter("ownedGames.@count > 0").sorted(byKeyPath: "name", ascending: ascending)
+                self.platforms = Array(realm.objects(Platform.self).filter("ownedGames.@count > 0").sorted(byKeyPath: "name", ascending: ascending))
                 break
             case .dateAdded:
                 sortString = "dateAdded"
                 ascending = false
-                self.platforms = realm?.objects(Platform.self).filter("ownedGames.@count > 0")
+                self.platforms = Array(realm.objects(Platform.self).filter("ownedGames.@count > 0"))
                 break
+            case .releaseYear:
+                sortString = "gameFields.releaseDate"
+                ascending = true
+                self.platforms = Array(realm.objects(Platform.self).filter("ownedGames.@count > 0").sorted(byKeyPath: "releaseDate", ascending: ascending))
+            case .percentComplete:
+                sortString = "progress"
+                ascending = true
+                self.platforms = realm.objects(Platform.self).filter("ownedGames.@count > 0").sorted { (p1, p2) in
+                    let ret = p1.progress < p2.progress
+                    return ret
+                }
+            case .completed:
+                sortString = "finished"
+                ascending = true
+                self.platforms = realm.objects(Platform.self).filter("ownedGames.@count > 0").sorted { (p1, p2) in
+                    let ret = p1.finished < p2.finished
+                    return ret
+                }
             }
-            self.allGames = realm?.objects(Game.self).sorted(byKeyPath: sortString, ascending: ascending)
+            self.allGames = realm.objects(Game.self).sorted(byKeyPath: sortString, ascending: ascending)
             self.filteredGames = self.allGames
         }
         if self.isSearching {
             self.filterContent(for: self.searchBar!.text!)
         }
-        if (platforms?.count ?? 0) > 0 {
+        if platforms.count > 0 {
             self.addBackgroundView?.isHidden = true
             self.tableView?.isHidden = false
         } else {
@@ -89,10 +110,11 @@ class LibraryViewController: UIViewController {
     @IBAction func leftBarButtonTapped(sender: UIBarButtonItem) {
         self.searchBar?.resignFirstResponder()
         let actions = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        let alphaAction = UIAlertAction(title: "Alphabetical", style: .default, handler: { _ in
+        let alphaAction = UIAlertAction(title: "Title", style: .default, handler: { _ in
             self.sortType = .alphabetical
-            if self.platforms != nil {
-                self.platforms = self.platforms!.sorted(byKeyPath: "name", ascending: true)
+            autoreleasepool {
+                let realm = try! Realm()
+                self.platforms = Array(realm.objects(Platform.self).filter("ownedGames.@count > 0").sorted(byKeyPath: "name", ascending: true))
             }
             if self.allGames != nil {
                 self.allGames = self.allGames!.sorted(byKeyPath: "gameFields.name", ascending: true)
@@ -106,8 +128,8 @@ class LibraryViewController: UIViewController {
         let dateAction = UIAlertAction(title: "Recently Added", style: .default, handler: { _ in
             self.sortType = .dateAdded
             autoreleasepool {
-                let realm = try? Realm()
-                self.platforms = realm?.objects(Platform.self).filter("ownedGames.@count > 0")
+                let realm = try! Realm()
+                self.platforms = Array(realm.objects(Platform.self).filter("ownedGames.@count > 0"))
             }
             if self.allGames != nil {
                 self.allGames = self.allGames!.sorted(byKeyPath: "dateAdded", ascending: false)
@@ -118,19 +140,100 @@ class LibraryViewController: UIViewController {
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
             self.tableView?.reloadData()
         })
+        let releaseAction = UIAlertAction(title: "Release Date", style: .default, handler: { _ in
+            self.sortType = .releaseYear
+            autoreleasepool {
+                let realm = try! Realm()
+                self.platforms = Array(realm.objects(Platform.self).filter("ownedGames.@count > 0").sorted(byKeyPath: "releaseDate", ascending: true))
+            }
+            if self.allGames != nil {
+                self.allGames = self.allGames!.sorted(byKeyPath: "gameFields.releaseDate", ascending: true)
+            }
+            if self.filteredGames != nil {
+                self.filteredGames = self.filteredGames!.sorted(byKeyPath: "gameFields.releaseDate", ascending: true)
+            }
+            UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
+            self.tableView?.reloadData()
+        })
+        let percentAction = UIAlertAction(title: "Progress", style: .default, handler: { _ in
+            self.sortType = .percentComplete
+            autoreleasepool {
+                let realm = try! Realm()
+                self.platforms = realm.objects(Platform.self).filter("ownedGames.@count > 0").sorted { (p1, p2) in
+                    let ret = p1.progress < p2.progress
+                    return ret
+                }
+            }
+            if self.allGames != nil {
+                self.allGames = self.allGames!.sorted(byKeyPath: "progress", ascending: true)
+            }
+            if self.filteredGames != nil {
+                self.filteredGames = self.filteredGames!.sorted(byKeyPath: "progress", ascending: true)
+            }
+            UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
+            self.tableView?.reloadData()
+        })
+        let completeAction = UIAlertAction(title: "Finished", style: .default, handler: { _ in
+            self.sortType = .completed
+            autoreleasepool {
+                let realm = try! Realm()
+                self.platforms = realm.objects(Platform.self).filter("ownedGames.@count > 0").sorted { (p1, p2) in
+                    let ret = p1.finished < p2.finished
+                    return ret
+                }
+            }
+            if self.allGames != nil {
+                self.allGames = self.allGames!.sorted(byKeyPath: "finished", ascending: true)
+            }
+            if self.filteredGames != nil {
+                self.filteredGames = self.filteredGames!.sorted(byKeyPath: "finished", ascending: true)
+            }
+            UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
+            self.tableView?.reloadData()
+        })
         
         switch self.sortType! {
         case .alphabetical:
             alphaAction.setValue(true, forKey: "checked")
             dateAction.setValue(false, forKey: "checked")
+            releaseAction.setValue(false, forKey: "checked")
+            percentAction.setValue(false, forKey: "checked")
+            completeAction.setValue(false, forKey: "checked")
             break
         case .dateAdded:
             alphaAction.setValue(false, forKey: "checked")
             dateAction.setValue(true, forKey: "checked")
+            releaseAction.setValue(false, forKey: "checked")
+            percentAction.setValue(false, forKey: "checked")
+            completeAction.setValue(false, forKey: "checked")
+            break
+        case .releaseYear:
+            alphaAction.setValue(false, forKey: "checked")
+            dateAction.setValue(false, forKey: "checked")
+            releaseAction.setValue(true, forKey: "checked")
+            percentAction.setValue(false, forKey: "checked")
+            completeAction.setValue(false, forKey: "checked")
+            break
+        case .percentComplete:
+            alphaAction.setValue(false, forKey: "checked")
+            dateAction.setValue(false, forKey: "checked")
+            releaseAction.setValue(false, forKey: "checked")
+            percentAction.setValue(true, forKey: "checked")
+            completeAction.setValue(false, forKey: "checked")
+            break
+        case .completed:
+            alphaAction.setValue(false, forKey: "checked")
+            dateAction.setValue(false, forKey: "checked")
+            releaseAction.setValue(false, forKey: "checked")
+            percentAction.setValue(false, forKey: "checked")
+            completeAction.setValue(true, forKey: "checked")
             break
         }
         actions.addAction(alphaAction)
         actions.addAction(dateAction)
+        actions.addAction(releaseAction)
+        actions.addAction(percentAction)
+        actions.addAction(completeAction)
         actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         self.present(actions, animated: true, completion: nil)
     }
@@ -140,7 +243,7 @@ class LibraryViewController: UIViewController {
             if let cell = sender as? UITableViewCell {
                 let i = (self.tableView?.indexPath(for: cell)?.row)!
                 let vc = segue.destination as! GameTableViewController
-                vc.platform = self.platforms?[i]
+                vc.platform = self.platforms[i]
             }
         }
     }
@@ -206,6 +309,18 @@ extension LibraryViewController: UISearchBarDelegate {
         case .dateAdded:
             sortString = "dateAdded"
             ascending = false
+            break
+        case .releaseYear:
+            sortString = "gameFields.releaseDate"
+            ascending = true
+            break
+        case .percentComplete:
+            sortString = "progress"
+            ascending = true
+            break
+        case .completed:
+            sortString = "finished"
+            ascending = true
         }
         if searchText != "" {
             self.filteredGames = allGames!.filter("gameFields.name contains[c] \"\(searchText)\"").sorted(byKeyPath: sortString, ascending: ascending)
@@ -219,7 +334,7 @@ extension LibraryViewController: UISearchBarDelegate {
 extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if !self.isSearching {
-            return self.platforms?.count ?? 0
+            return self.platforms.count
         } else {
             return self.filteredGames?.count ?? 0
         }
@@ -230,7 +345,7 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
         cell.accessoryType = .disclosureIndicator
         
         var indent: CGFloat = 0.0
-        if indexPath.row < self.platforms!.count - 1 {
+        if indexPath.row < self.platforms.count - 1 {
             indent = 58.0
         }
         if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
@@ -244,7 +359,7 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         if !self.isSearching {
-            let platform = self.platforms![indexPath.row]
+            let platform = self.platforms[indexPath.row]
             cell.titleLabel?.text = platform.name ?? ""
             cell.rightLabel?.text = "\(platform.ownedGames.count)"
             
