@@ -140,12 +140,37 @@
                                     <outletCollection property="gestureRecognizers" destination="rsR-xN-719" appends="YES" id="bjg-Kb-bHS"/>
                                 </connections>
                             </view>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q0f-79-S5h">
+                                <rect key="frame" x="16" y="0.0" width="288" height="115"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="dqH-h5-fAq">
+                                    <rect key="frame" x="0.0" y="0.0" width="288" height="115"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add games to Now Playing." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xPk-Tb-xK0">
+                                            <rect key="frame" x="39.5" y="47" width="209" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="xPk-Tb-xK0" firstAttribute="centerX" secondItem="dqH-h5-fAq" secondAttribute="centerX" id="PC7-sd-YjW"/>
+                                        <constraint firstItem="xPk-Tb-xK0" firstAttribute="centerY" secondItem="dqH-h5-fAq" secondAttribute="centerY" id="jgK-fx-nly"/>
+                                    </constraints>
+                                </view>
+                                <vibrancyEffect>
+                                    <blurEffect style="extraLight"/>
+                                </vibrancyEffect>
+                            </visualEffectView>
                         </subviews>
                         <constraints>
                             <constraint firstItem="0j2-8b-X67" firstAttribute="top" secondItem="Zbq-cw-Hrd" secondAttribute="top" id="8LU-d8-cJZ"/>
                             <constraint firstItem="xzl-vv-cfk" firstAttribute="leading" secondItem="0j2-8b-X67" secondAttribute="trailing" constant="10" id="8SF-zS-BKH"/>
+                            <constraint firstItem="q0f-79-S5h" firstAttribute="top" secondItem="Ft6-oW-KC0" secondAttribute="bottom" id="92o-A2-rId"/>
                             <constraint firstItem="0j2-8b-X67" firstAttribute="leading" secondItem="Zbq-cw-Hrd" secondAttribute="trailing" constant="50" id="AV9-OO-PM8"/>
                             <constraint firstItem="xzl-vv-cfk" firstAttribute="centerY" secondItem="0j2-8b-X67" secondAttribute="centerY" id="AZs-CR-vej"/>
+                            <constraint firstItem="q0f-79-S5h" firstAttribute="leading" secondItem="S3S-Oj-5AN" secondAttribute="leadingMargin" id="CX3-hR-fpQ"/>
+                            <constraint firstItem="q0f-79-S5h" firstAttribute="bottom" secondItem="FKl-LY-JtV" secondAttribute="top" id="GUV-x5-FWZ"/>
                             <constraint firstItem="6aC-Qi-c4n" firstAttribute="width" secondItem="6aC-Qi-c4n" secondAttribute="height" id="Kn7-Cz-Hic"/>
                             <constraint firstItem="S4Y-qG-3qu" firstAttribute="centerY" secondItem="YOL-th-bIK" secondAttribute="centerY" id="Kvb-Dh-rjN"/>
                             <constraint firstItem="Zbq-cw-Hrd" firstAttribute="centerY" secondItem="S3S-Oj-5AN" secondAttribute="centerY" id="Wnn-5I-RJa"/>
@@ -153,6 +178,7 @@
                             <constraint firstItem="YOL-th-bIK" firstAttribute="bottom" secondItem="Zbq-cw-Hrd" secondAttribute="bottom" id="bzM-iG-KMk"/>
                             <constraint firstItem="YOL-th-bIK" firstAttribute="centerX" secondItem="0j2-8b-X67" secondAttribute="centerX" id="ddd-Fg-Nkk"/>
                             <constraint firstItem="S4Y-qG-3qu" firstAttribute="height" secondItem="YOL-th-bIK" secondAttribute="height" id="e46-7x-vyD"/>
+                            <constraint firstItem="q0f-79-S5h" firstAttribute="trailing" secondItem="S3S-Oj-5AN" secondAttribute="trailingMargin" id="f0E-Ag-fRa"/>
                             <constraint firstItem="6aC-Qi-c4n" firstAttribute="leading" secondItem="xzl-vv-cfk" secondAttribute="trailing" constant="10" id="gaP-hh-2Cm"/>
                             <constraint firstItem="Zbq-cw-Hrd" firstAttribute="leading" secondItem="S3S-Oj-5AN" secondAttribute="leadingMargin" id="xMx-nZ-wmJ"/>
                             <constraint firstItem="S4Y-qG-3qu" firstAttribute="leading" secondItem="YOL-th-bIK" secondAttribute="trailing" constant="10" id="zj6-8F-oMg"/>
@@ -170,6 +196,7 @@
                         <outlet property="completeLabel" destination="asQ-64-JcI" id="BPX-qg-O1c"/>
                         <outlet property="completeVibrancy" destination="S4Y-qG-3qu" id="9iF-EB-4m5"/>
                         <outlet property="minusView" destination="0j2-8b-X67" id="h87-ml-tJi"/>
+                        <outlet property="noGamesVibrancy" destination="q0f-79-S5h" id="eU3-x6-hRb"/>
                         <outlet property="percentLabel" destination="Flt-2l-g8a" id="agk-0M-ZH6"/>
                         <outlet property="plusView" destination="6aC-Qi-c4n" id="dsE-Rc-WVk"/>
                         <outlet property="vibrancyView" destination="xzl-vv-cfk" id="bFf-RZ-uGZ"/>

@@ -481,17 +481,20 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
             }
             cell.cacheCompletionHandler = {
                 (image, error, cacheType, imageUrl) in
-                if image != nil {
-                    if cacheType == .none {
-                        UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                            cell.set(image: image!)
-                        }, completion: nil)
-                    } else {
-                        cell.set(image: image!)
+                if let cellUrl = cell.imageUrl {
+                    if imageUrl == cellUrl {
+                        if image != nil {
+                            if cacheType == .none {
+                                UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                                    cell.set(image: image!)
+                                }, completion: nil)
+                            } else {
+                                cell.set(image: image!)
+                            }
+                        }
                     }
                 }
             }
-            
         }
         
         return cell

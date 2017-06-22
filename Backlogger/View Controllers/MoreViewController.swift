@@ -73,6 +73,9 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
                 }
                 // Delete all cached images
                 ImageCache.default.clearDiskCache()
+                self.tabBarController!.viewControllers?[0] = self.storyboard!.instantiateViewController(withIdentifier: "NowPlayingNavigation")
+                self.tabBarController!.viewControllers?[1] = self.storyboard!.instantiateViewController(withIdentifier: "PlaylistNavigation")
+                self.tabBarController!.viewControllers?[2] = self.storyboard!.instantiateViewController(withIdentifier: "LibraryNavigation")
             }))
             actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.present(actions, animated: true, completion: nil)

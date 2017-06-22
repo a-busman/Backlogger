@@ -21,6 +21,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     @IBOutlet weak var completeButton:   UIView?
     @IBOutlet weak var completeVibrancy: UIVisualEffectView?
     @IBOutlet weak var completeLabel:    UILabel?
+    @IBOutlet weak var noGamesVibrancy:  UIVisualEffectView?
     
     var game: Game?
         
@@ -41,23 +42,48 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         Realm.Configuration.defaultConfiguration = config
         self.vibrancyView?.effect = UIVibrancyEffect.widgetPrimary()
         self.completeVibrancy?.effect = UIVibrancyEffect.widgetSecondary()
+        self.noGamesVibrancy?.effect = UIVibrancyEffect.widgetPrimary()
         self.loadNowPlaying()
-        let mask = UIImageView(image: #imageLiteral(resourceName: "check_mask"))
-        self.completeButton?.mask = self.game!.finished ? mask : nil
-        
-        self.percentLabel?.text = "\(self.game!.progress)%"
-        
-        self.completeLabel?.text = self.game!.finished ? "Finished" : "In Progress"
-        
-        let minusMask = UIImageView(frame: CGRect(x: 0.0, y: 0.0, width: 25.0, height: 25.0))
-        let plusMask = UIImageView(frame: CGRect(x: 0.0, y: 0.0, width: 25.0, height: 25.0))
-        
-        minusMask.image = #imageLiteral(resourceName: "minus_mask")
-        plusMask.image = #imageLiteral(resourceName: "add_mask")
-        self.minusView?.mask = minusMask
-        self.plusView?.mask = plusMask
-        
+        if let game = self.game {
+            let mask = UIImageView(image: #imageLiteral(resourceName: "check_mask"))
+            self.completeButton?.mask = game.finished ? mask : nil
+            
+            self.percentLabel?.text = "\(game.progress)%"
+            
+            self.completeLabel?.text = game.finished ? "Finished" : "In Progress"
+            
+            let minusMask = UIImageView(frame: CGRect(x: 0.0, y: 0.0, width: 25.0, height: 25.0))
+            let plusMask = UIImageView(frame: CGRect(x: 0.0, y: 0.0, width: 25.0, height: 25.0))
+            
+            minusMask.image = #imageLiteral(resourceName: "minus_mask")
+            plusMask.image = #imageLiteral(resourceName: "add_mask")
+            self.minusView?.mask = minusMask
+            self.plusView?.mask = plusMask
+            self.showGame()
+        } else {
+            self.hideGame()
+        }
         // Do any additional setup after loading the view from its nib.
+    }
+    
+    func hideGame() {
+        self.artView?.isHidden = true
+        self.plusView?.isHidden = true
+        self.minusView?.isHidden = true
+        self.vibrancyView?.isHidden = true
+        self.completeButton?.isHidden = true
+        self.noGamesVibrancy?.isHidden = false
+        self.completeVibrancy?.isHidden = true
+    }
+    
+    func showGame() {
+        self.artView?.isHidden = false
+        self.plusView?.isHidden = false
+        self.minusView?.isHidden = false
+        self.vibrancyView?.isHidden = false
+        self.completeButton?.isHidden = false
+        self.noGamesVibrancy?.isHidden = true
+        self.completeVibrancy?.isHidden = false
     }
     
     override func didReceiveMemoryWarning() {
@@ -133,7 +159,11 @@ class TodayViewController: UIViewController, NCWidgetProviding {
             let nowPlaying = playlists.filter("isNowPlaying = true")
             self.game = nowPlaying.first?.games.first
         }
-        self.artView?.kf.setImage(with: URL(string: self.game!.gameFields!.image!.smallUrl!), placeholder: nil, options: nil, progressBlock: nil, completionHandler: {
+        guard let game = self.game,
+              let smallUrl = game.gameFields?.image?.smallUrl else {
+            return
+        }
+        self.artView?.kf.setImage(with: URL(string: smallUrl), placeholder: nil, options: nil, progressBlock: nil, completionHandler: {
             (image, error, cacheType, imageUrl) in
             if image != nil {
                 UIView.transition(with: self.artView!,

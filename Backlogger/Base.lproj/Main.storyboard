@@ -47,7 +47,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="gHQ-JI-FLq" id="48K-F2-Ybp">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -84,10 +84,10 @@
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="customcell" id="bHV-tF-IEG">
-                                <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="56" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bHV-tF-IEG" id="Rhq-s1-hBU">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -322,9 +322,9 @@
         <!--Library-->
         <scene sceneID="Cz5-G1-dNb">
             <objects>
-                <navigationController id="Kzz-rj-QM8" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="LibraryNavigation" id="Kzz-rj-QM8" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Library" image="library" id="Ju7-re-Oi4"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="wlB-lA-b2k">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="wlB-lA-b2k">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="0.0" green="0.72525911350000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -366,7 +366,7 @@
                                         <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="RnJ-LV-Fpa" id="Uvq-zu-GmZ">
-                                            <rect key="frame" x="0.0" y="0.0" width="342" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="342" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                         <connections>
@@ -502,7 +502,7 @@
                                         <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="D6S-3v-TpQ" id="SIv-g7-lb3">
-                                            <rect key="frame" x="0.0" y="0.0" width="342" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="342" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                         <color key="tintColor" red="0.0" green="0.72525911350000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1444,7 +1444,7 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                                         <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="LpG-3j-JXj" id="UGS-Yr-fXV">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -1529,10 +1529,10 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="console_selection_cell" id="M6U-6b-l3J">
-                                <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="56" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="M6U-6b-l3J" id="VLs-jD-CFP">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -1561,7 +1561,7 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Y1C-fa-7fk" id="ZtL-nL-wpP">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                                 <connections>
@@ -1691,7 +1691,7 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="VwL-vg-cbS" id="tiF-dM-fMF">
-                                            <rect key="frame" x="0.0" y="0.0" width="342" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="342" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                         <connections>
@@ -1770,7 +1770,7 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
         <!--Now Playing-->
         <scene sceneID="ZHQ-gT-gYS">
             <objects>
-                <navigationController title="Now Playing" automaticallyAdjustsScrollViewInsets="NO" id="yFb-VB-gG6" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="NowPlayingNavigation" title="Now Playing" automaticallyAdjustsScrollViewInsets="NO" id="yFb-VB-gG6" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Now Playing" image="controller_icon" id="Cew-XV-gew"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="jNM-c2-5lP">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -1945,7 +1945,7 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                                                             <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="wE2-en-9Ub" id="mGZ-oG-Uh4">
-                                                                <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                             </tableViewCellContentView>
                                                         </tableViewCell>

@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class LibraryViewController: UIViewController {
+class LibraryViewController: UIViewController, UITabBarDelegate {
     @IBOutlet weak var tableView: UITableView?
     @IBOutlet weak var searchBar: UISearchBar?
     @IBOutlet weak var addBackgroundView: UIView?
@@ -36,10 +36,10 @@ class LibraryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         self.searchBar?.tintColor = Util.appColor
         self.tableView?.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: tableReuseIdentifier)
         self.tableView?.tableFooterView = UIView(frame: .zero)
+        self.navigationController?.navigationBar.tintColor = .white
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -52,7 +52,6 @@ class LibraryViewController: UIViewController {
         } else {
             self.sortType = SortType.init(rawValue: sort as! Int)
         }
-        self.tableView?.reloadData()
         autoreleasepool {
             let realm = try! Realm()
             var sortString: String
@@ -100,6 +99,8 @@ class LibraryViewController: UIViewController {
             self.addBackgroundView?.isHidden = false
             self.tableView?.isHidden = true
         }
+        self.tableView?.reloadData()
+
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
     }
     
@@ -251,6 +252,10 @@ class LibraryViewController: UIViewController {
     func addGame() {
         self.performSegue(withIdentifier: "add_show_details", sender: nil)
     }
+    
+    func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+
+    }
 }
 
 extension LibraryViewController: UISearchBarDelegate {
@@ -384,13 +389,17 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
                         }
                         cell.cacheCompletionHandler = {
                             (image, error, cacheType, imageUrl) in
-                            if image != nil {
-                                if cacheType == .none {
-                                    UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                                        cell.set(image: image!)
-                                    }, completion: nil)
-                                } else {
-                                    cell.set(image: image!)
+                            if let cellUrl = cell.imageUrl {
+                                if imageUrl == cellUrl {
+                                    if image != nil {
+                                        if cacheType == .none {
+                                            UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                                                cell.set(image: image!)
+                                            }, completion: nil)
+                                        } else {
+                                            cell.set(image: image!)
+                                        }
+                                    }
                                 }
                             }
                         }

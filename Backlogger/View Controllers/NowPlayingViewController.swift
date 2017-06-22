@@ -54,6 +54,7 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
         case full
     }
     
+    fileprivate var _isDismissing = false
     private var _blurViewState = UpNextState.minimal
     
     var blurViewState: UpNextState {
@@ -103,21 +104,25 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
             self.navigationController?.navigationBar.topItem?.leftBarButtonItem = nil
             self.addBackgroundView?.isHidden = false
         }
-        
-        self.collectionView?.scrollToItem(at: IndexPath(item: self.currentIndex, section: 0), at: .centeredHorizontally, animated: false)
-        
+        if self.orderedViewControllers.count > 0 && !self._isDismissing {
+            self.collectionView?.scrollToItem(at: IndexPath(item: self.currentIndex, section: 0), at: .centeredHorizontally, animated: false)
+        }
+        self._isDismissing = false
         self.pageControl?.numberOfPages = orderedViewControllers.count
     }
     
     func refreshFirstGame() {
-        let _ = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { _ in
-            let firstGameController = self.orderedViewControllers.first
-            autoreleasepool {
-                let realm = try! Realm()
-                let game = realm.object(ofType: Game.self, forPrimaryKey: firstGameController!.game!.uuid)
-                firstGameController?.game = game
-            }}
-        )
+        if self.tabBarController?.selectedIndex == 0 {
+            let _ = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { _ in
+                if let firstGameController = self.orderedViewControllers.first {
+                    autoreleasepool {
+                        let realm = try! Realm()
+                        let game = realm.object(ofType: Game.self, forPrimaryKey: firstGameController.game!.uuid)
+                        firstGameController.game = game
+                    }}
+                }
+            )
+        }
     }
     
     func loadPlaylists() {
@@ -159,7 +164,7 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
             }
             newGameIds.append(game.uuid)
         }
-        if !NowPlayingViewController.containSameElements(newGameIds, self.gameIds) {
+        if !NowPlayingViewController.containSameElements(newGameIds, self.gameIds) || self.gameIds.count == 0 {
             self.orderedViewControllers.removeAll()
             for game in self.games {
                 let vc = NowPlayingGameViewController()
@@ -260,6 +265,7 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
             let newNavController = segue.destination as! UINavigationController
             let addToPlaylistViewController = newNavController.topViewController as! AddToPlaylistViewController
             addToPlaylistViewController.delegate = self
+            addToPlaylistViewController.title = "Add to Now Playing"
         }
     }
     
@@ -377,8 +383,9 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
     func didDelete(viewController: NowPlayingGameViewController, uuid: String) {
         for i in 0..<self.orderedViewControllers.count {
             if self.orderedViewControllers[i].game?.uuid == uuid {
-                self.orderedViewControllers.remove(at: i)
+                let _ = self.orderedViewControllers.remove(at: i)
                 let game = self.games.remove(at: i)
+                let _ = self.gameIds.remove(at: i)
                 game.update {
                     game.nowPlaying = false
                 }
@@ -387,7 +394,7 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
                 break
             }
         }
-        if self.games.count <= 0 {
+        if self.games.count == 0 {
             if self.inEditMode {
                 self.handleTapEdit(sender: UIBarButtonItem())
             } else {
@@ -714,7 +721,11 @@ extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate {
         shadowRadiusAnimation.isRemovedOnCompletion = false
         shadowRadiusAnimation.fillMode = kCAFillModeForwards
 
-        
+        UIView.transition(with: self.addBackgroundView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+            let newButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(self.handleTapEdit))
+            self.navigationController?.navigationBar.topItem?.leftBarButtonItem = newButton
+            self.addBackgroundView?.isHidden = true
+        }, completion: nil)
         UIView.animate(withDuration: 0.5, animations: {
             shadowView.center = self.view.center
             shadowView.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
@@ -761,6 +772,7 @@ extension NowPlayingViewController: AddToPlaylistViewControllerDelegate {
         self.saveNowPlaying()
     }
     func dismissView(_ vc: AddToPlaylistViewController) {
+        self._isDismissing = true
         vc.dismiss(animated: true, completion: nil)
     }
 }
