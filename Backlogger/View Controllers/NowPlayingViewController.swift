@@ -104,6 +104,8 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
             self.addBackgroundView?.isHidden = false
         }
         
+        self.collectionView?.scrollToItem(at: IndexPath(item: self.currentIndex, section: 0), at: .centeredHorizontally, animated: false)
+        
         self.pageControl?.numberOfPages = orderedViewControllers.count
     }
     
@@ -157,16 +159,22 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
             }
             newGameIds.append(game.uuid)
         }
-        self.orderedViewControllers.removeAll()
-        for game in self.games {
-            let vc = NowPlayingGameViewController()
-            vc.game = game
+        if !NowPlayingViewController.containSameElements(newGameIds, self.gameIds) {
+            self.orderedViewControllers.removeAll()
+            for game in self.games {
+                let vc = NowPlayingGameViewController()
+                vc.game = game
             
-            self.orderedViewControllers.append(vc)
-            vc.addDetails()
+                self.orderedViewControllers.append(vc)
+                vc.addDetails()
+            }
+            self.gameIds = newGameIds
+            self.collectionView?.reloadData()
+        } else {
+            for (i, game) in self.games.enumerated() {
+                self.orderedViewControllers[i].game = game
+            }
         }
-        self.gameIds = newGameIds
-        self.collectionView?.reloadData()
         
         self.upNextTableView?.reloadData()
     }
