@@ -22,7 +22,7 @@ class TableViewCell: UITableViewCell {
     @IBOutlet weak var addButton:        UIButton!
     
     @IBOutlet weak var rightTrailingLayoutConstraint: NSLayoutConstraint!
-    @IBOutlet weak var titleTrailingLayoutConstraint: NSLayoutConstraint!
+    @IBOutlet weak var titleBottomLayoutConstraint:   NSLayoutConstraint!
     
     enum LibraryState {
         case add
@@ -86,6 +86,16 @@ class TableViewCell: UITableViewCell {
                 }, completion: nil)
             }
         }
+    }
+    
+    func showDetails() {
+        self.titleBottomLayoutConstraint.constant = 0
+        self.descriptionLabel.isHidden = false
+    }
+    
+    func hideDetails() {
+        self.titleBottomLayoutConstraint.constant = 10.25
+        self.descriptionLabel.isHidden = true
     }
     
     override func layoutSubviews() {

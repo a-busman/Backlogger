@@ -248,15 +248,20 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
             cell.titleLabel?.text = platform.name ?? ""
             cell.rightLabel?.text = "\(platform.ownedGames.count)"
             
-            if !platform.hasDetails {
+            if !platform.hasDetails && !platform.custom {
                 platform.updateDetails { results in
                     if let error = results.error {
                         cell.descriptionLabel?.text = ""
                         cell.set(image: #imageLiteral(resourceName: "table_placeholder_light"))
                         NSLog("\(error.localizedDescription)")
                     } else {
-                        cell.descriptionLabel?.text = platform.company?.name ?? ""
-                        
+                        if let companyName = platform.company?.name {
+                            cell.descriptionLabel?.text = companyName
+                            cell.showDetails()
+                        } else {
+                            cell.descriptionLabel?.text = ""
+                            cell.hideDetails()
+                        }
                         if let image = platform.image {
                             cell.imageUrl = URL(string: image.iconUrl!)
                         } else {
@@ -278,8 +283,14 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
                     }
                 }
             } else {
-                cell.descriptionLabel?.text = platform.company?.name ?? ""
-
+                if let companyName = platform.company?.name {
+                    cell.descriptionLabel?.text = companyName
+                    cell.showDetails()
+                } else {
+                    cell.descriptionLabel?.text = ""
+                    cell.hideDetails()
+                }
+                
                 if let image = platform.image {
                     cell.imageUrl = URL(string: image.iconUrl!)
                 } else {

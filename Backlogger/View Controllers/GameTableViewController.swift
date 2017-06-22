@@ -80,7 +80,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
 //            } else {
 //                self.yearLabel?.text = "\(platform.company?.name ?? "")"
 //            }
-            if !platform.hasDetails {
+            if !platform.hasDetails && !platform.custom {
                 platform.updateDetails { results in
                     if let error = results.error {
                         NSLog("\(error.localizedDescription)")
@@ -437,8 +437,15 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
         cell.addButtonHidden = true
         
         cell.titleLabel?.text = game.gameFields?.name
-        let index = game.gameFields?.releaseDate?.index((game.gameFields?.releaseDate?.startIndex)!, offsetBy: 4)
-        cell.descriptionLabel?.text = game.gameFields?.releaseDate?.substring(to: index!)
+        if let releaseDate = game.gameFields?.releaseDate,
+            releaseDate != "" {
+            let year = releaseDate.substring(to: releaseDate.index(releaseDate.startIndex, offsetBy: 4))
+            cell.descriptionLabel?.text = year
+            cell.showDetails()
+        } else {
+            cell.descriptionLabel?.text = ""
+            cell.hideDetails()
+        }
         cell.rightLabel?.text = "\(game.progress)%"
         if let image = game.gameFields?.image {
             cell.imageUrl = URL(string: image.iconUrl!)

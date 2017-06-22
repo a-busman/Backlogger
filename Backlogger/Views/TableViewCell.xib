@@ -103,6 +103,7 @@
                 <outlet property="descriptionLabel" destination="MYG-Sy-BgC" id="x1S-86-p9r"/>
                 <outlet property="rightLabel" destination="lPU-fk-BXR" id="lcN-Cm-GqZ"/>
                 <outlet property="rightTrailingLayoutConstraint" destination="ufz-t7-QHT" id="kPs-Ts-xRP"/>
+                <outlet property="titleBottomLayoutConstraint" destination="pek-Al-LCZ" id="ZY3-1p-xEf"/>
                 <outlet property="titleLabel" destination="M86-Nr-Z7l" id="ei3-Jy-dtA"/>
             </connections>
             <point key="canvasLocation" x="23" y="8"/>

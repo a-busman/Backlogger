@@ -442,6 +442,11 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
                     platformString += platforms[platforms.endIndex - 1].abbreviation!
                 }
             }
+            if platformString == "" {
+                cell.hideDetails()
+            } else {
+                cell.showDetails()
+            }
             cell.descriptionLabel?.text = platformString
             
             // See if we need to load more games

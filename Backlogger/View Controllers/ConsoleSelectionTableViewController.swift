@@ -74,42 +74,68 @@ class ConsoleSelectionTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        if consoles.count > 0 {
+            return 2
+        } else {
+            return 1
+        }
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0:
-            return consoles.count
-        case 1:
+        if consoles.count > 0 {
+            switch section {
+            case 0:
+                return consoles.count
+            case 1:
+                return customPlatforms.count + 1
+            default:
+                return 0
+            }
+        } else {
             return customPlatforms.count + 1
-        default:
-            return 0
         }
     }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        switch section {
-        case 0:
-            return "Platforms"
-        case 1:
+        if self.consoles.count > 0 {
+            switch section {
+            case 0:
+                return "Platforms"
+            case 1:
+                return "Custom Platforms"
+            default:
+                return ""
+            }
+        } else {
             return "Custom Platforms"
-        default:
-            return ""
         }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
         
-        if indexPath.section == 0 {
-            cell.textLabel?.text = consoles[indexPath.row].name ?? ""
-            if self.selected.contains(consoles[indexPath.row]) {
-                cell.accessoryType = .checkmark
-            } else {
-                cell.accessoryType = .none
+        if self.consoles.count > 0 {
+            if indexPath.section == 0 {
+                cell.textLabel?.text = consoles[indexPath.row].name ?? ""
+                if self.selected.contains(consoles[indexPath.row]) {
+                    cell.accessoryType = .checkmark
+                } else {
+                    cell.accessoryType = .none
+                }
+            } else if indexPath.section == 1 {
+                if indexPath.row == customPlatforms.count {
+                    cell.textLabel?.text = "Add Console..."
+                    cell.accessoryType = .none
+                } else {
+                    cell.textLabel?.text = customPlatforms[indexPath.row].name ?? ""
+                    if self.selected.contains(customPlatforms[indexPath.row]) {
+                        cell.accessoryType = .checkmark
+                    } else {
+                        cell.accessoryType = .none
+                    }
+                }
             }
-        } else if indexPath.section == 1 {
+        } else {
             if indexPath.row == customPlatforms.count {
                 cell.textLabel?.text = "Add Console..."
                 cell.accessoryType = .none
@@ -127,7 +153,91 @@ class ConsoleSelectionTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
-        if indexPath.section == 1 {
+        if self.consoles.count > 0 {
+            if indexPath.section == 1 {
+                if indexPath.row == customPlatforms.count {
+                    let alertController = UIAlertController(title: "Add New Console", message: "", preferredStyle: .alert)
+                    
+                    self.okAlertAction = UIAlertAction(title: "OK", style: .default, handler: {
+                        alert -> Void in
+                        
+                        let textField = alertController.textFields![0] as UITextField
+                        
+                        if (textField.text?.characters.count)! > 0 {
+                            autoreleasepool {
+                            let realm = try? Realm()
+                                // Check if platform already exists
+                                var newPlatform = realm?.objects(Platform.self).filter("name = '\((textField.text)!)'").first
+                                if newPlatform == nil {
+                                    newPlatform = Platform()
+                                    
+                                    newPlatform?.name = textField.text
+                                    newPlatform?.abbreviation = textField.text
+                                    newPlatform?.custom = true
+                                    if self.currentMaxId == 0 {
+                                        let maxNumber = realm?.objects(Platform.self).map{$0.idNumber}.max() ?? 0
+                                        if maxNumber >= Platform.customIdBase() {
+                                            self.currentMaxId = maxNumber + 1
+                                        } else {
+                                            self.currentMaxId = Platform.customIdBase()
+                                        }
+                                    }
+                                    
+                                    newPlatform?.idNumber = self.currentMaxId
+                                    self.currentMaxId = self.currentMaxId + 1
+                                }
+                                self.selected.append(newPlatform!)
+                                self.customPlatforms.append(newPlatform!)
+                            }
+
+                            cell?.accessoryType = .checkmark
+                            tableView.reloadData()
+                        }
+                    })
+                    
+                    let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {
+                        (action : UIAlertAction!) -> Void in
+                        
+                    })
+                    
+                    alertController.addTextField { textField in
+                        textField.placeholder = "Enter Platform Name"
+                        NotificationCenter.default.addObserver(self, selector: #selector(self.handleTextFieldTextDidChangeNotification), name: NSNotification.Name.UITextFieldTextDidChange, object: textField)
+                    }
+                    self.okAlertAction?.isEnabled = false
+                    alertController.addAction(self.okAlertAction!)
+                    alertController.addAction(cancelAction)
+                    
+                    self.present(alertController, animated: true, completion: nil)
+                } else {
+                    if !self.selected.contains(customPlatforms[indexPath.row]) {
+                        cell?.accessoryType = .checkmark
+                        self.selected.append(customPlatforms[indexPath.row])
+                    } else {
+                        for i in 0..<self.selected.count {
+                            if self.selected[i] == customPlatforms[indexPath.row] {
+                                self.selected.remove(at: i)
+                                break
+                            }
+                        }
+                        cell?.accessoryType = .none
+                    }
+                }
+            } else {
+                if !self.selected.contains(consoles[indexPath.row]) {
+                    cell?.accessoryType = .checkmark
+                    self.selected.append(consoles[indexPath.row])
+                } else {
+                    for i in 0..<self.selected.count {
+                        if self.selected[i] == consoles[indexPath.row] {
+                            self.selected.remove(at: i)
+                            break
+                        }
+                    }
+                    cell?.accessoryType = .none
+                }
+            }
+        } else {
             if indexPath.row == customPlatforms.count {
                 let alertController = UIAlertController(title: "Add New Console", message: "", preferredStyle: .alert)
                 
@@ -138,7 +248,7 @@ class ConsoleSelectionTableViewController: UITableViewController {
                     
                     if (textField.text?.characters.count)! > 0 {
                         autoreleasepool {
-                        let realm = try? Realm()
+                            let realm = try? Realm()
                             // Check if platform already exists
                             var newPlatform = realm?.objects(Platform.self).filter("name = '\((textField.text)!)'").first
                             if newPlatform == nil {
@@ -162,7 +272,7 @@ class ConsoleSelectionTableViewController: UITableViewController {
                             self.selected.append(newPlatform!)
                             self.customPlatforms.append(newPlatform!)
                         }
-
+                        
                         cell?.accessoryType = .checkmark
                         tableView.reloadData()
                     }
@@ -195,19 +305,6 @@ class ConsoleSelectionTableViewController: UITableViewController {
                     }
                     cell?.accessoryType = .none
                 }
-            }
-        } else {
-            if !self.selected.contains(consoles[indexPath.row]) {
-                cell?.accessoryType = .checkmark
-                self.selected.append(consoles[indexPath.row])
-            } else {
-                for i in 0..<self.selected.count {
-                    if self.selected[i] == consoles[indexPath.row] {
-                        self.selected.remove(at: i)
-                        break
-                    }
-                }
-                cell?.accessoryType = .none
             }
         }
         tableView.deselectRow(at: indexPath, animated: true)
