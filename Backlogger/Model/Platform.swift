@@ -24,6 +24,7 @@ class Platform: Field {
     dynamic var image:        ImageList? = nil
     dynamic var releaseDate:  String?    = nil
     dynamic var custom:       Bool       = false
+    dynamic var hasDetails:   Bool       = false
     
     let ownedGames: LinkingObjects<Game> = LinkingObjects(fromType: Game.self, property: "platform")
 
@@ -34,8 +35,6 @@ class Platform: Field {
             return [GameField]()
         }
     }
-    private var gettingDetails: Bool = false
-    private var tempJson: [String : Any] = [:]
     
     override init(json: [String : Any]) {
         self.abbreviation  = json[PlatformFields.Abbreviation.rawValue] as? String
@@ -56,10 +55,6 @@ class Platform: Field {
     
     class func customIdBase() -> Int {
         return 100000
-    }
-    
-    override static func ignoredProperties() -> [String] {
-        return ["gettingDetails", "tempJson"]
     }
     
     func deepCopy() -> Platform {
@@ -88,13 +83,45 @@ class Platform: Field {
         }
     }
     
+    func updateDetailsFromJson(json: [String: Any], fromDb: Bool) {
+        autoreleasepool {
+            let realm = try? Realm()
+            if let companyJson = json[PlatformFields.Company.rawValue] as? [String: Any] {
+                if let dbCompany = realm?.object(ofType: Company.self, forPrimaryKey: Field.idNumber(fromJson: companyJson)) {
+                    if self.company == nil || self.company?.idNumber != dbCompany.idNumber {
+                        self.update {
+                            self.company = dbCompany
+                        }
+                    }
+                } else {
+                    self.update {
+                        self.company = Company(json: companyJson)
+                    }
+                    self.company?.add()
+                }
+            }
+            if let imageJson = json[PlatformFields.Image.rawValue] as? [String: Any] {
+                var imageObject = realm?.object(ofType: ImageList.self, forPrimaryKey: "\(self.idNumber) platform")
+                if imageObject == nil {
+                    imageObject = ImageList(json: imageJson)
+                    imageObject?.id = "\(self.idNumber) platform"
+                }
+                self.update {
+                    self.image = imageObject
+                }
+            }
+            self.update {
+                self.releaseDate = json[PlatformFields.ReleaseDate.rawValue] as? String
+                self.hasDetails = true
+            }
+        }
+    }
+    
     func updateDetails(_ completionHandler: @escaping (Result<Any>) -> Void) {
-        self.gettingDetails = true
         if let apiDetailUrl = self.apiDetailUrl {
             let url = apiDetailUrl + "?api_key=" + GAME_API_KEY + "&format=json&field_list=company,image,release_date"
             Alamofire.request(url)
                 .responseJSON { response in
-                    self.gettingDetails = false
                     if let error = response.result.error {
                         completionHandler(.failure(error))
                         return
@@ -114,7 +141,7 @@ class Platform: Field {
                     results.statusCode = json["status_code"] as? Int
                     results.url = response.request?.mainDocumentURL?.absoluteString
                     if let jsonResults = json["results"] as? [String: Any] {
-                        self.tempJson = jsonResults
+                        self.updateDetailsFromJson(json: jsonResults, fromDb: true)
                         completionHandler(.success(BackendError.objectSerialization(reason: "success")))
                     } else {
                         completionHandler(.failure(BackendError.objectSerialization(reason: "could not get platform details")))
@@ -137,54 +164,18 @@ class Platform: Field {
                 } else {
                     self.company?.add()
                 }
-                super.add()
             }
             if self.image != nil {
                 if let dbImage = realm?.object(ofType: ImageList.self, forPrimaryKey: "\(self.idNumber) platform") {
                     self.update {
                         self.image = dbImage
                     }
-                }
-                super.add()
-            }
-            if (self.company == nil || self.image == nil) && !self.gettingDetails {
-                self.updateDetails { results in
-                    if let error = results.error {
-                        NSLog("\(error.localizedDescription)")
-                    } else {
-                        if let companyJson = self.tempJson[PlatformFields.Company.rawValue] as? [String: Any] {
-                            if let dbCompany = realm?.object(ofType: Company.self, forPrimaryKey: Field.idNumber(fromJson: companyJson)) {
-                                if self.company == nil || self.company?.idNumber != dbCompany.idNumber {
-                                    self.update {
-                                        self.company = dbCompany
-                                    }
-                                }
-                            } else {
-                                self.update {
-                                    self.company = Company(json: companyJson)
-                                }
-                                self.company?.add()
-                            }
-                        }
-                        if let imageJson = self.tempJson[PlatformFields.Image.rawValue] as? [String: Any] {
-                            var imageObject = realm?.object(ofType: ImageList.self, forPrimaryKey: "\(self.idNumber) platform")
-                            if imageObject == nil {
-                                imageObject = ImageList(json: imageJson)
-                                imageObject?.id = "\(self.idNumber) platform"
-                            }
-                            self.update {
-                                self.image = imageObject
-                            }
-                        }
-                        self.update {
-                            self.releaseDate = self.tempJson[PlatformFields.ReleaseDate.rawValue] as? String
-                            self.gettingDetails = false
-                        }
-                    }
-                    super.add()
+                } else {
+                    self.image?.add()
                 }
             }
         }
+        super.add()
     }
     
     override func delete() {

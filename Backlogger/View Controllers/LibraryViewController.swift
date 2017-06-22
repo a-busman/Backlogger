@@ -246,23 +246,55 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
         if !self.isSearching {
             let platform = self.platforms![indexPath.row]
             cell.titleLabel?.text = platform.name ?? ""
-            cell.descriptionLabel?.text = platform.company?.name ?? ""
             cell.rightLabel?.text = "\(platform.ownedGames.count)"
             
-            if let image = platform.image {
-                cell.imageUrl = URL(string: image.iconUrl!)
-            } else {
-                cell.set(image: #imageLiteral(resourceName: "table_placeholder_light"))
-            }
-            cell.cacheCompletionHandler = {
-                (image, error, cacheType, imageUrl) in
-                if image != nil {
-                    if cacheType == .none {
-                        UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                            cell.set(image: image!)
-                        }, completion: nil)
+            if !platform.hasDetails {
+                platform.updateDetails { results in
+                    if let error = results.error {
+                        cell.descriptionLabel?.text = ""
+                        cell.set(image: #imageLiteral(resourceName: "table_placeholder_light"))
+                        NSLog("\(error.localizedDescription)")
                     } else {
-                        cell.set(image: image!)
+                        cell.descriptionLabel?.text = platform.company?.name ?? ""
+                        
+                        if let image = platform.image {
+                            cell.imageUrl = URL(string: image.iconUrl!)
+                        } else {
+                            cell.set(image: #imageLiteral(resourceName: "table_placeholder_light"))
+                        }
+                        cell.cacheCompletionHandler = {
+                            (image, error, cacheType, imageUrl) in
+                            if image != nil {
+                                if cacheType == .none {
+                                    UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                                        cell.set(image: image!)
+                                    }, completion: nil)
+                                } else {
+                                    cell.set(image: image!)
+                                }
+                            }
+                        }
+                        cell.setNeedsLayout()
+                    }
+                }
+            } else {
+                cell.descriptionLabel?.text = platform.company?.name ?? ""
+
+                if let image = platform.image {
+                    cell.imageUrl = URL(string: image.iconUrl!)
+                } else {
+                    cell.set(image: #imageLiteral(resourceName: "table_placeholder_light"))
+                }
+                cell.cacheCompletionHandler = {
+                    (image, error, cacheType, imageUrl) in
+                    if image != nil {
+                        if cacheType == .none {
+                            UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                                cell.set(image: image!)
+                            }, completion: nil)
+                        } else {
+                            cell.set(image: image!)
+                        }
                     }
                 }
             }

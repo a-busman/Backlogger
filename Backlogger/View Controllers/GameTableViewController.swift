@@ -80,23 +80,51 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
 //            } else {
 //                self.yearLabel?.text = "\(platform.company?.name ?? "")"
 //            }
-            if let superUrl = platform.image?.superUrl {
-                self.platformImage?.kf.setImage(with: URL(string: superUrl), placeholder: #imageLiteral(resourceName: "now_playing_placeholder"), completionHandler: {
-                    (image, error, cacheType, imageUrl) in
-                    if image != nil {
-                        if cacheType == .none {
-                            UIView.transition(with: self.platformImage!,
-                                              duration:0.5,
-                                              options: .transitionCrossDissolve,
-                                              animations: { self.platformImage?.image = image },
-                                              completion: nil)
+            if !platform.hasDetails {
+                platform.updateDetails { results in
+                    if let error = results.error {
+                        NSLog("\(error.localizedDescription)")
+                        self.platformImage?.image = #imageLiteral(resourceName: "now_playing_placeholder")
+                    } else {
+                        if let superUrl = platform.image?.superUrl {
+                            self.platformImage?.kf.setImage(with: URL(string: superUrl), placeholder: #imageLiteral(resourceName: "now_playing_placeholder"), completionHandler: {
+                                (image, error, cacheType, imageUrl) in
+                                if image != nil {
+                                    if cacheType == .none {
+                                        UIView.transition(with: self.platformImage!,
+                                                          duration:0.5,
+                                                          options: .transitionCrossDissolve,
+                                                          animations: { self.platformImage?.image = image },
+                                                          completion: nil)
+                                    } else {
+                                        self.platformImage?.image = image
+                                    }
+                                }
+                            })
                         } else {
-                            self.platformImage?.image = image
+                            self.platformImage?.image = #imageLiteral(resourceName: "now_playing_placeholder")
                         }
                     }
-                })
+                }
             } else {
-                self.platformImage?.image = #imageLiteral(resourceName: "now_playing_placeholder")
+                if let superUrl = platform.image?.superUrl {
+                    self.platformImage?.kf.setImage(with: URL(string: superUrl), placeholder: #imageLiteral(resourceName: "now_playing_placeholder"), completionHandler: {
+                        (image, error, cacheType, imageUrl) in
+                        if image != nil {
+                            if cacheType == .none {
+                                UIView.transition(with: self.platformImage!,
+                                                  duration:0.5,
+                                                  options: .transitionCrossDissolve,
+                                                  animations: { self.platformImage?.image = image },
+                                                  completion: nil)
+                            } else {
+                                self.platformImage?.image = image
+                            }
+                        }
+                    })
+                } else {
+                    self.platformImage?.image = #imageLiteral(resourceName: "now_playing_placeholder")
+                }
             }
         } else {
             NSLog("No platform during load")
