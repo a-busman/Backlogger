@@ -218,6 +218,7 @@ class Platform: Field {
         newPlatform.name = self.name
         newPlatform.image = self.image?.deleteRetainCopy()
         newPlatform.releaseDate = self.releaseDate
+        newPlatform.hasDetails = self.hasDetails
         
         if let company = self.company {
             self.update {

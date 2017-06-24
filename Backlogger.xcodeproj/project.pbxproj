@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		867947D6F7A70750129C871C /* Pods_BackloggerWidget.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E967FDBF8E4F3EEDD70F5F51 /* Pods_BackloggerWidget.framework */; };
-		F5EE7A022B3CAD2DD1FF320A /* Pods_Backlogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC8BBA1C96900E3F30355A5F /* Pods_Backlogger.framework */; };
+		3E9F7EF1E20DC937EC2496FD /* Pods_BackloggerWidget.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1428B35991F31EBB335897AA /* Pods_BackloggerWidget.framework */; };
+		42B0C0A4B8F62F4A4428C04A /* Pods_Backlogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74943970C9663B8235314BA7 /* Pods_Backlogger.framework */; };
 		FA09156D1E2AA4210052BCEC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA09156C1E2AA4210052BCEC /* AppDelegate.swift */; };
 		FA0915741E2AA4210052BCEC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA0915721E2AA4210052BCEC /* Main.storyboard */; };
 		FA0915761E2AA4210052BCEC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA0915751E2AA4210052BCEC /* Assets.xcassets */; };
@@ -22,6 +22,7 @@
 		FA0915971E2B367B0052BCEC /* NowPlayingGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0915961E2B367B0052BCEC /* NowPlayingGameViewController.swift */; };
 		FA0C48901EAC532100F82C7D /* keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = FA0C488F1EAC532100F82C7D /* keys.plist */; };
 		FA1854B81ECF22B30031087E /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1854B71ECF22B30031087E /* Util.swift */; };
+		FA1FFF771EFDFBF50048D907 /* SteamLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1FFF761EFDFBF50048D907 /* SteamLoginViewController.swift */; };
 		FA358A521EB9AC4C001EE03D /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA358A511EB9AC4C001EE03D /* Playlist.swift */; };
 		FA358A541EBADF23001EE03D /* PlaylistTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA358A531EBADF23001EE03D /* PlaylistTableCell.xib */; };
 		FA358A561EBADF5E001EE03D /* PlaylistTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA358A551EBADF5E001EE03D /* PlaylistTableCell.swift */; };
@@ -52,6 +53,7 @@
 		FA68A8F11ECBB18400C9CE2E /* PlaylistFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA68A8F01ECBB18400C9CE2E /* PlaylistFooter.swift */; };
 		FA8E71CD1E80E61800E7400B /* Publisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8E71CC1E80E61800E7400B /* Publisher.swift */; };
 		FA8E71CF1E80E66500E7400B /* Developer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8E71CE1E80E66500E7400B /* Developer.swift */; };
+		FA9CFA361EFCB1B7003E93B8 /* Steam.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9CFA351EFCB1B7003E93B8 /* Steam.swift */; };
 		FAC778B11E3481A200944B6B /* GameDetailOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */; };
 		FAC778B51E3481E200944B6B /* GameDetailOverlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC778B41E3481E200944B6B /* GameDetailOverlayViewController.swift */; };
 		FACCA64E1EF82CD8005F1021 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FACCA64D1EF82CD8005F1021 /* NotificationCenter.framework */; };
@@ -103,12 +105,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		399E243301191BDB4908E382 /* Pods-BackloggerWidget.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BackloggerWidget.release.xcconfig"; path = "Pods/Target Support Files/Pods-BackloggerWidget/Pods-BackloggerWidget.release.xcconfig"; sourceTree = "<group>"; };
-		3E74F9518AB01F066EA69FD5 /* Pods-BackloggerWidget.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BackloggerWidget.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BackloggerWidget/Pods-BackloggerWidget.debug.xcconfig"; sourceTree = "<group>"; };
-		9AAD962DF395F2D66FEC110A /* Pods-Backlogger.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Backlogger.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Backlogger/Pods-Backlogger.debug.xcconfig"; sourceTree = "<group>"; };
-		D199AF38A366A54E48258FDF /* Pods-Backlogger.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Backlogger.release.xcconfig"; path = "Pods/Target Support Files/Pods-Backlogger/Pods-Backlogger.release.xcconfig"; sourceTree = "<group>"; };
-		DC8BBA1C96900E3F30355A5F /* Pods_Backlogger.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Backlogger.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E967FDBF8E4F3EEDD70F5F51 /* Pods_BackloggerWidget.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BackloggerWidget.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1428B35991F31EBB335897AA /* Pods_BackloggerWidget.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BackloggerWidget.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		74943970C9663B8235314BA7 /* Pods_Backlogger.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Backlogger.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		ADB13773BA4A914A0CB5EC14 /* Pods-Backlogger.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Backlogger.release.xcconfig"; path = "Pods/Target Support Files/Pods-Backlogger/Pods-Backlogger.release.xcconfig"; sourceTree = "<group>"; };
+		CB4A45D1E2F2DC212A61EE6F /* Pods-BackloggerWidget.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BackloggerWidget.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BackloggerWidget/Pods-BackloggerWidget.debug.xcconfig"; sourceTree = "<group>"; };
+		F099D7129DCF30CAF61B2A2F /* Pods-Backlogger.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Backlogger.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Backlogger/Pods-Backlogger.debug.xcconfig"; sourceTree = "<group>"; };
+		F840124FFCA20E947502CAB7 /* Pods-BackloggerWidget.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BackloggerWidget.release.xcconfig"; path = "Pods/Target Support Files/Pods-BackloggerWidget/Pods-BackloggerWidget.release.xcconfig"; sourceTree = "<group>"; };
 		FA0915691E2AA4210052BCEC /* Backlogger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Backlogger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA09156C1E2AA4210052BCEC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FA0915731E2AA4210052BCEC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 		FA0915961E2B367B0052BCEC /* NowPlayingGameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NowPlayingGameViewController.swift; path = "View Controllers/NowPlayingGameViewController.swift"; sourceTree = "<group>"; };
 		FA0C488F1EAC532100F82C7D /* keys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = keys.plist; sourceTree = "<group>"; };
 		FA1854B71ECF22B30031087E /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		FA1FFF761EFDFBF50048D907 /* SteamLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SteamLoginViewController.swift; path = "View Controllers/SteamLoginViewController.swift"; sourceTree = "<group>"; };
 		FA358A511EB9AC4C001EE03D /* Playlist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Playlist.swift; path = Model/Playlist.swift; sourceTree = "<group>"; };
 		FA358A531EBADF23001EE03D /* PlaylistTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PlaylistTableCell.xib; path = Views/PlaylistTableCell.xib; sourceTree = "<group>"; };
 		FA358A551EBADF5E001EE03D /* PlaylistTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlaylistTableCell.swift; path = "Table View/PlaylistTableCell.swift"; sourceTree = "<group>"; };
@@ -154,6 +157,7 @@
 		FA68A8F01ECBB18400C9CE2E /* PlaylistFooter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlaylistFooter.swift; path = "Table View/PlaylistFooter.swift"; sourceTree = "<group>"; };
 		FA8E71CC1E80E61800E7400B /* Publisher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Publisher.swift; path = Model/Publisher.swift; sourceTree = "<group>"; };
 		FA8E71CE1E80E66500E7400B /* Developer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Developer.swift; path = Model/Developer.swift; sourceTree = "<group>"; };
+		FA9CFA351EFCB1B7003E93B8 /* Steam.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Steam.swift; path = Model/Steam.swift; sourceTree = "<group>"; };
 		FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GameDetailOverlayView.xib; path = Views/GameDetailOverlayView.xib; sourceTree = "<group>"; };
 		FAC778B41E3481E200944B6B /* GameDetailOverlayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameDetailOverlayViewController.swift; path = "View Controllers/GameDetailOverlayViewController.swift"; sourceTree = "<group>"; };
 		FACCA64C1EF82CD8005F1021 /* BackloggerWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = BackloggerWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -178,7 +182,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F5EE7A022B3CAD2DD1FF320A /* Pods_Backlogger.framework in Frameworks */,
+				42B0C0A4B8F62F4A4428C04A /* Pods_Backlogger.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -187,20 +191,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				FACCA64E1EF82CD8005F1021 /* NotificationCenter.framework in Frameworks */,
-				867947D6F7A70750129C871C /* Pods_BackloggerWidget.framework in Frameworks */,
+				3E9F7EF1E20DC937EC2496FD /* Pods_BackloggerWidget.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		D42009BDAD157796B99BA222 /* Pods */ = {
+		7CBC82F61041BFE0A32A677A /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				9AAD962DF395F2D66FEC110A /* Pods-Backlogger.debug.xcconfig */,
-				D199AF38A366A54E48258FDF /* Pods-Backlogger.release.xcconfig */,
-				3E74F9518AB01F066EA69FD5 /* Pods-BackloggerWidget.debug.xcconfig */,
-				399E243301191BDB4908E382 /* Pods-BackloggerWidget.release.xcconfig */,
+				F099D7129DCF30CAF61B2A2F /* Pods-Backlogger.debug.xcconfig */,
+				ADB13773BA4A914A0CB5EC14 /* Pods-Backlogger.release.xcconfig */,
+				CB4A45D1E2F2DC212A61EE6F /* Pods-BackloggerWidget.debug.xcconfig */,
+				F840124FFCA20E947502CAB7 /* Pods-BackloggerWidget.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -208,9 +212,9 @@
 		D89C49BAE2CAA1BC26041695 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				DC8BBA1C96900E3F30355A5F /* Pods_Backlogger.framework */,
 				FACCA64D1EF82CD8005F1021 /* NotificationCenter.framework */,
-				E967FDBF8E4F3EEDD70F5F51 /* Pods_BackloggerWidget.framework */,
+				74943970C9663B8235314BA7 /* Pods_Backlogger.framework */,
+				1428B35991F31EBB335897AA /* Pods_BackloggerWidget.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -221,8 +225,8 @@
 				FA09156B1E2AA4210052BCEC /* Backlogger */,
 				FACCA64F1EF82CD8005F1021 /* BackloggerWidget */,
 				FA09156A1E2AA4210052BCEC /* Products */,
-				D42009BDAD157796B99BA222 /* Pods */,
 				D89C49BAE2CAA1BC26041695 /* Frameworks */,
+				7CBC82F61041BFE0A32A677A /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -274,6 +278,7 @@
 				FA4B44A01E61E3FC006A843F /* ImageViewerController.swift */,
 				FA5C623C1E760413008558BF /* ToastOverlayViewController.swift */,
 				FA68A8CE1EC4C2A500C9CE2E /* AddToPlaylistViewController.swift */,
+				FA1FFF761EFDFBF50048D907 /* SteamLoginViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -352,6 +357,7 @@
 				FA8E71CC1E80E61800E7400B /* Publisher.swift */,
 				FA8E71CE1E80E66500E7400B /* Developer.swift */,
 				FA358A511EB9AC4C001EE03D /* Playlist.swift */,
+				FA9CFA351EFCB1B7003E93B8 /* Steam.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -363,13 +369,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = FA09157D1E2AA4210052BCEC /* Build configuration list for PBXNativeTarget "Backlogger" */;
 			buildPhases = (
-				C8889B9FD6B103ABC525973E /* [CP] Check Pods Manifest.lock */,
+				F4848B463377AFBC287B514A /* [CP] Check Pods Manifest.lock */,
 				FA0915651E2AA4210052BCEC /* Sources */,
 				FA0915661E2AA4210052BCEC /* Frameworks */,
 				FA0915671E2AA4210052BCEC /* Resources */,
-				4AF8E8992E4F9638814F71F4 /* [CP] Embed Pods Frameworks */,
-				4C5FDF5FB9DB89EF0DF988BF /* [CP] Copy Pods Resources */,
 				FACCA65C1EF82CD8005F1021 /* Embed App Extensions */,
+				14F6BB706D213C4732E1FBFF /* [CP] Embed Pods Frameworks */,
+				F132CCD05E5F1FBA4C6F65EA /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -385,11 +391,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = FACCA65B1EF82CD8005F1021 /* Build configuration list for PBXNativeTarget "BackloggerWidget" */;
 			buildPhases = (
-				DBC0412A1692CC6EAEFEC282 /* [CP] Check Pods Manifest.lock */,
+				1EEC3C24B92721A4D0C1D062 /* [CP] Check Pods Manifest.lock */,
 				FACCA6481EF82CD8005F1021 /* Sources */,
 				FACCA6491EF82CD8005F1021 /* Frameworks */,
 				FACCA64A1EF82CD8005F1021 /* Resources */,
-				DFC2D37BE33FA3801610DBFB /* [CP] Copy Pods Resources */,
+				EBD56B322444A5A40314A256 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -486,7 +492,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4AF8E8992E4F9638814F71F4 /* [CP] Embed Pods Frameworks */ = {
+		14F6BB706D213C4732E1FBFF /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -501,22 +507,7 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Backlogger/Pods-Backlogger-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		4C5FDF5FB9DB89EF0DF988BF /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Backlogger/Pods-Backlogger-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C8889B9FD6B103ABC525973E /* [CP] Check Pods Manifest.lock */ = {
+		1EEC3C24B92721A4D0C1D062 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -531,22 +522,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		DBC0412A1692CC6EAEFEC282 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		DFC2D37BE33FA3801610DBFB /* [CP] Copy Pods Resources */ = {
+		EBD56B322444A5A40314A256 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -561,6 +537,36 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BackloggerWidget/Pods-BackloggerWidget-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		F132CCD05E5F1FBA4C6F65EA /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Backlogger/Pods-Backlogger-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F4848B463377AFBC287B514A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -572,6 +578,7 @@
 				FA358A661EBFC015001EE03D /* PlaylistAddTableCell.swift in Sources */,
 				FA4B449D1E6124CC006A843F /* GameDetailsViewController.swift in Sources */,
 				FA8E71CF1E80E66500E7400B /* Developer.swift in Sources */,
+				FA9CFA361EFCB1B7003E93B8 /* Steam.swift in Sources */,
 				FA68A8CF1EC4C2A500C9CE2E /* AddToPlaylistViewController.swift in Sources */,
 				FA358A561EBADF5E001EE03D /* PlaylistTableCell.swift in Sources */,
 				FADA80901E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift in Sources */,
@@ -581,6 +588,7 @@
 				FAC778B51E3481E200944B6B /* GameDetailOverlayViewController.swift in Sources */,
 				FA0915881E2AA98C0052BCEC /* MoreViewController.swift in Sources */,
 				FA5C623D1E760413008558BF /* ToastOverlayViewController.swift in Sources */,
+				FA1FFF771EFDFBF50048D907 /* SteamLoginViewController.swift in Sources */,
 				FA4B44871E556AD3006A843F /* LibraryAddSearchViewController.swift in Sources */,
 				FA358A5C1EBC2BD2001EE03D /* PlaylistTitleCell.swift in Sources */,
 				FA09158C1E2AA9AD0052BCEC /* NowPlayingViewController.swift in Sources */,
@@ -759,7 +767,7 @@
 		};
 		FA09157E1E2AA4210052BCEC /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9AAD962DF395F2D66FEC110A /* Pods-Backlogger.debug.xcconfig */;
+			baseConfigurationReference = F099D7129DCF30CAF61B2A2F /* Pods-Backlogger.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -776,7 +784,7 @@
 		};
 		FA09157F1E2AA4210052BCEC /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D199AF38A366A54E48258FDF /* Pods-Backlogger.release.xcconfig */;
+			baseConfigurationReference = ADB13773BA4A914A0CB5EC14 /* Pods-Backlogger.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -793,7 +801,7 @@
 		};
 		FACCA6591EF82CD8005F1021 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3E74F9518AB01F066EA69FD5 /* Pods-BackloggerWidget.debug.xcconfig */;
+			baseConfigurationReference = CB4A45D1E2F2DC212A61EE6F /* Pods-BackloggerWidget.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = BackloggerWidget/BackloggerWidget.entitlements;
@@ -810,7 +818,7 @@
 		};
 		FACCA65A1EF82CD8005F1021 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 399E243301191BDB4908E382 /* Pods-BackloggerWidget.release.xcconfig */;
+			baseConfigurationReference = F840124FFCA20E947502CAB7 /* Pods-BackloggerWidget.release.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = BackloggerWidget/BackloggerWidget.entitlements;

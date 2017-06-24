@@ -63,6 +63,8 @@ class GameField: Field {
     dynamic var image:        ImageList?      = nil
     dynamic var hasDetails:   Bool            = false
     dynamic var numReviews:   Int             = 0
+    dynamic var steamAppId:   Int             = 0
+    dynamic var onlySteam:    Bool            = false
             var images:       List<ImageList> = List<ImageList>()
             var developers:   List<Developer> = List<Developer>()
             var genres:       List<Genre>     = List<Genre>()
@@ -295,7 +297,7 @@ class GameField: Field {
         
         // make sure we got JSON and it's a dictionary
         guard let json = response.result.value as? [String: Any] else {
-            NSLog("didn't get gamess object as JSON from API")
+            NSLog("didn't get games object as JSON from API")
             return .failure(BackendError.objectSerialization(reason:
                 "Did not get JSON dictionary in response"))
         }
@@ -457,8 +459,13 @@ class GameField: Field {
         }
     }
     
+    class func getGames(from steamName: String, _ completionHandler: @escaping (Result<SearchResults>) -> Void) {
+        let queryUrl = SearchResults.endpointForSearch() + "name:\"\(steamName)\",platform:94"
+        getGames(atPath:queryUrl, completionHandler)
+    }
+    
     class func getGames(withQuery query:String, _ completionHandler: @escaping (Result<SearchResults>) -> Void) {
-        let queryUrl = SearchResults.endpointForSearch() + "&filter=name%3A" + query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
+        let queryUrl = SearchResults.endpointForGames() + "&filter=name%3A" + query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
         getGames(atPath:queryUrl, completionHandler)
     }
     
@@ -474,7 +481,7 @@ class GameField: Field {
             return
         }
         if (pageNum - 1) * limit < totalResults {
-            let queryUrl = SearchResults.endpointForSearch() + "&filter=name%3A" + query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)! + "&offset=\((pageNum - 1) * limit)"
+            let queryUrl = SearchResults.endpointForGames() + "&filter=name%3A" + query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)! + "&offset=\((pageNum - 1) * limit)"
             getGames(atPath:queryUrl, completionHandler)
         } else {
             let error = BackendError.objectSerialization(reason: "Page index out of bounds")
@@ -682,6 +689,9 @@ class GameField: Field {
         newGameField.idNumber = self.idNumber
         newGameField.apiDetailUrl = self.apiDetailUrl
         newGameField.siteDetailUrl = self.siteDetailUrl
+        newGameField.numReviews = self.numReviews
+        newGameField.steamAppId = self.steamAppId
+        newGameField.onlySteam = self.onlySteam
         
         self.image?.delete()
         

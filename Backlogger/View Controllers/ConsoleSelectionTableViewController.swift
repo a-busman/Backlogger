@@ -193,6 +193,7 @@ class ConsoleSelectionTableViewController: UITableViewController {
                             cell?.accessoryType = .checkmark
                             tableView.reloadData()
                         }
+                        NotificationCenter.default.removeObserver(self)
                     })
                     
                     let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {
@@ -276,6 +277,7 @@ class ConsoleSelectionTableViewController: UITableViewController {
                         cell?.accessoryType = .checkmark
                         tableView.reloadData()
                     }
+                    NotificationCenter.default.removeObserver(self)
                 })
                 
                 let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {

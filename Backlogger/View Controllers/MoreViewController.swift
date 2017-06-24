@@ -11,20 +11,31 @@ import RealmSwift
 import Kingfisher
 
 class MoreViewController: UIViewController {
-    let stringList: [String] = ["Delete All", "About"]
+    @IBOutlet weak var tableView: UITableView?
+    var steamVc: UINavigationController?
+    let stringList: [String] = ["Link Steam Account", "Delete All", "About"]
     override func viewDidLoad() {
         super.viewDidLoad()
     }
 }
 
-extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
+extension MoreViewController: UITableViewDelegate, UITableViewDataSource, SteamLoginViewControllerDelegate {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return stringList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "customcell", for: indexPath)
-        cell.textLabel?.text = stringList[indexPath.row]
+        if indexPath.row == 0,
+           let steamName = UserDefaults.standard.value(forKey: "steamName") as? String {
+                cell.textLabel?.text = "Unlink Steam Account"
+                cell.detailTextLabel?.text = steamName
+            
+        } else {
+            cell.textLabel?.text = stringList[indexPath.row]
+            cell.detailTextLabel?.text = ""
+        }
         return cell
     }
     
@@ -43,9 +54,76 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
         return versionLabel
     }
     
+    func tappedDone(sender: UIBarButtonItem) {
+        self.steamVc?.dismiss(animated: true, completion: nil)
+    }
+    
+    func got(steamId: String?, username: String?) {
+        if steamId != nil {
+            UserDefaults.standard.set(steamId, forKey: "steamId")
+            Steam.getUserName(with: steamId!) { results in
+                if let error = results.error {
+                    NSLog(error.localizedDescription)
+                    // Could not get steamID
+                } else {
+                    UserDefaults.standard.set(results.value!, forKey: "steamName")
+                    self.tableView?.reloadData()
+                }
+            }
+            Steam.getUserGameList(with: steamId!) { results in
+                if let listError = results.error {
+                    NSLog(listError.localizedDescription)
+                } else {
+                    print("\(steamId!) has \(results.value!.count) games")
+                    for game in results.value! {
+                        print(game.name)
+                    }
+                }
+            }
+        } else if username != nil {
+            UserDefaults.standard.set(username!, forKey: "steamName")
+            Steam.getUserId(with: username!) { results in
+                if let error = results.error {
+                    NSLog(error.localizedDescription)
+                    // Could not get steamID
+                } else {
+                    UserDefaults.standard.set(results.value!, forKey: "steamId")
+                    Steam.getUserGameList(with: results.value!) { gameResults in
+                        if let listError = gameResults.error {
+                            NSLog(listError.localizedDescription)
+                        } else {
+                            print("\(username!) has \(gameResults.value!.count) games")
+                            for game in gameResults.value! {
+                                print(game.name)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        self.tableView?.reloadData()
+        self.steamVc?.dismiss(animated: true, completion: nil)
+    }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch(indexPath.row) {
         case 0:
+            if let _ = UserDefaults.standard.value(forKey: "steamName") as? String {
+                UserDefaults.standard.removeObject(forKey: "steamName")
+                UserDefaults.standard.removeObject(forKey: "steamId")
+                self.tableView?.reloadData()
+            } else {
+                let vc = SteamLoginViewController()
+                self.steamVc = UINavigationController(rootViewController: vc)
+                self.steamVc?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.tappedDone))
+                self.steamVc?.navigationBar.barTintColor = Util.appColor
+                self.steamVc?.navigationBar.tintColor = .white
+                self.steamVc?.navigationBar.barStyle = .black
+                self.steamVc?.navigationBar.isTranslucent = true
+                vc.delegate = self
+                self.present(self.steamVc!, animated: true, completion: nil)
+                
+            }
+        case 1:
             let actions = UIAlertController(title: "Delete all games?", message: "This will delete all games and playlists in your library.", preferredStyle: .alert)
             actions.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
                 autoreleasepool {
@@ -79,11 +157,11 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
             }))
             actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.present(actions, animated: true, completion: nil)
-        case 1:
+            break
+        case 2:
             let vc = self.storyboard!.instantiateViewController(withIdentifier: "about")
             self.navigationController?.pushViewController(vc, animated: true)
             self.navigationController?.navigationBar.tintColor = .white
-            print("About")
         default:
             break
         }
