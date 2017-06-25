@@ -24,6 +24,7 @@
 		FA1854B81ECF22B30031087E /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1854B71ECF22B30031087E /* Util.swift */; };
 		FA1FFF771EFDFBF50048D907 /* SteamLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1FFF761EFDFBF50048D907 /* SteamLoginViewController.swift */; };
 		FA1FFF791EFEB61E0048D907 /* AddSteamGamesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1FFF781EFEB61E0048D907 /* AddSteamGamesViewController.swift */; };
+		FA1FFF7B1F001F220048D907 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1FFF7A1F001F220048D907 /* AboutViewController.swift */; };
 		FA358A521EB9AC4C001EE03D /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA358A511EB9AC4C001EE03D /* Playlist.swift */; };
 		FA358A541EBADF23001EE03D /* PlaylistTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA358A531EBADF23001EE03D /* PlaylistTableCell.xib */; };
 		FA358A561EBADF5E001EE03D /* PlaylistTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA358A551EBADF5E001EE03D /* PlaylistTableCell.swift */; };
@@ -129,6 +130,7 @@
 		FA1854B71ECF22B30031087E /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		FA1FFF761EFDFBF50048D907 /* SteamLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SteamLoginViewController.swift; path = "View Controllers/SteamLoginViewController.swift"; sourceTree = "<group>"; };
 		FA1FFF781EFEB61E0048D907 /* AddSteamGamesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AddSteamGamesViewController.swift; path = "View Controllers/AddSteamGamesViewController.swift"; sourceTree = "<group>"; };
+		FA1FFF7A1F001F220048D907 /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AboutViewController.swift; path = "View Controllers/AboutViewController.swift"; sourceTree = "<group>"; };
 		FA358A511EB9AC4C001EE03D /* Playlist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Playlist.swift; path = Model/Playlist.swift; sourceTree = "<group>"; };
 		FA358A531EBADF23001EE03D /* PlaylistTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PlaylistTableCell.xib; path = Views/PlaylistTableCell.xib; sourceTree = "<group>"; };
 		FA358A551EBADF5E001EE03D /* PlaylistTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlaylistTableCell.swift; path = "Table View/PlaylistTableCell.swift"; sourceTree = "<group>"; };
@@ -282,6 +284,7 @@
 				FA68A8CE1EC4C2A500C9CE2E /* AddToPlaylistViewController.swift */,
 				FA1FFF761EFDFBF50048D907 /* SteamLoginViewController.swift */,
 				FA1FFF781EFEB61E0048D907 /* AddSteamGamesViewController.swift */,
+				FA1FFF7A1F001F220048D907 /* AboutViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -611,6 +614,7 @@
 				FA68A8F11ECBB18400C9CE2E /* PlaylistFooter.swift in Sources */,
 				FA4B448D1E5D3F04006A843F /* Company.swift in Sources */,
 				FA09156D1E2AA4210052BCEC /* AppDelegate.swift in Sources */,
+				FA1FFF7B1F001F220048D907 /* AboutViewController.swift in Sources */,
 				FA1854B81ECF22B30031087E /* Util.swift in Sources */,
 				FADA80981E4FA0EB0069943D /* GameTableViewController.swift in Sources */,
 				FA8E71CD1E80E61800E7400B /* Publisher.swift in Sources */,
