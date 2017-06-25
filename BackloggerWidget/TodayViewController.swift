@@ -163,7 +163,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
               let smallUrl = game.gameFields?.image?.smallUrl else {
             return
         }
-        self.artView?.kf.setImage(with: URL(string: smallUrl), placeholder: nil, options: nil, progressBlock: nil, completionHandler: {
+        self.artView?.kf.setImage(with: URL(string: smallUrl), placeholder: #imageLiteral(resourceName: "info_image_placeholder"), options: nil, progressBlock: nil, completionHandler: {
             (image, error, cacheType, imageUrl) in
             if image != nil {
                 UIView.transition(with: self.artView!,

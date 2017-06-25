@@ -9,13 +9,17 @@
 import UIKit
 import RealmSwift
 
-class GameTableViewController: UIViewController, GameDetailsViewControllerDelegate, UIViewControllerPreviewingDelegate, PlaylistViewControllerDelegate {
+class GameTableViewController: UIViewController, GameDetailsViewControllerDelegate, UIViewControllerPreviewingDelegate, PlaylistViewControllerDelegate, AddSteamGamesViewControllerDelegate {
     
-    @IBOutlet weak var tableView:     UITableView?
-    @IBOutlet weak var headerView:    UIView?
-    @IBOutlet weak var platformImage: UIImageView?
-    @IBOutlet weak var titleLabel:    UILabel?
-    @IBOutlet weak var shadowView:    UIView?
+    @IBOutlet weak var tableView:         UITableView?
+    @IBOutlet weak var headerView:        UIView?
+    @IBOutlet weak var platformImage:     UIImageView?
+    @IBOutlet weak var titleLabel:        UILabel?
+    @IBOutlet weak var shadowView:        UIView?
+    @IBOutlet weak var loadingView:       UIView?
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView?
+    @IBOutlet weak var progressLabel:     UILabel?
+    @IBOutlet weak var progressBar:       UIProgressView?
     
     @IBOutlet weak var shadowBottomLayoutConstraint:  NSLayoutConstraint?
     @IBOutlet weak var titleBottomLayoutConstraint:   NSLayoutConstraint?
@@ -34,6 +38,10 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
     
     var toastOverlay = ToastOverlayViewController()
     
+    var steamVc: UINavigationController?
+    
+    var currentScrollPosition: CGFloat = 100.0
+
     fileprivate var didLayout = false
     
     fileprivate let titleBottomInitial:   CGFloat = -10.0
@@ -111,23 +119,27 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
                     }
                 }
             } else {
-                if let superUrl = platform.image?.superUrl {
-                    self.platformImage?.kf.setImage(with: URL(string: superUrl), placeholder: #imageLiteral(resourceName: "now_playing_placeholder"), completionHandler: {
-                        (image, error, cacheType, imageUrl) in
-                        if image != nil {
-                            if cacheType == .none {
-                                UIView.transition(with: self.platformImage!,
-                                                  duration:0.5,
-                                                  options: .transitionCrossDissolve,
-                                                  animations: { self.platformImage?.image = image },
-                                                  completion: nil)
-                            } else {
-                                self.platformImage?.image = image
+                if platform.idNumber != Steam.steamPlatformIdNumber {
+                    if let superUrl = platform.image?.superUrl {
+                        self.platformImage?.kf.setImage(with: URL(string: superUrl), placeholder: #imageLiteral(resourceName: "now_playing_placeholder"), completionHandler: {
+                            (image, error, cacheType, imageUrl) in
+                            if image != nil {
+                                if cacheType == .none {
+                                    UIView.transition(with: self.platformImage!,
+                                                      duration:0.5,
+                                                      options: .transitionCrossDissolve,
+                                                      animations: { self.platformImage?.image = image },
+                                                      completion: nil)
+                                } else {
+                                    self.platformImage?.image = image
+                                }
                             }
-                        }
-                    })
+                        })
+                    } else {
+                        self.platformImage?.image = #imageLiteral(resourceName: "now_playing_placeholder")
+                    }
                 } else {
-                    self.platformImage?.image = #imageLiteral(resourceName: "now_playing_placeholder")
+                    self.platformImage?.image = #imageLiteral(resourceName: "steam_logo_large")
                 }
             }
         } else {
@@ -210,7 +222,17 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         }
         self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: ascending)
         self.tableView?.reloadData()
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.clear]
+        
+        
+        if self.currentScrollPosition < 90.0 {
+            let remainingWidth = self.currentScrollPosition - 65.0
+            let newColor = UIColor(white: 1.0, alpha: (25.0 - remainingWidth) / 25.0)
+            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: newColor]
+        } else if self.currentScrollPosition < 65.0 {
+            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        } else {
+            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.clear]
+        }
         if self.games!.count < 1 {
             let _ = self.navigationController?.popViewController(animated: true)
             return
@@ -263,8 +285,11 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
     }
     
     @IBAction func moreTapped(sender: UIBarButtonItem) {
+        
         let actions = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        let addAction = UIAlertAction(title: "Add Games", style: .default, handler: self.addGames)
+        let addAction = self.platform!.idNumber != Steam.steamPlatformIdNumber ?
+        UIAlertAction(title: "Add Games", style: .default, handler: self.addGames) :
+        UIAlertAction(title: "Sync with Steam", style: .default, handler: self.syncWithSteam)
         let sortAction = UIAlertAction(title: "Sort...", style: .default, handler: self.sortTapped)
         
         actions.addAction(addAction)
@@ -363,6 +388,81 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         self.present(actions, animated: true, completion: nil)
     }
     
+    func syncWithSteam(sender: UIAlertAction) {
+        let steamId = UserDefaults.standard.value(forKey: "steamId") as! String
+        Steam.getUserGameList(with: steamId) { results in
+            if let listError = results.error {
+                NSLog(listError.localizedDescription)
+            } else {
+                var newGames: [SteamGame] = []
+                for game in results.value! {
+                    autoreleasepool {
+                        let realm = try! Realm()
+                        if realm.objects(Game.self).filter(NSPredicate(format: "gameFields.steamAppId = %d and platform.idNumber = %d", game.appId, Steam.steamPlatformIdNumber)).count == 0 {
+                            newGames.append(game)
+                        }
+                    }
+                }
+                Steam.matchGiantBombGames(with: newGames, progressHandler: { progress, total in
+                    self.progressBar?.setProgress(Float(progress) / Float(total), animated: true)
+                    self.progressLabel?.text = "\(progress) / \(total)"
+                }) { matched, unmatched in
+                    if let gamesError = matched.error {
+                        NSLog(gamesError.localizedDescription)
+                    } else {
+                        NSLog("Done")
+                        self.loadingView?.isHidden = true
+                        self.activityIndicator?.stopAnimating()
+                        UIApplication.shared.endIgnoringInteractionEvents()
+                        if matched.value!.count > 0 {
+                            //dedupe
+                            var dedupedList: [GameField] = []
+                            for game in matched.value! {
+                                var inNewList = false
+                                for newGame in dedupedList {
+                                    if game.idNumber == newGame.idNumber {
+                                        inNewList = true
+                                        break
+                                    }
+                                }
+                                autoreleasepool {
+                                    let realm = try! Realm()
+                                    if let dbGameField = realm.object(ofType: GameField.self, forPrimaryKey: game.idNumber) {
+                                        for dbGame in dbGameField.ownedGames {
+                                            if dbGame.fromSteam {
+                                                inNewList = true
+                                            }
+                                        }
+                                    }
+                                }
+                                if !inNewList {
+                                    dedupedList.append(game)
+                                }
+                            }
+                            let vc = self.storyboard!.instantiateViewController(withIdentifier: "add_from_steam") as! UINavigationController
+                            let rootView = vc.viewControllers.first! as! AddSteamGamesViewController
+                            vc.navigationBar.tintColor = .white
+                            rootView.delegate = self
+                            rootView.gameFields = dedupedList
+                            self.present(vc, animated: true, completion: nil)
+                        }
+                    }
+                }
+            }
+        }
+        self.tableView?.reloadData()
+        self.steamVc?.dismiss(animated: true, completion: nil)
+        self.activityIndicator?.startAnimating()
+        self.progressBar?.setProgress(0.0, animated: false)
+        self.progressLabel?.text = ""
+        self.loadingView?.isHidden = false
+        UIApplication.shared.beginIgnoringInteractionEvents()
+    }
+    
+    func tappedDone(sender: UIBarButtonItem) {
+        self.steamVc?.dismiss(animated: true, completion: nil)
+    }
+    
     func addGames(sender: UIAlertAction) {
         let vc: LibraryAddSearchViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "add_game") as! LibraryAddSearchViewController
         let navVc = UINavigationController(rootViewController: vc)
@@ -370,6 +470,47 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         navVc.navigationBar.isTranslucent = true
         navVc.navigationBar.barTintColor = Util.appColor
         self.present(navVc, animated: true, completion: nil)
+    }
+    
+    func didSelectSteamGames(vc: AddSteamGamesViewController, games: [GameField]) {
+        if games.count > 0 {
+            var steamPlatform: Platform?
+            autoreleasepool {
+                let realm = try! Realm()
+                if let plat = realm.object(ofType: Platform.self, forPrimaryKey: Steam.steamPlatformIdNumber) {
+                    steamPlatform = plat
+                } else {
+                    var company: Company
+                    if let comp = realm.object(ofType: Company.self, forPrimaryKey: 1374) {
+                        company = comp
+                    } else {
+                        company = Company()
+                        company.name = "Valve Corporation"
+                        company.idNumber = 1374
+                        company.apiDetailUrl = "https://www.giantbomb.com/api/company/3010-1374/"
+                        company.siteDetailUrl = "https://www.giantbomb.com/valve-corporation/3010-1374/"
+                        company.add()
+                    }
+                    steamPlatform = Platform()
+                    steamPlatform?.idNumber = Steam.steamPlatformIdNumber
+                    steamPlatform?.name = "Steam"
+                    steamPlatform?.company = company
+                    steamPlatform?.hasDetails = true
+                    steamPlatform?.add()
+                }
+            }
+            for game in games {
+                let newGame = Game()
+                newGame.inLibrary = true
+                newGame.fromSteam = true
+                newGame.add(game, steamPlatform)
+            }
+        }
+        vc.dismiss(animated: true, completion: nil)
+    }
+    
+    func didDismiss(vc: AddSteamGamesViewController) {
+        vc.dismiss(animated: true, completion: nil)
     }
     
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
@@ -554,9 +695,32 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
                 self.platform = realm?.object(ofType: Platform.self, forPrimaryKey: self.platformId)
             }
             if self.platform != nil {
-                self.games = self.platform?.ownedGames.filter("platform.name = \"\(self.platform!.name!)\"")
+                var sortString: String
+                var ascending: Bool
+                switch self.sortType! {
+                case .alphabetical:
+                    sortString = "gameFields.name"
+                    ascending = true
+                    break
+                case .dateAdded:
+                    sortString = "dateAdded"
+                    ascending = false
+                    break
+                case .releaseYear:
+                    sortString = "gameFields.releaseDate"
+                    ascending = true
+                    break
+                case .percentComplete:
+                    sortString = "progress"
+                    ascending = true
+                    break
+                case .completed:
+                    sortString = "finished"
+                    ascending = true
+                }
+                self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: ascending)
                 self.tableView?.deleteRows(at: [indexPath], with: .automatic)
-                self.tableView?.reloadData()
+                //self.tableView?.reloadData()
             } else {
                 let _ = self.navigationController?.popViewController(animated: true)
             }
@@ -577,20 +741,23 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
             if offset > self.startInset {
                 self.imageHeightLayoutConstraint?.constant = offset - self.startInset + self.imageHeightInitial
                 self.imageTopLayoutConstraint?.constant = 0.0
-                self.tableView?.scrollIndicatorInsets.top = offset
             } else {
                 self.imageTopLayoutConstraint?.constant = (offset - self.startInset) / 5.0
                 self.imageHeightLayoutConstraint?.constant = self.imageHeightInitial
-                self.tableView?.scrollIndicatorInsets.top = self.startInset
             }
+            self.currentScrollPosition = offset
             if offset < 90.0 {
-                
-                let remainingWidth = offset - 65.0
-                let newColor = UIColor(white: 1.0, alpha: (25.0 - remainingWidth) / 25.0)
-                self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: newColor]
-            } else if offset < 65.0 {
-                self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+                if offset < 65.0 {
+                    self.tableView?.scrollIndicatorInsets.top = 65.0
+                    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+                } else {
+                    self.tableView?.scrollIndicatorInsets.top = offset
+                    let remainingWidth = offset - 65.0
+                    let newColor = UIColor(white: 1.0, alpha: (25.0 - remainingWidth) / 25.0)
+                    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: newColor]
+                }
             } else {
+                self.tableView?.scrollIndicatorInsets.top = offset
                 self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.clear]
             }
         }

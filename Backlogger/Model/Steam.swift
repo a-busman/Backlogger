@@ -70,6 +70,8 @@ class SteamGameResults {
 }
 
 class Steam {
+    
+    static let steamPlatformIdNumber = Platform.customIdBase() - 1
     class func generateUserSummaryUrl(with steamId: String) -> URL? {
         return URL(string: "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + STEAM_API_KEY + "&steamids=" + steamId)
     }
@@ -84,6 +86,146 @@ class Steam {
     
     class func generateImageUrl(with image: String, appId: Int) -> URL? {
         return URL(string: "https://media.steampowered.com/steamcommunity/public/images/apps/\(appId)/" + image + ".jpg")
+    }
+    
+    class func matchGiantBombGames(with gameList: [SteamGame], progressHandler: @escaping (Int, Int) -> Void, _ completionHandler: @escaping (_ matched: Result<[GameField]>, _ unmatched: Result<[SteamGame]>) -> Void) {
+        var gameFields: [GameField] = []
+        var unmatchedSteamGames: [SteamGame] = []
+        var gameCount = 0
+        var i = 0
+        let totalGames = gameList.count
+        let queue = DispatchQueue(label: "game.count.queue")
+        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { timer in
+            let currentGame = gameList[i]
+            var gameName = currentGame.name.trimmingCharacters(in: .whitespacesAndNewlines).removeSpecialEdition()
+            
+            // for some reason, resident evil games have biohazard written after them (the japanese name)
+            if gameName.lowercased().contains("biohazard") && gameName.lowercased().contains("resident") {
+                
+                let index = gameName.lowercased().index(gameName.lowercased().range(of: "biohazard")!.lowerBound, offsetBy: -2)
+                gameName = gameName[gameName.startIndex..<index]
+            }
+            gameName = gameName.trimmingCharacters(in: .whitespacesAndNewlines)
+            GameField.getGames(from: gameName) { results in
+                if let error = results.error {
+                    NSLog("Error searching for \(gameName)")
+                    completionHandler(.failure(error), .failure(error))
+                } else {
+                    let searchResults = results.value!
+                    var gameField: GameField?
+                    var pcGameResults: [GameField] = []
+                    let gameNameComponents = gameName.lowercased().components(separatedBy: " ")
+                    
+                    // Find games with PC as platform
+                    for game in searchResults.results as! [GameField] {
+                        for platform in game.platforms {
+                            if platform.idNumber == 94 {
+                                var amountOfComponentsIncluded = 0
+                                var versionNumberMatches = true
+                                var versionInSteam = false
+                                var versionInGB = false
+                                
+                                let gbNameComponents = game.name!.lowercased().components(separatedBy: " ")
+                                // make sure at least 1 word is in the game
+                                for component in gameNameComponents {
+                                    var strippedComponent = component
+                                    if component.characters.last == ":" {
+                                        strippedComponent = component[0..<component.count - 1]
+                                    }
+                                    if game.name!.lowercased().contains(strippedComponent) {
+                                        amountOfComponentsIncluded += 1
+                                    }
+                                    let version = Int(strippedComponent)
+                                    if version != nil {
+                                        versionInSteam = true
+                                        if !game.name!.lowercased().contains(strippedComponent) && !game.name!.lowercased().contains(Util.toRoman(number: version!).lowercased()) {
+                                            versionNumberMatches = false
+                                        }
+                                    }
+                                }
+                                
+                                for component in gbNameComponents {
+                                    var strippedComponent = component
+                                    if component.characters.last == ":" {
+                                        strippedComponent = component[0..<component.count - 1]
+                                    }
+                                    if let _ = Int(strippedComponent) {
+                                        versionInGB = true
+                                    }
+                                }
+                                
+                                if amountOfComponentsIncluded > 0 && versionNumberMatches && versionInSteam == versionInGB {
+                                    pcGameResults.append(game)
+                                }
+                            }
+                        }
+                    }
+                    var matches: [Int: [GameField]] = [:]
+                    // Determine distances of each game to search request
+                    for game in pcGameResults {
+                        if game.name!.lowercased() == gameName.lowercased() {
+                            if matches[0] == nil {
+                                matches[0] = []
+                            }
+                            matches[0]?.append(game)
+                            continue
+                        }
+                        let newDistance = game.name!.lowercased().distance(between: gameName.lowercased())
+                        if matches[newDistance] == nil {
+                            matches[newDistance] = []
+                        }
+                        matches[newDistance]?.append(game)
+                    }
+                    var lowestDistance = 999
+                    // Find lowest distance matches
+                    for (distance, _) in matches {
+                        if distance < lowestDistance {
+                            lowestDistance = distance
+                        }
+                    }
+                    var latestReleaseYear = 0
+                    if lowestDistance != 999 {
+                        if matches[lowestDistance]!.count > 0 {
+                            gameField = matches[lowestDistance]?.first
+                        }
+                        // Find most recent release year
+                        for game in matches[lowestDistance]! {
+                            var gameYear = 0
+                            
+                            if let releaseDate = game.releaseDate {
+                                if releaseDate.count >= 4 {
+                                    let releaseYear = releaseDate[0..<4]
+                                    gameYear = Int(releaseYear)!
+                                }
+                            }
+                            if gameYear > latestReleaseYear {
+                                latestReleaseYear = gameYear
+                                gameField = game
+                            }
+                        }
+                    }
+                    if gameField != nil {
+                        gameFields.append(gameField!)
+                        gameField!.steamAppId = currentGame.appId
+                        print("\(currentGame.name) -> \(gameField!.name!)")
+                    } else {
+                        unmatchedSteamGames.append(currentGame)
+                        print("Could not find match for \(currentGame.name)")
+                    }
+                    queue.sync {
+                        gameCount += 1
+                        progressHandler(gameCount, totalGames)
+                        if gameCount == totalGames {
+                            completionHandler(.success(gameFields), .success(unmatchedSteamGames))
+                        }
+                    }
+                }
+            }
+            i += 1
+            if i >= totalGames {
+                timer.invalidate()
+            }
+        })
     }
     
     class func username(from response: DataResponse<Any>) -> Result<String> {

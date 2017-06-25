@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "check-empty-black@1x.png",
+      "filename" : "steam_logo_large@1x.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "check-empty-black@2x.png",
+      "filename" : "steam_logo_large@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "check-empty-black@3x.png",
+      "filename" : "steam_logo_large@3x.png",
       "scale" : "3x"
     }
   ],

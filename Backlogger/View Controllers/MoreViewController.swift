@@ -12,14 +12,21 @@ import Kingfisher
 
 class MoreViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView?
+    @IBOutlet weak var loadingView: UIView?
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView?
+    @IBOutlet weak var progressLabel: UILabel?
+    @IBOutlet weak var progressBar: UIProgressView?
+    @IBOutlet weak var plainLoadingView: UIView?
+    @IBOutlet weak var plainActivityIndicator: UIActivityIndicatorView?
+    
     var steamVc: UINavigationController?
-    let stringList: [String] = ["Link Steam Account", "Delete All", "About"]
+    let stringList: [String] = ["Link Steam Account", "Reset Data", "About"]
     override func viewDidLoad() {
         super.viewDidLoad()
     }
 }
 
-extension MoreViewController: UITableViewDelegate, UITableViewDataSource, SteamLoginViewControllerDelegate {
+extension MoreViewController: UITableViewDelegate, UITableViewDataSource, SteamLoginViewControllerDelegate, AddSteamGamesViewControllerDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return stringList.count
@@ -74,9 +81,40 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource, SteamL
                 if let listError = results.error {
                     NSLog(listError.localizedDescription)
                 } else {
-                    print("\(steamId!) has \(results.value!.count) games")
-                    for game in results.value! {
-                        print(game.name)
+                    Steam.matchGiantBombGames(with: results.value!, progressHandler: { progress, total in
+                        self.progressBar?.setProgress(Float(progress) / Float(total), animated: true)
+                        self.progressLabel?.text = "\(progress) / \(total)"
+                    }) { matched, unmatched in
+                        if let gamesError = matched.error {
+                            NSLog(gamesError.localizedDescription)
+                        } else {
+                            NSLog("Done")
+                            self.loadingView?.isHidden = true
+                            self.activityIndicator?.stopAnimating()
+                            UIApplication.shared.endIgnoringInteractionEvents()
+                            if matched.value!.count > 0 {
+                                //dedupe
+                                var dedupedList: [GameField] = []
+                                for game in matched.value! {
+                                    var inNewList = false
+                                    for newGame in dedupedList {
+                                        if game.idNumber == newGame.idNumber {
+                                            inNewList = true
+                                            break
+                                        }
+                                    }
+                                    if !inNewList {
+                                        dedupedList.append(game)
+                                    }
+                                }
+                                let vc = self.storyboard!.instantiateViewController(withIdentifier: "add_from_steam") as! UINavigationController
+                                let rootView = vc.viewControllers.first! as! AddSteamGamesViewController
+                                vc.navigationBar.tintColor = .white
+                                rootView.delegate = self
+                                rootView.gameFields = dedupedList
+                                self.present(vc, animated: true, completion: nil)
+                            }
+                        }
                     }
                 }
             }
@@ -92,9 +130,40 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource, SteamL
                         if let listError = gameResults.error {
                             NSLog(listError.localizedDescription)
                         } else {
-                            print("\(username!) has \(gameResults.value!.count) games")
-                            for game in gameResults.value! {
-                                print(game.name)
+                            Steam.matchGiantBombGames(with: gameResults.value!, progressHandler: { progress, total in
+                                self.progressBar?.setProgress(Float(progress) / Float(total), animated: true)
+                                self.progressLabel?.text = "\(progress) / \(total)"
+                            }) { matched, unmatched in
+                                if let gamesError = matched.error {
+                                    NSLog(gamesError.localizedDescription)
+                                } else {
+                                    NSLog("Done")
+                                    self.loadingView?.isHidden = true
+                                    self.activityIndicator?.stopAnimating()
+                                    UIApplication.shared.endIgnoringInteractionEvents()
+                                    if matched.value!.count > 0 {
+                                        //dedupe
+                                        var dedupedList: [GameField] = []
+                                        for game in matched.value! {
+                                            var inNewList = false
+                                            for newGame in dedupedList {
+                                                if game.idNumber == newGame.idNumber {
+                                                    inNewList = true
+                                                    break
+                                                }
+                                            }
+                                            if !inNewList {
+                                                dedupedList.append(game)
+                                            }
+                                        }
+                                        let vc = self.storyboard!.instantiateViewController(withIdentifier: "add_from_steam") as! UINavigationController
+                                        let rootView = vc.viewControllers.first! as! AddSteamGamesViewController
+                                        vc.navigationBar.tintColor = .white
+                                        rootView.delegate = self
+                                        rootView.gameFields = dedupedList
+                                        self.present(vc, animated: true, completion: nil)
+                                    }
+                                }
                             }
                         }
                     }
@@ -103,14 +172,89 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource, SteamL
         }
         self.tableView?.reloadData()
         self.steamVc?.dismiss(animated: true, completion: nil)
+        self.activityIndicator?.startAnimating()
+        self.progressBar?.setProgress(0.0, animated: false)
+        self.progressLabel?.text = ""
+        self.loadingView?.isHidden = false
+        UIApplication.shared.beginIgnoringInteractionEvents()
     }
+    
+    func didSelectSteamGames(vc: AddSteamGamesViewController, games: [GameField]) {
+        vc.dismiss(animated: true, completion: nil)
+        if games.count > 0 {
+            var steamPlatform: Platform?
+            autoreleasepool {
+                let realm = try! Realm()
+                if let plat = realm.object(ofType: Platform.self, forPrimaryKey: Steam.steamPlatformIdNumber) {
+                    steamPlatform = plat
+                } else {
+                    var company: Company
+                    if let comp = realm.object(ofType: Company.self, forPrimaryKey: 1374) {
+                        company = comp
+                    } else {
+                        company = Company()
+                        company.name = "Valve Corporation"
+                        company.idNumber = 1374
+                        company.apiDetailUrl = "https://www.giantbomb.com/api/company/3010-1374/"
+                        company.siteDetailUrl = "https://www.giantbomb.com/valve-corporation/3010-1374/"
+                        company.add()
+                    }
+                    steamPlatform = Platform()
+                    steamPlatform?.idNumber = Steam.steamPlatformIdNumber
+                    steamPlatform?.name = "Steam"
+                    steamPlatform?.company = company
+                    steamPlatform?.hasDetails = true
+                    steamPlatform?.add()
+                }
+            }
+            self.plainActivityIndicator?.startAnimating()
+            self.plainLoadingView?.isHidden = false
+            UIApplication.shared.beginIgnoringInteractionEvents()
+            for game in games {
+                let newGame = Game()
+                newGame.inLibrary = true
+                newGame.fromSteam = true
+                newGame.add(game, steamPlatform)
+            }
+            self.plainLoadingView?.isHidden = true
+            self.plainActivityIndicator?.stopAnimating()
+            UIApplication.shared.endIgnoringInteractionEvents()
+        }
+    }
+    func didDismiss(vc: AddSteamGamesViewController) {
+        vc.dismiss(animated: true, completion: nil)
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch(indexPath.row) {
         case 0:
             if let _ = UserDefaults.standard.value(forKey: "steamName") as? String {
-                UserDefaults.standard.removeObject(forKey: "steamName")
-                UserDefaults.standard.removeObject(forKey: "steamId")
-                self.tableView?.reloadData()
+                let actions = UIAlertController(title: "Unlink Steam account?", message: "This will remove all steam games from Backlogger.", preferredStyle: .alert)
+                actions.addAction(UIAlertAction(title: "Unlink", style: .destructive, handler: { _ in
+                    UserDefaults.standard.removeObject(forKey: "steamName")
+                    UserDefaults.standard.removeObject(forKey: "steamId")
+                    self.plainActivityIndicator?.startAnimating()
+                    self.plainLoadingView?.isHidden = false
+                    UIApplication.shared.beginIgnoringInteractionEvents()
+                    autoreleasepool {
+                        let realm = try! Realm()
+                        if let platform = realm.object(ofType: Platform.self, forPrimaryKey: Steam.steamPlatformIdNumber) {
+                            let ownedGames = platform.ownedGames
+                            for game in ownedGames {
+                                game.delete()
+                            }
+                        }
+                    }
+                    UIApplication.shared.endIgnoringInteractionEvents()
+                    self.plainLoadingView?.isHidden = true
+                    self.plainActivityIndicator?.stopAnimating()
+                    self.tableView?.reloadData()
+                    self.tabBarController!.viewControllers?[0] = self.storyboard!.instantiateViewController(withIdentifier: "NowPlayingNavigation")
+                    self.tabBarController!.viewControllers?[1] = self.storyboard!.instantiateViewController(withIdentifier: "PlaylistNavigation")
+                    self.tabBarController!.viewControllers?[2] = self.storyboard!.instantiateViewController(withIdentifier: "LibraryNavigation")
+                }))
+                actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                self.present(actions, animated: true, completion: nil)
             } else {
                 let vc = SteamLoginViewController()
                 self.steamVc = UINavigationController(rootViewController: vc)
@@ -124,8 +268,15 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource, SteamL
                 
             }
         case 1:
-            let actions = UIAlertController(title: "Delete all games?", message: "This will delete all games and playlists in your library.", preferredStyle: .alert)
-            actions.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
+            var messageString: String = "This will remove all games and playlists in your library."
+            if let _ = UserDefaults.standard.value(forKey: "steamName") as? String {
+                messageString += " This will also unlink your steam account."
+            }
+            
+            let actions = UIAlertController(title: "Reset Data?", message: messageString, preferredStyle: .alert)
+            actions.addAction(UIAlertAction(title: "Reset", style: .destructive, handler: { _ in
+                UserDefaults.standard.removeObject(forKey: "steamName")
+                UserDefaults.standard.removeObject(forKey: "steamId")
                 autoreleasepool {
                     let realm = try! Realm()
                     try! realm.write {
@@ -151,6 +302,7 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource, SteamL
                 }
                 // Delete all cached images
                 ImageCache.default.clearDiskCache()
+                self.tableView?.reloadData()
                 self.tabBarController!.viewControllers?[0] = self.storyboard!.instantiateViewController(withIdentifier: "NowPlayingNavigation")
                 self.tabBarController!.viewControllers?[1] = self.storyboard!.instantiateViewController(withIdentifier: "PlaylistNavigation")
                 self.tabBarController!.viewControllers?[2] = self.storyboard!.instantiateViewController(withIdentifier: "LibraryNavigation")

@@ -63,6 +63,8 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     
     @IBOutlet weak var doneButton: UIBarButtonItem?
     
+    @IBOutlet weak var steamLogo: UIImageView?
+    
     var toastOverlay = ToastOverlayViewController()
     
     @IBOutlet weak var informationTopConstraint:         NSLayoutConstraint?
@@ -197,8 +199,10 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
             }
         } else {
             self._state = .inLibrary
+            if self._game!.platform!.idNumber == Steam.steamPlatformIdNumber {
+                self.steamLogo?.isHidden = false
+            }
         }
-        
         
         self.addBackground?.isHidden = !self.showAddButton
 
@@ -510,41 +514,45 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     
     private func updateGameDetails() {
         // Download all images at once
-        if let game = self._game {
-            for (i, image) in game.gameFields!.images.enumerated() {
-                let imageView = UIImageView()
-                var newUrl: String
-                if let url = image.superUrl {
-                    newUrl = url
-                } else if let url = image.mediumUrl {
-                    newUrl = url
-                } else if let url = image.screenUrl {
-                    newUrl = url
-                } else {
-                    newUrl = ""
-                    imageView.image = #imageLiteral(resourceName: "info_image_placeholder")
-                }
-                let image = imageView.image ?? UIImage()
-                let galleryItem = GalleryItem.image { $0(image) }
-                let item: DataItem = DataItem(imageView: imageView, galleryItem: galleryItem)
-                self.images[i] = item
-                if imageView.image == nil {
-                    imageView.kf.setImage(with: URL(string: newUrl), placeholder: #imageLiteral(resourceName: "info_image_placeholder"), completionHandler: {
-                        (image, error, cacheType, imageUrl) in
-                        if image != nil {
-                            if cacheType == .none {
-                                UIView.transition(with: imageView,
-                                                  duration:0.5,
-                                                  options: .transitionCrossDissolve,
-                                                  animations: { imageView.image = image },
-                                                  completion: nil)
-                            } else {
-                                imageView.image = image
-                            }
-                            self.images[i]?.galleryItem = GalleryItem.image { $0(image) }
+        var gameField: GameField
+        if self._game == nil {
+            gameField = self._gameField!
+        } else {
+            gameField = self._game!.gameFields!
+        }
+        for (i, image) in gameField.images.enumerated() {
+            let imageView = UIImageView()
+            var newUrl: String
+            if let url = image.superUrl {
+                newUrl = url
+            } else if let url = image.mediumUrl {
+                newUrl = url
+            } else if let url = image.screenUrl {
+                newUrl = url
+            } else {
+                newUrl = ""
+                imageView.image = #imageLiteral(resourceName: "info_image_placeholder")
+            }
+            let image = imageView.image ?? UIImage()
+            let galleryItem = GalleryItem.image { $0(image) }
+            let item: DataItem = DataItem(imageView: imageView, galleryItem: galleryItem)
+            self.images[i] = item
+            if imageView.image == nil {
+                imageView.kf.setImage(with: URL(string: newUrl), placeholder: #imageLiteral(resourceName: "info_image_placeholder"), completionHandler: {
+                    (image, error, cacheType, imageUrl) in
+                    if image != nil {
+                        if cacheType == .none {
+                            UIView.transition(with: imageView,
+                                              duration:0.5,
+                                              options: .transitionCrossDissolve,
+                                              animations: { imageView.image = image },
+                                              completion: nil)
+                        } else {
+                            imageView.image = image
                         }
-                    })
-                }
+                        self.images[i]?.galleryItem = GalleryItem.image { $0(image) }
+                    }
+                })
             }
         }
         self.imageCollectionView?.reloadData()
@@ -658,23 +666,28 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
             }
             self.navigationController?.pushViewController(consoleSelection, animated: true)
         } else {
-            var gameFieldCopy: GameField?
-            let endIndex = (self._gameField?.ownedGames.endIndex)!
-            // All links are broken at this point
-            for (i, game) in (self._gameField?.ownedGames.enumerated())! {
-                if (i == endIndex - 1) {
-                    gameFieldCopy = game.deleteWithGameFieldCopy()
-                } else {
-                    game.delete()
+            if self._game != nil {
+                self._game?.delete()
+                self.navigationController?.popViewController(animated: true)
+            } else {
+                var gameFieldCopy: GameField?
+                let endIndex = (self._gameField?.ownedGames.endIndex)!
+                // All links are broken at this point
+                for (i, game) in (self._gameField?.ownedGames.enumerated())! {
+                    if (i == endIndex - 1) {
+                        gameFieldCopy = game.deleteWithGameFieldCopy()
+                    } else {
+                        game.delete()
+                    }
                 }
-            }
 
-            UIView.setAnimationsEnabled(false)
-            self.platformButton?.setTitle("", for: .normal)
-            UIView.setAnimationsEnabled(true)
-            self.platformButton?.isEnabled = false
-            self._gameField = gameFieldCopy
-            self.transitionToAdd()
+                UIView.setAnimationsEnabled(false)
+                self.platformButton?.setTitle("", for: .normal)
+                UIView.setAnimationsEnabled(true)
+                self.platformButton?.isEnabled = false
+                self._gameField = gameFieldCopy
+                self.transitionToAdd()
+            }
         }
     }
     

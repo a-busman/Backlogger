@@ -31,6 +31,54 @@ class Util {
             Set("abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLKMNOPQRSTUVWXYZ1234567890+-*=(),.:!_".characters)
         return String(text.characters.filter {okayChars.contains($0) })
     }
+    
+    class func toRoman(number: Int) -> String {
+        
+        let romanValues = ["M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"]
+        let arabicValues = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1]
+        
+        var romanValue = ""
+        var startingValue = number
+        
+        for (index, romanChar) in romanValues.enumerated() {
+            let arabicValue = arabicValues[index]
+            
+            let div = startingValue / arabicValue
+            
+            if (div > 0)
+            {
+                for _ in 0..<div
+                {
+                    //println("Should add \(romanChar) to string")
+                    romanValue += romanChar
+                }
+                
+                startingValue -= arabicValue * div
+            }
+        }
+        
+        return romanValue
+    }
+}
+
+extension UIImage {
+    public func resize(to newSize: CGSize) -> UIImage {
+        let newRect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
+        let imageRef = self.cgImage!
+        
+        UIGraphicsBeginImageContext(newSize)
+        let context = UIGraphicsGetCurrentContext()
+        context?.interpolationQuality = .high
+        
+        let flipVertical = CGAffineTransform(a: 1, b: 0, c: 0, d: -1, tx: 0, ty: newSize.height)
+        context?.concatenate(flipVertical)
+        context?.draw(imageRef, in: newRect)
+        
+        let newImageRef = context!.makeImage()
+        let newImage = UIImage(cgImage: newImageRef!)
+        UIGraphicsEndImageContext()
+        return newImage
+    }
 }
 
 extension String {
@@ -117,5 +165,40 @@ extension String {
         }
         
         return d[self.count + 1][target.count + 1]
+    }
+    
+    public func removeSpecialEdition() -> String {
+        let lowercase = self.lowercased()
+        if lowercase.hasSuffix("goty edition") {
+            return self[0..<self.count - "goty edition".count - 1]
+        } else if lowercase.hasSuffix("game of the year edition") {
+            return self[0..<self.count - "game of the year edition".count - 1]
+        } else if lowercase.hasSuffix("enhanced edition") {
+            return self[0..<self.count - "enhanced edition".count - 1]
+        } else if lowercase.hasSuffix("steam edition") {
+            return self[0..<self.count - "steam edition".count - 1]
+        } else if lowercase.hasSuffix("hd") {
+            return self[0..<self.count - "hd".count - 1]
+        } else if lowercase.hasSuffix("goty") {
+            return self[0..<self.count - "goty".count - 1]
+        } else if lowercase.hasSuffix("the directors cut") {
+            return self[0..<self.count - "the directors cut".count - 1]
+        } else if lowercase.hasSuffix("(new steam version)") {
+            return self[0..<self.count - "(new steam version".count - 1]
+        } else if lowercase.hasSuffix("multiplayer") {
+            return self[0..<self.count - "multiplayer".count - 1]
+        } else if lowercase.hasSuffix("single player") {
+            return self[0..<self.count - "single player".count - 1]
+        } else if lowercase.hasSuffix("remastered") {
+            return self[0..<self.count - "remastered".count - 1]
+        } else if lowercase.hasSuffix("complete edition") {
+            return self[0..<self.count - "complete edition".count - 1]
+        } else if lowercase.hasSuffix("deluxe") {
+            return self[0..<self.count - "deluxe".count - 1]
+        } else if lowercase.hasSuffix("maximum edition") {
+            return self[0..<self.count - "maximum edition".count - 1]
+        } else {
+            return self
+        }
     }
 }

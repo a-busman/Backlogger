@@ -23,6 +23,7 @@
 		FA0C48901EAC532100F82C7D /* keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = FA0C488F1EAC532100F82C7D /* keys.plist */; };
 		FA1854B81ECF22B30031087E /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1854B71ECF22B30031087E /* Util.swift */; };
 		FA1FFF771EFDFBF50048D907 /* SteamLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1FFF761EFDFBF50048D907 /* SteamLoginViewController.swift */; };
+		FA1FFF791EFEB61E0048D907 /* AddSteamGamesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1FFF781EFEB61E0048D907 /* AddSteamGamesViewController.swift */; };
 		FA358A521EB9AC4C001EE03D /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA358A511EB9AC4C001EE03D /* Playlist.swift */; };
 		FA358A541EBADF23001EE03D /* PlaylistTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA358A531EBADF23001EE03D /* PlaylistTableCell.xib */; };
 		FA358A561EBADF5E001EE03D /* PlaylistTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA358A551EBADF5E001EE03D /* PlaylistTableCell.swift */; };
@@ -127,6 +128,7 @@
 		FA0C488F1EAC532100F82C7D /* keys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = keys.plist; sourceTree = "<group>"; };
 		FA1854B71ECF22B30031087E /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		FA1FFF761EFDFBF50048D907 /* SteamLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SteamLoginViewController.swift; path = "View Controllers/SteamLoginViewController.swift"; sourceTree = "<group>"; };
+		FA1FFF781EFEB61E0048D907 /* AddSteamGamesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AddSteamGamesViewController.swift; path = "View Controllers/AddSteamGamesViewController.swift"; sourceTree = "<group>"; };
 		FA358A511EB9AC4C001EE03D /* Playlist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Playlist.swift; path = Model/Playlist.swift; sourceTree = "<group>"; };
 		FA358A531EBADF23001EE03D /* PlaylistTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PlaylistTableCell.xib; path = Views/PlaylistTableCell.xib; sourceTree = "<group>"; };
 		FA358A551EBADF5E001EE03D /* PlaylistTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlaylistTableCell.swift; path = "Table View/PlaylistTableCell.swift"; sourceTree = "<group>"; };
@@ -279,6 +281,7 @@
 				FA5C623C1E760413008558BF /* ToastOverlayViewController.swift */,
 				FA68A8CE1EC4C2A500C9CE2E /* AddToPlaylistViewController.swift */,
 				FA1FFF761EFDFBF50048D907 /* SteamLoginViewController.swift */,
+				FA1FFF781EFEB61E0048D907 /* AddSteamGamesViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -599,6 +602,7 @@
 				FA09158E1E2AA9BE0052BCEC /* RootViewController.swift in Sources */,
 				FA4B448B1E5D3DC2006A843F /* Field.swift in Sources */,
 				FA0915831E2AA9480052BCEC /* PlaylistViewController.swift in Sources */,
+				FA1FFF791EFEB61E0048D907 /* AddSteamGamesViewController.swift in Sources */,
 				FA358A621EBF865B001EE03D /* PlaylistDescriptionCell.swift in Sources */,
 				FA0915861E2AA97B0052BCEC /* LibraryViewController.swift in Sources */,
 				FA4B44891E5625E7006A843F /* SearchResults.swift in Sources */,

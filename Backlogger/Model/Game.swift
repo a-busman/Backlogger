@@ -353,7 +353,7 @@ class GameField: Field {
         return .success(game!)
     }
     
-    fileprivate class func getGames(atPath path: String, _ completionHandler: @escaping (Result<SearchResults>) -> Void) {
+    fileprivate class func getGames(atPath path: String, allowsCancel: Bool, _ completionHandler: @escaping (Result<SearchResults>) -> Void) {
         // make sure it's HTTPS because sometimes the API gives us HTTP URLs
 
         guard var urlComponents = URLComponents(string: path) else {
@@ -368,7 +368,7 @@ class GameField: Field {
             completionHandler(.failure(error))
             return
         }
-        if self.request != nil {
+        if self.request != nil && allowsCancel {
             self.request!.cancel()
         }
         //UIApplication.shared.isNetworkActivityIndicatorVisible = true
@@ -460,13 +460,13 @@ class GameField: Field {
     }
     
     class func getGames(from steamName: String, _ completionHandler: @escaping (Result<SearchResults>) -> Void) {
-        let queryUrl = SearchResults.endpointForSearch() + "name:\"\(steamName)\",platform:94"
-        getGames(atPath:queryUrl, completionHandler)
+        let queryUrl = SearchResults.endpointForSearch() + "name%3A" + steamName.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
+        getGames(atPath:queryUrl, allowsCancel: false, completionHandler)
     }
     
     class func getGames(withQuery query:String, _ completionHandler: @escaping (Result<SearchResults>) -> Void) {
         let queryUrl = SearchResults.endpointForGames() + "&filter=name%3A" + query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
-        getGames(atPath:queryUrl, completionHandler)
+        getGames(atPath:queryUrl, allowsCancel: true, completionHandler)
     }
     
     class func getGames(withPageNum pageNum: Int, query: String, prevResults: SearchResults?, _ completionHandler: @escaping (Result<SearchResults>) -> Void) {
@@ -482,7 +482,7 @@ class GameField: Field {
         }
         if (pageNum - 1) * limit < totalResults {
             let queryUrl = SearchResults.endpointForGames() + "&filter=name%3A" + query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)! + "&offset=\((pageNum - 1) * limit)"
-            getGames(atPath:queryUrl, completionHandler)
+            getGames(atPath:queryUrl, allowsCancel: true, completionHandler)
         } else {
             let error = BackendError.objectSerialization(reason: "Page index out of bounds")
             completionHandler(.failure(error))
@@ -763,7 +763,7 @@ class Game: Object {
     dynamic var progress:   Int        = 0
     dynamic var finished:   Bool       = false
     dynamic var notes:      String?    = nil
-
+    dynamic var fromSteam:  Bool       = false
     
     var linkedPlaylists: [Playlist] {
         if let objects = realm?.objects(Playlist.self).filter("%@ IN games", self) {

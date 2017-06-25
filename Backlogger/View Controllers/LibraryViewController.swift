@@ -415,22 +415,27 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
                     cell.hideDetails()
                 }
                 
-                if let image = platform.image {
-                    cell.imageUrl = URL(string: image.iconUrl!)
-                } else {
-                    cell.set(image: #imageLiteral(resourceName: "table_placeholder_light"))
-                }
-                cell.cacheCompletionHandler = {
-                    (image, error, cacheType, imageUrl) in
-                    if image != nil {
-                        if cacheType == .none {
-                            UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                if platform.idNumber != Steam.steamPlatformIdNumber {
+                    if let image = platform.image {
+                        cell.imageUrl = URL(string: image.iconUrl!)
+                    } else {
+                        cell.set(image: #imageLiteral(resourceName: "table_placeholder_light"))
+                    }
+                    cell.cacheCompletionHandler = {
+                        (image, error, cacheType, imageUrl) in
+                        if image != nil {
+                            if cacheType == .none {
+                                UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                                    cell.set(image: image!)
+                                }, completion: nil)
+                            } else {
                                 cell.set(image: image!)
-                            }, completion: nil)
-                        } else {
-                            cell.set(image: image!)
+                            }
                         }
                     }
+                } else {
+                    cell.imageUrl = nil
+                    cell.set(image: #imageLiteral(resourceName: "steam_logo"))
                 }
             }
         } else {
