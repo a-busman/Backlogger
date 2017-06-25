@@ -55,7 +55,7 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
     }
     
     fileprivate var _isDismissing = false
-    private var _blurViewState = UpNextState.minimal
+    fileprivate var _blurViewState = UpNextState.minimal
     
     var blurViewState: UpNextState {
         get {
@@ -487,7 +487,7 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
                 newAlpha = 0.5
             } else {
                 newY = self.blurTopLayoutConstraint!.constant + translation.y
-                newAlpha = (newY / maxHeight) / 2.0
+                newAlpha = ((newY + 50.0) / (maxHeight + 50.0)) / 2.0
             }
             self.blurTopLayoutConstraint?.constant = newY
             if self.gamesUpNext.count > 0 {
@@ -589,7 +589,25 @@ extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate {
                 self.upNextPlaylist.games.removeAll()
                 self.upNextPlaylist.games.append(contentsOf: self.gamesUpNext)
             }
-            self.upNextTableView?.reloadData()
+            self.upNextTableView?.deleteRows(at: [indexPath], with: .automatic)
+            
+            if self.gamesUpNext.count == 0 {
+                self.handleTapDimView(sender: UITapGestureRecognizer())
+                self.upNextTableView?.reloadData()
+                return
+            }
+            let maxHeight = max(-self.visibleView!.bounds.height * 0.9, 55.0 * CGFloat(-self.gamesUpNext.count) - 50.0)
+            self.blurTopLayoutConstraint?.constant = maxHeight
+
+            UIView.animate(withDuration: 0.4,
+               delay: 0.0,
+               usingSpringWithDamping: 1.0,
+               initialSpringVelocity: 0,
+               options: .curveEaseIn,
+               animations: {
+                self.visibleView?.layoutIfNeeded()
+            },
+               completion: nil)
         }
     }
     

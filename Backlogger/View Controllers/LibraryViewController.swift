@@ -236,6 +236,7 @@ class LibraryViewController: UIViewController, UITabBarDelegate {
         actions.addAction(percentAction)
         actions.addAction(completeAction)
         actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        actions.popoverPresentationController?.barButtonItem = self.navigationController?.navigationBar.topItem?.leftBarButtonItem
         self.present(actions, animated: true, completion: nil)
     }
     

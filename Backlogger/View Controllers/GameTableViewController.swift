@@ -243,7 +243,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         super.viewDidLayoutSubviews()
 
         if !self.didLayout {
-            self.shadowGradientLayer.frame = CGRect(x: 0.0, y: 0.0, width: (self.shadowView?.frame.width)!, height: (self.shadowView?.frame.height)!)
+            self.shadowGradientLayer.frame = CGRect(x: 0.0, y: 0.0, width: UIScreen.main.bounds.width, height: (self.shadowView?.frame.height)!)
             let darkColor = UIColor(white: 0.0, alpha: 0.3).cgColor
             self.shadowGradientLayer.colors = [UIColor.clear.cgColor, darkColor]
             self.shadowGradientLayer.locations = [0.7, 1.0]
@@ -295,6 +295,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         actions.addAction(addAction)
         actions.addAction(sortAction)
         actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        actions.popoverPresentationController?.barButtonItem = self.navigationController?.navigationBar.topItem?.rightBarButtonItem
         self.present(actions, animated: true, completion: nil)
     }
     
@@ -385,6 +386,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         actions.addAction(percentAction)
         actions.addAction(completeAction)
         actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        actions.popoverPresentationController?.barButtonItem = self.navigationController?.navigationBar.topItem?.rightBarButtonItem
         self.present(actions, animated: true, completion: nil)
     }
     

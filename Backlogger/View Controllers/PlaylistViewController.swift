@@ -129,6 +129,7 @@ class PlaylistViewController: UIViewController {
         actions.addAction(progressAction)
         actions.addAction(completedAction)
         actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        actions.popoverPresentationController?.barButtonItem = self.navigationController?.navigationBar.topItem?.rightBarButtonItem
         self.present(actions, animated: true, completion: nil)
     }
     func cancelTapped(sender: UIBarButtonItem) {

@@ -216,43 +216,43 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
                 self.finishedButton?.setImage(#imageLiteral(resourceName: "check-green"), for: .normal)
                 self.finishedButtonState = .selected
             }
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-white")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-white")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-empty-black")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-empty-black")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-empty-black")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
             switch (game.rating) {
             case 0:
-                self.firstStar?.image  = #imageLiteral(resourceName: "star-white")
-                self.secondStar?.image = #imageLiteral(resourceName: "star-white")
-                self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
-                self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
-                self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+                self.firstStar?.image  = #imageLiteral(resourceName: "star-empty-black")
+                self.secondStar?.image = #imageLiteral(resourceName: "star-empty-black")
+                self.thirdStar?.image  = #imageLiteral(resourceName: "star-empty-black")
+                self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
+                self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
                 break
             case 1:
-                self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
+                self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
                 break
             case 2:
-                self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
-                self.secondStar?.image = #imageLiteral(resourceName: "star-black")
+                self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+                self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
                 break
             case 3:
-                self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
-                self.secondStar?.image = #imageLiteral(resourceName: "star-black")
-                self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
+                self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+                self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
+                self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
                 break
             case 4:
-                self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
-                self.secondStar?.image = #imageLiteral(resourceName: "star-black")
-                self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
-                self.fourthStar?.image = #imageLiteral(resourceName: "star-black")
+                self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+                self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
+                self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
+                self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
                 break
             case 5:
-                self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
-                self.secondStar?.image = #imageLiteral(resourceName: "star-black")
-                self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
-                self.fourthStar?.image = #imageLiteral(resourceName: "star-black")
-                self.fifthStar?.image  = #imageLiteral(resourceName: "star-black")
+                self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+                self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
+                self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
+                self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
+                self.fifthStar?.image  = #imageLiteral(resourceName: "star-yellow")
                 break
             default:
                 break
@@ -745,45 +745,45 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
         let starIndex = Int(location.x / ((self.ratingContainerView?.bounds.width)! / 5.0))
         var rating = 0
         if starIndex < 0 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-white")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-white")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-empty-black")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-empty-black")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-empty-black")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
         } else if starIndex == 0 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-white")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-empty-black")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-empty-black")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
             rating = 1
         } else if starIndex == 1 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-black")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-empty-black")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
             rating = 2
         } else if starIndex == 2 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-black")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
             rating = 3
         } else if starIndex == 3 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-black")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-black")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
             rating = 4
         } else {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-black")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-black")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-black")
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-yellow")
             rating = 5
         }
         self._game?.update {
@@ -797,39 +797,39 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
         let starIndex = Int(location.x / ((self.ratingContainerView?.bounds.width)! / 5.0))
         var rating = 0
         if starIndex <= 0 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-white")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-empty-black")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-empty-black")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
             rating = 1
         } else if starIndex == 1 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-black")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-empty-black")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
             rating = 2
         } else if starIndex == 2 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-black")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
             rating = 3
         } else if starIndex == 3 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-black")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-black")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
             rating = 4
         } else {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-black")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-black")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-black")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-black")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-black")
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-yellow")
             rating = 5
         }
         self._game?.update {

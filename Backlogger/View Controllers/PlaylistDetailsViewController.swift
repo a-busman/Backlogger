@@ -425,6 +425,8 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             actions.addAction(queueAction)
         }
         actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        actions.popoverPresentationController?.sourceView = self.titleCell.moreButton
+        actions.popoverPresentationController?.sourceRect = self.titleCell.moreButton!.bounds
         self.present(actions, animated: true, completion: nil)
     }
     
@@ -436,6 +438,9 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         actions.addAction(takeAction)
         actions.addAction(chooseAction)
         actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        actions.popoverPresentationController?.sourceView = self.titleCell.artView
+        actions.popoverPresentationController?.sourceRect = self.titleCell.artView!.bounds
 
         self.present(actions, animated: true, completion: nil)
     }
@@ -477,6 +482,8 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         let deleteAction = UIAlertAction(title: "Delete Playlist", style: .destructive, handler: self.handleSecondDelete)
         actions.addAction(deleteAction)
         actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        actions.popoverPresentationController?.sourceView = self.titleCell.moreButton
+        actions.popoverPresentationController?.sourceRect = self.titleCell.moreButton!.bounds
         self.present(actions, animated: true, completion: nil)
     }
     

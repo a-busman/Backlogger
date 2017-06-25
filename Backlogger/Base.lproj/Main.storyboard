@@ -714,11 +714,11 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <view hidden="YES" alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="I2G-X2-t60">
-                                <rect key="frame" x="150" y="296" width="74" height="74"/>
+                                <rect key="frame" x="137" y="283" width="100" height="100"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="I2G-X2-t60" secondAttribute="height" id="Jtl-9U-1yH"/>
-                                    <constraint firstAttribute="width" constant="74" id="hgm-2P-xxx"/>
+                                    <constraint firstAttribute="width" constant="100" id="hgm-2P-xxx"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -1209,10 +1209,18 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                                                 <constraint firstAttribute="width" secondItem="WiZ-zI-24F" secondAttribute="height" id="Y15-jN-TYC"/>
                                             </constraints>
                                         </imageView>
+                                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="steam" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fhq-Eb-ul8">
+                                            <rect key="frame" x="45" y="151.5" width="225.5" height="20.5"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="Lto-Ap-7f7" firstAttribute="trailing" secondItem="WPU-V0-T7e" secondAttribute="trailing" constant="-10" id="271-fU-BK1"/>
                                         <constraint firstItem="CZM-Bc-4S9" firstAttribute="top" secondItem="nOy-jF-hqi" secondAttribute="top" id="2oS-uZ-Xh4"/>
+                                        <constraint firstItem="Fhq-Eb-ul8" firstAttribute="centerY" secondItem="WiZ-zI-24F" secondAttribute="centerY" id="33V-Yk-G32"/>
+                                        <constraint firstItem="Fhq-Eb-ul8" firstAttribute="trailing" secondItem="w8J-Fc-HQw" secondAttribute="trailing" constant="-30" id="3PW-vz-0Ui"/>
                                         <constraint firstItem="nOy-jF-hqi" firstAttribute="bottom" secondItem="srX-AB-VRu" secondAttribute="bottom" id="69U-eM-zqR"/>
                                         <constraint firstItem="srX-AB-VRu" firstAttribute="leading" secondItem="WPU-V0-T7e" secondAttribute="leading" constant="20" id="6T2-vC-H4s"/>
                                         <constraint firstItem="CZM-Bc-4S9" firstAttribute="trailing" secondItem="WPU-V0-T7e" secondAttribute="trailing" constant="-10" id="7Nz-s9-SfM"/>
@@ -1234,6 +1242,7 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                                         <constraint firstItem="w8J-Fc-HQw" firstAttribute="centerY" secondItem="nOy-jF-hqi" secondAttribute="centerY" id="rDh-Je-zgy"/>
                                         <constraint firstItem="Lto-Ap-7f7" firstAttribute="leading" secondItem="YfW-ZH-mUf" secondAttribute="leading" id="uft-7F-Wzp"/>
                                         <constraint firstItem="5gO-IU-wMV" firstAttribute="bottom" secondItem="WPU-V0-T7e" secondAttribute="bottom" constant="-3" id="xs2-hW-VI1"/>
+                                        <constraint firstItem="Fhq-Eb-ul8" firstAttribute="leading" secondItem="WiZ-zI-24F" secondAttribute="trailing" constant="5" id="zrm-PE-NME"/>
                                     </constraints>
                                     <variation key="default">
                                         <mask key="constraints">
@@ -1247,13 +1256,13 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                                 <blurEffect style="extraLight"/>
                             </visualEffectView>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="thQ-co-ZR8">
-                                <rect key="frame" x="0.0" y="239" width="375" height="379"/>
+                                <rect key="frame" x="0.0" y="239" width="375" height="428"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="ydf-rd-4fg">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="379"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="428"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="djC-wv-i8j">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="379"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="428"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zpl-ms-vop">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="371.5"/>
@@ -1270,31 +1279,31 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                                                                 <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="JAi-Yj-wEx">
                                                                     <rect key="frame" x="0.0" y="0.0" width="215" height="20"/>
                                                                     <subviews>
-                                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="star-white" translatesAutoresizingMaskIntoConstraints="NO" id="Qrl-hq-5G1">
+                                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="star-empty-black" translatesAutoresizingMaskIntoConstraints="NO" id="Qrl-hq-5G1">
                                                                             <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="width" secondItem="Qrl-hq-5G1" secondAttribute="height" id="vky-Wb-FAo"/>
                                                                             </constraints>
                                                                         </imageView>
-                                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="star-white" translatesAutoresizingMaskIntoConstraints="NO" id="3TJ-8w-tGg">
+                                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="star-empty-black" translatesAutoresizingMaskIntoConstraints="NO" id="3TJ-8w-tGg">
                                                                             <rect key="frame" x="49" y="0.0" width="20" height="20"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="width" secondItem="3TJ-8w-tGg" secondAttribute="height" id="NKM-cH-fN2"/>
                                                                             </constraints>
                                                                         </imageView>
-                                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="star-white" translatesAutoresizingMaskIntoConstraints="NO" id="AmH-P8-65M">
+                                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="star-empty-black" translatesAutoresizingMaskIntoConstraints="NO" id="AmH-P8-65M">
                                                                             <rect key="frame" x="97.5" y="0.0" width="20" height="20"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="width" secondItem="AmH-P8-65M" secondAttribute="height" id="cSs-MZ-xwg"/>
                                                                             </constraints>
                                                                         </imageView>
-                                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="star-white" translatesAutoresizingMaskIntoConstraints="NO" id="ruC-Mn-gJx">
+                                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="star-empty-black" translatesAutoresizingMaskIntoConstraints="NO" id="ruC-Mn-gJx">
                                                                             <rect key="frame" x="146.5" y="0.0" width="20" height="20"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="width" secondItem="ruC-Mn-gJx" secondAttribute="height" id="89P-bn-XUj"/>
                                                                             </constraints>
                                                                         </imageView>
-                                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="star-white" translatesAutoresizingMaskIntoConstraints="NO" id="hEn-Zq-WrY">
+                                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="star-empty-black" translatesAutoresizingMaskIntoConstraints="NO" id="hEn-Zq-WrY">
                                                                             <rect key="frame" x="195" y="0.0" width="20" height="20"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="width" secondItem="hEn-Zq-WrY" secondAttribute="height" id="CwR-b3-SBh"/>
@@ -1422,10 +1431,11 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                                 <blurEffect style="extraLight"/>
                             </visualEffectView>
                             <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UB4-1H-riR">
-                                <rect key="frame" x="150" y="296" width="74" height="74"/>
+                                <rect key="frame" x="137" y="283" width="100" height="100"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="UB4-1H-riR" secondAttribute="height" id="2Sn-FP-OlB"/>
+                                    <constraint firstAttribute="width" constant="100" id="r1N-2z-eZZ"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -1445,7 +1455,6 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                             <constraint firstItem="thQ-co-ZR8" firstAttribute="centerX" secondItem="HOp-Pa-rLP" secondAttribute="centerX" id="7nx-5X-dur"/>
                             <constraint firstItem="8Yh-gY-jcp" firstAttribute="width" secondItem="HOp-Pa-rLP" secondAttribute="width" id="CVC-wO-F75"/>
                             <constraint firstItem="esg-nU-ufh" firstAttribute="top" secondItem="bn6-ck-75o" secondAttribute="bottom" id="Eaw-84-9bp"/>
-                            <constraint firstItem="UB4-1H-riR" firstAttribute="leading" secondItem="HOp-Pa-rLP" secondAttribute="leading" constant="150" id="FwE-gt-ZPE"/>
                             <constraint firstItem="UB4-1H-riR" firstAttribute="centerY" secondItem="HOp-Pa-rLP" secondAttribute="centerY" id="G79-fr-twj"/>
                             <constraint firstItem="BlG-vb-kFs" firstAttribute="centerX" secondItem="HOp-Pa-rLP" secondAttribute="centerX" id="Hv0-fm-HY0"/>
                             <constraint firstItem="BlG-vb-kFs" firstAttribute="centerY" secondItem="HOp-Pa-rLP" secondAttribute="centerY" id="ISv-2c-XVQ"/>
@@ -1492,6 +1501,7 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                         <outlet property="informationTitleLabel" destination="pQJ-KW-okR" id="hO5-6U-gFD"/>
                         <outlet property="informationTopConstraint" destination="FKR-WT-0hV" id="iUc-8h-hhR"/>
                         <outlet property="mainImageView" destination="e03-aO-4Lk" id="pe5-Jf-0YY"/>
+                        <outlet property="moreButton" destination="CZM-Bc-4S9" id="TCL-5p-80I"/>
                         <outlet property="notesTextView" destination="WZj-NR-Sbk" id="TGp-ON-ILp"/>
                         <outlet property="percentageBlurView" destination="GlE-oM-j4W" id="cm3-lK-zYX"/>
                         <outlet property="percentageLabel" destination="jvE-Vz-oPB" id="EJF-Kc-y3b"/>
@@ -1512,6 +1522,7 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                         <outlet property="statsLeadingToTrailingConstraint" destination="poY-7o-FMs" id="rMH-nm-QZx"/>
                         <outlet property="statsScrollView" destination="djC-wv-i8j" id="EeG-TN-mpR"/>
                         <outlet property="steamLogo" destination="WiZ-zI-24F" id="lRp-i0-LsJ"/>
+                        <outlet property="steamUserLabel" destination="Fhq-Eb-ul8" id="7Cq-ar-cxo"/>
                         <outlet property="thirdStar" destination="AmH-P8-65M" id="xpQ-DK-xYQ"/>
                         <outlet property="titleLabel" destination="YfW-ZH-mUf" id="VnZ-0V-xlf"/>
                         <outlet property="view" destination="HOp-Pa-rLP" id="M8Z-qn-uIn"/>
@@ -1646,11 +1657,11 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
                                 </connections>
                             </tableView>
                             <view hidden="YES" alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HqJ-eQ-3gN">
-                                <rect key="frame" x="150" y="296" width="74" height="74"/>
+                                <rect key="frame" x="137" y="283" width="100" height="100"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="HqJ-eQ-3gN" secondAttribute="height" id="AAC-Kq-XMH"/>
-                                    <constraint firstAttribute="width" constant="74" id="Za4-lL-aaI"/>
+                                    <constraint firstAttribute="width" constant="100" id="Za4-lL-aaI"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -2317,12 +2328,12 @@ Shankle pork belly flank turkey doner. Sirloin jowl pork loin pancetta, spare ri
         <image name="play-black" width="36" height="36"/>
         <image name="playlists" width="25" height="25"/>
         <image name="search_background" width="225" height="224"/>
-        <image name="star-white" width="25" height="25"/>
+        <image name="star-empty-black" width="25" height="25"/>
         <image name="steam_logo_tiny" width="20" height="20"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="4UJ-d8-tRw"/>
-        <segue reference="oSh-fC-Gev"/>
+        <segue reference="io8-Qh-LNs"/>
         <segue reference="wid-M9-uTf"/>
+        <segue reference="4UJ-d8-tRw"/>
     </inferredMetricsTieBreakers>
 </document>
