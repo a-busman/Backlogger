@@ -7,39 +7,56 @@
 //
 
 import UIKit
-import ImageViewer
-
-extension UIImageView: DisplaceableView {}
+import RealmSwift
 
 protocol GameDetailOverlayViewControllerDelegate {
     func didTapDetails()
+    func didDelete(viewController: GameDetailOverlayViewController, uuid: String)
+    func notesTyping(textView: UITextView)
 }
 
-struct DataItem {
-    let imageView: UIImageView
-    var galleryItem: GalleryItem
-}
-
-class GameDetailOverlayViewController: UIViewController {
+class GameDetailOverlayViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var titleLabel:           UILabel?
     @IBOutlet weak var completionPercentage: UILabel?
     @IBOutlet weak var platformLabel:        UILabel?
     @IBOutlet weak var progressSliderView:   UISlider?
-    @IBOutlet weak var scrollView:           UIScrollView?
-    @IBOutlet weak var contentView:          UIView?
-    @IBOutlet weak var descriptionLabel:     UILabel?
-    @IBOutlet weak var imageCollectionView:  UICollectionView?
-    @IBOutlet weak var publisherLabel:       UILabel?
-    @IBOutlet weak var developerLabel:       UILabel?
-    @IBOutlet weak var platformsLabel:       UILabel?
-    @IBOutlet weak var genresLabel:          UILabel?
     @IBOutlet weak var completionView:       UIView?
     @IBOutlet weak var completionCheckImage: UIImageView?
     @IBOutlet weak var completionLabel:      UILabel?
     @IBOutlet weak var detailsGestureView:   UIView?
     @IBOutlet weak var pullTabView:          UIView?
+    @IBOutlet weak var playPauseButton:      UIButton?
+    @IBOutlet weak var favouriteButton:      UIButton?
+    @IBOutlet weak var finishedButton:       UIButton?
+    @IBOutlet weak var ratingContainerView:  UIView?
+    @IBOutlet weak var notesTextView:        UITextView?
+    
+    @IBOutlet weak var firstStar:  UIImageView?
+    @IBOutlet weak var secondStar: UIImageView?
+    @IBOutlet weak var thirdStar:  UIImageView?
+    @IBOutlet weak var fourthStar: UIImageView?
+    @IBOutlet weak var fifthStar:  UIImageView?
+    
+    var delegate: GameDetailOverlayViewControllerDelegate?
     
     private var _game:  Game?
+    
+    enum ButtonState {
+        case heldDown
+        case down
+        case up
+    }
+    
+    enum StatsButtonState {
+        case selected
+        case normal
+    }
+    
+    private var buttonState = ButtonState.up
+    
+    private var playButtonState = StatsButtonState.selected
+    private var favouriteButtonState = StatsButtonState.normal
+    private var finishedButtonState = StatsButtonState.normal
     
     let imageCellReuseIdentifier = "image_cell"
     
@@ -47,10 +64,6 @@ class GameDetailOverlayViewController: UIViewController {
         case finished
         case inProgress
     }
-    
-    var images: [Int: DataItem] = [:]
-    
-    var delegate: GameDetailOverlayViewControllerDelegate?
 
     private var completionState = CompletionState.inProgress
     
@@ -66,80 +79,17 @@ class GameDetailOverlayViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.scrollView?.delegate = self
-        self.scrollView?.scrollIndicatorInsets = UIEdgeInsetsMake(0.0, 0.0, 5.0, 0.0)
         self.updateStats()
-        self.updateImages()
         
     }
     
     func updateStats() {
         self.titleLabel?.text = self._game?.gameFields?.name
-        self.descriptionLabel?.text = self._game?.gameFields?.deck
-        var platformString = ""
-        if let platforms = self._game?.gameFields?.platforms {
-            if platforms.count > 0 {
-                if platforms.count > 1 {
-                    for platform in platforms[0..<platforms.endIndex - 1] {
-                        if platform.name!.characters.count < 10 {
-                            platformString += platform.name! + ", "
-                        } else {
-                            platformString += platform.abbreviation! + ", "
-                        }
-                    }
-                }
-                if platforms[platforms.endIndex - 1].name!.characters.count < 10 {
-                    platformString += (platforms.last?.name)!
-                } else {
-                    platformString += (platforms.last?.abbreviation)!
-                }
-            }
-            self.platformLabel?.text = (self._game?.platform?.name)!
-        }
-        self.platformsLabel?.text = platformString
-        
-        var developersString = ""
-        if let developers = self._game?.gameFields?.developers {
-            if developers.count > 0 {
-                if developers.count > 1 {
-                    for developer in developers[0..<developers.endIndex - 1] {
-                        developersString += developer.name! + ", "
-                    }
-                }
-                developersString += (developers.last?.name)!
-            }
-        }
-        self.developerLabel?.text = developersString
-        
-        var publishersString = ""
-        if let publishers = self._game?.gameFields?.publishers {
-            if publishers.count > 0 {
-                if publishers.count > 1 {
-                    for publisher in publishers[0..<publishers.endIndex - 1] {
-                        publishersString += publisher.name! + ", "
-                    }
-                }
-                publishersString += (publishers.last?.name)!
-            }
-        }
-        self.publisherLabel?.text = publishersString
-        
-        var genresString = ""
-        if let genres = self._game?.gameFields?.genres {
-            if genres.count > 0 {
-                if genres.count > 1 {
-                    for genre in genres[0..<genres.endIndex - 1] {
-                        genresString += genre.name! + ", "
-                    }
-                }
-                genresString += (genres.last?.name)!
-            }
-        }
-        self.genresLabel?.text = genresString
         
         completionPercentage?.text = "\(self._game!.progress)%"
         progressSliderView?.value = Float(self._game!.progress)
-        
+        self.platformLabel?.text = (self._game?.platform?.name)!
+
         if self._game!.finished == true {
             self.completionCheckImage?.image = #imageLiteral(resourceName: "check_light")
             self.completionLabel?.text = "Finished"
@@ -147,52 +97,71 @@ class GameDetailOverlayViewController: UIViewController {
             self.completionCheckImage?.image = #imageLiteral(resourceName: "check_light_filled")
             self.completionLabel?.text = "In Progress"
         }
-    }
-
-    func updateImages() {
-        // Download all images at once
         if let game = self._game {
-            for (i, image) in game.gameFields!.images.enumerated() {
-                let imageView = UIImageView()
-                var newUrl: String
-                if let url = image.superUrl {
-                    newUrl = url
-                } else if let url = image.mediumUrl {
-                    newUrl = url
-                } else if let url = image.screenUrl {
-                    newUrl = url
-                } else {
-                    newUrl = ""
-                    imageView.image = #imageLiteral(resourceName: "info_image_placeholder")
-                }
-                let image = imageView.image ?? UIImage()
-                let galleryItem = GalleryItem.image { $0(image) }
-                let item: DataItem = DataItem(imageView: imageView, galleryItem: galleryItem)
-                self.images[i] = item
-                if imageView.image == nil {
-                    imageView.kf.setImage(with: URL(string: newUrl), placeholder: #imageLiteral(resourceName: "info_image_placeholder"), completionHandler: {
-                        (image, error, cacheType, imageUrl) in
-                        if image != nil {
-                            if cacheType == .none {
-                                UIView.transition(with: imageView,
-                                                  duration:0.5,
-                                                  options: .transitionCrossDissolve,
-                                                  animations: { imageView.image = image },
-                                                  completion: nil)
-                            } else {
-                                imageView.image = image
-                            }
-                            self.images[i]?.galleryItem = GalleryItem.image { $0(image) }
-                        }
-                    })
-                }
+            if !game.favourite {
+                self.favouriteButton?.setImage(#imageLiteral(resourceName: "heart-empty-white"), for: .normal)
+                self.favouriteButtonState = .normal
+            } else {
+                self.favouriteButton?.setImage(#imageLiteral(resourceName: "heart"), for: .normal)
+                self.favouriteButtonState = .selected
             }
+            if !game.nowPlaying {
+                self.playPauseButton?.setImage(#imageLiteral(resourceName: "play-white"), for: .normal)
+                self.playButtonState = .normal
+            } else {
+                self.playPauseButton?.setImage(#imageLiteral(resourceName: "pause-white"), for: .normal)
+                self.playButtonState = .selected
+            }
+            if !game.finished {
+                self.finishedButton?.setImage(#imageLiteral(resourceName: "check-empty-white"), for: .normal)
+                self.finishedButtonState = .normal
+            } else {
+                self.finishedButton?.setImage(#imageLiteral(resourceName: "check-green"), for: .normal)
+                self.finishedButtonState = .selected
+            }
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-white")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            switch (game.rating) {
+            case 0:
+                self.firstStar?.image  = #imageLiteral(resourceName: "star-white")
+                self.secondStar?.image = #imageLiteral(resourceName: "star-white")
+                self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
+                self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
+                self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+                break
+            case 1:
+                self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+                break
+            case 2:
+                self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+                self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
+                break
+            case 3:
+                self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+                self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
+                self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
+                break
+            case 4:
+                self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+                self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
+                self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
+                self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
+                break
+            case 5:
+                self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+                self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
+                self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
+                self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
+                self.fifthStar?.image  = #imageLiteral(resourceName: "star-yellow")
+                break
+            default:
+                break
+            }
+            self.notesTextView?.text = self._game?.notes
         }
-    }
-    
-    override func viewDidLayoutSubviews() {
-        self.scrollView?.contentSize = (self.contentView?.bounds.size)!
-        self.imageCollectionView?.reloadData()
     }
     
     func updateFinished() {
@@ -224,163 +193,221 @@ class GameDetailOverlayViewController: UIViewController {
     @IBAction func tappedDetails(sender: UITapGestureRecognizer) {
         delegate?.didTapDetails()
     }
-}
-
-extension GameDetailOverlayViewController: GalleryItemsDataSource {
-    func itemCount() -> Int {
-        return self.game?.gameFields?.images.count ?? 0
-    }
     
-    func provideGalleryItem(_ index: Int) -> GalleryItem {
-        return self.images[index]!.galleryItem
-    }
-}
-
-extension GameDetailOverlayViewController: GalleryItemsDelegate {
-    func removeGalleryItem(at index: Int) {
-        print("remove item at \(index)")
-    }
-}
-
-extension GameDetailOverlayViewController: UIScrollViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    }
-}
-
-extension GameDetailOverlayViewController: GalleryDisplacedViewsDataSource {
-    func provideDisplacementItem(atIndex index: Int) -> DisplaceableView? {
-        return index < self.images.count ? self.images[index]?.imageView : nil
-    }
-}
-
-extension GameDetailOverlayViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    // tell the collection view how many cells to make
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.game?.gameFields?.images.count ?? 0
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        var size = (self.imageCollectionView?.frame.size)!
-        size.width = size.height
-        return size
-    }
-    
-    // make a cell for each cell index path
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        // get a reference to our storyboard cell
-        self.imageCollectionView?.register(UINib(nibName: "ImageCell", bundle: Bundle.main), forCellWithReuseIdentifier: imageCellReuseIdentifier)
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: imageCellReuseIdentifier, for: indexPath)
-        let cellView = self.images[indexPath.item]!.imageView
-        for subview in cell.contentView.subviews {
-            subview.removeFromSuperview()
+    @IBAction func ratingPanHandler(sender: UIPanGestureRecognizer) {
+        let location = sender.location(in: self.ratingContainerView!)
+        let starIndex = Int(location.x / ((self.ratingContainerView?.bounds.width)! / 5.0))
+        var rating = 0
+        if starIndex < 0 {
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-white")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+        } else if starIndex == 0 {
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-white")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            rating = 1
+        } else if starIndex == 1 {
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            rating = 2
+        } else if starIndex == 2 {
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            rating = 3
+        } else if starIndex == 3 {
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            rating = 4
+        } else {
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            rating = 5
         }
-        cellView.clipsToBounds = true
-        cell.clipsToBounds = false
-        cellView.contentMode = .scaleAspectFill
-        cellView.translatesAutoresizingMaskIntoConstraints = false
-        
-        cell.contentView.addSubview(cellView)
-        NSLayoutConstraint(item: cellView,
-                           attribute: .leading,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .leading,
-                           multiplier: 1.0,
-                           constant: 5.0
-            ).isActive = true
-        NSLayoutConstraint(item: cellView,
-                           attribute: .trailing,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .trailing,
-                           multiplier: 1.0,
-                           constant: -5.0
-            ).isActive = true
-        NSLayoutConstraint(item: cellView,
-                           attribute: .top,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .top,
-                           multiplier: 1.0,
-                           constant: 5.0
-            ).isActive = true
-        NSLayoutConstraint(item: cellView,
-                           attribute: .bottom,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .bottom,
-                           multiplier: 1.0,
-                           constant: -5.0
-            ).isActive = true
-        
-        cell.contentView.layer.shadowOpacity = 1.0
-        cell.contentView.layer.shadowRadius = 2.0
-        cell.contentView.layer.shadowColor = UIColor.black.cgColor
-        let newBounds = cell.bounds
-        cell.contentView.layer.shadowPath = UIBezierPath(rect: CGRect(x: newBounds.origin.x + 5, y: newBounds.origin.y + 5, width: newBounds.width - 10, height: newBounds.height - 10)).cgPath
-        cell.contentView.layer.shadowOffset = .zero
-        
-        return cell
+        self._game?.update {
+            self._game?.rating = rating
+        }
+        self.notesTextView?.resignFirstResponder()
     }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let displacedViewIndex = indexPath.item
-        
-        let galleryViewController = GalleryViewController(startIndex: displacedViewIndex, itemsDataSource: self, itemsDelegate: self, displacedViewsDataSource: self, configuration: galleryConfiguration())
-        
-        self.presentImageGallery(galleryViewController)
+    @IBAction func ratingTapHandler(sender: UITapGestureRecognizer) {
+        let location = sender.location(in: self.ratingContainerView!)
+        let starIndex = Int(location.x / ((self.ratingContainerView?.bounds.width)! / 5.0))
+        var rating = 0
+        if starIndex <= 0 {
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-white")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            rating = 1
+        } else if starIndex == 1 {
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            rating = 2
+        } else if starIndex == 2 {
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            rating = 3
+        } else if starIndex == 3 {
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
+            rating = 4
+        } else {
+            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
+            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
+            self.fifthStar?.image  = #imageLiteral(resourceName: "star-yellow")
+            rating = 5
+        }
+        self._game?.update {
+            self._game?.rating = rating
+        }
+        self.notesTextView?.resignFirstResponder()
     }
     
-    func galleryConfiguration() -> GalleryConfiguration {
+    @IBAction func statsControlTouchUpInside(sender: UIButton!) {
+        switch sender.tag {
+        case 1:
+            if self.favouriteButtonState == .selected {
+                self.favouriteButton?.setImage(#imageLiteral(resourceName: "heart-empty-white"), for: .normal)
+                self.favouriteButtonState = .normal
+                self._game?.update {
+                    self._game?.favourite = false
+                }
+            } else {
+                self.favouriteButton?.setImage(#imageLiteral(resourceName: "heart"), for: .normal)
+                self.favouriteButtonState = .selected
+                self._game?.update {
+                    self._game?.favourite = true
+                }
+            }
+        case 2:
+            if self.playButtonState == .selected {
+                self.playPauseButton?.setImage(#imageLiteral(resourceName: "play-white"), for: .normal)
+                self.playButtonState = .normal
+                self._game?.update {
+                    self._game?.nowPlaying = false
+                }
+                // Update in Now Playing playlist
+                autoreleasepool {
+                    let realm = try! Realm()
+                    let nowPlayingPlaylist = realm.objects(Playlist.self).filter("isNowPlaying = true").first
+                    if nowPlayingPlaylist != nil {
+                        if let index = nowPlayingPlaylist?.games.index(where: { (item) -> Bool in
+                            item.uuid == self._game!.uuid
+                        }) {
+                            nowPlayingPlaylist?.update {
+                                nowPlayingPlaylist?.games.remove(objectAtIndex: index)
+                            }
+                        }
+                    }
+                }
+                let actions = UIAlertController(title: "Remove from Now Playing?", message: nil, preferredStyle: .alert)
+                actions.addAction(UIAlertAction(title: "Remove", style: .destructive, handler: { _ in self.delegate?.didDelete(viewController: self, uuid: (self.game?.uuid)!)}))
+                actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                self.present(actions, animated: true, completion: nil)
+                if self.finishedButtonState != .selected {
+                    self.completionLabel?.text = "Incomplete"
+                    self.completionCheckImage?.image = #imageLiteral(resourceName: "empty_check")
+                }
+            } else {
+                self.playPauseButton?.setImage(#imageLiteral(resourceName: "pause-white"), for: .normal)
+                self.playButtonState = .selected
+                self._game?.update {
+                    self._game?.nowPlaying = true
+                }
+                // Update in Now Playing playlist
+                autoreleasepool {
+                    let realm = try! Realm()
+                    let nowPlayingPlaylist = realm.objects(Playlist.self).filter("isNowPlaying = true").first
+                    if nowPlayingPlaylist != nil {
+                        nowPlayingPlaylist?.update {
+                            nowPlayingPlaylist?.games.append(self._game!)
+                        }
+                    }
+                }
+                if self.finishedButtonState != .selected {
+                    self.completionLabel?.text = "In Progress"
+                    self.completionCheckImage?.image = #imageLiteral(resourceName: "check_light_filled")
+                }
+            }
+        case 3:
+            if self.finishedButtonState == .selected {
+                self.finishedButton?.setImage(#imageLiteral(resourceName: "check-empty-white"), for: .normal)
+                self.finishedButtonState = .normal
+                self._game?.update {
+                    self._game?.finished = false
+                }
+                if self.playButtonState != .selected {
+                    self.completionLabel?.text = "Incomplete"
+                    self.completionCheckImage?.image = #imageLiteral(resourceName: "empty_check")
+                } else {
+                    self.completionLabel?.text = "In Progress"
+                    self.completionCheckImage?.image = #imageLiteral(resourceName: "check_light_filled")
+                }
+            } else {
+                self.finishedButton?.setImage(#imageLiteral(resourceName: "check-green"), for: .normal)
+                self.finishedButtonState = .selected
+                self._game?.update {
+                    self._game?.finished = true
+                }
+                self.completionLabel?.text = "Finished"
+                self.completionCheckImage?.image = #imageLiteral(resourceName: "check_light")
+            }
+        default:
+            break
+        }
         
-        return [
-            
-            GalleryConfigurationItem.closeButtonMode(.builtIn),
-            
-            GalleryConfigurationItem.pagingMode(.standard),
-            GalleryConfigurationItem.presentationStyle(.displacement),
-            GalleryConfigurationItem.hideDecorationViewsOnLaunch(false),
-            
-            GalleryConfigurationItem.swipeToDismissMode(.vertical),
-            GalleryConfigurationItem.toggleDecorationViewsBySingleTap(true),
-            
-            GalleryConfigurationItem.overlayColor(UIColor(white: 0.035, alpha: 1)),
-            GalleryConfigurationItem.overlayColorOpacity(1),
-            GalleryConfigurationItem.overlayBlurOpacity(1),
-            GalleryConfigurationItem.overlayBlurStyle(UIBlurEffectStyle.light),
-            
-            GalleryConfigurationItem.videoControlsColor(.white),
-            
-            GalleryConfigurationItem.maximumZoomScale(8),
-            GalleryConfigurationItem.swipeToDismissThresholdVelocity(500),
-            
-            GalleryConfigurationItem.doubleTapToZoomDuration(0.25),
-            
-            GalleryConfigurationItem.blurPresentDuration(0.5),
-            GalleryConfigurationItem.blurPresentDelay(0),
-            GalleryConfigurationItem.colorPresentDuration(0.25),
-            GalleryConfigurationItem.colorPresentDelay(0),
-            
-            GalleryConfigurationItem.blurDismissDuration(0.1),
-            GalleryConfigurationItem.blurDismissDelay(0.4),
-            GalleryConfigurationItem.colorDismissDuration(0.45),
-            GalleryConfigurationItem.colorDismissDelay(0),
-            
-            GalleryConfigurationItem.itemFadeDuration(0.3),
-            GalleryConfigurationItem.decorationViewsFadeDuration(0.15),
-            GalleryConfigurationItem.rotationDuration(0.15),
-            
-            GalleryConfigurationItem.displacementDuration(0.55),
-            GalleryConfigurationItem.reverseDisplacementDuration(0.25),
-            GalleryConfigurationItem.displacementTransitionStyle(.springBounce(0.7)),
-            GalleryConfigurationItem.displacementTimingCurve(.linear),
-            
-            GalleryConfigurationItem.statusBarHidden(true),
-            GalleryConfigurationItem.displacementKeepOriginalInPlace(false),
-            GalleryConfigurationItem.displacementInsetMargin(50),
-            
-            GalleryConfigurationItem.deleteButtonMode(.none)
-        ]
+        UIView.animate(withDuration: 0.1, animations: {sender.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)}, completion: { _ in
+            UIView.animate(withDuration: 0.1, animations: {sender.transform = CGAffineTransform.identity})
+        })
+        self.buttonState = .up
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        self.delegate?.notesTyping(textView: textView)
+    }
+    
+    @IBAction func statsControlTouchDown(sender: UIButton!) {
+        self.notesTextView?.resignFirstResponder()
+        if self.buttonState == .up {
+            self.buttonState = .down
+        } else if self.buttonState == .down {
+            self.buttonState = .heldDown
+            UIView.animate(withDuration: 0.1, animations: {sender.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)})
+        }
+    }
+    
+    @IBAction func statsControlTouchDragExit(sender: UIButton!) {
+        self.buttonState = .up
+        UIView.animate(withDuration: 0.1, animations: {sender.transform = CGAffineTransform.identity})
+        self.notesTextView?.resignFirstResponder()
     }
 }

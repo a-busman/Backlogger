@@ -12,6 +12,7 @@ import RealmSwift
 
 protocol NowPlayingGameViewDelegate {
     func didDelete(viewController: NowPlayingGameViewController, uuid: String)
+    func notesTyping(textView: UITextView)
 }
 
 class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewControllerDelegate, UITextViewDelegate {
@@ -23,24 +24,6 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
     @IBOutlet weak var shadowView:           UIView?
     @IBOutlet weak var detailsPanRecognizer: PanDirectionGestureRecognizer?
     @IBOutlet weak var hideTapRecognizer:    UITapGestureRecognizer?
-    @IBOutlet weak var statsButtonView:      UIView?
-    @IBOutlet weak var moreIcon:             UIImageView?
-    @IBOutlet weak var statsBlurView:        UIVisualEffectView?
-    @IBOutlet weak var playPauseButton:      UIButton?
-    @IBOutlet weak var favouriteButton:      UIButton?
-    @IBOutlet weak var finishedButton:       UIButton?
-    @IBOutlet weak var statsContainerView:   UIView?
-    @IBOutlet weak var ratingContainerView:  UIView?
-    @IBOutlet weak var notesTextView:        UITextView?
-    
-    @IBOutlet weak var statsButtonLeadingConstraint: NSLayoutConstraint?
-    @IBOutlet weak var statsButtonBottomConstraint:  NSLayoutConstraint?
-    
-    @IBOutlet weak var firstStar:  UIImageView?
-    @IBOutlet weak var secondStar: UIImageView?
-    @IBOutlet weak var thirdStar:  UIImageView?
-    @IBOutlet weak var fourthStar: UIImageView?
-    @IBOutlet weak var fifthStar:  UIImageView?
     
     var delegate: NowPlayingGameViewDelegate?
     
@@ -83,30 +66,6 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
         case full
     }
     
-    enum StatsState {
-        case hidden
-        case visible
-    }
-    
-    enum ButtonState {
-        case heldDown
-        case down
-        case up
-    }
-    
-    enum StatsButtonState {
-        case selected
-        case normal
-    }
-    
-    private var statsState = StatsState.hidden
-    
-    private var buttonState = ButtonState.up
-    
-    private var playButtonState = StatsButtonState.selected
-    private var favouriteButtonState = StatsButtonState.normal
-    private var finishedButtonState = StatsButtonState.normal
-    
     private var blurViewState = DetailState.minimal
     private var blurViewMinimalY: CGFloat = 0.0
     
@@ -137,8 +96,6 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
         self.gameDetailOverlayController.delegate = self
         self.detailsPanRecognizer?.direction = .vertical
         self.shadowView?.isUserInteractionEnabled = true
-        self.statsBlurView?.effect = nil
-        self.statsBlurView?.isHidden = true
         if let detailView = gameDetailOverlayController.view {
             self.detailsContainerView?.addSubview(detailView)
             detailView.translatesAutoresizingMaskIntoConstraints = false
@@ -193,72 +150,6 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
             self.addDetails()
         }
         self.gameDetailOverlayController.detailsGestureView?.addGestureRecognizer(self.detailsPanRecognizer!)
-        
-        if let game = self._game {
-            if !game.favourite {
-                self.favouriteButton?.setImage(#imageLiteral(resourceName: "heart-empty"), for: .normal)
-                self.favouriteButtonState = .normal
-            } else {
-                self.favouriteButton?.setImage(#imageLiteral(resourceName: "heart"), for: .normal)
-                self.favouriteButtonState = .selected
-            }
-            if !game.nowPlaying {
-                self.playPauseButton?.setImage(#imageLiteral(resourceName: "play-black"), for: .normal)
-                self.playButtonState = .normal
-            } else {
-                self.playPauseButton?.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
-                self.playButtonState = .selected
-            }
-            if !game.finished {
-                self.finishedButton?.setImage(#imageLiteral(resourceName: "check-empty-black"), for: .normal)
-                self.finishedButtonState = .normal
-            } else {
-                self.finishedButton?.setImage(#imageLiteral(resourceName: "check-green"), for: .normal)
-                self.finishedButtonState = .selected
-            }
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-empty-black")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            switch (game.rating) {
-            case 0:
-                self.firstStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-                self.secondStar?.image = #imageLiteral(resourceName: "star-empty-black")
-                self.thirdStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-                self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
-                self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-                break
-            case 1:
-                self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                break
-            case 2:
-                self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-                break
-            case 3:
-                self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-                self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                break
-            case 4:
-                self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-                self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
-                break
-            case 5:
-                self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-                self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
-                self.fifthStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                break
-            default:
-                break
-            }
-            self.notesTextView?.text = self._game?.notes
-        }
     }
     
     // MARK: viewDidLayoutSubviews
@@ -269,12 +160,6 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
         self.shadowView?.layer.shadowColor = UIColor.black.cgColor
         self.shadowView?.layer.shadowPath = UIBezierPath(roundedRect: (self.shadowView?.bounds)!, cornerRadius: 10).cgPath
         self.shadowView?.layer.shadowOffset = CGSize.zero
-        
-        self.statsButtonView?.layer.shadowOpacity = 0.8
-        self.statsButtonView?.layer.shadowRadius = 5.0
-        self.statsButtonView?.layer.shadowColor = UIColor.black.cgColor
-        self.statsButtonView?.layer.shadowPath = UIBezierPath(roundedRect: (self.statsButtonView?.bounds)!, cornerRadius: 40).cgPath
-        self.statsButtonView?.layer.shadowOffset = CGSize.zero
         
         if self.blurViewMinimalY != 0.0 {
             self.blurViewState = .minimal
@@ -379,7 +264,6 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
             self.isInEditMode = editMode
             self.detailsPanRecognizer?.isEnabled = !editMode
             self.hideTapRecognizer?.isEnabled = !editMode
-            self.notesTextView?.resignFirstResponder()
         }
     }
     
@@ -396,10 +280,7 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
                                                                        y: editMode ? self.MAXIMUM_TRANSOFRM : self.MINIMUM_TRANSFORM)
                        },
                        completion: nil)
-        if self.statsState != .hidden {
-            handleTapMore(sender: UITapGestureRecognizer())
-        }
-        else if self.blurViewState != .minimal {
+        if self.blurViewState != .minimal {
             UIView.animate(withDuration: 0.2,
                            delay: 0.0,
                            usingSpringWithDamping: 1.0,
@@ -426,8 +307,6 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
         
         // Show minimal details bar
         if self.blurViewState == .hidden {
-            self.statsButtonBottomConstraint?.constant = 40
-            self.statsButtonLeadingConstraint?.constant = -40
             UIView.animate(withDuration: 0.4,
                            delay: 0.0,
                            usingSpringWithDamping: 1.0,
@@ -445,8 +324,6 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
         // Hide all details and just show cover art
         } else if self.blurViewState == .minimal {
             self.blurViewMinimalY = (self.blurView?.center.y)!
-            self.statsButtonBottomConstraint?.constant = 0
-            self.statsButtonLeadingConstraint?.constant = 0
             UIView.animate(withDuration: 0.4,
                            delay: 0.0,
                            usingSpringWithDamping: 1.0,
@@ -463,8 +340,12 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
     
     // MARK: handleTapDetails
     
+    func didDelete(viewController: GameDetailOverlayViewController, uuid: String) {
+        self.delegate?.didDelete(viewController: self, uuid: uuid)
+    }
+    
     func didTapDetails() {
-        if !self.isInEditMode && self.statsState != .visible {
+        if !self.isInEditMode {
             // Show percent slider
             if self.blurViewState == .minimal {
                 self.blurViewMinimalY = (self.blurView?.center.y)!
@@ -495,6 +376,10 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
         }
     }
     
+    func notesTyping(textView: UITextView) {
+        self.delegate?.notesTyping(textView: textView)
+    }
+    
     // MARK: handlePanDetails
     
     @IBAction func handlePanDetails(recognizer:UIPanGestureRecognizer) {
@@ -504,8 +389,6 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
             if self.blurViewState == .minimal {
                 self.blurViewMinimalY = (self.blurView?.center.y)!
             }
-            self.statsButtonBottomConstraint?.constant = 0
-            self.statsButtonLeadingConstraint?.constant = 0
             UIView.animate(withDuration: 0.2, animations: {
                 self.view.layoutIfNeeded()
             })
@@ -565,8 +448,6 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
                 // If the view is below the middle, or if the user was swiping down when they ended, return to minimal state with a spring bounce
                 } else if (view.center.y > self.view.bounds.maxY && velocity > -300) || velocity > 300 {
                     let animationTime: TimeInterval = ((0.4 - 1.0) * (min(Double(velocity), 1000.0) - 300)/(1000 - 300) + 1.0)
-                    self.statsButtonBottomConstraint?.constant = 40
-                    self.statsButtonLeadingConstraint?.constant = -40
                     UIView.animate(withDuration: animationTime,
                                    delay: 0.0,
                                    usingSpringWithDamping: 0.6,
@@ -583,258 +464,5 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
                 }
             }
         }
-    }
-    
-    @IBAction func handleTapMore(sender: UIGestureRecognizer) {
-        if statsState == .hidden {
-            if self.blurViewState == .minimal {
-                didTapDetails()
-            }
-            self.statsBlurView?.isHidden = false
-            self.detailsPanRecognizer?.isEnabled = false
-            UIView.transition(with: self.moreIcon!,
-                              duration:0.2,
-                              options: .transitionCrossDissolve,
-                              animations: { self.moreIcon?.image = #imageLiteral(resourceName: "x_symbol") },
-                              completion: nil)
-            UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveLinear, animations: {
-                self.statsBlurView?.effect = UIBlurEffect(style: .light)
-                self.gameDetailOverlayController.pullTabView?.alpha = 0.0
-                self.statsContainerView?.alpha = 1.0
-            }, completion: nil)
-            statsState = .visible
-        } else {
-            UIView.transition(with: self.moreIcon!,
-                              duration:0.2,
-                              options: .transitionCrossDissolve,
-                              animations: { self.moreIcon?.image = #imageLiteral(resourceName: "more") },
-                              completion: nil)
-            UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveLinear, animations: {
-                self.statsBlurView?.effect = nil
-                self.gameDetailOverlayController.pullTabView?.alpha = 1.0
-                self.statsContainerView?.alpha = 0.0
-            }, completion: { _ in
-                UIView.animate(withDuration: 0.2, animations: {
-                    self.detailsPanRecognizer?.isEnabled = true
-                    self.statsBlurView?.isHidden = true
-                })
-            })
-            statsState = .hidden
-            didTapDetails()
-            self.notesTextView?.resignFirstResponder()
-        }
-    }
-    
-    @IBAction func statsControlTouchDown(sender: UIButton!) {
-        self.notesTextView?.resignFirstResponder()
-        if self.buttonState == .up {
-            self.buttonState = .down
-        } else if self.buttonState == .down {
-            self.buttonState = .heldDown
-            UIView.animate(withDuration: 0.1, animations: {sender.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)})
-        }
-    }
-    
-    @IBAction func statsControlTouchUpInside(sender: UIButton!) {
-        switch sender.tag {
-        case 1:
-            if self.favouriteButtonState == .selected {
-                self.favouriteButton?.setImage(#imageLiteral(resourceName: "heart-empty"), for: .normal)
-                self.favouriteButtonState = .normal
-                self._game?.update {
-                    self._game?.favourite = false
-                }
-            } else {
-                self.favouriteButton?.setImage(#imageLiteral(resourceName: "heart"), for: .normal)
-                self.favouriteButtonState = .selected
-                self._game?.update {
-                    self._game?.favourite = true
-                }
-            }
-        case 2:
-            if self.playButtonState == .selected {
-                self.playPauseButton?.setImage(#imageLiteral(resourceName: "play-black"), for: .normal)
-                self.playButtonState = .normal
-                self._game?.update {
-                    self._game?.nowPlaying = false
-                }
-                // Update in Now Playing playlist
-                autoreleasepool {
-                    let realm = try! Realm()
-                    let nowPlayingPlaylist = realm.objects(Playlist.self).filter("isNowPlaying = true").first
-                    if nowPlayingPlaylist != nil {
-                        if let index = nowPlayingPlaylist?.games.index(where: { (item) -> Bool in
-                            item.uuid == self._game!.uuid
-                        }) {
-                            nowPlayingPlaylist?.update {
-                                nowPlayingPlaylist?.games.remove(objectAtIndex: index)
-                            }
-                        }
-                    }
-                }
-                let actions = UIAlertController(title: "Remove from Now Playing?", message: nil, preferredStyle: .alert)
-                actions.addAction(UIAlertAction(title: "Remove", style: .destructive, handler: { _ in self.delegate?.didDelete(viewController: self, uuid: (self.game?.uuid)!)}))
-                actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-                self.present(actions, animated: true, completion: nil)
-                if self.finishedButtonState != .selected {
-                    self.gameDetailOverlayController.completionLabel?.text = "Incomplete"
-                    self.gameDetailOverlayController.completionCheckImage?.image = #imageLiteral(resourceName: "empty_check")
-                }
-            } else {
-                self.playPauseButton?.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
-                self.playButtonState = .selected
-                self._game?.update {
-                    self._game?.nowPlaying = true
-                }
-                // Update in Now Playing playlist
-                autoreleasepool {
-                    let realm = try! Realm()
-                    let nowPlayingPlaylist = realm.objects(Playlist.self).filter("isNowPlaying = true").first
-                    if nowPlayingPlaylist != nil {
-                        nowPlayingPlaylist?.update {
-                            nowPlayingPlaylist?.games.append(self._game!)
-                        }
-                    }
-                }
-                if self.finishedButtonState != .selected {
-                    self.gameDetailOverlayController.completionLabel?.text = "In Progress"
-                    self.gameDetailOverlayController.completionCheckImage?.image = #imageLiteral(resourceName: "check_light_filled")
-                }
-            }
-        case 3:
-            if self.finishedButtonState == .selected {
-                self.finishedButton?.setImage(#imageLiteral(resourceName: "check-empty-black"), for: .normal)
-                self.finishedButtonState = .normal
-                self._game?.update {
-                    self._game?.finished = false
-                }
-                if self.playButtonState != .selected {
-                    self.gameDetailOverlayController.completionLabel?.text = "Incomplete"
-                    self.gameDetailOverlayController.completionCheckImage?.image = #imageLiteral(resourceName: "empty_check")
-                } else {
-                    self.gameDetailOverlayController.completionLabel?.text = "In Progress"
-                    self.gameDetailOverlayController.completionCheckImage?.image = #imageLiteral(resourceName: "check_light_filled")
-                }
-            } else {
-                self.finishedButton?.setImage(#imageLiteral(resourceName: "check-green"), for: .normal)
-                self.finishedButtonState = .selected
-                self._game?.update {
-                    self._game?.finished = true
-                }
-                self.gameDetailOverlayController.completionLabel?.text = "Finished"
-                self.gameDetailOverlayController.completionCheckImage?.image = #imageLiteral(resourceName: "check_light")
-            }
-        default:
-            break
-        }
-        
-        UIView.animate(withDuration: 0.1, animations: {sender.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)}, completion: { _ in
-            UIView.animate(withDuration: 0.1, animations: {sender.transform = CGAffineTransform.identity})
-        })
-        self.buttonState = .up
-    }
-    
-    @IBAction func statsControlTouchDragExit(sender: UIButton!) {
-        self.buttonState = .up
-        UIView.animate(withDuration: 0.1, animations: {sender.transform = CGAffineTransform.identity})
-        self.notesTextView?.resignFirstResponder()
-    }
-    
-    @IBAction func ratingPanHandler(sender: UIPanGestureRecognizer) {
-        let location = sender.location(in: self.ratingContainerView!)
-        let starIndex = Int(location.x / ((self.ratingContainerView?.bounds.width)! / 5.0))
-        var rating = 0
-        if starIndex < 0 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-empty-black")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-        } else if starIndex == 0 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-empty-black")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            rating = 1
-        } else if starIndex == 1 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            rating = 2
-        } else if starIndex == 2 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            rating = 3
-        } else if starIndex == 3 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            rating = 4
-        } else {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            rating = 5
-        }
-        self._game?.update {
-            self._game?.rating = rating
-        }
-        self.notesTextView?.resignFirstResponder()
-    }
-    
-    @IBAction func ratingTapHandler(sender: UITapGestureRecognizer) {
-        let location = sender.location(in: self.ratingContainerView!)
-        let starIndex = Int(location.x / ((self.ratingContainerView?.bounds.width)! / 5.0))
-        var rating = 0
-        if starIndex <= 0 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-empty-black")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            rating = 1
-        } else if starIndex == 1 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            rating = 2
-        } else if starIndex == 2 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            rating = 3
-        } else if starIndex == 3 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            rating = 4
-        } else {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            rating = 5
-        }
-        self._game?.update {
-            self._game?.rating = rating
-        }
-        self.notesTextView?.resignFirstResponder()
     }
 }

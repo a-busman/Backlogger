@@ -89,6 +89,7 @@ class AddSteamGamesViewController: UIViewController, UITableViewDataSource, UITa
             let gameToShow = self.gameFields[indexPath.row]
             
             cell.rightLabel?.text = ""
+            cell.percentImage?.isHidden = true
 
             if let name = gameToShow.name {
                 cell.titleLabel?.text = name

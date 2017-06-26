@@ -234,7 +234,7 @@ class AddToPlaylistViewController: UIViewController, UITableViewDelegate, UITabl
                 cell.titleLabel?.text = (game.gameFields?.name)!
                 cell.descriptionLabel?.text = (game.platform?.name)!
                 cell.rightLabel?.text = ""
-                
+                cell.percentImage?.isHidden = true
                 if let gameField = game.gameFields {
                     if let image = gameField.image {
                         cell.imageUrl = URL(string: image.iconUrl!)
@@ -257,7 +257,7 @@ class AddToPlaylistViewController: UIViewController, UITableViewDelegate, UITabl
             if self.gameFields.count >= indexPath.row {
                 
                 let gameToShow = self.gameFields[indexPath.row]
-                
+                cell.percentImage?.isHidden = true
                 cell.rightLabel?.text = ""
                 var inLibrary = false
                 

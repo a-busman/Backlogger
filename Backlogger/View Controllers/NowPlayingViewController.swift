@@ -57,6 +57,8 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
     fileprivate var _isDismissing = false
     fileprivate var _blurViewState = UpNextState.minimal
     
+    var currentlyTypingTextView: UITextView?
+    
     var blurViewState: UpNextState {
         get {
             return self._blurViewState
@@ -89,6 +91,7 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         self.navigationController?.navigationBar.tintColor = .white
         self.longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(NowPlayingViewController.handleLongGesture))
         self.collectionView?.addGestureRecognizer(longPressGesture!)
@@ -109,6 +112,43 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
         }
         self._isDismissing = false
         self.pageControl?.numberOfPages = orderedViewControllers.count
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y == 0{
+                self.view.frame.origin.y -= (keyboardSize.height - (self.tabBarController?.tabBar.frame.height)! - 50.0)
+            }
+        }
+        self.navigationController?.navigationBar.topItem?.leftBarButtonItem?.isEnabled = false
+        UIView.setAnimationsEnabled(false)
+        self.navigationController?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.dismissKeyboard))
+        UIView.setAnimationsEnabled(true)
+    }
+    
+    func dismissKeyboard(sender: UIBarButtonItem) {
+        self.currentlyTypingTextView?.resignFirstResponder()
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y != 0 {
+                self.view.frame.origin.y += keyboardSize.height - (self.tabBarController?.tabBar.frame.height)! - 50.0
+            }
+        }
+        self.navigationController?.navigationBar.topItem?.leftBarButtonItem?.isEnabled = true
+        UIView.setAnimationsEnabled(false)
+        self.navigationController?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.addTapped))
+        UIView.setAnimationsEnabled(true)
     }
     
     func refreshFirstGame() {
@@ -149,7 +189,7 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
             self.gamesUpNext = Array(self.upNextPlaylist.games)
         }
         var newGameIds = [String]()
-        for (i, game) in self.games.enumerated() {
+        for game in self.games {
             if let gameField = game.gameFields {
                 if !gameField.hasDetails {
                     gameField.updateGameDetails { result in
@@ -157,8 +197,6 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
                             NSLog("error: \(error.localizedDescription)")
                             return
                         }
-                        self.orderedViewControllers[i].gameDetailOverlayController.updateImages()
-                        self.orderedViewControllers[i].gameDetailOverlayController.imageCollectionView?.reloadData()
                     }
                 }
             }
@@ -378,6 +416,22 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
     private func randomizeInterval(interval: TimeInterval, withVariance variance:Double) -> TimeInterval {
         let random = (Double(arc4random_uniform(1000)) - 500.0) / 500.0
         return interval + variance * random;
+    }
+    
+    func notesTyping(textView: UITextView) {
+        self.currentlyTypingTextView = textView
+        self.navigationController?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.doneTyping))
+        self.navigationController?.navigationBar.topItem?.leftBarButtonItem?.isEnabled = false
+    }
+    
+    func doneTyping(sender: UIBarButtonItem) {
+        self.currentlyTypingTextView?.resignFirstResponder()
+        self.navigationController?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.addTapped))
+        self.navigationController?.navigationBar.topItem?.leftBarButtonItem?.isEnabled = true
+    }
+    
+    func addTapped(sender: UIBarButtonItem) {
+        self.performSegue(withIdentifier: "addToNowPlaying", sender: sender)
     }
     
     func didDelete(viewController: NowPlayingGameViewController, uuid: String) {

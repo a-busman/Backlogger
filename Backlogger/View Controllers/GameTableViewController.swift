@@ -66,9 +66,10 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         case releaseYear = 2
         case percentComplete = 3
         case completed = 4
+        case rating = 5
     }
 
-    
+    var hideComplete: Bool?
     var sortType: SortType?
     
     override func viewDidLoad() {
@@ -182,6 +183,12 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.hideComplete = UserDefaults.standard.value(forKey: "hideComplete") as? Bool
+        if self.hideComplete == nil {
+            self.hideComplete = false
+            UserDefaults.standard.set(false, forKey: "hideComplete")
+        }
+        
         let sort = UserDefaults.standard.value(forKey: "librarySortType")
         if sort == nil {
             self.sortType = .dateAdded
@@ -219,8 +226,16 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         case .completed:
             sortString = "finished"
             ascending = true
+            break
+        case .rating:
+            sortString = "rating"
+            ascending = false
         }
-        self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: ascending)
+        if self.hideComplete! {
+            self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: ascending).filter("finished = false")
+        } else {
+            self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: ascending)
+        }
         self.tableView?.reloadData()
         
         
@@ -291,12 +306,59 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         UIAlertAction(title: "Add Games", style: .default, handler: self.addGames) :
         UIAlertAction(title: "Sync with Steam", style: .default, handler: self.syncWithSteam)
         let sortAction = UIAlertAction(title: "Sort...", style: .default, handler: self.sortTapped)
+        var completeString: String
+        if self.hideComplete! {
+            completeString = "Show Finished"
+        } else {
+            completeString = "Hide Finished"
+        }
+        let hideCompleteAction = UIAlertAction(title: completeString, style: .default, handler: self.hideTapped)
         
         actions.addAction(addAction)
         actions.addAction(sortAction)
+        actions.addAction(hideCompleteAction)
         actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         actions.popoverPresentationController?.barButtonItem = self.navigationController?.navigationBar.topItem?.rightBarButtonItem
         self.present(actions, animated: true, completion: nil)
+    }
+    
+    func hideTapped(sender: UIAlertAction) {
+        self.hideComplete = !self.hideComplete!
+        UserDefaults.standard.set(self.hideComplete, forKey: "hideComplete")
+        
+        var sortString: String
+        var ascending: Bool
+        switch self.sortType! {
+        case .alphabetical:
+            sortString = "gameFields.name"
+            ascending = true
+            break
+        case .dateAdded:
+            sortString = "dateAdded"
+            ascending = false
+            break
+        case .releaseYear:
+            sortString = "gameFields.releaseDate"
+            ascending = true
+            break
+        case .percentComplete:
+            sortString = "progress"
+            ascending = true
+            break
+        case .completed:
+            sortString = "finished"
+            ascending = true
+            break
+        case .rating:
+            sortString = "rating"
+            ascending = false
+        }
+        if self.hideComplete! {
+            self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: ascending).filter("finished = false")
+        } else {
+            self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: ascending)
+        }
+        self.tableView?.reloadData()
     }
     
     func sortTapped(sender: UIAlertAction) {
@@ -342,49 +404,47 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
             self.tableView?.reloadData()
         })
+        let ratingAction = UIAlertAction(title: "Rating", style: .default, handler: { _ in
+            self.sortType = .rating
+            if self.games != nil {
+                self.games = self.games!.sorted(byKeyPath: "rating", ascending: false)
+            }
+            UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
+            self.tableView?.reloadData()
+        })
+        
+        alphaAction.setValue(false, forKey: "checked")
+        dateAction.setValue(false, forKey: "checked")
+        releaseAction.setValue(false, forKey: "checked")
+        percentAction.setValue(false, forKey: "checked")
+        completeAction.setValue(false, forKey: "checked")
+        ratingAction.setValue(false, forKey: "checked")
         
         switch self.sortType! {
         case .alphabetical:
             alphaAction.setValue(true, forKey: "checked")
-            dateAction.setValue(false, forKey: "checked")
-            releaseAction.setValue(false, forKey: "checked")
-            percentAction.setValue(false, forKey: "checked")
-            completeAction.setValue(false, forKey: "checked")
             break
         case .dateAdded:
-            alphaAction.setValue(false, forKey: "checked")
             dateAction.setValue(true, forKey: "checked")
-            releaseAction.setValue(false, forKey: "checked")
-            percentAction.setValue(false, forKey: "checked")
-            completeAction.setValue(false, forKey: "checked")
             break
         case .releaseYear:
-            alphaAction.setValue(false, forKey: "checked")
-            dateAction.setValue(false, forKey: "checked")
             releaseAction.setValue(true, forKey: "checked")
-            percentAction.setValue(false, forKey: "checked")
-            completeAction.setValue(false, forKey: "checked")
             break
         case .percentComplete:
-            alphaAction.setValue(false, forKey: "checked")
-            dateAction.setValue(false, forKey: "checked")
-            releaseAction.setValue(false, forKey: "checked")
             percentAction.setValue(true, forKey: "checked")
-            completeAction.setValue(false, forKey: "checked")
             break
         case .completed:
-            alphaAction.setValue(false, forKey: "checked")
-            dateAction.setValue(false, forKey: "checked")
-            releaseAction.setValue(false, forKey: "checked")
-            percentAction.setValue(false, forKey: "checked")
             completeAction.setValue(true, forKey: "checked")
             break
+        case .rating:
+            ratingAction.setValue(true, forKey: "checked")
         }
         actions.addAction(alphaAction)
         actions.addAction(dateAction)
         actions.addAction(releaseAction)
         actions.addAction(percentAction)
         actions.addAction(completeAction)
+        actions.addAction(ratingAction)
         actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         actions.popoverPresentationController?.barButtonItem = self.navigationController?.navigationBar.topItem?.rightBarButtonItem
         self.present(actions, animated: true, completion: nil)
@@ -657,7 +717,9 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
             cell.descriptionLabel?.text = ""
             cell.hideDetails()
         }
-        cell.rightLabel?.text = "\(game.progress)%"
+        cell.rightLabel?.text = ""
+        cell.percentImage?.isHidden = false
+        cell.percentImage?.image = cell.percentageImages[game.progress]
         if let image = game.gameFields?.image {
             cell.imageUrl = URL(string: image.iconUrl!)
         }
@@ -719,6 +781,10 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
                 case .completed:
                     sortString = "finished"
                     ascending = true
+                    break
+                case .rating:
+                    sortString = "rating"
+                    ascending = false
                 }
                 self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: ascending)
                 self.tableView?.deleteRows(at: [indexPath], with: .automatic)

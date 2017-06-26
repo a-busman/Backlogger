@@ -11,6 +11,8 @@ import RealmSwift
 import Kingfisher
 import ImageViewer
 
+extension UIImageView : DisplaceableView {}
+
 protocol GameDetailsViewControllerDelegate {
     func gamesCreated(gameField: GameField)
 }
@@ -75,6 +77,11 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     @IBOutlet weak var headingTopConstraint:             NSLayoutConstraint?
     
     var peekHeadingTopConstraint: NSLayoutConstraint?
+    
+    struct DataItem {
+        let imageView: UIImageView
+        var galleryItem: GalleryItem
+    }
     
     var images: [Int: DataItem] = [:]
     

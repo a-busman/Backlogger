@@ -472,6 +472,11 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             self.playlistImageSource = .custom
             self.titleCell.artImage = editedImage
             self.titleCell.showImage()
+        } else if let originalImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            self.playlistImage = originalImage
+            self.playlistImageSource = .custom
+            self.titleCell.artImage = originalImage
+            self.titleCell.showImage()
         }
         self.didPickImage = true
         picker.dismiss(animated: true, completion: nil)
@@ -703,6 +708,8 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             self.firstLoaded = true
             if self.playlistImageSource != .custom {
                 self.updatePlaylistImage()
+            } else {
+                newPlaylist.imageUrl = "custom"
             }
             self.savePlaylistImage()
             self.delegate?.didFinish(vc: self, playlist: newPlaylist)

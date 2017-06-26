@@ -52,6 +52,14 @@ class Platform: Field {
         return finishedSum
     }
     
+    var rating: Int {
+        var ratingSum = 0
+        for game in self.ownedGames {
+            ratingSum += game.rating
+        }
+        return ratingSum / self.ownedGames.count
+    }
+    
     override init(json: [String : Any]) {
         self.abbreviation  = json[PlatformFields.Abbreviation.rawValue] as? String
         super.init(json: json)

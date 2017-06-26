@@ -30,6 +30,7 @@ class LibraryViewController: UIViewController, UITabBarDelegate {
         case releaseYear = 2
         case percentComplete = 3
         case completed = 4
+        case rating = 5
     }
     
     var sortType: SortType?
@@ -71,6 +72,7 @@ class LibraryViewController: UIViewController, UITabBarDelegate {
                 sortString = "gameFields.releaseDate"
                 ascending = true
                 self.platforms = Array(realm.objects(Platform.self).filter("ownedGames.@count > 0").sorted(byKeyPath: "releaseDate", ascending: ascending))
+                break
             case .percentComplete:
                 sortString = "progress"
                 ascending = true
@@ -78,6 +80,7 @@ class LibraryViewController: UIViewController, UITabBarDelegate {
                     let ret = p1.progress < p2.progress
                     return ret
                 }
+                break
             case .completed:
                 sortString = "finished"
                 ascending = true
@@ -85,6 +88,15 @@ class LibraryViewController: UIViewController, UITabBarDelegate {
                     let ret = p1.finished < p2.finished
                     return ret
                 }
+                break
+            case .rating:
+                sortString = "rating"
+                ascending = false
+                self.platforms = realm.objects(Platform.self).filter("ownedGames.@count > 0").sorted { (p1, p2) in
+                    let ret = p1.rating > p2.rating
+                    return ret
+                }
+                break
             }
             self.allGames = realm.objects(Game.self).sorted(byKeyPath: sortString, ascending: ascending)
             self.filteredGames = self.allGames
@@ -193,48 +205,57 @@ class LibraryViewController: UIViewController, UITabBarDelegate {
             self.tableView?.reloadData()
         })
         
+        let ratingAction = UIAlertAction(title: "Rating", style: .default, handler: { _ in
+            self.sortType = .rating
+            autoreleasepool {
+                let realm = try! Realm()
+                self.platforms = realm.objects(Platform.self).filter("ownedGames.@count > 0").sorted { (p1, p2) in
+                    let ret = p1.rating > p2.rating
+                    return ret
+                }
+            }
+            if self.allGames != nil {
+                self.allGames = self.allGames!.sorted(byKeyPath: "rating", ascending: false)
+            }
+            if self.filteredGames != nil {
+                self.filteredGames = self.filteredGames!.sorted(byKeyPath: "rating", ascending: false)
+            }
+            UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
+            self.tableView?.reloadData()
+        })
+        
+        alphaAction.setValue(false, forKey: "checked")
+        dateAction.setValue(false, forKey: "checked")
+        releaseAction.setValue(false, forKey: "checked")
+        percentAction.setValue(false, forKey: "checked")
+        completeAction.setValue(false, forKey: "checked")
+        ratingAction.setValue(false, forKey: "checked")
+        
         switch self.sortType! {
         case .alphabetical:
             alphaAction.setValue(true, forKey: "checked")
-            dateAction.setValue(false, forKey: "checked")
-            releaseAction.setValue(false, forKey: "checked")
-            percentAction.setValue(false, forKey: "checked")
-            completeAction.setValue(false, forKey: "checked")
             break
         case .dateAdded:
-            alphaAction.setValue(false, forKey: "checked")
             dateAction.setValue(true, forKey: "checked")
-            releaseAction.setValue(false, forKey: "checked")
-            percentAction.setValue(false, forKey: "checked")
-            completeAction.setValue(false, forKey: "checked")
             break
         case .releaseYear:
-            alphaAction.setValue(false, forKey: "checked")
-            dateAction.setValue(false, forKey: "checked")
             releaseAction.setValue(true, forKey: "checked")
-            percentAction.setValue(false, forKey: "checked")
-            completeAction.setValue(false, forKey: "checked")
             break
         case .percentComplete:
-            alphaAction.setValue(false, forKey: "checked")
-            dateAction.setValue(false, forKey: "checked")
-            releaseAction.setValue(false, forKey: "checked")
             percentAction.setValue(true, forKey: "checked")
-            completeAction.setValue(false, forKey: "checked")
             break
         case .completed:
-            alphaAction.setValue(false, forKey: "checked")
-            dateAction.setValue(false, forKey: "checked")
-            releaseAction.setValue(false, forKey: "checked")
-            percentAction.setValue(false, forKey: "checked")
             completeAction.setValue(true, forKey: "checked")
             break
+        case .rating:
+            ratingAction.setValue(true, forKey: "checked")
         }
         actions.addAction(alphaAction)
         actions.addAction(dateAction)
         actions.addAction(releaseAction)
         actions.addAction(percentAction)
         actions.addAction(completeAction)
+        actions.addAction(ratingAction)
         actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         actions.popoverPresentationController?.barButtonItem = self.navigationController?.navigationBar.topItem?.leftBarButtonItem
         self.present(actions, animated: true, completion: nil)
@@ -327,6 +348,10 @@ extension LibraryViewController: UISearchBarDelegate {
         case .completed:
             sortString = "finished"
             ascending = true
+            break
+        case .rating:
+            sortString = "rating"
+            ascending = false
         }
         if searchText != "" {
             self.filteredGames = allGames!.filter("gameFields.name contains[c] \"\(searchText)\"").sorted(byKeyPath: sortString, ascending: ascending)
@@ -367,6 +392,7 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
         if !self.isSearching {
             let platform = self.platforms[indexPath.row]
             cell.titleLabel?.text = platform.name ?? ""
+            cell.percentImage?.isHidden = true
             cell.rightLabel?.text = "\(platform.ownedGames.count)"
             
             if !platform.hasDetails && !platform.custom {
@@ -443,6 +469,7 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
             let game = self.filteredGames![indexPath.row]
             cell.titleLabel?.text = game.gameFields!.name
             cell.descriptionLabel?.text = game.platform!.name
+            cell.percentImage?.isHidden = true
             cell.rightLabel?.text = ""
             if let image = game.gameFields!.image {
                 cell.imageUrl = URL(string: image.iconUrl!)

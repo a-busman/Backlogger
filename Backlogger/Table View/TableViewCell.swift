@@ -20,6 +20,7 @@ class TableViewCell: UITableViewCell {
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var rightLabel:       UILabel!
     @IBOutlet weak var addButton:        UIButton!
+    @IBOutlet weak var percentImage:     UIImageView!
     
     @IBOutlet weak var rightTrailingLayoutConstraint: NSLayoutConstraint!
     @IBOutlet weak var titleBottomLayoutConstraint:   NSLayoutConstraint!
@@ -42,6 +43,20 @@ class TableViewCell: UITableViewCell {
     
     var imageUrl: URL?
     var cacheCompletionHandler: CompletionHandler?
+    
+    let percentageImages: [Int: UIImage] = [
+        0: #imageLiteral(resourceName: "0-percent"),
+        10: #imageLiteral(resourceName: "10-percent"),
+        20: #imageLiteral(resourceName: "20-percent"),
+        30: #imageLiteral(resourceName: "30-percent"),
+        40: #imageLiteral(resourceName: "40-percent"),
+        50: #imageLiteral(resourceName: "50-percent"),
+        60: #imageLiteral(resourceName: "60-percent"),
+        70: #imageLiteral(resourceName: "70-percent"),
+        80: #imageLiteral(resourceName: "80-percent"),
+        90: #imageLiteral(resourceName: "90-percent"),
+        100: #imageLiteral(resourceName: "100-percent")
+    ]
     
     var libraryState: LibraryState {
         get {
