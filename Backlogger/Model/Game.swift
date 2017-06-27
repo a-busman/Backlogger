@@ -70,6 +70,7 @@ class GameField: Field {
             var genres:       List<Genre>     = List<Genre>()
             var publishers:   List<Publisher> = List<Publisher>()
             var platforms:    List<Platform>  = List<Platform>()
+            var characters:   List<GameCharacter> = List<GameCharacter>()
     
     let ownedGames: LinkingObjects<Game> = LinkingObjects(fromType: Game.self, property: "gameFields")
     
@@ -235,6 +236,31 @@ class GameField: Field {
                             self.update {
                                 self.hasDetails = true
                                 self.images.append(image!)
+                            }
+                        }
+                    }
+                }
+                if let jsonCharacters = json[GameFields.Characters.rawValue] as? [[String: Any]] {
+                    for jsonCharacter in jsonCharacters {
+                        let characterId = jsonCharacter[GenericFields.Id.rawValue] as? Int ?? 0
+                        var character = realm?.object(ofType: GameCharacter.self, forPrimaryKey: characterId)
+                        var inCharacters = false
+                        
+                        for c in self.characters {
+                            if c.idNumber == characterId {
+                                inCharacters = true
+                            }
+                        }
+                        if character == nil {
+                            character = GameCharacter(json: jsonCharacter)
+                            if self.ownedGames.count > 0 {
+                                character?.add()
+                            }
+                        }
+                        if !inCharacters {
+                            self.update {
+                                self.hasDetails = true
+                                self.characters.append(character!)
                             }
                         }
                     }
@@ -532,6 +558,9 @@ class GameField: Field {
         for platform in self.platforms {
             newGameField.platforms.append(platform.deepCopy())
         }
+        for character in self.characters {
+            newGameField.characters.append(character.deepCopy())
+        }
         return newGameField
     }
     
@@ -582,6 +611,15 @@ class GameField: Field {
                     self.platforms[index].syncWithRealm()
                 }
             }
+            for (index, character) in self.characters.enumerated() {
+                let characterId = character.idNumber
+                let dbCharacter = realm?.object(ofType: GameCharacter.self, forPrimaryKey: characterId)
+                if dbCharacter != nil {
+                    self.characters[index] = dbCharacter!
+                } else {
+                    self.characters[index].syncWithRealm()
+                }
+            }
         }
     }
     
@@ -629,6 +667,15 @@ class GameField: Field {
                     genre.add()
                 }
             }
+            for (index, character) in self.characters.enumerated() {
+                if let dbCharacter = realm?.object(ofType: GameCharacter.self, forPrimaryKey: character.idNumber) {
+                    self.update {
+                        self.characters[index] = dbCharacter
+                    }
+                } else {
+                    character.add()
+                }
+            }
         }
         super.add()
     }
@@ -668,6 +715,15 @@ class GameField: Field {
             }
             if genre.linkingGameFields.count == 0 {
                 genre.delete()
+            }
+        }
+        while self.characters.count > 0 {
+            var character: GameCharacter!
+            self.update {
+                character = self.characters.remove(at: 0)
+            }
+            if character.linkedGameFields.count == 0 {
+                character.delete()
             }
         }
         
@@ -740,6 +796,18 @@ class GameField: Field {
                 newGameField.genres.append(genre.deleteRetainCopy())
             } else {
                 newGameField.genres.append(genre.deepCopy())
+            }
+        }
+        
+        while self.characters.count > 0 {
+            var character: GameCharacter!
+            self.update {
+                character = self.characters.remove(at: 0)
+            }
+            if character.linkedGameFields.count == 0 {
+                newGameField.characters.append(character.deleteRetainCopy())
+            } else {
+                newGameField.characters.append(character.deepCopy())
             }
         }
         for image in self.images {

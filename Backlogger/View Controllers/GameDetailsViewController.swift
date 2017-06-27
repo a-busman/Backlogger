@@ -18,45 +18,47 @@ protocol GameDetailsViewControllerDelegate {
 }
 
 class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewControllerDelegate, UITextViewDelegate, PlaylistViewControllerDelegate {
-    @IBOutlet weak var mainImageView:          UIImageView?
-    @IBOutlet weak var titleLabel:             UILabel?
-    @IBOutlet weak var yearLabel:              UILabel?
-    @IBOutlet weak var platformButton:         UIButton?
-    @IBOutlet weak var headerView:             UIVisualEffectView?
-    @IBOutlet weak var headerContent:          UIView?
-    @IBOutlet weak var shadowView:             UIView?
-    @IBOutlet weak var detailsScrollView:      UIScrollView?
-    @IBOutlet weak var detailsContentView:     UIView?
-    @IBOutlet weak var descriptionView:        UILabel?
-    @IBOutlet weak var imagesTitleLabel:       UILabel?
-    @IBOutlet weak var imageCollectionView:    UICollectionView?
-    @IBOutlet weak var informationTitleLabel:  UILabel?
-    @IBOutlet weak var publisherLabel:         UILabel?
-    @IBOutlet weak var developerLabel:         UILabel?
-    @IBOutlet weak var platformsLabel:         UILabel?
-    @IBOutlet weak var genresLabel:            UILabel?
-    @IBOutlet weak var activityIndicator:      UIActivityIndicatorView?
-    @IBOutlet weak var activityBackground:     UIView?
-    @IBOutlet weak var addSymbolImage:         UIImageView?
-    @IBOutlet weak var addLabel:               UILabel?
-    @IBOutlet weak var addBackground:          UIView?
-    @IBOutlet weak var statsButton:            UIView?
-    @IBOutlet weak var progressIcon:           UIView?
-    @IBOutlet weak var statsEffectView:        UIVisualEffectView?
-    @IBOutlet weak var statsScrollView:        UIScrollView?
-    @IBOutlet weak var statsLabel:             UILabel?
-    @IBOutlet weak var percentageBlurView:     UIVisualEffectView?
-    @IBOutlet weak var percentageVibrancyView: UIVisualEffectView?
-    @IBOutlet weak var percentageLabel:        UILabel?
-    @IBOutlet weak var playPauseButton:        UIButton?
-    @IBOutlet weak var favouriteButton:        UIButton?
-    @IBOutlet weak var finishedButton:         UIButton?
-    @IBOutlet weak var completionLabel:        UILabel?
-    @IBOutlet weak var completionImageView:    UIImageView?
-    @IBOutlet weak var ratingContainerView:    UIView?
-    @IBOutlet weak var notesTextView:          UITextView?
-    @IBOutlet weak var progressSlider:         UISlider?
-    @IBOutlet weak var moreButton:             UIView?
+    @IBOutlet weak var mainImageView:            UIImageView?
+    @IBOutlet weak var titleLabel:               UILabel?
+    @IBOutlet weak var yearLabel:                UILabel?
+    @IBOutlet weak var platformButton:           UIButton?
+    @IBOutlet weak var headerView:               UIVisualEffectView?
+    @IBOutlet weak var headerContent:            UIView?
+    @IBOutlet weak var shadowView:               UIView?
+    @IBOutlet weak var detailsScrollView:        UIScrollView?
+    @IBOutlet weak var detailsContentView:       UIView?
+    @IBOutlet weak var descriptionView:          UILabel?
+    @IBOutlet weak var imagesTitleLabel:         UILabel?
+    @IBOutlet weak var imageCollectionView:      UICollectionView?
+    @IBOutlet weak var informationTitleLabel:    UILabel?
+    @IBOutlet weak var publisherLabel:           UILabel?
+    @IBOutlet weak var developerLabel:           UILabel?
+    @IBOutlet weak var platformsLabel:           UILabel?
+    @IBOutlet weak var genresLabel:              UILabel?
+    @IBOutlet weak var activityIndicator:        UIActivityIndicatorView?
+    @IBOutlet weak var activityBackground:       UIView?
+    @IBOutlet weak var addSymbolImage:           UIImageView?
+    @IBOutlet weak var addLabel:                 UILabel?
+    @IBOutlet weak var addBackground:            UIView?
+    @IBOutlet weak var statsButton:              UIView?
+    @IBOutlet weak var progressIcon:             UIView?
+    @IBOutlet weak var statsEffectView:          UIVisualEffectView?
+    @IBOutlet weak var statsScrollView:          UIScrollView?
+    @IBOutlet weak var statsLabel:               UILabel?
+    @IBOutlet weak var percentageBlurView:       UIVisualEffectView?
+    @IBOutlet weak var percentageVibrancyView:   UIVisualEffectView?
+    @IBOutlet weak var percentageLabel:          UILabel?
+    @IBOutlet weak var playPauseButton:          UIButton?
+    @IBOutlet weak var favouriteButton:          UIButton?
+    @IBOutlet weak var finishedButton:           UIButton?
+    @IBOutlet weak var completionLabel:          UILabel?
+    @IBOutlet weak var completionImageView:      UIImageView?
+    @IBOutlet weak var ratingContainerView:      UIView?
+    @IBOutlet weak var notesTextView:            UITextView?
+    @IBOutlet weak var progressSlider:           UISlider?
+    @IBOutlet weak var moreButton:               UIView?
+    @IBOutlet weak var charactersCollectionView: UICollectionView?
+    @IBOutlet weak var charactersTitleLabel:     UILabel?
 
     @IBOutlet weak var firstStar:  UIImageView?
     @IBOutlet weak var secondStar: UIImageView?
@@ -75,6 +77,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     @IBOutlet weak var statsLeadingToLeadingConstraint:  NSLayoutConstraint?
     @IBOutlet weak var statsLeadingToTrailingConstraint: NSLayoutConstraint?
     @IBOutlet weak var headingTopConstraint:             NSLayoutConstraint?
+    @IBOutlet weak var bottomConstraint:                 NSLayoutConstraint?
     
     var peekHeadingTopConstraint: NSLayoutConstraint?
     
@@ -86,6 +89,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     var images: [Int: DataItem] = [:]
     
     let imageCellReuseIdentifier = "image_cell"
+    let characterCellReuseIdentifier = "character_cell"
 
     let headerBorder = CALayer()
     
@@ -249,15 +253,69 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         
         var gameFields: GameField?
         gameFields = self._gameField ?? GameField()
+        let queue = DispatchQueue(label: "character.loading.queue")
         if !(gameFields?.hasDetails)! {
             gameFields?.updateGameDetails { result in
                 if let error = result.error {
                     NSLog("error: \(error.localizedDescription)")
                     return
                 }
+                if gameFields!.characters.count > 0 {
+                    var imagesLoaded = 0
+                    for character in gameFields!.characters {
+                        if !character.hasImage {
+                            character.updateDetails { result in
+                                queue.sync {
+                                    imagesLoaded += 1
+                                    if let error = result.error {
+                                        NSLog("error: \(error.localizedDescription)")
+                                        return
+                                    }
+                                    character.updateDetailsFromJson(json: result.value! as! [String: Any], fromDb: true)
+                                    if imagesLoaded == gameFields!.characters.count {
+                                        self.charactersCollectionView?.reloadData()
+                                    }
+                                }
+                            }
+                        } else {
+                            self.charactersCollectionView?.reloadData()
+                            self.updateGameDetails()
+                        }
+                    }
+                } else {
+                    self.charactersCollectionView?.isHidden = true
+                    self.charactersTitleLabel?.isHidden = true
+                    self.bottomConstraint?.isActive = false
+                    NSLayoutConstraint(item: self.detailsContentView!, attribute: .bottom, relatedBy: .equal, toItem: self.genresLabel, attribute: .bottom, multiplier: 1.0, constant: 0.0).isActive = true
+                }
                 self.updateGameDetails()
             }
         } else {
+            if gameFields!.characters.count > 0 {
+                var imagesLoaded = 0
+                for character in gameFields!.characters {
+                    if !character.hasImage {
+                        character.updateDetails { result in
+                            queue.sync {
+                                imagesLoaded += 1
+                                if let error = result.error {
+                                    NSLog("error: \(error.localizedDescription)")
+                                    return
+                                }
+                                character.updateDetailsFromJson(json: result.value! as! [String: Any], fromDb: true)
+                                if imagesLoaded == gameFields!.characters.count {
+                                    self.charactersCollectionView?.reloadData()
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                self.charactersCollectionView?.isHidden = true
+                self.charactersTitleLabel?.isHidden = true
+                self.bottomConstraint?.isActive = false
+                NSLayoutConstraint(item: self.detailsContentView!, attribute: .bottom, relatedBy: .equal, toItem: self.genresLabel, attribute: .bottom, multiplier: 1.0, constant: 0.0).isActive = true
+            }
             self.updateGameDetails()
         }
         if let titleString = gameFields?.name {
@@ -445,6 +503,9 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
             self.percentageLabel?.text = "\((self._game?.progress)!)%"
             self.notesTextView?.text = self._game?.notes
         }
+        
+        self.imageCollectionView?.register(UINib(nibName: "ImageCell", bundle: Bundle.main), forCellWithReuseIdentifier: self.imageCellReuseIdentifier)
+        self.charactersCollectionView?.register(UINib(nibName: "CharacterCell", bundle: Bundle.main), forCellWithReuseIdentifier: self.characterCellReuseIdentifier)
     }
     
     override func viewDidLayoutSubviews() {
@@ -525,6 +586,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     }
     
     private func updateGameDetails() {
+        self.charactersCollectionView?.reloadData()
         // Download all images at once
         var gameField: GameField
         if self._game == nil {
@@ -1365,115 +1427,111 @@ extension GameDetailsViewController: GalleryDisplacedViewsDataSource {
 extension GameDetailsViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     // tell the collection view how many cells to make
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.gameField?.images.count ?? 0
+        if collectionView == self.imageCollectionView! {
+            return self.gameField?.images.count ?? 0
+        } else if collectionView == self.charactersCollectionView! {
+            return self.gameField?.characters.count ?? 0
+        }
+        return 0
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        var size = (self.imageCollectionView?.frame.size)!
-        size.width = size.height
+        var size = collectionView.frame.size
+        if collectionView == self.charactersCollectionView! {
+            size.width = 105.0
+        } else {
+            size.width = size.height
+        }
         return size
     }
     
     // make a cell for each cell index path
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        // get a reference to our storyboard cell
-        self.imageCollectionView?.register(UINib(nibName: "ImageCell", bundle: Bundle.main), forCellWithReuseIdentifier: imageCellReuseIdentifier)
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: imageCellReuseIdentifier, for: indexPath)
-        let cellView = UIView()
-        cellView.backgroundColor = .lightGray
-        cellView.clipsToBounds = true
-        cellView.layer.cornerRadius = 5.0
-        cell.clipsToBounds = false
-        cellView.translatesAutoresizingMaskIntoConstraints = false
-        
-        for subview in cell.contentView.subviews {
-            subview.removeFromSuperview()
+        if collectionView == self.imageCollectionView! {
+            // get a reference to our storyboard cell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.imageCellReuseIdentifier, for: indexPath) as! ImageCell
+            let cellView = cell.contentView
+            if let imageView = self.images[indexPath.row]?.imageView {
+                imageView.contentMode = .scaleAspectFill
+                imageView.translatesAutoresizingMaskIntoConstraints = false
+                imageView.layer.cornerRadius = 5.0
+                imageView.clipsToBounds = true
+                
+                cellView.addSubview(imageView)
+                NSLayoutConstraint(item: imageView,
+                                   attribute: .leading,
+                                   relatedBy: .equal,
+                                   toItem: cellView,
+                                   attribute: .leading,
+                                   multiplier: 1.0,
+                                   constant: 0.5
+                    ).isActive = true
+                NSLayoutConstraint(item: imageView,
+                                   attribute: .trailing,
+                                   relatedBy: .equal,
+                                   toItem: cellView,
+                                   attribute: .trailing,
+                                   multiplier: 1.0,
+                                   constant: -0.5
+                    ).isActive = true
+                NSLayoutConstraint(item: imageView,
+                                   attribute: .top,
+                                   relatedBy: .equal,
+                                   toItem: cellView,
+                                   attribute: .top,
+                                   multiplier: 1.0,
+                                   constant: 0.5
+                    ).isActive = true
+                NSLayoutConstraint(item: imageView,
+                                   attribute: .bottom,
+                                   relatedBy: .equal,
+                                   toItem: cellView,
+                                   attribute: .bottom,
+                                   multiplier: 1.0,
+                                   constant: -0.5
+                    ).isActive = true
+            }
+            return cell
+        } else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.characterCellReuseIdentifier, for: indexPath) as! CharacterCell
+            guard let character = self.gameField?.characters[indexPath.row] else {
+                return cell
+            }
+            cell.characterLabel?.text = character.name
+            if let urlString = character.image?.mediumUrl {
+                if urlString.hasSuffix("question_mark.jpg") {
+                    cell.hideImage()
+                } else {
+                    cell.characterImage = UIImage()
+                    cell.showImage()
+                    cell.characterImageView?.kf.setImage(with: URL(string: urlString)!, placeholder: UIImage(), completionHandler: {
+                        (image, error, cacheType, imageUrl) in
+                        if image != nil {
+                            if cacheType == .none {
+                                UIView.transition(with: cell.characterImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                                    cell.characterImageView?.image = image
+                                }, completion: nil)
+                            } else {
+                                cell.characterImageView?.image = image
+                            }
+                        }
+                    })
+                }
+            } else if character.hasImage {
+                cell.hideImage()
+            }
+            return cell
         }
-        
-        cell.contentView.addSubview(cellView)
-        NSLayoutConstraint(item: cellView,
-                           attribute: .leading,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .leading,
-                           multiplier: 1.0,
-                           constant: 5.0
-            ).isActive = true
-        NSLayoutConstraint(item: cellView,
-                           attribute: .trailing,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .trailing,
-                           multiplier: 1.0,
-                           constant: -5.0
-            ).isActive = true
-        NSLayoutConstraint(item: cellView,
-                           attribute: .top,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .top,
-                           multiplier: 1.0,
-                           constant: 5.0
-            ).isActive = true
-        NSLayoutConstraint(item: cellView,
-                           attribute: .bottom,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .bottom,
-                           multiplier: 1.0,
-                           constant: -5.0
-            ).isActive = true
-        
-        if let imageView = self.images[indexPath.row]?.imageView {
-            imageView.contentMode = .scaleAspectFill
-            imageView.translatesAutoresizingMaskIntoConstraints = false
-            imageView.layer.cornerRadius = 5.0
-            imageView.clipsToBounds = true
-            
-            cellView.addSubview(imageView)
-            NSLayoutConstraint(item: imageView,
-                               attribute: .leading,
-                               relatedBy: .equal,
-                               toItem: cellView,
-                               attribute: .leading,
-                               multiplier: 1.0,
-                               constant: 0.5
-                ).isActive = true
-            NSLayoutConstraint(item: imageView,
-                               attribute: .trailing,
-                               relatedBy: .equal,
-                               toItem: cellView,
-                               attribute: .trailing,
-                               multiplier: 1.0,
-                               constant: -0.5
-                ).isActive = true
-            NSLayoutConstraint(item: imageView,
-                               attribute: .top,
-                               relatedBy: .equal,
-                               toItem: cellView,
-                               attribute: .top,
-                               multiplier: 1.0,
-                               constant: 0.5
-                ).isActive = true
-            NSLayoutConstraint(item: imageView,
-                               attribute: .bottom,
-                               relatedBy: .equal,
-                               toItem: cellView,
-                               attribute: .bottom,
-                               multiplier: 1.0,
-                               constant: -0.5
-                ).isActive = true
-        }
-        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let displacedViewIndex = indexPath.item
-        
-        let galleryViewController = GalleryViewController(startIndex: displacedViewIndex, itemsDataSource: self, itemsDelegate: self, displacedViewsDataSource: self, configuration: galleryConfiguration())
-        
-        self.presentImageGallery(galleryViewController)
+        if collectionView == self.imageCollectionView! {
+            let displacedViewIndex = indexPath.item
+            
+            let galleryViewController = GalleryViewController(startIndex: displacedViewIndex, itemsDataSource: self, itemsDelegate: self, displacedViewsDataSource: self, configuration: galleryConfiguration())
+            
+            self.presentImageGallery(galleryViewController)
+        }
     }
     
     func galleryConfiguration() -> GalleryConfiguration {

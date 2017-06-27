@@ -9,7 +9,7 @@
 import UIKit
 
 class PlaylistTableCell: UITableViewCell {
-    @IBOutlet weak var artView:  UIImageView?
+    @IBOutlet weak var artView:    UIImageView?
     @IBOutlet weak var titleLabel: UILabel?
     @IBOutlet weak var descLabel:  UILabel?
     @IBOutlet weak var blurView:   UIVisualEffectView?

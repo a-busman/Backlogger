@@ -32,7 +32,7 @@ class SearchResults {
     var url: String?
     
     class func endpointForGames() -> String {
-        return "https://www.giantbomb.com/api/games/?api_key=" + GAME_API_KEY + "&format=json&field_list=name,api_detail_url,deck,expected_release_year,id,image,number_of_user_reviews,original_release_date,platforms&limit=30"
+        return "https://www.giantbomb.com/api/games/?api_key=" + GAME_API_KEY + "&format=json&field_list=name,api_detail_url,deck,expected_release_year,id,image,number_of_user_reviews,original_release_date,platforms,characters&limit=30"
     }
     class func endpointForSearch() -> String {
         return "https://www.giantbomb.com/api/search/?api_key=" + GAME_API_KEY + "&format=json&resources=game&query="

@@ -165,8 +165,7 @@ class Platform: Field {
                     results.statusCode = json["status_code"] as? Int
                     results.url = response.request?.mainDocumentURL?.absoluteString
                     if let jsonResults = json["results"] as? [String: Any] {
-                        self.updateDetailsFromJson(json: jsonResults, fromDb: true)
-                        completionHandler(.success(BackendError.objectSerialization(reason: "success")))
+                        completionHandler(.success(jsonResults))
                     } else {
                         completionHandler(.failure(BackendError.objectSerialization(reason: "could not get platform details")))
                     }
@@ -188,6 +187,7 @@ class Platform: Field {
                 } else {
                     self.company?.add()
                 }
+                
             }
             if self.image != nil {
                 if let dbImage = realm?.object(ofType: ImageList.self, forPrimaryKey: "\(self.idNumber) platform") {
@@ -198,8 +198,18 @@ class Platform: Field {
                     self.image?.add()
                 }
             }
+            super.add()
+            if (self.company == nil || self.image == nil) {
+                self.updateDetails { results in
+                    if let error = results.error {
+                        NSLog("\(error.localizedDescription)")
+                    } else {
+                        self.updateDetailsFromJson(json: results.value as! [String : Any], fromDb: true)
+                    }
+                    super.add()
+                }
+            }
         }
-        super.add()
     }
     
     override func delete() {

@@ -25,6 +25,10 @@
 		FA1FFF771EFDFBF50048D907 /* SteamLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1FFF761EFDFBF50048D907 /* SteamLoginViewController.swift */; };
 		FA1FFF791EFEB61E0048D907 /* AddSteamGamesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1FFF781EFEB61E0048D907 /* AddSteamGamesViewController.swift */; };
 		FA1FFF7B1F001F220048D907 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1FFF7A1F001F220048D907 /* AboutViewController.swift */; };
+		FA1FFF7D1F0152450048D907 /* CharacterCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA1FFF7C1F0152450048D907 /* CharacterCell.xib */; };
+		FA1FFF7F1F0153690048D907 /* CharacterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1FFF7E1F0153690048D907 /* CharacterCell.swift */; };
+		FA1FFF811F0153E40048D907 /* GameCharacter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1FFF801F0153E40048D907 /* GameCharacter.swift */; };
+		FA1FFF821F01A5920048D907 /* GameCharacter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1FFF801F0153E40048D907 /* GameCharacter.swift */; };
 		FA358A521EB9AC4C001EE03D /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA358A511EB9AC4C001EE03D /* Playlist.swift */; };
 		FA358A541EBADF23001EE03D /* PlaylistTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA358A531EBADF23001EE03D /* PlaylistTableCell.xib */; };
 		FA358A561EBADF5E001EE03D /* PlaylistTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA358A551EBADF5E001EE03D /* PlaylistTableCell.swift */; };
@@ -131,6 +135,9 @@
 		FA1FFF761EFDFBF50048D907 /* SteamLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SteamLoginViewController.swift; path = "View Controllers/SteamLoginViewController.swift"; sourceTree = "<group>"; };
 		FA1FFF781EFEB61E0048D907 /* AddSteamGamesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AddSteamGamesViewController.swift; path = "View Controllers/AddSteamGamesViewController.swift"; sourceTree = "<group>"; };
 		FA1FFF7A1F001F220048D907 /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AboutViewController.swift; path = "View Controllers/AboutViewController.swift"; sourceTree = "<group>"; };
+		FA1FFF7C1F0152450048D907 /* CharacterCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CharacterCell.xib; path = Views/CharacterCell.xib; sourceTree = "<group>"; };
+		FA1FFF7E1F0153690048D907 /* CharacterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CharacterCell.swift; path = "Collection View/CharacterCell.swift"; sourceTree = "<group>"; };
+		FA1FFF801F0153E40048D907 /* GameCharacter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameCharacter.swift; path = Model/GameCharacter.swift; sourceTree = "<group>"; };
 		FA358A511EB9AC4C001EE03D /* Playlist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Playlist.swift; path = Model/Playlist.swift; sourceTree = "<group>"; };
 		FA358A531EBADF23001EE03D /* PlaylistTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PlaylistTableCell.xib; path = Views/PlaylistTableCell.xib; sourceTree = "<group>"; };
 		FA358A551EBADF5E001EE03D /* PlaylistTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlaylistTableCell.swift; path = "Table View/PlaylistTableCell.swift"; sourceTree = "<group>"; };
@@ -303,6 +310,7 @@
 				FA358A591EBC22F6001EE03D /* PlaylistTitleCell.xib */,
 				FA358A5F1EBF7484001EE03D /* PlaylistDescriptionCell.xib */,
 				FA358A631EBFC001001EE03D /* PlaylistAddTableCell.xib */,
+				FA1FFF7C1F0152450048D907 /* CharacterCell.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -333,6 +341,7 @@
 				FADA808D1E4C0D680069943D /* NowPlayingGameViewCell.swift */,
 				FADA808F1E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift */,
 				FA4B44981E5E97C5006A843F /* ImageCell.swift */,
+				FA1FFF7E1F0153690048D907 /* CharacterCell.swift */,
 			);
 			name = "Collection View";
 			sourceTree = "<group>";
@@ -364,6 +373,7 @@
 				FA8E71CE1E80E66500E7400B /* Developer.swift */,
 				FA358A511EB9AC4C001EE03D /* Playlist.swift */,
 				FA9CFA351EFCB1B7003E93B8 /* Steam.swift */,
+				FA1FFF801F0153E40048D907 /* GameCharacter.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -483,6 +493,7 @@
 				FA0915761E2AA4210052BCEC /* Assets.xcassets in Resources */,
 				FA4B44A31E6262FB006A843F /* ToastOverlayView.xib in Resources */,
 				FA0915741E2AA4210052BCEC /* Main.storyboard in Resources */,
+				FA1FFF7D1F0152450048D907 /* CharacterCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -592,6 +603,7 @@
 				FADA808B1E4C07570069943D /* PanDirectionGestureRecognizer.swift in Sources */,
 				FA4B448F1E5D3F2D006A843F /* Genre.swift in Sources */,
 				FAC778B51E3481E200944B6B /* GameDetailOverlayViewController.swift in Sources */,
+				FA1FFF811F0153E40048D907 /* GameCharacter.swift in Sources */,
 				FA0915881E2AA98C0052BCEC /* MoreViewController.swift in Sources */,
 				FA5C623D1E760413008558BF /* ToastOverlayViewController.swift in Sources */,
 				FA1FFF771EFDFBF50048D907 /* SteamLoginViewController.swift in Sources */,
@@ -618,6 +630,7 @@
 				FA1854B81ECF22B30031087E /* Util.swift in Sources */,
 				FADA80981E4FA0EB0069943D /* GameTableViewController.swift in Sources */,
 				FA8E71CD1E80E61800E7400B /* Publisher.swift in Sources */,
+				FA1FFF7F1F0153690048D907 /* CharacterCell.swift in Sources */,
 				FADA80A21E5252DB0069943D /* Game.swift in Sources */,
 				FA4B44991E5E97C5006A843F /* ImageCell.swift in Sources */,
 				FA358A521EB9AC4C001EE03D /* Playlist.swift in Sources */,
@@ -637,6 +650,7 @@
 				FACCA6631EF8437C005F1021 /* Company.swift in Sources */,
 				FACCA6621EF84379005F1021 /* SearchResults.swift in Sources */,
 				FACCA65E1EF840AA005F1021 /* Playlist.swift in Sources */,
+				FA1FFF821F01A5920048D907 /* GameCharacter.swift in Sources */,
 				FACCA6671EF8438A005F1021 /* Developer.swift in Sources */,
 				FACCA6641EF8437F005F1021 /* Genre.swift in Sources */,
 			);
