@@ -75,6 +75,7 @@ class GameField: Field {
     let ownedGames: LinkingObjects<Game> = LinkingObjects(fromType: Game.self, property: "gameFields")
     
     static var request:   DataRequest?
+    static var requestTimer: Timer?
     
     required init(json: [String: Any], fromDb: Bool) {
         super.init(json: json)
@@ -398,17 +399,20 @@ class GameField: Field {
             self.request!.cancel()
         }
         //UIApplication.shared.isNetworkActivityIndicatorVisible = true
-        self.request = Alamofire.request(url)
-            .responseJSON { response in
-                //UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                if let error = response.result.error {
-                    completionHandler(.failure(error))
-                    return
-                }
-                self.request = nil
-                let gamesWrapperResult = GameField.gamesArrayFromResponse(response)
-                completionHandler(gamesWrapperResult)
-        }
+        self.requestTimer?.invalidate()
+        self.requestTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { _ in
+            self.request = Alamofire.request(url)
+                .responseJSON { response in
+                    //UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                    if let error = response.result.error {
+                        completionHandler(.failure(error))
+                        return
+                    }
+                    self.request = nil
+                    let gamesWrapperResult = GameField.gamesArrayFromResponse(response)
+                    completionHandler(gamesWrapperResult)
+            }
+        })
     }
     
     class func buildDetailUrl(fromId id: Int) -> String {
