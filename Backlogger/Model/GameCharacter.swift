@@ -59,45 +59,47 @@ class GameCharacter: Field {
     }
     
     func updateDetails(id: Int, _ completionHandler: @escaping (Result<Any>) -> Void) {
-        let realm = try! Realm()
-        var character: GameCharacter? = realm.object(ofType: GameCharacter.self, forPrimaryKey: id)
-        if character == nil {
-            character = self
-        }
-        if let apiDetailUrl = character!.apiDetailUrl {
-            let url = apiDetailUrl + "?api_key=" + GAME_API_KEY + "&format=json"
-            GameCharacter.loadingQueue.sync {
-                sleep(1)
-                Alamofire.request(url)
-                    .responseJSON { response in
-                        if let error = response.result.error {
-                            completionHandler(.failure(error))
-                            return
-                        }
-                        guard let json = response.result.value as? [String: Any] else {
-                            completionHandler(.failure(BackendError.objectSerialization(reason:
-                                "Did not get JSON dictionary in response")))
-                            return
-                        }
-                        
-                        let results = SearchResults()
-                        results.error = json["error"] as? String
-                        results.limit = json["limit"] as? Int
-                        results.offset = json["offset"] as? Int
-                        results.numberOfPageResults = json["number_of_page_results"] as? Int
-                        results.numberOfTotalResults = json["number_of_total_results"] as? Int
-                        results.statusCode = json["status_code"] as? Int
-                        results.url = response.request?.mainDocumentURL?.absoluteString
-                        if let jsonResults = json["results"] as? [String: Any] {
-                            completionHandler(.success(jsonResults))
-                        } else {
-                            completionHandler(.failure(BackendError.objectSerialization(reason: "could not get platform details")))
-                        }
-                }
+        autoreleasepool{
+            let realm = try! Realm()
+            var character: GameCharacter? = realm.object(ofType: GameCharacter.self, forPrimaryKey: id)
+            if character == nil {
+                character = self
             }
-        } else {
-            completionHandler(.failure(BackendError.objectSerialization(reason: "no api detail url")))
-            return
+            if let apiDetailUrl = character!.apiDetailUrl {
+                let url = apiDetailUrl + "?api_key=" + GAME_API_KEY + "&format=json"
+                GameCharacter.loadingQueue.sync {
+                    sleep(1)
+                    Alamofire.request(url)
+                        .responseJSON { response in
+                            if let error = response.result.error {
+                                completionHandler(.failure(error))
+                                return
+                            }
+                            guard let json = response.result.value as? [String: Any] else {
+                                completionHandler(.failure(BackendError.objectSerialization(reason:
+                                    "Did not get JSON dictionary in response")))
+                                return
+                            }
+                            
+                            let results = SearchResults()
+                            results.error = json["error"] as? String
+                            results.limit = json["limit"] as? Int
+                            results.offset = json["offset"] as? Int
+                            results.numberOfPageResults = json["number_of_page_results"] as? Int
+                            results.numberOfTotalResults = json["number_of_total_results"] as? Int
+                            results.statusCode = json["status_code"] as? Int
+                            results.url = response.request?.mainDocumentURL?.absoluteString
+                            if let jsonResults = json["results"] as? [String: Any] {
+                                completionHandler(.success(jsonResults))
+                            } else {
+                                completionHandler(.failure(BackendError.objectSerialization(reason: "could not get platform details")))
+                            }
+                    }
+                }
+            } else {
+                completionHandler(.failure(BackendError.objectSerialization(reason: "no api detail url")))
+                return
+            }
         }
     }
     

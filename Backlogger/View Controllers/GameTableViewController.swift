@@ -722,6 +722,8 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
         cell.percentImage?.image = cell.percentageImages[game.progress]
         if let image = game.gameFields?.image {
             cell.imageUrl = URL(string: image.iconUrl!)
+        } else {
+            cell.artView?.image = #imageLiteral(resourceName: "table_placeholder_light")
         }
         cell.cacheCompletionHandler = {
             (image, error, cacheType, imageUrl) in
