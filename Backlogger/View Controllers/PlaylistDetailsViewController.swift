@@ -709,7 +709,9 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             if self.playlistImageSource != .custom {
                 self.updatePlaylistImage()
             } else {
-                newPlaylist.imageUrl = "custom"
+                newPlaylist.update {
+                    newPlaylist.imageUrl = "custom"
+                }
             }
             self.savePlaylistImage()
             self.delegate?.didFinish(vc: self, playlist: newPlaylist)
