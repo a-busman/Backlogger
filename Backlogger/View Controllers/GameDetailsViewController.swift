@@ -71,6 +71,8 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     @IBOutlet weak var steamLogo:      UIImageView?
     @IBOutlet weak var steamUserLabel: UILabel?
     
+    var characterImageViews: [UIImageView] = []
+    
     var toastOverlay = ToastOverlayViewController()
     
     @IBOutlet weak var informationTopConstraint:         NSLayoutConstraint?
@@ -261,20 +263,17 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
                     return
                 }
                 if gameFields!.characters.count > 0 {
-                    var imagesLoaded = 0
                     for character in gameFields!.characters {
                         if !character.hasImage {
-                            character.updateDetails { result in
-                                queue.sync {
-                                    imagesLoaded += 1
+                            let characterId = character.idNumber
+                            queue.async {
+                                character.updateDetails(id: characterId) { result in
                                     if let error = result.error {
                                         NSLog("error: \(error.localizedDescription)")
                                         return
                                     }
                                     character.updateDetailsFromJson(json: result.value! as! [String: Any], fromDb: true)
-                                    if imagesLoaded == gameFields!.characters.count {
-                                        self.charactersCollectionView?.reloadData()
-                                    }
+                                    self.charactersCollectionView?.reloadData()
                                 }
                             }
                         } else {
@@ -292,20 +291,17 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
             }
         } else {
             if gameFields!.characters.count > 0 {
-                var imagesLoaded = 0
                 for character in gameFields!.characters {
                     if !character.hasImage {
-                        character.updateDetails { result in
-                            queue.sync {
-                                imagesLoaded += 1
+                        let characterId = character.idNumber
+                        queue.async {
+                            character.updateDetails(id: characterId) { result in
                                 if let error = result.error {
                                     NSLog("error: \(error.localizedDescription)")
                                     return
                                 }
                                 character.updateDetailsFromJson(json: result.value! as! [String: Any], fromDb: true)
-                                if imagesLoaded == gameFields!.characters.count {
-                                    self.charactersCollectionView?.reloadData()
-                                }
+                                self.charactersCollectionView?.reloadData()
                             }
                         }
                     }
@@ -1497,27 +1493,48 @@ extension GameDetailsViewController: UICollectionViewDelegate, UICollectionViewD
             guard let character = self.gameField?.characters[indexPath.row] else {
                 return cell
             }
+            var characterImageView: UIImageView
+            if indexPath.item == self.characterImageViews.count {
+                characterImageView = UIImageView()
+                characterImageView.backgroundColor = .white
+                characterImageView.tag = 9000
+                self.characterImageViews.append(characterImageView)
+            } else {
+                characterImageView = self.characterImageViews[indexPath.item]
+            }
             cell.characterLabel?.text = character.name
+            characterImageView.translatesAutoresizingMaskIntoConstraints = false
+            characterImageView.contentMode = .scaleAspectFill
+            characterImageView.clipsToBounds = true
+            characterImageView.layer.cornerRadius = 52.0
+            cell.characterBorder?.addSubview(characterImageView)
+            NSLayoutConstraint(item: characterImageView, attribute: .top, relatedBy: .equal, toItem: cell.characterBorder!, attribute: .top, multiplier: 1.0, constant: 0.5).isActive = true
+            NSLayoutConstraint(item: characterImageView, attribute: .bottom, relatedBy: .equal, toItem: cell.characterBorder!, attribute: .bottom, multiplier: 1.0, constant: -0.5).isActive = true
+            NSLayoutConstraint(item: characterImageView, attribute: .leading, relatedBy: .equal, toItem: cell.characterBorder!, attribute: .leading, multiplier: 1.0, constant: 0.5).isActive = true
+            NSLayoutConstraint(item: characterImageView, attribute: .trailing, relatedBy: .equal, toItem: cell.characterBorder!, attribute: .trailing, multiplier: 1.0, constant: -0.5).isActive = true
+
             if let urlString = character.image?.mediumUrl {
                 if urlString.hasSuffix("question_mark.jpg") {
+                    characterImageView.image = #imageLiteral(resourceName: "new_playlist")
                     cell.hideImage()
                 } else {
-                    cell.characterImage = UIImage()
+                    characterImageView.image = nil
                     cell.showImage()
-                    cell.characterImageView?.kf.setImage(with: URL(string: urlString)!, placeholder: UIImage(), completionHandler: {
+                    characterImageView.kf.setImage(with: URL(string: urlString)!, placeholder: nil, completionHandler: {
                         (image, error, cacheType, imageUrl) in
                         if image != nil {
                             if cacheType == .none {
-                                UIView.transition(with: cell.characterImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                                    cell.characterImageView?.image = image
+                                UIView.transition(with: characterImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                                    characterImageView.image = image
                                 }, completion: nil)
                             } else {
-                                cell.characterImageView?.image = image
+                                characterImageView.image = image
                             }
                         }
                     })
                 }
             } else if character.hasImage {
+                characterImageView.image = #imageLiteral(resourceName: "new_playlist")
                 cell.hideImage()
             }
             return cell

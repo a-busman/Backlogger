@@ -15,6 +15,8 @@ class GameCharacter: Field {
     dynamic var image: ImageList? = nil
     dynamic var hasImage: Bool = false
     
+    static var loadingQueue: DispatchQueue = DispatchQueue(label: "character.load.queue")
+    
     var linkedGameFields: [GameField] {
         if let objects = realm?.objects(GameField.self).filter("%@ IN characters", self) {
             return Array(objects)
@@ -56,34 +58,42 @@ class GameCharacter: Field {
         }
     }
     
-    func updateDetails(_ completionHandler: @escaping (Result<Any>) -> Void) {
-        if let apiDetailUrl = self.apiDetailUrl {
+    func updateDetails(id: Int, _ completionHandler: @escaping (Result<Any>) -> Void) {
+        let realm = try! Realm()
+        var character: GameCharacter? = realm.object(ofType: GameCharacter.self, forPrimaryKey: id)
+        if character == nil {
+            character = self
+        }
+        if let apiDetailUrl = character!.apiDetailUrl {
             let url = apiDetailUrl + "?api_key=" + GAME_API_KEY + "&format=json"
-            Alamofire.request(url)
-                .responseJSON { response in
-                    if let error = response.result.error {
-                        completionHandler(.failure(error))
-                        return
-                    }
-                    guard let json = response.result.value as? [String: Any] else {
-                        completionHandler(.failure(BackendError.objectSerialization(reason:
-                            "Did not get JSON dictionary in response")))
-                        return
-                    }
-                    
-                    let results = SearchResults()
-                    results.error = json["error"] as? String
-                    results.limit = json["limit"] as? Int
-                    results.offset = json["offset"] as? Int
-                    results.numberOfPageResults = json["number_of_page_results"] as? Int
-                    results.numberOfTotalResults = json["number_of_total_results"] as? Int
-                    results.statusCode = json["status_code"] as? Int
-                    results.url = response.request?.mainDocumentURL?.absoluteString
-                    if let jsonResults = json["results"] as? [String: Any] {
-                        completionHandler(.success(jsonResults))
-                    } else {
-                        completionHandler(.failure(BackendError.objectSerialization(reason: "could not get platform details")))
-                    }
+            GameCharacter.loadingQueue.sync {
+                sleep(1)
+                Alamofire.request(url)
+                    .responseJSON { response in
+                        if let error = response.result.error {
+                            completionHandler(.failure(error))
+                            return
+                        }
+                        guard let json = response.result.value as? [String: Any] else {
+                            completionHandler(.failure(BackendError.objectSerialization(reason:
+                                "Did not get JSON dictionary in response")))
+                            return
+                        }
+                        
+                        let results = SearchResults()
+                        results.error = json["error"] as? String
+                        results.limit = json["limit"] as? Int
+                        results.offset = json["offset"] as? Int
+                        results.numberOfPageResults = json["number_of_page_results"] as? Int
+                        results.numberOfTotalResults = json["number_of_total_results"] as? Int
+                        results.statusCode = json["status_code"] as? Int
+                        results.url = response.request?.mainDocumentURL?.absoluteString
+                        if let jsonResults = json["results"] as? [String: Any] {
+                            completionHandler(.success(jsonResults))
+                        } else {
+                            completionHandler(.failure(BackendError.objectSerialization(reason: "could not get platform details")))
+                        }
+                }
             }
         } else {
             completionHandler(.failure(BackendError.objectSerialization(reason: "no api detail url")))
@@ -116,9 +126,8 @@ class GameCharacter: Field {
                 }
                 self.hasImage = true
             }
-            super.add()
             if (self.image == nil) {
-                self.updateDetails { results in
+                self.updateDetails(id: self.idNumber) { results in
                     if let error = results.error {
                         NSLog("\(error.localizedDescription)")
                     } else {
@@ -127,6 +136,7 @@ class GameCharacter: Field {
                     super.add()
                 }
             }
+            super.add()
         }
     }
     

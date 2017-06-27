@@ -9,7 +9,7 @@
 import UIKit
 
 class CharacterCell: UICollectionViewCell {
-    @IBOutlet weak var characterImageView: UIImageView?
+    @IBOutlet weak var characterBorder: UIView?
     @IBOutlet weak var characterLabel: UILabel?
     @IBOutlet weak var blurView: UIVisualEffectView?
     @IBOutlet weak var blurImage: UIImageView?
@@ -17,24 +17,18 @@ class CharacterCell: UICollectionViewCell {
     var characterImage: UIImage?
     
     override func prepareForReuse() {
-        self.characterImageView?.image = nil
         self.characterImage = nil
         self.blurView?.isHidden = true
+        if let imageView = self.characterBorder?.viewWithTag(9000) as? UIImageView {
+            imageView.removeFromSuperview()
+        }
     }
     
     func showImage() {
-        if let image = self.characterImage {
-            self.characterImageView?.image = image
-            self.blurView?.isHidden = true
-        } else {
-            self.characterImageView?.image = #imageLiteral(resourceName: "new_playlist")
-            self.blurView?.isHidden = false
-            self.blurImage?.image = #imageLiteral(resourceName: "character")
-        }
+        self.blurView?.isHidden = true
     }
     
     func hideImage() {
         self.blurView?.isHidden = false
-        self.characterImageView?.image = #imageLiteral(resourceName: "new_playlist")
     }
 }

@@ -22,18 +22,6 @@
                     <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Y7-eW-b2X">
                         <rect key="frame" x="50.5" y="0.0" width="105" height="105"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="APa-PZ-4NR">
-                                <rect key="frame" x="0.5" y="0.5" width="104" height="104"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="APa-PZ-4NR" secondAttribute="height" id="9mu-A6-hB7"/>
-                                </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="52"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </imageView>
                             <visualEffectView hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vLl-iw-Djd">
                                 <rect key="frame" x="0.0" y="-0.5" width="105" height="105"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="kYf-ch-pTI">
@@ -82,12 +70,9 @@
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="APa-PZ-4NR" firstAttribute="centerX" secondItem="4Y7-eW-b2X" secondAttribute="centerX" id="DUS-Vy-Gyr"/>
-                            <constraint firstItem="APa-PZ-4NR" firstAttribute="width" secondItem="4Y7-eW-b2X" secondAttribute="width" constant="-1" id="LVS-GZ-f4j"/>
-                            <constraint firstItem="APa-PZ-4NR" firstAttribute="centerY" secondItem="4Y7-eW-b2X" secondAttribute="centerY" id="lQe-PE-6VP"/>
+                            <constraint firstItem="vLl-iw-Djd" firstAttribute="centerX" secondItem="4Y7-eW-b2X" secondAttribute="centerX" id="csi-ln-X8w"/>
                             <constraint firstAttribute="width" constant="105" id="lrc-8s-GWx"/>
-                            <constraint firstItem="vLl-iw-Djd" firstAttribute="centerY" secondItem="APa-PZ-4NR" secondAttribute="centerY" id="pnA-ne-FCn"/>
-                            <constraint firstItem="vLl-iw-Djd" firstAttribute="centerX" secondItem="APa-PZ-4NR" secondAttribute="centerX" id="r4q-cO-qSc"/>
+                            <constraint firstItem="vLl-iw-Djd" firstAttribute="centerY" secondItem="4Y7-eW-b2X" secondAttribute="centerY" id="nQP-V6-P2c"/>
                             <constraint firstAttribute="height" constant="105" id="uIi-dg-XIW"/>
                             <constraint firstItem="vLl-iw-Djd" firstAttribute="width" secondItem="4Y7-eW-b2X" secondAttribute="width" id="xn6-Eg-wmc"/>
                         </constraints>
@@ -116,7 +101,7 @@
             <connections>
                 <outlet property="blurImage" destination="T0e-sZ-wSk" id="Hgr-Uv-6ov"/>
                 <outlet property="blurView" destination="vLl-iw-Djd" id="CbI-XA-zRg"/>
-                <outlet property="characterImageView" destination="APa-PZ-4NR" id="pQo-Qu-4Pr"/>
+                <outlet property="characterBorder" destination="4Y7-eW-b2X" id="nag-3H-Rak"/>
                 <outlet property="characterLabel" destination="oZI-tK-6l3" id="HkC-p2-Sy7"/>
             </connections>
             <point key="canvasLocation" x="109" y="-38"/>
