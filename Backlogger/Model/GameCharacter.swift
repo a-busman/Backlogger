@@ -66,7 +66,7 @@ class GameCharacter: Field {
                 character = self
             }
             if let apiDetailUrl = character!.apiDetailUrl {
-                let url = apiDetailUrl + "?api_key=" + GAME_API_KEY + "&format=json"
+                let url = apiDetailUrl + "?api_key=" + GAME_API_KEY + "&format=json&fields_list=image"
                 GameCharacter.loadingQueue.sync {
                     sleep(1)
                     Alamofire.request(url)
@@ -127,16 +127,6 @@ class GameCharacter: Field {
                     self.image?.add()
                 }
                 self.hasImage = true
-            }
-            if (self.image == nil) {
-                self.updateDetails(id: self.idNumber) { results in
-                    if let error = results.error {
-                        NSLog("\(error.localizedDescription)")
-                    } else {
-                        self.updateDetailsFromJson(json: results.value as! [String : Any], fromDb: true)
-                    }
-                    super.add()
-                }
             }
             super.add()
         }

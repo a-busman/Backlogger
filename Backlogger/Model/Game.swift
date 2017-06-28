@@ -299,6 +299,12 @@ class GameField: Field {
                 self.image = imageObject
                 self.imageUrl = self.image?.iconUrl
             }
+            if let jsonCharacters = json[GameFields.Characters.rawValue] as? [[String: Any]] {
+                for jsonCharacter in jsonCharacters {
+                    let character = GameCharacter(json: jsonCharacter)
+                    self.characters.append(character)
+                }
+            }
             if let jsonImages = json[GameFields.Images.rawValue] as? [[String: Any]] {
                 for (i, jsonImage) in jsonImages.enumerated() {
                     let image = ImageList(json: jsonImage)

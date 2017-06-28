@@ -74,6 +74,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     @IBOutlet weak var networkConnectionLabel: UILabel?
     
     var characterImageViews: [UIImageView] = []
+    let queue = DispatchQueue(label: "character.loading.queue")
     
     var toastOverlay = ToastOverlayViewController()
     
@@ -114,6 +115,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     var isAddingToPlaylist  = false
     var isAddingToPlayNext  = false
     var isAddingToPlayLater = false
+    var isExiting = false
     
     var addRemoveClosure:      ((UIPreviewAction, UIViewController) -> Void)?
     var addToPlaylistClosure:  ((UIPreviewAction, UIViewController) -> Void)?
@@ -257,7 +259,6 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         
         var gameFields: GameField?
         gameFields = self._gameField ?? GameField()
-        let queue = DispatchQueue(label: "character.loading.queue")
         if !(gameFields?.hasDetails)! && Util.isInternetAvailable() {
             gameFields?.updateGameDetails { result in
                 if let error = result.error {
@@ -271,14 +272,18 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
                     for character in gameFields!.characters {
                         if !character.hasImage {
                             let characterId = character.idNumber
-                            queue.async {
-                                character.updateDetails(id: characterId) { result in
-                                    if let error = result.error {
-                                        NSLog("error: \(error.localizedDescription)")
-                                        return
+                            self.queue.async {
+                                if !self.isExiting {
+                                    character.updateDetails(id: characterId) { result in
+                                        if let error = result.error {
+                                            NSLog("error: \(error.localizedDescription)")
+                                            return
+                                        }
+                                        if !self.isExiting {
+                                            character.updateDetailsFromJson(json: result.value! as! [String: Any], fromDb: true)
+                                            self.charactersCollectionView?.reloadData()
+                                        }
                                     }
-                                    character.updateDetailsFromJson(json: result.value! as! [String: Any], fromDb: true)
-                                    self.charactersCollectionView?.reloadData()
                                 }
                             }
                         } else {
@@ -303,14 +308,18 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
                 for character in gameFields!.characters {
                     if !character.hasImage {
                         let characterId = character.idNumber
-                        queue.async {
-                            character.updateDetails(id: characterId) { result in
-                                if let error = result.error {
-                                    NSLog("error: \(error.localizedDescription)")
-                                    return
+                        self.queue.async {
+                            if !self.isExiting {
+                                character.updateDetails(id: characterId) { result in
+                                    if let error = result.error {
+                                        NSLog("error: \(error.localizedDescription)")
+                                        return
+                                    }
+                                    if !self.isExiting {
+                                        character.updateDetailsFromJson(json: result.value! as! [String: Any], fromDb: true)
+                                        self.charactersCollectionView?.reloadData()
+                                    }
                                 }
-                                character.updateDetailsFromJson(json: result.value! as! [String: Any], fromDb: true)
-                                self.charactersCollectionView?.reloadData()
                             }
                         }
                     }
@@ -586,6 +595,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         if self.isMovingFromParentViewController {
+            self.isExiting = true
             self.delegate?.gamesCreated(gameField: self._gameField!)
         }
     }
