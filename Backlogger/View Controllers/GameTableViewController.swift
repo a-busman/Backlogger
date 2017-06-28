@@ -71,6 +71,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
 
     var hideComplete: Bool?
     var sortType: SortType?
+    var ascending: Bool?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -196,6 +197,11 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         } else {
             self.sortType = SortType.init(rawValue: sort as! Int)
         }
+        self.ascending = UserDefaults.standard.value(forKey: "libraryAscending") as? Bool
+        if self.ascending == nil {
+            self.ascending = true
+            UserDefaults.standard.set(self.ascending, forKey: "libraryAscending")
+        }
         autoreleasepool {
             let realm = try? Realm()
             self.platform = realm?.object(ofType: Platform.self, forPrimaryKey: platformId)
@@ -205,36 +211,29 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
             return
         }
         var sortString: String
-        var ascending: Bool
         switch self.sortType! {
         case .alphabetical:
             sortString = "gameFields.name"
-            ascending = true
             break
         case .dateAdded:
             sortString = "dateAdded"
-            ascending = false
             break
         case .releaseYear:
             sortString = "gameFields.releaseDate"
-            ascending = true
             break
         case .percentComplete:
             sortString = "progress"
-            ascending = true
             break
         case .completed:
             sortString = "finished"
-            ascending = true
             break
         case .rating:
             sortString = "rating"
-            ascending = false
         }
         if self.hideComplete! {
-            self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: ascending).filter("finished = false")
+            self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: self.ascending!).filter("finished = false")
         } else {
-            self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: ascending)
+            self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: self.ascending!)
         }
         self.tableView?.reloadData()
         
@@ -327,36 +326,29 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         UserDefaults.standard.set(self.hideComplete, forKey: "hideComplete")
         
         var sortString: String
-        var ascending: Bool
         switch self.sortType! {
         case .alphabetical:
             sortString = "gameFields.name"
-            ascending = true
             break
         case .dateAdded:
             sortString = "dateAdded"
-            ascending = false
             break
         case .releaseYear:
             sortString = "gameFields.releaseDate"
-            ascending = true
             break
         case .percentComplete:
             sortString = "progress"
-            ascending = true
             break
         case .completed:
             sortString = "finished"
-            ascending = true
             break
         case .rating:
             sortString = "rating"
-            ascending = false
         }
         if self.hideComplete! {
-            self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: ascending).filter("finished = false")
+            self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: self.ascending!).filter("finished = false")
         } else {
-            self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: ascending)
+            self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: self.ascending!)
         }
         self.tableView?.reloadData()
     }
@@ -365,50 +357,62 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         let actions = UIAlertController(title: "Sort games", message: nil, preferredStyle: .actionSheet)
 
         let alphaAction = UIAlertAction(title: "Title", style: .default, handler: { _ in
+            self.ascending = self.sortType == .alphabetical ? !self.ascending! : true
             self.sortType = .alphabetical
             if self.games != nil {
-                self.games = self.games!.sorted(byKeyPath: "gameFields.name", ascending: true)
+                self.games = self.games!.sorted(byKeyPath: "gameFields.name", ascending: self.ascending!)
             }
+            UserDefaults.standard.set(self.ascending!, forKey: "libraryAscending")
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
             self.tableView?.reloadData()
         })
         let dateAction = UIAlertAction(title: "Recently Added", style: .default, handler: { _ in
+            self.ascending = self.sortType == .dateAdded ? !self.ascending! : false
             self.sortType = .dateAdded
             if self.games != nil {
-                self.games = self.games!.sorted(byKeyPath: "dateAdded", ascending: true)
+                self.games = self.games!.sorted(byKeyPath: "dateAdded", ascending: self.ascending!)
             }
+            UserDefaults.standard.set(self.ascending!, forKey: "libraryAscending")
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
             self.tableView?.reloadData()
         })
         let releaseAction = UIAlertAction(title: "Release Date", style: .default, handler: { _ in
+            self.ascending = self.sortType == .releaseYear ? !self.ascending! : true
             self.sortType = .releaseYear
             if self.games != nil {
-                self.games = self.games!.sorted(byKeyPath: "gameFields.releaseDate", ascending: true)
+                self.games = self.games!.sorted(byKeyPath: "gameFields.releaseDate", ascending: self.ascending!)
             }
+            UserDefaults.standard.set(self.ascending!, forKey: "libraryAscending")
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
             self.tableView?.reloadData()
         })
         let percentAction = UIAlertAction(title: "Progress", style: .default, handler: { _ in
+            self.ascending = self.sortType == .percentComplete ? !self.ascending! : true
             self.sortType = .percentComplete
             if self.games != nil {
-                self.games = self.games!.sorted(byKeyPath: "progress", ascending: true)
+                self.games = self.games!.sorted(byKeyPath: "progress", ascending: self.ascending!)
             }
+            UserDefaults.standard.set(self.ascending!, forKey: "libraryAscending")
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
             self.tableView?.reloadData()
         })
         let completeAction = UIAlertAction(title: "Finished", style: .default, handler: { _ in
+            self.ascending = self.sortType == .completed ? !self.ascending! : true
             self.sortType = .completed
             if self.games != nil {
-                self.games = self.games!.sorted(byKeyPath: "finished", ascending: true)
+                self.games = self.games!.sorted(byKeyPath: "finished", ascending: self.ascending!)
             }
+            UserDefaults.standard.set(self.ascending!, forKey: "libraryAscending")
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
             self.tableView?.reloadData()
         })
         let ratingAction = UIAlertAction(title: "Rating", style: .default, handler: { _ in
+            self.ascending = self.sortType == .rating ? !self.ascending! : false
             self.sortType = .rating
             if self.games != nil {
-                self.games = self.games!.sorted(byKeyPath: "rating", ascending: false)
+                self.games = self.games!.sorted(byKeyPath: "rating", ascending: self.ascending!)
             }
+            UserDefaults.standard.set(self.ascending!, forKey: "libraryAscending")
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
             self.tableView?.reloadData()
         })
@@ -762,33 +766,26 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
             }
             if self.platform != nil {
                 var sortString: String
-                var ascending: Bool
                 switch self.sortType! {
                 case .alphabetical:
                     sortString = "gameFields.name"
-                    ascending = true
                     break
                 case .dateAdded:
                     sortString = "dateAdded"
-                    ascending = false
                     break
                 case .releaseYear:
                     sortString = "gameFields.releaseDate"
-                    ascending = true
                     break
                 case .percentComplete:
                     sortString = "progress"
-                    ascending = true
                     break
                 case .completed:
                     sortString = "finished"
-                    ascending = true
                     break
                 case .rating:
                     sortString = "rating"
-                    ascending = false
                 }
-                self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: ascending)
+                self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: self.ascending!)
                 self.tableView?.deleteRows(at: [indexPath], with: .automatic)
                 //self.tableView?.reloadData()
             } else {

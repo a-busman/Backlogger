@@ -34,6 +34,7 @@ class PlaylistViewController: UIViewController {
     }
     
     var sortType: SortType?
+    var ascending: Bool?
     
     var selectedRow = -1
     override func viewDidLoad() {
@@ -44,6 +45,11 @@ class PlaylistViewController: UIViewController {
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "playlistSortType")
         } else {
             self.sortType = SortType.init(rawValue: sort as! Int)
+        }
+        self.ascending = UserDefaults.standard.value(forKey: "playlistAscending") as? Bool
+        if self.ascending == nil {
+            self.ascending = true
+            UserDefaults.standard.set(self.ascending, forKey: "playlistAscending")
         }
         self.tableView?.register(UINib(nibName: "PlaylistTableCell", bundle: nil), forCellReuseIdentifier: self.cellReuseIdentifier)
         self.tableView?.tableFooterView = UIView(frame: .zero)
@@ -56,44 +62,62 @@ class PlaylistViewController: UIViewController {
     @IBAction func sortTapped(sender: UIBarButtonItem) {
         let actions = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let alphaAction = UIAlertAction(title: "Title", style: .default, handler: { _ in
+            self.ascending = self.sortType == .alphabetical ? !self.ascending! : true
             self.sortType = .alphabetical
             autoreleasepool {
                 let realm = try! Realm()
-                self.playlistList = Array(realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false").sorted(byKeyPath: "name", ascending: true))
+                self.playlistList = Array(realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false").sorted(byKeyPath: "name", ascending: self.ascending!))
             }
+            UserDefaults.standard.set(self.ascending!, forKey: "playlistAscending")
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "playlistSortType")
             self.tableView?.reloadData()
         })
         let dateAction = UIAlertAction(title: "Recently Added", style: .default, handler: { _ in
+            self.ascending = self.sortType == .dateAdded ? !self.ascending! : false
             self.sortType = .dateAdded
             autoreleasepool {
                 let realm = try! Realm()
-                self.playlistList = Array(realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false").sorted(byKeyPath: "dateAdded", ascending: false))
+                self.playlistList = Array(realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false").sorted(byKeyPath: "dateAdded", ascending: self.ascending!))
             }
+            UserDefaults.standard.set(self.ascending!, forKey: "playlistAscending")
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "playlistSortType")
             self.tableView?.reloadData()
         })
         let progressAction = UIAlertAction(title: "Progress", style: .default, handler: { _ in
+            self.ascending = self.sortType == .percentComplete ? !self.ascending! : true
             self.sortType = .percentComplete
             autoreleasepool {
                 let realm = try! Realm()
                 self.playlistList = realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false").sorted { (p1, p2) in
-                    let ret = p1.progress < p2.progress
+                    var ret: Bool
+                    if self.ascending! {
+                        ret = p1.progress < p2.progress
+                    } else {
+                        ret = p1.progress > p2.progress
+                    }
                     return ret
                 }
             }
+            UserDefaults.standard.set(self.ascending!, forKey: "playlistAscending")
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "playlistSortType")
             self.tableView?.reloadData()
         })
         let completedAction = UIAlertAction(title: "Finished", style: .default, handler: { _ in
+            self.ascending = self.sortType == .completed ? !self.ascending! : true
             self.sortType = .completed
             autoreleasepool {
                 let realm = try! Realm()
                 self.playlistList = realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false").sorted { (p1, p2) in
-                    let ret = p1.finished < p2.finished
+                    var ret: Bool
+                    if self.ascending! {
+                        ret = p1.finished < p2.finished
+                    } else {
+                        ret = p1.finished > p2.finished
+                    }
                     return ret
                 }
             }
+            UserDefaults.standard.set(self.ascending!, forKey: "playlistAscending")
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "playlistSortType")
             self.tableView?.reloadData()
         })
@@ -141,20 +165,30 @@ class PlaylistViewController: UIViewController {
             let realm = try! Realm()
             switch self.sortType! {
             case .alphabetical:
-                self.playlistList = Array(realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false").sorted(byKeyPath: "name", ascending: true))
+                self.playlistList = Array(realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false").sorted(byKeyPath: "name", ascending: self.ascending!))
                 break
             case .dateAdded:
-                self.playlistList = Array(realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false").sorted(byKeyPath: "dateAdded", ascending: false))
+                self.playlistList = Array(realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false").sorted(byKeyPath: "dateAdded", ascending: self.ascending!))
                 break
             case .percentComplete:
                 self.playlistList = realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false").sorted { (p1, p2) in
-                    let ret = p1.progress < p2.progress
+                    var ret: Bool
+                    if self.ascending! {
+                        ret = p1.progress < p2.progress
+                    } else {
+                        ret = p1.progress > p2.progress
+                    }
                     return ret
                 }
                 break
             case .completed:
                 self.playlistList = realm.objects(Playlist.self).filter("isNowPlaying = false and isUpNext = false").sorted { (p1, p2) in
-                    let ret = p1.finished < p2.finished
+                    var ret: Bool
+                    if self.ascending! {
+                        ret = p1.finished < p2.finished
+                    } else {
+                        ret = p1.finished > p2.finished
+                    }
                     return ret
                 }
             }

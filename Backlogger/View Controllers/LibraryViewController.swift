@@ -35,6 +35,8 @@ class LibraryViewController: UIViewController, UITabBarDelegate {
     
     var sortType: SortType?
     
+    var ascending: Bool?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.searchBar?.tintColor = Util.appColor
@@ -53,47 +55,62 @@ class LibraryViewController: UIViewController, UITabBarDelegate {
         } else {
             self.sortType = SortType.init(rawValue: sort as! Int)
         }
+        
+        self.ascending = UserDefaults.standard.value(forKey: "libraryAscending") as? Bool
+        if self.ascending == nil {
+            self.ascending = true
+            UserDefaults.standard.set(self.ascending, forKey: "libraryAscending")
+        }
         autoreleasepool {
             let realm = try! Realm()
             var sortString: String
-            var ascending: Bool
+            let ascending = self.ascending!
             switch self.sortType! {
             case .alphabetical:
                 sortString = "gameFields.name"
-                ascending = true
                 self.platforms = Array(realm.objects(Platform.self).filter("ownedGames.@count > 0").sorted(byKeyPath: "name", ascending: ascending))
                 break
             case .dateAdded:
                 sortString = "dateAdded"
-                ascending = false
                 self.platforms = Array(realm.objects(Platform.self).filter("ownedGames.@count > 0"))
                 break
             case .releaseYear:
                 sortString = "gameFields.releaseDate"
-                ascending = true
                 self.platforms = Array(realm.objects(Platform.self).filter("ownedGames.@count > 0").sorted(byKeyPath: "releaseDate", ascending: ascending))
                 break
             case .percentComplete:
                 sortString = "progress"
-                ascending = true
                 self.platforms = realm.objects(Platform.self).filter("ownedGames.@count > 0").sorted { (p1, p2) in
-                    let ret = p1.progress < p2.progress
+                    var ret: Bool
+                    if self.ascending! {
+                        ret = p1.progress < p2.progress
+                    } else {
+                        ret = p1.progress > p2.progress
+                    }
                     return ret
                 }
                 break
             case .completed:
                 sortString = "finished"
-                ascending = true
                 self.platforms = realm.objects(Platform.self).filter("ownedGames.@count > 0").sorted { (p1, p2) in
-                    let ret = p1.finished < p2.finished
+                    var ret: Bool
+                    if self.ascending! {
+                        ret = p1.finished < p2.finished
+                    } else {
+                        ret = p1.finished > p2.finished
+                    }
                     return ret
                 }
                 break
             case .rating:
                 sortString = "rating"
-                ascending = false
                 self.platforms = realm.objects(Platform.self).filter("ownedGames.@count > 0").sorted { (p1, p2) in
-                    let ret = p1.rating > p2.rating
+                    var ret: Bool
+                    if self.ascending! {
+                        ret = p1.rating < p2.rating
+                    } else {
+                        ret = p1.rating > p2.rating
+                    }
                     return ret
                 }
                 break
@@ -124,102 +141,129 @@ class LibraryViewController: UIViewController, UITabBarDelegate {
         self.searchBar?.resignFirstResponder()
         let actions = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let alphaAction = UIAlertAction(title: "Title", style: .default, handler: { _ in
+            self.ascending = self.sortType == .alphabetical ? !self.ascending! : true
             self.sortType = .alphabetical
             autoreleasepool {
                 let realm = try! Realm()
-                self.platforms = Array(realm.objects(Platform.self).filter("ownedGames.@count > 0").sorted(byKeyPath: "name", ascending: true))
+                self.platforms = Array(realm.objects(Platform.self).filter("ownedGames.@count > 0").sorted(byKeyPath: "name", ascending: self.ascending!))
             }
             if self.allGames != nil {
-                self.allGames = self.allGames!.sorted(byKeyPath: "gameFields.name", ascending: true)
+                self.allGames = self.allGames!.sorted(byKeyPath: "gameFields.name", ascending: self.ascending!)
             }
             if self.filteredGames != nil {
-                self.filteredGames = self.filteredGames!.sorted(byKeyPath: "gameFields.name", ascending: true)
+                self.filteredGames = self.filteredGames!.sorted(byKeyPath: "gameFields.name", ascending: self.ascending!)
             }
+            UserDefaults.standard.set(self.ascending!, forKey: "libraryAscending")
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
             self.tableView?.reloadData()
         })
         let dateAction = UIAlertAction(title: "Recently Added", style: .default, handler: { _ in
+            self.ascending = self.sortType == .dateAdded ? !self.ascending! : false
             self.sortType = .dateAdded
             autoreleasepool {
                 let realm = try! Realm()
                 self.platforms = Array(realm.objects(Platform.self).filter("ownedGames.@count > 0"))
             }
             if self.allGames != nil {
-                self.allGames = self.allGames!.sorted(byKeyPath: "dateAdded", ascending: false)
+                self.allGames = self.allGames!.sorted(byKeyPath: "dateAdded", ascending: self.ascending!)
             }
             if self.filteredGames != nil {
-                self.filteredGames = self.filteredGames!.sorted(byKeyPath: "dateAdded", ascending: false)
+                self.filteredGames = self.filteredGames!.sorted(byKeyPath: "dateAdded", ascending: self.ascending!)
             }
+            UserDefaults.standard.set(self.ascending!, forKey: "libraryAscending")
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
             self.tableView?.reloadData()
         })
         let releaseAction = UIAlertAction(title: "Release Date", style: .default, handler: { _ in
+            self.ascending = self.sortType == .releaseYear ? !self.ascending! : true
             self.sortType = .releaseYear
             autoreleasepool {
                 let realm = try! Realm()
-                self.platforms = Array(realm.objects(Platform.self).filter("ownedGames.@count > 0").sorted(byKeyPath: "releaseDate", ascending: true))
+                self.platforms = Array(realm.objects(Platform.self).filter("ownedGames.@count > 0").sorted(byKeyPath: "releaseDate", ascending: self.ascending!))
             }
             if self.allGames != nil {
-                self.allGames = self.allGames!.sorted(byKeyPath: "gameFields.releaseDate", ascending: true)
+                self.allGames = self.allGames!.sorted(byKeyPath: "gameFields.releaseDate", ascending: self.ascending!)
             }
             if self.filteredGames != nil {
-                self.filteredGames = self.filteredGames!.sorted(byKeyPath: "gameFields.releaseDate", ascending: true)
+                self.filteredGames = self.filteredGames!.sorted(byKeyPath: "gameFields.releaseDate", ascending: self.ascending!)
             }
+            UserDefaults.standard.set(self.ascending!, forKey: "libraryAscending")
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
             self.tableView?.reloadData()
         })
         let percentAction = UIAlertAction(title: "Progress", style: .default, handler: { _ in
+            self.ascending = self.sortType == .percentComplete ? !self.ascending! : true
             self.sortType = .percentComplete
             autoreleasepool {
                 let realm = try! Realm()
                 self.platforms = realm.objects(Platform.self).filter("ownedGames.@count > 0").sorted { (p1, p2) in
-                    let ret = p1.progress < p2.progress
+                    var ret: Bool
+                    if self.ascending! {
+                        ret = p1.progress < p2.progress
+                    } else {
+                        ret = p1.progress > p2.progress
+                    }
                     return ret
                 }
             }
             if self.allGames != nil {
-                self.allGames = self.allGames!.sorted(byKeyPath: "progress", ascending: true)
+                self.allGames = self.allGames!.sorted(byKeyPath: "progress", ascending: self.ascending!)
             }
             if self.filteredGames != nil {
-                self.filteredGames = self.filteredGames!.sorted(byKeyPath: "progress", ascending: true)
+                self.filteredGames = self.filteredGames!.sorted(byKeyPath: "progress", ascending: self.ascending!)
             }
+            UserDefaults.standard.set(self.ascending!, forKey: "libraryAscending")
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
             self.tableView?.reloadData()
         })
         let completeAction = UIAlertAction(title: "Finished", style: .default, handler: { _ in
+            self.ascending = self.sortType == .completed ? !self.ascending! : true
             self.sortType = .completed
             autoreleasepool {
                 let realm = try! Realm()
                 self.platforms = realm.objects(Platform.self).filter("ownedGames.@count > 0").sorted { (p1, p2) in
-                    let ret = p1.finished < p2.finished
+                    var ret: Bool
+                    if self.ascending! {
+                        ret = p1.finished < p2.finished
+                    } else {
+                        ret = p1.finished > p2.finished
+                    }
                     return ret
                 }
             }
             if self.allGames != nil {
-                self.allGames = self.allGames!.sorted(byKeyPath: "finished", ascending: true)
+                self.allGames = self.allGames!.sorted(byKeyPath: "finished", ascending: self.ascending!)
             }
             if self.filteredGames != nil {
-                self.filteredGames = self.filteredGames!.sorted(byKeyPath: "finished", ascending: true)
+                self.filteredGames = self.filteredGames!.sorted(byKeyPath: "finished", ascending: self.ascending!)
             }
+            UserDefaults.standard.set(self.ascending!, forKey: "libraryAscending")
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
             self.tableView?.reloadData()
         })
         
         let ratingAction = UIAlertAction(title: "Rating", style: .default, handler: { _ in
+            self.ascending = self.sortType == .rating ? !self.ascending! : true
             self.sortType = .rating
             autoreleasepool {
                 let realm = try! Realm()
                 self.platforms = realm.objects(Platform.self).filter("ownedGames.@count > 0").sorted { (p1, p2) in
-                    let ret = p1.rating > p2.rating
+                    var ret: Bool
+                    if self.ascending! {
+                        ret = p1.rating < p2.rating
+                    } else {
+                        ret = p1.rating > p2.rating
+                    }
                     return ret
                 }
             }
             if self.allGames != nil {
-                self.allGames = self.allGames!.sorted(byKeyPath: "rating", ascending: false)
+                self.allGames = self.allGames!.sorted(byKeyPath: "rating", ascending: self.ascending!)
             }
             if self.filteredGames != nil {
-                self.filteredGames = self.filteredGames!.sorted(byKeyPath: "rating", ascending: false)
+                self.filteredGames = self.filteredGames!.sorted(byKeyPath: "rating", ascending: self.ascending!)
             }
+            UserDefaults.standard.set(self.ascending!, forKey: "libraryAscending")
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
             self.tableView?.reloadData()
         })
@@ -327,34 +371,27 @@ extension LibraryViewController: UISearchBarDelegate {
  
     func filterContent(for searchText: String) {
         var sortString: String
-        var ascending: Bool
         switch self.sortType! {
         case .alphabetical:
             sortString = "gameFields.name"
-            ascending = true
             break
         case .dateAdded:
             sortString = "dateAdded"
-            ascending = false
             break
         case .releaseYear:
             sortString = "gameFields.releaseDate"
-            ascending = true
             break
         case .percentComplete:
             sortString = "progress"
-            ascending = true
             break
         case .completed:
             sortString = "finished"
-            ascending = true
             break
         case .rating:
             sortString = "rating"
-            ascending = false
         }
         if searchText != "" {
-            self.filteredGames = allGames!.filter("gameFields.name contains[c] \"\(searchText)\"").sorted(byKeyPath: sortString, ascending: ascending)
+            self.filteredGames = allGames!.filter("gameFields.name contains[c] \"\(searchText)\"").sorted(byKeyPath: sortString, ascending: self.ascending!)
         } else {
             self.filteredGames = allGames?.sorted(byKeyPath: sortString)
         }
