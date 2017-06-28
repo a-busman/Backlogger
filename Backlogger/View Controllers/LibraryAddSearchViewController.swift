@@ -84,6 +84,13 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
                            multiplier: 1.0,
                            constant: 300.0
             ).isActive = true
+        
+        if !Util.isInternetAvailable() {
+            self.searchLabel?.text = "No Network Connection."
+            self.searchBackground?.isHidden = true
+            self.tableView?.tableHeaderView = UIView(frame: .zero)
+            self.tableView?.alwaysBounceVertical = false
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -91,7 +98,7 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        if !self.viewAlreadyLoaded {
+        if !self.viewAlreadyLoaded && Util.isInternetAvailable() {
             self.searchBar?.becomeFirstResponder()
             self.viewAlreadyLoaded = true
         }
@@ -178,8 +185,10 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
     
     
     @IBAction func dismissView() {
-        if (self.searchBar?.isFirstResponder)! {
-            self.searchBar?.resignFirstResponder()
+        if self.searchBar != nil {
+            if (self.searchBar?.isFirstResponder)! {
+                self.searchBar?.resignFirstResponder()
+            }
         }
         self.dismiss(animated: true, completion: nil)
     }
@@ -602,7 +611,7 @@ extension LibraryAddSearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(false, animated: true)
         searchBar.resignFirstResponder()
-        if self.query != searchBar.text {
+        if self.query != searchBar.text && Util.isInternetAvailable() {
             self.query = searchBar.text
             self.performSearch()
         }
@@ -619,7 +628,7 @@ extension LibraryAddSearchViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         self.query = searchText
-        if !(self.query?.isEmpty)! {
+        if !(self.query?.isEmpty)! && Util.isInternetAvailable() {
             self.performSearch()
         } else {
             self.gameFields.removeAll()

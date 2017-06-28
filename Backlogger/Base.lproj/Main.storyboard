@@ -1099,6 +1099,12 @@
                                     <constraint firstItem="H7B-Hs-sae" firstAttribute="leading" secondItem="8Yh-gY-jcp" secondAttribute="leading" id="ySS-5l-AQY"/>
                                 </constraints>
                             </scrollView>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Network Connection" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3r3-Lq-OYo">
+                                <rect key="frame" x="95.5" y="323.5" width="183" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="esg-nU-ufh">
                                 <rect key="frame" x="0.0" y="64" width="375" height="175"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="WPU-V0-T7e">
@@ -1586,7 +1592,9 @@
                             <constraint firstItem="BlG-vb-kFs" firstAttribute="centerX" secondItem="HOp-Pa-rLP" secondAttribute="centerX" id="Hv0-fm-HY0"/>
                             <constraint firstItem="BlG-vb-kFs" firstAttribute="centerY" secondItem="HOp-Pa-rLP" secondAttribute="centerY" id="ISv-2c-XVQ"/>
                             <constraint firstItem="8Yh-gY-jcp" firstAttribute="centerY" secondItem="HOp-Pa-rLP" secondAttribute="centerY" id="VAr-02-wmi"/>
+                            <constraint firstItem="3r3-Lq-OYo" firstAttribute="centerY" secondItem="HOp-Pa-rLP" secondAttribute="centerY" id="VXs-K5-y4X"/>
                             <constraint firstItem="esg-nU-ufh" firstAttribute="width" secondItem="HOp-Pa-rLP" secondAttribute="width" id="WmQ-c7-QF6"/>
+                            <constraint firstItem="3r3-Lq-OYo" firstAttribute="centerX" secondItem="HOp-Pa-rLP" secondAttribute="centerX" id="YdX-QR-4KM"/>
                             <constraint firstItem="8Yh-gY-jcp" firstAttribute="height" secondItem="HOp-Pa-rLP" secondAttribute="height" id="iz2-xy-PxD"/>
                             <constraint firstItem="thQ-co-ZR8" firstAttribute="top" secondItem="esg-nU-ufh" secondAttribute="bottom" id="kHC-vp-fjF"/>
                             <constraint firstItem="UB4-1H-riR" firstAttribute="centerX" secondItem="HOp-Pa-rLP" secondAttribute="centerX" id="rW7-RM-KG7"/>
@@ -1632,6 +1640,7 @@
                         <outlet property="informationTopConstraint" destination="FKR-WT-0hV" id="iUc-8h-hhR"/>
                         <outlet property="mainImageView" destination="e03-aO-4Lk" id="pe5-Jf-0YY"/>
                         <outlet property="moreButton" destination="CZM-Bc-4S9" id="TCL-5p-80I"/>
+                        <outlet property="networkConnectionLabel" destination="3r3-Lq-OYo" id="eHB-PN-0fF"/>
                         <outlet property="notesTextView" destination="WZj-NR-Sbk" id="TGp-ON-ILp"/>
                         <outlet property="percentageBlurView" destination="GlE-oM-j4W" id="cm3-lK-zYX"/>
                         <outlet property="percentageLabel" destination="jvE-Vz-oPB" id="EJF-Kc-y3b"/>

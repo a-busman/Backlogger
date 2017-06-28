@@ -52,6 +52,17 @@ class AddToPlaylistViewController: UIViewController, UITableViewDelegate, UITabl
         }
         self.gameCountLabel?.text = "\(self.filteredGames!.count) games found."
         self.gameCountLabel?.isHidden = false
+        if !Util.isInternetAvailable() {
+            self.searchBar?.showsScopeBar = false
+            self.searchBar?.sizeToFit()
+            let scopeBarContainer = self.searchBar!.subviews.first!.subviews.first!
+            for view in scopeBarContainer.subviews {
+                if view.isKind(of: UISegmentedControl.self) {
+                    scopeBarContainer.isHidden = true
+                    break
+                }
+            }
+        }
     }
     
     override func didReceiveMemoryWarning() {

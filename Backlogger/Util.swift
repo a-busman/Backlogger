@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import SystemConfiguration
 
 class Util {
     
@@ -33,7 +34,6 @@ class Util {
     }
     
     class func toRoman(number: Int) -> String {
-        
         let romanValues = ["M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"]
         let arabicValues = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1]
         
@@ -49,7 +49,6 @@ class Util {
             {
                 for _ in 0..<div
                 {
-                    //println("Should add \(romanChar) to string")
                     romanValue += romanChar
                 }
                 
@@ -59,25 +58,30 @@ class Util {
         
         return romanValue
     }
-}
-
-extension UIImage {
-    public func resize(to newSize: CGSize) -> UIImage {
-        let newRect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
-        let imageRef = self.cgImage!
+    
+    class func isInternetAvailable() -> Bool {
         
-        UIGraphicsBeginImageContext(newSize)
-        let context = UIGraphicsGetCurrentContext()
-        context?.interpolationQuality = .high
+        var zeroAddress = sockaddr_in()
+        zeroAddress.sin_len = UInt8(MemoryLayout<sockaddr_in>.size)
+        zeroAddress.sin_family = sa_family_t(AF_INET)
         
-        let flipVertical = CGAffineTransform(a: 1, b: 0, c: 0, d: -1, tx: 0, ty: newSize.height)
-        context?.concatenate(flipVertical)
-        context?.draw(imageRef, in: newRect)
+        guard let defaultRouteReachability = withUnsafePointer(to: &zeroAddress, {
+            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
+                SCNetworkReachabilityCreateWithAddress(nil, $0)
+            }
+        }) else {
+            return false
+        }
         
-        let newImageRef = context!.makeImage()
-        let newImage = UIImage(cgImage: newImageRef!)
-        UIGraphicsEndImageContext()
-        return newImage
+        var flags: SCNetworkReachabilityFlags = []
+        if !SCNetworkReachabilityGetFlags(defaultRouteReachability, &flags) {
+            return false
+        }
+        
+        let isReachable = flags.contains(.reachable)
+        let needsConnection = flags.contains(.connectionRequired)
+        
+        return (isReachable && !needsConnection)
     }
 }
 

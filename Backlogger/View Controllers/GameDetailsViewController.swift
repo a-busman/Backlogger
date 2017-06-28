@@ -71,6 +71,8 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     @IBOutlet weak var steamLogo:      UIImageView?
     @IBOutlet weak var steamUserLabel: UILabel?
     
+    @IBOutlet weak var networkConnectionLabel: UILabel?
+    
     var characterImageViews: [UIImageView] = []
     
     var toastOverlay = ToastOverlayViewController()
@@ -256,10 +258,13 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         var gameFields: GameField?
         gameFields = self._gameField ?? GameField()
         let queue = DispatchQueue(label: "character.loading.queue")
-        if !(gameFields?.hasDetails)! {
+        if !(gameFields?.hasDetails)! && Util.isInternetAvailable() {
             gameFields?.updateGameDetails { result in
                 if let error = result.error {
                     NSLog("error: \(error.localizedDescription)")
+                    self.networkConnectionLabel?.isHidden = false
+                    self.activityBackground?.isHidden = true
+                    self.activityIndicator?.stopAnimating()
                     return
                 }
                 if gameFields!.characters.count > 0 {
@@ -289,6 +294,10 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
                 }
                 self.updateGameDetails()
             }
+        } else if !Util.isInternetAvailable() {
+            self.networkConnectionLabel?.isHidden = false
+            self.activityBackground?.isHidden = true
+            self.activityIndicator?.stopAnimating()
         } else {
             if gameFields!.characters.count > 0 {
                 for character in gameFields!.characters {
