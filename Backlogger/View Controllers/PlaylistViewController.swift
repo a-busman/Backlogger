@@ -275,7 +275,7 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
             details.playlistState = .default
         } else {
             let details = segue.destination as! PlaylistDetailsViewController
-            details.playlist = self.playlistList[self.selectedRow - 1]
+            details.playlist = self.playlistList[self.selectedRow - 1 - (self.showFavourites ? 1 : 0)]
             details.playlistState = .default
         }
     }
