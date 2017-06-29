@@ -67,3 +67,24 @@ class TopAlignedCollectionViewFlowLayout: UICollectionViewFlowLayout
         return 2.0
     }
 }
+
+class ImageCollectionViewFlowLayout: UICollectionViewFlowLayout {
+    override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
+        guard let collectionView = collectionView else { return proposedContentOffset }
+        
+        if proposedContentOffset.x >= (collectionView.contentSize.width - collectionView.bounds.width) {
+            return proposedContentOffset
+        }
+        let proposedPage = floor((proposedContentOffset.x + (self.pageWidth / 2.0)) / self.pageWidth)
+        
+        var newProposedContentOffset = proposedContentOffset
+        
+        newProposedContentOffset.x = proposedPage * self.pageWidth
+        
+        return newProposedContentOffset
+    }
+    
+    var pageWidth: CGFloat {
+        return itemSize.width + minimumInteritemSpacing
+    }
+}

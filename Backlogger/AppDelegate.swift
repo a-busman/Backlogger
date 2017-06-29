@@ -20,10 +20,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         self.createDirectories()
         var performShortcutDelegate = true
-        let dir: URL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.BackloggerWidgetSharing")!
+        let dir: URL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.BackloggerSharing")!
         let realmPath = dir.appendingPathComponent("db.realm")
         
-        let config = Realm.Configuration(fileURL: realmPath, schemaVersion: 3, migrationBlock: {
+        let config = Realm.Configuration(fileURL: realmPath, schemaVersion: 1, migrationBlock: {
             migration, oldSchemaVersion in
             if oldSchemaVersion < 1 {
                 // auto migrate

@@ -122,9 +122,11 @@ class LibraryViewController: UIViewController, UITabBarDelegate {
             self.filterContent(for: self.searchBar!.text!)
         }
         if platforms.count > 0 {
+            self.navigationController?.navigationBar.topItem?.leftBarButtonItem = UIBarButtonItem(title: "Sort", style: .plain, target: self, action: #selector(self.leftBarButtonTapped))
             self.addBackgroundView?.isHidden = true
             self.tableView?.isHidden = false
         } else {
+            self.navigationController?.navigationBar.topItem?.leftBarButtonItem = nil
             self.addBackgroundView?.isHidden = false
             self.tableView?.isHidden = true
         }

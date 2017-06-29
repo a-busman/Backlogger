@@ -26,6 +26,8 @@ class PlaylistViewController: UIViewController {
     
     var delegate: PlaylistViewControllerDelegate?
     
+    var showFavourites: Bool = false
+    
     enum SortType: Int {
         case alphabetical = 0
         case dateAdded = 1
@@ -192,9 +194,21 @@ class PlaylistViewController: UIViewController {
                     return ret
                 }
             }
+            if realm.objects(Game.self).filter("favourite = true").count > 0 && !self.isAddingGames {
+                self.showFavourites = true
+            } else {
+                self.showFavourites = false
+            }
         }
         for (_, playlist) in self.playlistList.enumerated() {
             let _ = self.loadImageFromFile(playlist.uuid)
+        }
+        if self.tabBarController != nil {
+            if self.playlistList.count == 0 {
+                self.navigationController?.navigationBar.topItem?.rightBarButtonItem = nil
+            } else {
+                self.navigationController?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(title: "Sort", style: .plain, target: self, action: #selector(self.sortTapped))
+            }
         }
         self.tableView?.reloadData()
     }
@@ -202,14 +216,19 @@ class PlaylistViewController: UIViewController {
 
 extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.playlistList.count + 1
+        var count = self.playlistList.count + 1
+        if self.showFavourites {
+            count += 1
+        }
+        return count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! PlaylistTableCell
+        let extraCell = self.showFavourites ? 1 : 0
         
         var indent: CGFloat = 0.0
-        if indexPath.row < self.playlistList.count {
+        if indexPath.row < self.playlistList.count + extraCell {
             indent = 129.5
         }
         if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
@@ -221,10 +240,13 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
         if cell.responds(to: #selector(setter: UIView.preservesSuperviewLayoutMargins)) {
             cell.preservesSuperviewLayoutMargins = false
         }
-        
-        if indexPath.row > 0 {
-            cell.playlist = self.playlistList[indexPath.row - 1]
-            cell.artImage = self.loadPlaylistImage(indexPath.row - 1)
+        if self.showFavourites && indexPath.row == 1 {
+            cell.state = .favourite
+            cell.accessoryType = .disclosureIndicator
+        }
+        if indexPath.row > 0 + extraCell {
+            cell.playlist = self.playlistList[indexPath.row - 1 - extraCell]
+            cell.artImage = self.loadPlaylistImage(indexPath.row - 1 - extraCell)
             if !self.isAddingGames {
                 cell.accessoryType = .disclosureIndicator
             } else {
@@ -247,6 +269,10 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
                 details.delegate = self
                 details.games.append(contentsOf: self.addingGames)
             }
+        } else if self.selectedRow == 1 && self.showFavourites {
+            let details = segue.destination as! PlaylistDetailsViewController
+            details.isFavourites = true
+            details.playlistState = .default
         } else {
             let details = segue.destination as! PlaylistDetailsViewController
             details.playlist = self.playlistList[self.selectedRow - 1]

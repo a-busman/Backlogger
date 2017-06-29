@@ -76,6 +76,8 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     
     var didEditField = false
     
+    var isFavourites = false
+    
     enum PlaylistState {
         case new
         case editing
@@ -105,13 +107,18 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             self.navigationController?.navigationBar.topItem?.leftBarButtonItem = newLeftButton
             self.tableView.setEditing(true, animated: false)
             self.navigationItem.title = "New Playlist"
-            
+        } else if self.isFavourites {
+            self.firstLoaded = true
+            self.navigationItem.setRightBarButton(nil, animated: false)
+            self.loadPlaylistImage()
+            self.updatePlaylistImage()
         } else {
-            if let _ = self.playlist {
+            if self.playlist != nil {
                 self.loadPlaylistImage()
             }
             self.playlistFooterView.delegate = self
         }
+        
         self.tableView.register(UINib(nibName: "PlaylistAddTableCell", bundle: nil), forCellReuseIdentifier: self.cellReuseIdentifier)
         
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: self.titleReuseIdentifier)
@@ -128,6 +135,11 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         if self._playlistState == .new {
             self.titleCell.isEditable = true
             self.descCell.isEditable = true
+        } else if self.isFavourites {
+            self.titleCell.titleString = "Favourites"
+            self.titleCell.isEditable = false
+            self.descCell.descriptionString = ""
+            self.descCell.isEditable = false
         } else {
             self.titleCell.titleString = self.playlist?.name ?? ""
             self.titleCell.isEditable = false
@@ -224,7 +236,12 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     }
     
     func savePlaylistImage() {
-        let filename = Util.getPlaylistImagesDirectory().appendingPathComponent("\(self.playlist!.uuid).png")
+        var filename: URL
+        if self.isFavourites {
+            filename = Util.getPlaylistImagesDirectory().appendingPathComponent("favourites.png")
+        } else {
+            filename = Util.getPlaylistImagesDirectory().appendingPathComponent("\(self.playlist!.uuid).png")
+        }
         if self.playlistImage != nil {
             let data = UIImagePNGRepresentation(self.playlistImage!)
             try? data?.write(to: filename)
@@ -234,7 +251,12 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     }
     
     func loadPlaylistImage() {
-        let filename = Util.getPlaylistImagesDirectory().appendingPathComponent("\(self.playlist!.uuid).png")
+        var filename: URL
+        if self.isFavourites {
+            filename = Util.getPlaylistImagesDirectory().appendingPathComponent("favourites.png")
+        } else {
+            filename = Util.getPlaylistImagesDirectory().appendingPathComponent("\(self.playlist!.uuid).png")
+        }
         self.playlistImage = UIImage(contentsOfFile: filename.path)
         if self.playlistImage != nil {
             if self.playlist?.imageUrl != nil {
@@ -363,6 +385,19 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        if self.isFavourites {
+            autoreleasepool {
+                let realm = try! Realm()
+                self.games.removeAll()
+                let games = realm.objects(Game.self).filter("favourite = true")
+                if games.count == 0 {
+                    self.navigationController?.popViewController(animated: false)
+                    return
+                }
+                self.games.append(contentsOf: games)
+            }
+        }
+        
         if !self.didPickImage {
             if self._playlistState == .default {
                 if let playlist = self.playlist {
@@ -417,8 +452,9 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         addToAction.setValue(#imageLiteral(resourceName: "add_to_playlist"), forKey: "image")
         playNextAction.setValue(#imageLiteral(resourceName: "play_next"), forKey: "image")
         queueAction.setValue(#imageLiteral(resourceName: "add_to_queue"), forKey: "image")
-        
-        actions.addAction(deleteAction)
+        if !self.isFavourites {
+            actions.addAction(deleteAction)
+        }
         if self.games.count > 0 {
             actions.addAction(addToAction)
             actions.addAction(playNextAction)
@@ -677,6 +713,9 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             self.reloadDataWithCrossDissolve()
             self.tableView.tableFooterView = UIView(frame: .zero)
             self.tableView.setEditing(true, animated: false)
+            if self.isFavourites {
+                self.firstLoaded = true
+            }
         } else if self._playlistState == .editing {
             self.saveCurrentState(playlist: nil)
             self.playlistFooterView.update(count: self.games.count)
@@ -1010,14 +1049,14 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if indexPath.section == 1 || (indexPath.section == 0 && indexPath.row == 2) {
+        if (indexPath.section == 1 && !self.isFavourites) || (indexPath.section == 0 && indexPath.row == 2){
             return true
         }
         return false
     }
     
     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        if indexPath.section == 1 {
+        if indexPath.section == 1 && !self.isFavourites {
             return true
         }
         return false
@@ -1030,7 +1069,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
     }
     
     override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
-        if indexPath.section == 1 {
+        if indexPath.section == 1 && !self.isFavourites {
             return .delete
         } else if indexPath.section == 0 && indexPath.row == 2 {
             return .insert
@@ -1061,6 +1100,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                 vc.game = self.games[i]
                 vc.state = .inLibrary
                 vc.showAddButton = false
+                vc.hideStats = true
             }
         }
     }

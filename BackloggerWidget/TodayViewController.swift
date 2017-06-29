@@ -30,10 +30,10 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         
         self.extensionContext?.widgetLargestAvailableDisplayMode = .compact
         
-        let dir: URL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.BackloggerWidgetSharing")!
+        let dir: URL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.BackloggerSharing")!
         let realmPath = dir.appendingPathComponent("db.realm")
         
-        let config = Realm.Configuration(fileURL: realmPath, schemaVersion: 3, migrationBlock: {
+        let config = Realm.Configuration(fileURL: realmPath, schemaVersion: 1, migrationBlock: {
             migration, oldSchemaVersion in
             if oldSchemaVersion < 1 {
                 // auto migrate
@@ -42,7 +42,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         Realm.Configuration.defaultConfiguration = config
         self.vibrancyView?.effect = UIVibrancyEffect.widgetPrimary()
         self.completeVibrancy?.effect = UIVibrancyEffect.widgetSecondary()
-        self.noGamesVibrancy?.effect = UIVibrancyEffect.widgetPrimary()
+        self.noGamesVibrancy?.effect = UIVibrancyEffect.widgetSecondary()
         self.loadNowPlaying()
         if let game = self.game {
             let mask = UIImageView(image: #imageLiteral(resourceName: "check_mask"))

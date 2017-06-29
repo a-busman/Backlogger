@@ -83,6 +83,25 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     @IBOutlet weak var statsLeadingToTrailingConstraint: NSLayoutConstraint?
     @IBOutlet weak var headingTopConstraint:             NSLayoutConstraint?
     @IBOutlet weak var bottomConstraint:                 NSLayoutConstraint?
+    @IBOutlet weak var headerHeightConstraint:           NSLayoutConstraint?
+    @IBOutlet weak var shadowLeadingConstraint:          NSLayoutConstraint?
+    @IBOutlet weak var shadowTopConstraint:              NSLayoutConstraint?
+    @IBOutlet weak var shadowBottomConstraint:           NSLayoutConstraint?
+    @IBOutlet weak var platformTopConstraint:            NSLayoutConstraint?
+    
+    let maximumShadowSpacing: CGFloat = 10.0
+    let minimumShadowSpacing: CGFloat = 5.0
+    
+    let maximumShadowBottom: CGFloat = 25.0
+    let minimumShadowBottom: CGFloat = 5.0
+    
+    let minimumHeaderHeight: CGFloat = 55.0
+    let maximumHeaderHeight: CGFloat = (UIDevice().type == .iPhone5  ||
+                                        UIDevice().type == .iPhone5S ||
+                                        UIDevice().type == .iPhone5C ||
+                                        UIDevice().type == .iPhoneSE ||
+                                        UIScreen.main.bounds.width == 320.0) ?
+                                        123.0 : 175.0
     
     var peekHeadingTopConstraint: NSLayoutConstraint?
     
@@ -111,6 +130,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     var delegate: GameDetailsViewControllerDelegate?
     
     var showAddButton = true
+    var hideStats = false
     
     var isAddingToPlaylist  = false
     var isAddingToPlayNext  = false
@@ -199,8 +219,13 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        let screenSize = UIScreen.main.bounds
+        NSLog("\(screenSize.width)x\(screenSize.height)")
         let setGameField = self._gameField?.deepCopy()
+        if UIScreen.main.bounds.width == 320.0 {
+            self.titleLabel?.numberOfLines = 2
+            self.yearLabel?.isHidden = true
+        }
         autoreleasepool {
             let realm = try? Realm()
             if let gameFieldId = self.gameFieldId {
@@ -523,15 +548,16 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     }
     
     override func viewDidLayoutSubviews() {
-        self.detailsScrollView?.scrollIndicatorInsets = UIEdgeInsets(top: (self.headerView?.bounds.height)! + 25.0 + (self.navigationController?.navigationBar.bounds.height ?? -20.0), left: 0, bottom: self.tabBarController?.tabBar.bounds.height ?? 0.0, right: 0)
-        self.detailsScrollView?.contentInset = UIEdgeInsets(top: (self.headerView?.bounds.height)! + 25.0 + (self.navigationController?.navigationBar.bounds.height ?? -20.0), left: 0.0, bottom: self.tabBarController?.tabBar.bounds.height ?? 0.0, right: 0.0)
-        let bottomBorder = CALayer()
-        bottomBorder.backgroundColor = UIColor(white: 0.9, alpha: 1.0).cgColor
-        bottomBorder.frame = CGRect(x:0, y:(self.headerView?.frame.size.height)! - 0.5, width: (self.headerView?.frame.size.width)!, height: 0.5)
-        self.headerView?.layer.addSublayer(bottomBorder)
+        self.detailsScrollView?.scrollIndicatorInsets = UIEdgeInsets(top: self.maximumHeaderHeight + 20.0 + (self.navigationController?.navigationBar.bounds.height ?? -20.0), left: 0, bottom: self.tabBarController?.tabBar.bounds.height ?? 0.0, right: 0)
+        self.detailsScrollView?.contentInset = UIEdgeInsets(top: self.maximumHeaderHeight + 25.0 + (self.navigationController?.navigationBar.bounds.height ?? -20.0), left: 0.0, bottom: self.tabBarController?.tabBar.bounds.height ?? 0.0, right: 0.0)
+
+        self.statsLeadingToTrailingConstraint?.isActive = !self.hideStats
+        self.statsLeadingToLeadingConstraint?.isActive = self.hideStats
+        self.statsButton?.isHidden = self.hideStats
         
-        self.statsLeadingToTrailingConstraint?.isActive = self.showAddButton
-        self.statsLeadingToLeadingConstraint?.isActive = !self.showAddButton
+        if UIScreen.main.bounds.width == 320.0 {
+            self.platformTopConstraint?.constant = -20.5
+        }
     }
     override var previewActionItems: [UIPreviewActionItem] {
         var addString: String
@@ -1412,6 +1438,79 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
                     self.addToUpNext(games: gamesToAdd, later: true)
                     self.isAddingToPlayLater = false
                 }
+            }
+        }
+    }
+}
+
+extension GameDetailsViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView == self.detailsScrollView! {
+            let offset = scrollView.contentOffset.y
+            let initialInset = -(self.maximumHeaderHeight + 25.0 + (self.navigationController?.navigationBar.bounds.height ?? -20.0))
+            let heightRange = self.maximumHeaderHeight - self.minimumHeaderHeight
+            var newConstant: CGFloat = 0
+            var newBorderConstant: CGFloat = 0
+            var newBottomConstant: CGFloat = 0
+            var heightPercentage = 1 - (offset - initialInset) / heightRange
+            if offset >= initialInset && offset <= (initialInset + heightRange) {
+                newBorderConstant = heightPercentage * (self.maximumShadowSpacing - self.minimumShadowSpacing) + self.minimumShadowSpacing
+                newBottomConstant = -(heightPercentage * (self.maximumShadowBottom - self.minimumShadowBottom) + self.minimumShadowBottom)
+                newConstant = self.maximumHeaderHeight - (offset - initialInset)
+                self.addBackground?.isHidden = false
+                self.statsButton?.isHidden = self.hideStats
+                self.moreButton?.isHidden = false
+                self.platformButton?.isHidden = false
+            } else if offset < initialInset {
+                newBorderConstant = self.maximumShadowSpacing
+                newBottomConstant = -self.maximumShadowBottom
+                newConstant = self.maximumHeaderHeight
+                self.addBackground?.isHidden = false
+                self.statsButton?.isHidden = false
+                self.moreButton?.isHidden = false
+                self.platformButton?.isHidden = false
+                heightPercentage = 1.0
+            } else if offset > (initialInset + heightRange) {
+                newBorderConstant = self.minimumShadowSpacing
+                newBottomConstant = -self.minimumShadowBottom
+                newConstant = self.minimumHeaderHeight
+                self.addBackground?.isHidden = true
+                self.statsButton?.isHidden = true
+                self.moreButton?.isHidden = true
+                self.platformButton?.isHidden = true
+                heightPercentage = 0.0
+            }
+            self.headerHeightConstraint?.constant = newConstant
+            self.shadowTopConstraint?.constant = newBorderConstant
+            self.shadowLeadingConstraint?.constant = newBorderConstant
+            self.shadowBottomConstraint?.constant = newBottomConstant
+            self.addBackground?.alpha = heightPercentage
+            self.statsButton?.alpha = heightPercentage
+            self.moreButton?.alpha = heightPercentage
+            self.yearLabel?.alpha = heightPercentage
+            self.platformButton?.alpha = heightPercentage
+            self.completionLabel?.alpha = heightPercentage
+            self.completionImageView?.alpha = heightPercentage
+            self.steamLogo?.alpha = heightPercentage
+            self.steamUserLabel?.alpha = heightPercentage
+        }
+    }
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        if scrollView == self.detailsScrollView {
+            let offset = targetContentOffset.pointee.y
+            let initialInset = -(self.maximumHeaderHeight + 25.0 + (self.navigationController?.navigationBar.bounds.height ?? -20.0))
+            let heightRange = self.maximumHeaderHeight - self.minimumHeaderHeight
+            if offset >= initialInset && offset <= (initialInset + heightRange) {
+                if (offset - initialInset) < heightRange / 2.0 {
+                    targetContentOffset.pointee = CGPoint(x: 0.0, y: initialInset)
+                } else {
+                    targetContentOffset.pointee = CGPoint(x: 0.0, y: initialInset + heightRange)
+                }
+            }
+        } else if let collectionView = scrollView as? UICollectionView {
+            if collectionView == self.imageCollectionView! {
+                let itemWidth = collectionView
             }
         }
     }

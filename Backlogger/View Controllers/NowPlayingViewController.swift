@@ -228,6 +228,7 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
         flowLayout.itemSize = size
         collectionView?.contentInset.top = 0.0
         collectionView?.contentInset.bottom = 0.0
+        collectionView?.reloadData()
     }
     
     func saveNowPlaying() {

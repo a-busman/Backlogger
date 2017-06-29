@@ -21,6 +21,7 @@ class PlaylistTableCell: UITableViewCell {
     
     enum CellState {
         case new
+        case favourite
         case title
         case full
     }
@@ -35,21 +36,28 @@ class PlaylistTableCell: UITableViewCell {
         }
         set(newState) {
             self._state = newState
-            if newState == .new {
+            switch (newState) {
+            case .new:
                 self.titleLabel?.text = "New Playlist..."
                 self.titleLabel?.textColor = Util.appColor
                 self.titleCenterLayoutConstraint?.constant = 0.0
                 self.descLabel?.text = ""
                 self.descLabel?.isHidden = true
-            } else if newState == .title {
+            case .title:
                 self.titleLabel?.textColor = .black
                 self.titleCenterLayoutConstraint?.constant = 0.0
                 self.descLabel?.text = ""
                 self.descLabel?.isHidden = true
-            } else {
+            case .full:
                 self.titleLabel?.textColor = .black
                 self.titleCenterLayoutConstraint?.constant = -14.0
                 self.descLabel?.isHidden = false
+            case .favourite:
+                self.titleLabel?.textColor = .black
+                self.titleLabel?.text = "Favourites"
+                self.titleCenterLayoutConstraint?.constant = 0.0
+                self.descLabel?.text = ""
+                self.descLabel?.isHidden = true
             }
         }
     }
@@ -71,12 +79,20 @@ class PlaylistTableCell: UITableViewCell {
                 self.descLabel?.isHidden = false
             }
         } else {
-            self.titleLabel?.text = "New Playlist..."
-            self.titleLabel?.textColor = Util.appColor
+            if self._state == .new {
+                self.titleLabel?.text = "New Playlist..."
+                self.titleLabel?.textColor = Util.appColor
+                self.hideImage()
+                self.blurImage?.image = #imageLiteral(resourceName: "new_playlist_plus")
+            } else {
+                self.titleLabel?.text = "Favourites"
+                self.titleLabel?.textColor = .black
+                self.hideImage()
+                self.blurImage?.image = #imageLiteral(resourceName: "large-heart")
+            }
             self.titleCenterLayoutConstraint?.constant = 0.0
             self.descLabel?.text = ""
             self.descLabel?.isHidden = true
-            self.hideImage()
         }
     }
     

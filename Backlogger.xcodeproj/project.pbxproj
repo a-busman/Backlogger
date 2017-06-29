@@ -434,7 +434,7 @@
 				TargetAttributes = {
 					FA0915681E2AA4210052BCEC = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = RJTCSD68GK;
+						DevelopmentTeam = D9J98STRHA;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -444,7 +444,7 @@
 					};
 					FACCA64B1EF82CD8005F1021 = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = RJTCSD68GK;
+						DevelopmentTeam = D9J98STRHA;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -734,7 +734,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -778,7 +778,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -794,11 +794,11 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Backlogger/Backlogger.entitlements;
-				DEVELOPMENT_TEAM = RJTCSD68GK;
+				DEVELOPMENT_TEAM = D9J98STRHA;
 				INFOPLIST_FILE = Backlogger/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.a-busman.Backlogger";
+				PRODUCT_BUNDLE_IDENTIFIER = com.alexbusman.Backlogger;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -811,11 +811,11 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Backlogger/Backlogger.entitlements;
-				DEVELOPMENT_TEAM = RJTCSD68GK;
+				DEVELOPMENT_TEAM = D9J98STRHA;
 				INFOPLIST_FILE = Backlogger/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.a-busman.Backlogger";
+				PRODUCT_BUNDLE_IDENTIFIER = com.alexbusman.Backlogger;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -827,11 +827,11 @@
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = BackloggerWidget/BackloggerWidget.entitlements;
-				DEVELOPMENT_TEAM = RJTCSD68GK;
+				DEVELOPMENT_TEAM = D9J98STRHA;
 				INFOPLIST_FILE = BackloggerWidget/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.a-busman.Backlogger.BackloggerWidget";
+				PRODUCT_BUNDLE_IDENTIFIER = com.alexbusman.Backlogger.BackloggerWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
@@ -844,11 +844,11 @@
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = BackloggerWidget/BackloggerWidget.entitlements;
-				DEVELOPMENT_TEAM = RJTCSD68GK;
+				DEVELOPMENT_TEAM = D9J98STRHA;
 				INFOPLIST_FILE = BackloggerWidget/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.a-busman.Backlogger.BackloggerWidget";
+				PRODUCT_BUNDLE_IDENTIFIER = com.alexbusman.Backlogger.BackloggerWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
