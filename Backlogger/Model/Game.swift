@@ -388,6 +388,10 @@ class GameField: Field {
     
     fileprivate class func getGames(atPath path: String, allowsCancel: Bool, _ completionHandler: @escaping (Result<SearchResults>) -> Void) {
         // make sure it's HTTPS because sometimes the API gives us HTTP URLs
+        
+        let manager = Alamofire.SessionManager.default
+        manager.session.configuration.timeoutIntervalForRequest = 10
+        manager.session.configuration.timeoutIntervalForResource = 10
 
         guard var urlComponents = URLComponents(string: path) else {
             let error = BackendError.urlError(reason: "Tried to load an invalid URL")
@@ -408,7 +412,7 @@ class GameField: Field {
         if allowsCancel {
             self.requestTimer?.invalidate()
             self.requestTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { _ in
-                self.request = Alamofire.request(url)
+                self.request = manager.request(url)
                     .responseJSON { response in
                         //UIApplication.shared.isNetworkActivityIndicatorVisible = false
                         if let error = response.result.error {
@@ -421,7 +425,7 @@ class GameField: Field {
                 }
             })
         } else {
-            self.request = Alamofire.request(url)
+            self.request = manager.request(url)
                 .responseJSON { response in
                     //UIApplication.shared.isNetworkActivityIndicatorVisible = false
                     if let error = response.result.error {

@@ -109,6 +109,14 @@ class Steam {
             GameField.getGames(from: gameName) { results in
                 if let error = results.error {
                     NSLog("Error searching for \(gameName)")
+                    unmatchedSteamGames.append(currentGame)
+                    queue.sync {
+                        gameCount += 1
+                        progressHandler(gameCount, totalGames)
+                        if gameCount == totalGames {
+                            completionHandler(.success(gameFields), .success(unmatchedSteamGames))
+                        }
+                    }
                     completionHandler(.failure(error), .failure(error))
                 } else {
                     let searchResults = results.value!

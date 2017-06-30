@@ -1468,7 +1468,7 @@ extension GameDetailsViewController: UIScrollViewDelegate {
                 newBottomConstant = -self.maximumShadowBottom
                 newConstant = self.maximumHeaderHeight
                 self.addBackground?.isHidden = false
-                self.statsButton?.isHidden = false
+                self.statsButton?.isHidden = self.hideStats
                 self.moreButton?.isHidden = false
                 self.platformButton?.isHidden = false
                 heightPercentage = 1.0
