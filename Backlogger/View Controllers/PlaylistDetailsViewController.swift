@@ -1100,7 +1100,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                 vc.game = self.games[i]
                 vc.state = .inLibrary
                 vc.showAddButton = false
-                vc.hideStats = true
+                vc.hideStats = false
             }
         }
     }
