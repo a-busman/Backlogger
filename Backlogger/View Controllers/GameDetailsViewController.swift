@@ -253,16 +253,16 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         self.addBackground?.isHidden = !self.showAddButton
 
         if self._state == .addToLibrary {
-            self.statsButton?.alpha = 0.0
+            self.hideStats = true
             self.progressIcon?.alpha = 0.0
         } else {
             if self._state == .partialAddToLibrary {
                 self.platformButton?.isEnabled = true
-                self.statsButton?.alpha = (self.gameField?.ownedGames.count)! > 1 ? 0.0 : 1.0
+                self.hideStats = (self.gameField?.ownedGames.count)! > 1
                 self.addLabel?.text = (self.gameField?.ownedGames.count)! > 1 ? "REMOVE ALL" : "REMOVE"
             } else {
                 self.addLabel?.text = "REMOVE"
-                self.statsButton?.alpha = 1.0
+                self.hideStats = false
             }
             self.progressIcon?.alpha = 1.0
             self.addSymbolImage?.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 4.0)
@@ -550,8 +550,6 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         self.detailsScrollView?.scrollIndicatorInsets = UIEdgeInsets(top: self.maximumHeaderHeight + 20.0 + (self.navigationController?.navigationBar.bounds.height ?? -20.0), left: 0, bottom: self.tabBarController?.tabBar.bounds.height ?? 0.0, right: 0)
         self.detailsScrollView?.contentInset = UIEdgeInsets(top: self.maximumHeaderHeight + 25.0 + (self.navigationController?.navigationBar.bounds.height ?? -20.0), left: 0.0, bottom: self.tabBarController?.tabBar.bounds.height ?? 0.0, right: 0.0)
 
-        self.statsLeadingToTrailingConstraint?.isActive = !self.hideStats
-        self.statsLeadingToLeadingConstraint?.isActive = self.hideStats
         self.statsButton?.isHidden = self.hideStats
         
         if UIScreen.main.bounds.width == 320.0 {
@@ -800,7 +798,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
                 UIView.setAnimationsEnabled(true)
                 self.platformButton?.isEnabled = false
                 self._gameField = gameFieldCopy
-                self.transitionToAdd()
+                self.navigationController?.popViewController(animated: true)
             }
         }
     }
@@ -825,8 +823,10 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
             self.addBackground?.backgroundColor = .red
             if self._gameField?.ownedGames.count == 1 {
                 self.statsButton?.alpha = 1.0
+                self.hideStats = false
             } else {
                 self.statsButton?.alpha = 0.0
+                self.hideStats = true
             }
             self.progressIcon?.alpha = 1.0
             self.view.layoutIfNeeded()
@@ -840,6 +840,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
             self.addSymbolImage?.transform = CGAffineTransform(rotationAngle: 0.0)
             self.addBackground?.backgroundColor = Util.appColor
             self.statsButton?.alpha = 0.0
+            self.hideStats = true
             self.progressIcon?.alpha = 0.0
             self.view.layoutIfNeeded()
         })
@@ -861,12 +862,14 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     private func showStatsButton() {
         UIView.animate(withDuration: 0.2, animations: {
             self.statsButton?.alpha = 1.0
+            self.hideStats = false
         })
     }
     
     private func hideStatsButton() {
         UIView.animate(withDuration: 0.2, animations: {
             self.statsButton?.alpha = 0.0
+            self.hideStats = true
         })
     }
     

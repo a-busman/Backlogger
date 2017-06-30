@@ -45,14 +45,16 @@ class GameCharacter: Field {
         autoreleasepool {
             let realm = try? Realm()
             if let imageJson = json[GameFields.Image.rawValue] as? [String: Any] {
-                var imageObject = realm?.object(ofType: ImageList.self, forPrimaryKey: "\(self.idNumber) character")
-                if imageObject == nil {
-                    imageObject = ImageList(json: imageJson)
-                    imageObject?.id = "\(self.idNumber) character"
-                }
-                self.update {
-                    self.image = imageObject
-                    self.hasImage = true
+                if !self.isInvalidated {
+                    var imageObject = realm?.object(ofType: ImageList.self, forPrimaryKey: "\(self.idNumber) character")
+                    if imageObject == nil {
+                        imageObject = ImageList(json: imageJson)
+                        imageObject?.id = "\(self.idNumber) character"
+                    }
+                    self.update {
+                        self.image = imageObject
+                        self.hasImage = true
+                    }
                 }
             }
         }
@@ -65,7 +67,8 @@ class GameCharacter: Field {
             if character == nil {
                 character = self
             }
-            if let apiDetailUrl = character!.apiDetailUrl {
+            if !character!.isInvalidated,
+                let apiDetailUrl = character?.apiDetailUrl {
                 let url = apiDetailUrl + "?api_key=" + GAME_API_KEY + "&format=json&fields_list=image"
                 GameCharacter.loadingQueue.sync {
                     sleep(1)
