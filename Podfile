@@ -7,12 +7,16 @@ target 'Backlogger' do
     pod 'RealmSwift'
     pod 'Kingfisher'
     pod 'ImageViewer'
+    pod 'Fabric'
+    pod 'Crashlytics'
 end
 
 target 'BackloggerWidget' do
     pod 'Alamofire'
     pod 'RealmSwift'
     pod 'Kingfisher'
+    pod 'Fabric'
+    pod 'Crashlytics'
 end
 
 post_install do |installer|
