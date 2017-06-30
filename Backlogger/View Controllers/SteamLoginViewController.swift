@@ -19,7 +19,9 @@ class SteamLoginViewController: UIViewController, WKNavigationDelegate {
     var delegate: SteamLoginViewControllerDelegate?
     
     override func loadView() {
-        webView = WKWebView()
+        let config = WKWebViewConfiguration()
+        config.websiteDataStore = WKWebsiteDataStore.nonPersistent()
+        webView = WKWebView(frame: .zero, configuration: config)
         webView.navigationDelegate = self
         view = webView
     }

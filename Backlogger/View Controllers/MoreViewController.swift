@@ -81,40 +81,46 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource, SteamL
                 if let listError = results.error {
                     NSLog(listError.localizedDescription)
                 } else {
-                    Steam.matchGiantBombGames(with: results.value!, progressHandler: { progress, total in
-                        self.progressBar?.setProgress(Float(progress) / Float(total), animated: true)
-                        self.progressLabel?.text = "\(progress) / \(total)"
-                    }) { matched, unmatched in
-                        if let gamesError = matched.error {
-                            NSLog(gamesError.localizedDescription)
-                        } else {
-                            NSLog("Done")
-                            self.loadingView?.isHidden = true
-                            self.activityIndicator?.stopAnimating()
-                            UIApplication.shared.endIgnoringInteractionEvents()
-                            if matched.value!.count > 0 {
-                                //dedupe
-                                var dedupedList: [GameField] = []
-                                for game in matched.value! {
-                                    var inNewList = false
-                                    for newGame in dedupedList {
-                                        if game.idNumber == newGame.idNumber {
-                                            inNewList = true
-                                            break
+                    if results.value!.count > 0 {
+                        Steam.matchGiantBombGames(with: results.value!, progressHandler: { progress, total in
+                            self.progressBar?.setProgress(Float(progress) / Float(total), animated: true)
+                            self.progressLabel?.text = "\(progress) / \(total)"
+                        }) { matched, unmatched in
+                            if let gamesError = matched.error {
+                                NSLog(gamesError.localizedDescription)
+                            } else {
+                                NSLog("Done")
+                                self.loadingView?.isHidden = true
+                                self.activityIndicator?.stopAnimating()
+                                UIApplication.shared.endIgnoringInteractionEvents()
+                                if matched.value!.count > 0 {
+                                    //dedupe
+                                    var dedupedList: [GameField] = []
+                                    for game in matched.value! {
+                                        var inNewList = false
+                                        for newGame in dedupedList {
+                                            if game.idNumber == newGame.idNumber {
+                                                inNewList = true
+                                                break
+                                            }
+                                        }
+                                        if !inNewList {
+                                            dedupedList.append(game)
                                         }
                                     }
-                                    if !inNewList {
-                                        dedupedList.append(game)
-                                    }
+                                    let vc = self.storyboard!.instantiateViewController(withIdentifier: "add_from_steam") as! UINavigationController
+                                    let rootView = vc.viewControllers.first! as! AddSteamGamesViewController
+                                    vc.navigationBar.tintColor = .white
+                                    rootView.delegate = self
+                                    rootView.gameFields = dedupedList
+                                    self.present(vc, animated: true, completion: nil)
                                 }
-                                let vc = self.storyboard!.instantiateViewController(withIdentifier: "add_from_steam") as! UINavigationController
-                                let rootView = vc.viewControllers.first! as! AddSteamGamesViewController
-                                vc.navigationBar.tintColor = .white
-                                rootView.delegate = self
-                                rootView.gameFields = dedupedList
-                                self.present(vc, animated: true, completion: nil)
                             }
                         }
+                    } else {
+                        self.loadingView?.isHidden = true
+                        self.activityIndicator?.stopAnimating()
+                        UIApplication.shared.endIgnoringInteractionEvents()
                     }
                 }
             }
