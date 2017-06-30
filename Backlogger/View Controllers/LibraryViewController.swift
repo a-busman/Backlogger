@@ -121,6 +121,12 @@ class LibraryViewController: UIViewController, UITabBarDelegate {
         if self.isSearching {
             self.filterContent(for: self.searchBar!.text!)
         }
+        self.tableView?.reloadData()
+
+        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
         if platforms.count > 0 {
             self.navigationController?.navigationBar.topItem?.leftBarButtonItem = UIBarButtonItem(title: "Sort", style: .plain, target: self, action: #selector(self.leftBarButtonTapped))
             self.addBackgroundView?.isHidden = true
@@ -130,9 +136,6 @@ class LibraryViewController: UIViewController, UITabBarDelegate {
             self.addBackgroundView?.isHidden = false
             self.tableView?.isHidden = true
         }
-        self.tableView?.reloadData()
-
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
     }
     
     override func didReceiveMemoryWarning() {
@@ -458,7 +461,7 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
                             if let cellUrl = cell.imageUrl {
                                 if imageUrl == cellUrl {
                                     if image != nil {
-                                        if cacheType == .none {
+                                        if cacheType == .none || cacheType == .disk {
                                             UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
                                                 cell.set(image: image!)
                                             }, completion: nil)
@@ -490,7 +493,7 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
                     cell.cacheCompletionHandler = {
                         (image, error, cacheType, imageUrl) in
                         if image != nil {
-                            if cacheType == .none {
+                            if cacheType == .none || cacheType == .disk {
                                 UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
                                     cell.set(image: image!)
                                 }, completion: nil)
@@ -516,7 +519,7 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
             cell.cacheCompletionHandler = {
                 (image, error, cacheType, imageUrl) in
                 if image != nil {
-                    if cacheType == .none {
+                    if cacheType == .none || cacheType == .disk {
                         UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
                             cell.set(image: image!)
                         }, completion: nil)

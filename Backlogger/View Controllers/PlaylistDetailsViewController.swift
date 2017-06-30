@@ -948,7 +948,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
                 gameCell.cacheCompletionHandler = {
                     (image, error, cacheType, imageUrl) in
                     if image != nil {
-                        if cacheType == .none {
+                        if cacheType == .none || cacheType == .disk {
                             UIView.transition(with: gameCell.artView!,
                                               duration: 0.5,
                                               options: .transitionCrossDissolve,

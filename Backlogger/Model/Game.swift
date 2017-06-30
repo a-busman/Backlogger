@@ -405,8 +405,22 @@ class GameField: Field {
             self.request!.cancel()
         }
         //UIApplication.shared.isNetworkActivityIndicatorVisible = true
-        self.requestTimer?.invalidate()
-        self.requestTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { _ in
+        if allowsCancel {
+            self.requestTimer?.invalidate()
+            self.requestTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { _ in
+                self.request = Alamofire.request(url)
+                    .responseJSON { response in
+                        //UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                        if let error = response.result.error {
+                            completionHandler(.failure(error))
+                            return
+                        }
+                        self.request = nil
+                        let gamesWrapperResult = GameField.gamesArrayFromResponse(response)
+                        completionHandler(gamesWrapperResult)
+                }
+            })
+        } else {
             self.request = Alamofire.request(url)
                 .responseJSON { response in
                     //UIApplication.shared.isNetworkActivityIndicatorVisible = false
@@ -418,7 +432,7 @@ class GameField: Field {
                     let gamesWrapperResult = GameField.gamesArrayFromResponse(response)
                     completionHandler(gamesWrapperResult)
             }
-        })
+        }
     }
     
     class func buildDetailUrl(fromId id: Int) -> String {

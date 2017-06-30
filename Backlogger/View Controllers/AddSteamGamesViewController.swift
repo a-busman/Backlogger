@@ -124,7 +124,7 @@ class AddSteamGamesViewController: UIViewController, UITableViewDataSource, UITa
                 if let cellUrl = cell.imageUrl {
                     if imageUrl == cellUrl {
                         if image != nil {
-                            if cacheType == .none {
+                            if cacheType == .none || cacheType == .disk {
                                 UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
                                     cell.set(image: image!)
                                 }, completion: nil)

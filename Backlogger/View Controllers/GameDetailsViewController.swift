@@ -220,9 +220,8 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     override func viewDidLoad() {
         super.viewDidLoad()
         let screenSize = UIScreen.main.bounds
-        NSLog("\(screenSize.width)x\(screenSize.height)")
         let setGameField = self._gameField?.deepCopy()
-        if UIScreen.main.bounds.width == 320.0 {
+        if screenSize.width == 320.0 {
             self.titleLabel?.numberOfLines = 2
             self.yearLabel?.isHidden = true
         }
