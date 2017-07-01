@@ -107,8 +107,8 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
             self.navigationController?.navigationBar.topItem?.leftBarButtonItem = nil
             self.addBackgroundView?.isHidden = false
         }
-        if self.currentIndex < self.orderedViewControllers.count - 1 && !self._isDismissing {
-            self.collectionView?.scrollToItem(at: IndexPath(item: self.currentIndex, section: 0), at: .centeredHorizontally, animated: false)
+        if self.currentIndex < self.orderedViewControllers.count && !self._isDismissing {
+            scrollOnLoad()
         }
         self._isDismissing = false
         self.pageControl?.numberOfPages = orderedViewControllers.count
@@ -348,11 +348,16 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
         self.scroll(to: sender.currentPage)
     }
     
+    private func scrollOnLoad() {
+        let offset = CGFloat(self.currentIndex) * self.flowLayout.pageWidth
+        self.collectionView?.scrollRectToVisible(CGRect(x: offset, y: 0.0, width: (self.collectionView?.frame.width)!, height: (self.collectionView?.frame.height)!), animated: false)
+    }
+    
     private func scroll(to index: Int) {
         self.flowLayout.currentPage = index
         var newOffset: CGFloat = 0.0
         
-        if (index < self.currentIndex) {
+        if (index < self.currentIndex || index == 0) {
             newOffset = self.flowLayout.pageWidth * CGFloat(self.flowLayout.currentPage)
         } else {
             newOffset = self.flowLayout.pageWidth * CGFloat(self.flowLayout.currentPage) + self.flowLayout.sectionInset.left + self.flowLayout.sectionInset.right

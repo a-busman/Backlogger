@@ -27,8 +27,6 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
     
     var delegate: NowPlayingGameViewDelegate?
     
-    var didExpandDetails = false
-    
     let gameDetailOverlayController = GameDetailOverlayViewController()
     
     private var _game: Game?
@@ -313,9 +311,7 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
                            initialSpringVelocity: 0,
                            options: .curveEaseOut,
                            animations: {
-                            if self.didExpandDetails {
-                                self.blurView?.center.y -= 65
-                            }
+                               self.blurView?.center.y -= 65
                                self.view.layoutIfNeeded()
                            },
                            completion: nil)
@@ -443,7 +439,6 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
                         self.animator.addBehavior(self.gravity)
                     }
                     self.blurViewState = .full
-                    self.didExpandDetails = true
                     
                 // If the view is below the middle, or if the user was swiping down when they ended, return to minimal state with a spring bounce
                 } else if (view.center.y > self.view.bounds.maxY && velocity > -300) || velocity > 300 {
