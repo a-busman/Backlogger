@@ -107,7 +107,7 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
             self.navigationController?.navigationBar.topItem?.leftBarButtonItem = nil
             self.addBackgroundView?.isHidden = false
         }
-        if self.orderedViewControllers.count > 0 && !self._isDismissing {
+        if self.currentIndex < self.orderedViewControllers.count - 1 && !self._isDismissing {
             self.collectionView?.scrollToItem(at: IndexPath(item: self.currentIndex, section: 0), at: .centeredHorizontally, animated: false)
         }
         self._isDismissing = false
@@ -218,7 +218,7 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
                 self.orderedViewControllers[i].game = game
             }
         }
-        
+        self.collectionView?.reloadData()
         self.upNextTableView?.reloadData()
     }
     

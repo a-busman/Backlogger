@@ -39,32 +39,20 @@ class TopAlignedCollectionViewFlowLayout: UICollectionViewFlowLayout
     override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
         guard let collectionView = collectionView else { return proposedContentOffset }
         
-        let currentXOffset = collectionView.contentOffset.x
-        
-        let approximatePage = currentXOffset / self.pageWidth
-        let currentPage = (velocity.x < 0.0) ? floor(approximatePage) : ceil(approximatePage)
+        if proposedContentOffset.x >= (collectionView.contentSize.width - collectionView.bounds.width) {
+            return proposedContentOffset
+        }
+        let proposedPage = floor((proposedContentOffset.x + (self.pageWidth / 2.0)) / self.pageWidth)
         
         var newProposedContentOffset = proposedContentOffset
         
-        let flickedPages = round(velocity.x / self.flickVelocity)
-        
-        if (flickedPages != 0.0) {
-            newProposedContentOffset.x = (currentPage + flickedPages) * self.pageWidth
-            self.currentPage = Int(currentPage + flickedPages)
-        } else {
-            newProposedContentOffset.x = currentPage * self.pageWidth
-            self.currentPage = Int(currentPage)
-        }
+        newProposedContentOffset.x = proposedPage * self.pageWidth
         
         return newProposedContentOffset
     }
     
     var pageWidth: CGFloat {
         return itemSize.width - 40.0
-    }
-    
-    var flickVelocity: CGFloat {
-        return 2.0
     }
 }
 
