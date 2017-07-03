@@ -116,9 +116,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         autoreleasepool {
             let realm = try? Realm()
             try! realm?.writeCopy(toFile: compactedURL)
-            try! FileManager.default.removeItem(at: realmPath)
-            try! FileManager.default.moveItem(at: compactedURL, to: realmPath)
         }
+        try! FileManager.default.removeItem(at: realmPath)
+        try! FileManager.default.moveItem(at: compactedURL, to: realmPath)
     }
     
 }

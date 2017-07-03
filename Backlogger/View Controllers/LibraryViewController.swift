@@ -124,17 +124,20 @@ class LibraryViewController: UIViewController, UITabBarDelegate {
         self.tableView?.reloadData()
 
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        if platforms.count > 0 {
+            self.addBackgroundView?.isHidden = true
+            self.tableView?.isHidden = false
+        } else {
+            self.addBackgroundView?.isHidden = false
+            self.tableView?.isHidden = true
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         if platforms.count > 0 {
             self.navigationController?.navigationBar.topItem?.leftBarButtonItem = UIBarButtonItem(title: "Sort", style: .plain, target: self, action: #selector(self.leftBarButtonTapped))
-            self.addBackgroundView?.isHidden = true
-            self.tableView?.isHidden = false
         } else {
             self.navigationController?.navigationBar.topItem?.leftBarButtonItem = nil
-            self.addBackgroundView?.isHidden = false
-            self.tableView?.isHidden = true
         }
     }
     

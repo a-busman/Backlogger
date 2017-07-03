@@ -619,6 +619,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         if self.isMovingFromParentViewController {
             self.isExiting = true
+            ImageCache.default.clearMemoryCache()
             self.delegate?.gamesCreated(gameField: self._gameField!)
         }
     }
