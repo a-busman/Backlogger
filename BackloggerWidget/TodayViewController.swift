@@ -23,7 +23,10 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     @IBOutlet weak var completeLabel:    UILabel?
     @IBOutlet weak var noGamesVibrancy:  UIVisualEffectView?
     
-    var game: Game?
+    var imageUrl: URL?
+    var progress: Int?
+    var finished: Bool?
+    var gameId: String?
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,13 +47,13 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         self.completeVibrancy?.effect = UIVibrancyEffect.widgetSecondary()
         self.noGamesVibrancy?.effect = UIVibrancyEffect.widgetSecondary()
         self.loadNowPlaying()
-        if let game = self.game {
+        if self.gameId != nil {
             let mask = UIImageView(image: #imageLiteral(resourceName: "check_mask"))
-            self.completeButton?.mask = game.finished ? mask : nil
+            self.completeButton?.mask = self.finished! ? mask : nil
             
-            self.percentLabel?.text = "\(game.progress)%"
+            self.percentLabel?.text = "\(self.progress!)%"
             
-            self.completeLabel?.text = game.finished ? "Finished" : "In Progress"
+            self.completeLabel?.text = self.finished! ? "Finished" : "In Progress"
             
             let minusMask = UIImageView(frame: CGRect(x: 0.0, y: 0.0, width: 25.0, height: 25.0))
             let plusMask = UIImageView(frame: CGRect(x: 0.0, y: 0.0, width: 25.0, height: 25.0))
@@ -98,11 +101,17 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     }
     
     @IBAction func minusTapped(sender: UITapGestureRecognizer) {
-        if self.game!.progress > 0 {
-            self.game?.update {
-                self.game?.progress -= 10
+        if self.progress! > 0 {
+            self.progress! -= 10
+            autoreleasepool {
+                let realm = try! Realm()
+                if let game = realm.object(ofType: Game.self, forPrimaryKey: self.gameId!) {
+                    game.update {
+                        game.progress = self.progress!
+                    }
+                }
             }
-            self.percentLabel?.text = "\(self.game!.progress)%"
+            self.percentLabel?.text = "\(self.progress!)%"
         }
         UIView.animate(withDuration: 0.1, animations: {self.minusView?.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)}, completion: { _ in
             UIView.animate(withDuration: 0.1, animations: {self.minusView?.transform = CGAffineTransform.identity})
@@ -110,11 +119,17 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     }
     
     @IBAction func plusTapped(sender: UITapGestureRecognizer) {
-        if self.game!.progress < 100 {
-            self.game?.update {
-                self.game?.progress += 10
+        if self.progress! < 100 {
+            self.progress! += 10
+            autoreleasepool {
+                let realm = try! Realm()
+                if let game = realm.object(ofType: Game.self, forPrimaryKey: self.gameId!) {
+                    game.update {
+                        game.progress = self.progress!
+                    }
+                }
             }
-            self.percentLabel?.text = "\(self.game!.progress)%"
+            self.percentLabel?.text = "\(self.progress!)%"
         }
         UIView.animate(withDuration: 0.1, animations: {self.plusView?.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)}, completion: { _ in
             UIView.animate(withDuration: 0.1, animations: {self.plusView?.transform = CGAffineTransform.identity})
@@ -126,10 +141,17 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     }
     
     @IBAction func completeTapped(sender: UITapGestureRecognizer) {
-        self.game?.update {
-            self.game?.finished = !self.game!.finished
+        self.finished = !self.finished!
+        autoreleasepool {
+            let realm = try! Realm()
+            if let game = realm.object(ofType: Game.self, forPrimaryKey: self.gameId!) {
+                game.update {
+                    game.finished = self.finished!
+                }
+            }
         }
-        if self.game!.finished {
+        
+        if self.finished! {
             let checkView = UIImageView(image: #imageLiteral(resourceName: "check_mask"))
             self.completeButton?.mask = checkView
             self.completeLabel?.text = "Finished"
@@ -157,21 +179,27 @@ class TodayViewController: UIViewController, NCWidgetProviding {
             let realm = try! Realm()
             let playlists = realm.objects(Playlist.self)
             let nowPlaying = playlists.filter("isNowPlaying = true")
-            self.game = nowPlaying.first?.games.first
-        }
-        guard let game = self.game,
-              let smallUrl = game.gameFields?.image?.smallUrl else {
-            return
-        }
-        self.artView?.kf.setImage(with: URL(string: smallUrl), placeholder: #imageLiteral(resourceName: "info_image_placeholder"), options: nil, progressBlock: nil, completionHandler: {
-            (image, error, cacheType, imageUrl) in
-            if image != nil {
-                UIView.transition(with: self.artView!,
-                                  duration:0.5,
-                                  options: .transitionCrossDissolve,
-                                  animations: { self.artView?.image = image },
-                                  completion: nil)
+            let game = nowPlaying.first?.games.first
+            if let smallUrl = game?.gameFields?.image?.smallUrl {
+                self.imageUrl = URL(string: smallUrl)
             }
-        })
+            self.progress = game?.progress
+            self.finished = game?.finished
+            self.gameId = game?.uuid
+        }
+        if self.imageUrl != nil {
+            self.artView?.kf.setImage(with: self.imageUrl!, placeholder: #imageLiteral(resourceName: "info_image_placeholder"), options: nil, progressBlock: nil, completionHandler: {
+                (image, error, cacheType, imageUrl) in
+                if image != nil {
+                    UIView.transition(with: self.artView!,
+                                      duration:0.5,
+                                      options: .transitionCrossDissolve,
+                                      animations: { self.artView?.image = image },
+                                      completion: nil)
+                }
+            })
+        } else {
+            self.artView?.image = #imageLiteral(resourceName: "info_image_placeholder")
+        }
     }
 }

@@ -22,7 +22,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Fabric.with([Crashlytics.self])
         // Override point for customization after application launch.
         self.createDirectories()
-        var performShortcutDelegate = true
         let dir: URL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.BackloggerSharing")!
         let realmPath = dir.appendingPathComponent("db.realm")
         
@@ -41,10 +40,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         if let shortcutItem = launchOptions?[UIApplicationLaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem {
             self.shortcutItem = shortcutItem
-            performShortcutDelegate = false
+            return false
         }
         
-        return performShortcutDelegate
+        return true
     }
     
 
@@ -114,8 +113,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let defaultParentURL = realmPath.deletingLastPathComponent()
         let compactedURL = defaultParentURL.appendingPathComponent("default-compact.realm")
         autoreleasepool {
-            let realm = try? Realm()
-            try! realm?.writeCopy(toFile: compactedURL)
+            let realm = try! Realm()
+            try! realm.writeCopy(toFile: compactedURL)
         }
         try! FileManager.default.removeItem(at: realmPath)
         try! FileManager.default.moveItem(at: compactedURL, to: realmPath)
