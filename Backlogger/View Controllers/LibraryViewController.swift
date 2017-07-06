@@ -437,7 +437,7 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
         if !self.isSearching {
             let platform = self.platforms[indexPath.row]
             cell.titleLabel?.text = platform.name ?? ""
-            cell.percentImage?.isHidden = true
+            cell.percentView?.isHidden = true
             cell.rightLabel?.text = "\(platform.ownedGames.count)"
             
             if !platform.hasDetails && !platform.custom {
@@ -514,7 +514,7 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
             let game = self.filteredGames![indexPath.row]
             cell.titleLabel?.text = game.gameFields!.name
             cell.descriptionLabel?.text = game.platform!.name
-            cell.percentImage?.isHidden = true
+            cell.percentView?.isHidden = true
             cell.rightLabel?.text = ""
             if let image = game.gameFields!.image {
                 cell.imageUrl = URL(string: image.iconUrl!)

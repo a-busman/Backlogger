@@ -722,8 +722,8 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
             cell.hideDetails()
         }
         cell.rightLabel?.text = ""
-        cell.percentImage?.isHidden = false
-        cell.percentImage?.image = cell.percentageImages[game.progress]
+        cell.percentView?.isHidden = false
+        cell.progress = game.progress
         if let image = game.gameFields?.image {
             cell.imageUrl = URL(string: image.iconUrl!)
         } else {

@@ -251,7 +251,10 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         }
         
         self.addBackground?.isHidden = !self.showAddButton
-
+        self.percentageBlurView?.effect = nil
+        self.percentageVibrancyView?.effect = nil
+        self.percentageLabel?.alpha = 0.0
+        
         if self._state == .addToLibrary {
             self.hideStats = true
             self.progressIcon?.alpha = 0.0
@@ -263,11 +266,11 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
             } else {
                 self.addLabel?.text = "REMOVE"
                 self.hideStats = false
+                self.showPercentage()
             }
             self.progressIcon?.alpha = 1.0
             self.addSymbolImage?.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 4.0)
             self.addBackground?.backgroundColor = .red
-            self.showPercentage()
             self.percentTimer?.invalidate()
             self.percentTimer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(hidePercentage), userInfo: nil, repeats: false)
         }
@@ -276,10 +279,6 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         self.statsScrollView?.alpha = 0.0
         self.statsButton?.layer.borderWidth = 1.0
         self.statsButton?.layer.borderColor = Util.appColor.cgColor
-        
-        self.percentageBlurView?.effect = nil
-        self.percentageVibrancyView?.effect = nil
-        self.percentageLabel?.alpha = 0.0
         
         var gameFields: GameField?
         gameFields = self._gameField ?? GameField()
@@ -619,7 +618,6 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         if self.isMovingFromParentViewController {
             self.isExiting = true
-            ImageCache.default.clearMemoryCache()
             self.delegate?.gamesCreated(gameField: self._gameField!)
         }
     }

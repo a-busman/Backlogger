@@ -20,10 +20,12 @@ class TableViewCell: UITableViewCell {
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var rightLabel:       UILabel!
     @IBOutlet weak var addButton:        UIButton!
-    @IBOutlet weak var percentImage:     UIImageView!
+    @IBOutlet weak var percentView:      UIView!
     
     @IBOutlet weak var rightTrailingLayoutConstraint: NSLayoutConstraint!
     @IBOutlet weak var titleBottomLayoutConstraint:   NSLayoutConstraint!
+    
+    let percentViewController = PercentViewController()
     
     enum LibraryState {
         case add
@@ -44,19 +46,17 @@ class TableViewCell: UITableViewCell {
     var imageUrl: URL?
     var cacheCompletionHandler: CompletionHandler?
     
-    let percentageImages: [Int: UIImage] = [
-        0: #imageLiteral(resourceName: "0-percent"),
-        10: #imageLiteral(resourceName: "10-percent"),
-        20: #imageLiteral(resourceName: "20-percent"),
-        30: #imageLiteral(resourceName: "30-percent"),
-        40: #imageLiteral(resourceName: "40-percent"),
-        50: #imageLiteral(resourceName: "50-percent"),
-        60: #imageLiteral(resourceName: "60-percent"),
-        70: #imageLiteral(resourceName: "70-percent"),
-        80: #imageLiteral(resourceName: "80-percent"),
-        90: #imageLiteral(resourceName: "90-percent"),
-        100: #imageLiteral(resourceName: "100-percent")
-    ]
+    private var _progress: Int = 0
+    
+    var progress: Int {
+        get {
+            return self._progress
+        }
+        set(newValue) {
+            self._progress = newValue
+            self.percentViewController.progress = newValue
+        }
+    }
     
     var libraryState: LibraryState {
         get {
@@ -115,7 +115,8 @@ class TableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-    
+        self.percentViewController.progress = self.progress
+        self.percentViewController.view.translatesAutoresizingMaskIntoConstraints = false
         self.addButton?.isHidden = self.addButtonHidden
         if self.addButtonHidden {
             self.rightTrailingLayoutConstraint?.constant = 0.0
@@ -139,6 +140,13 @@ class TableViewCell: UITableViewCell {
         if self.imageUrl != nil {
             self.artView?.kf.setImage(with: self.imageUrl, placeholder: #imageLiteral(resourceName: "table_placeholder_light"), completionHandler: self.cacheCompletionHandler)
         }
+        
+        self.percentView.addSubview(self.percentViewController.view)
+        NSLayoutConstraint(item: self.percentViewController.view, attribute: .top, relatedBy: .equal, toItem: self.percentView, attribute: .top, multiplier: 1.0, constant: 0.0).isActive = true
+        NSLayoutConstraint(item: self.percentViewController.view, attribute: .bottom, relatedBy: .equal, toItem: self.percentView, attribute: .bottom, multiplier: 1.0, constant: 0.0).isActive = true
+        NSLayoutConstraint(item: self.percentViewController.view, attribute: .leading, relatedBy: .equal, toItem: self.percentView, attribute: .leading, multiplier: 1.0, constant: 0.0).isActive = true
+        NSLayoutConstraint(item: self.percentViewController.view, attribute: .trailing, relatedBy: .equal, toItem: self.percentView, attribute: .trailing, multiplier: 1.0, constant: 0.0).isActive = true
+        
     }
     
     @IBAction func addButtonTapped(sender: UIButton!) {

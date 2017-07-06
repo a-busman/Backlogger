@@ -998,6 +998,7 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             }
             cell.selectionStyle = .default
             cell.accessoryType = .disclosureIndicator
+            
         }
 
         return cell

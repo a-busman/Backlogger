@@ -53,6 +53,7 @@
 		FA4B449F1E61DF94006A843F /* ImageViewer.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA4B449E1E61DF94006A843F /* ImageViewer.xib */; };
 		FA4B44A11E61E3FC006A843F /* ImageViewerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B44A01E61E3FC006A843F /* ImageViewerController.swift */; };
 		FA4B44A31E6262FB006A843F /* ToastOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA4B44A21E6262FB006A843F /* ToastOverlayView.xib */; };
+		FA545BE21F0E740800D2F185 /* PercentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA545BE11F0E740800D2F185 /* PercentViewController.swift */; };
 		FA5C623D1E760413008558BF /* ToastOverlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5C623C1E760413008558BF /* ToastOverlayViewController.swift */; };
 		FA68A8CF1EC4C2A500C9CE2E /* AddToPlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA68A8CE1EC4C2A500C9CE2E /* AddToPlaylistViewController.swift */; };
 		FA68A8EF1ECBB06900C9CE2E /* PlaylistFooter.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA68A8EE1ECBB06900C9CE2E /* PlaylistFooter.xib */; };
@@ -162,6 +163,7 @@
 		FA4B449E1E61DF94006A843F /* ImageViewer.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ImageViewer.xib; path = Views/ImageViewer.xib; sourceTree = "<group>"; };
 		FA4B44A01E61E3FC006A843F /* ImageViewerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageViewerController.swift; path = "View Controllers/ImageViewerController.swift"; sourceTree = "<group>"; };
 		FA4B44A21E6262FB006A843F /* ToastOverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ToastOverlayView.xib; path = Views/ToastOverlayView.xib; sourceTree = "<group>"; };
+		FA545BE11F0E740800D2F185 /* PercentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PercentViewController.swift; path = Views/PercentViewController.swift; sourceTree = "<group>"; };
 		FA5C623C1E760413008558BF /* ToastOverlayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ToastOverlayViewController.swift; path = "View Controllers/ToastOverlayViewController.swift"; sourceTree = "<group>"; };
 		FA68A8CE1EC4C2A500C9CE2E /* AddToPlaylistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AddToPlaylistViewController.swift; path = "View Controllers/AddToPlaylistViewController.swift"; sourceTree = "<group>"; };
 		FA68A8EE1ECBB06900C9CE2E /* PlaylistFooter.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PlaylistFooter.xib; path = Views/PlaylistFooter.xib; sourceTree = "<group>"; };
@@ -311,6 +313,7 @@
 				FA358A5F1EBF7484001EE03D /* PlaylistDescriptionCell.xib */,
 				FA358A631EBFC001001EE03D /* PlaylistAddTableCell.xib */,
 				FA1FFF7C1F0152450048D907 /* CharacterCell.xib */,
+				FA545BE11F0E740800D2F185 /* PercentViewController.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -613,6 +616,7 @@
 				FA68A8CF1EC4C2A500C9CE2E /* AddToPlaylistViewController.swift in Sources */,
 				FA358A561EBADF5E001EE03D /* PlaylistTableCell.swift in Sources */,
 				FADA80901E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift in Sources */,
+				FA545BE21F0E740800D2F185 /* PercentViewController.swift in Sources */,
 				FA358A681EC27768001EE03D /* ConsoleSelectionTableViewController.swift in Sources */,
 				FADA808B1E4C07570069943D /* PanDirectionGestureRecognizer.swift in Sources */,
 				FA4B448F1E5D3F2D006A843F /* Genre.swift in Sources */,

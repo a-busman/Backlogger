@@ -8,6 +8,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -80,27 +81,27 @@
                             <action selector="addButtonTappedWithSender:" destination="33h-aR-jd1" eventType="touchUpInside" id="fLW-hJ-1Ls"/>
                         </connections>
                     </button>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="jdC-Az-Slu">
-                        <rect key="frame" x="347" y="7" width="28" height="28"/>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5g9-xI-DaY">
+                        <rect key="frame" x="339" y="7" width="28" height="28"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="28" id="bnJ-9F-Lh9"/>
-                            <constraint firstAttribute="width" secondItem="jdC-Az-Slu" secondAttribute="height" id="hhJ-UH-Mkf"/>
+                            <constraint firstAttribute="height" constant="28" id="fnq-Xm-e9j"/>
+                            <constraint firstAttribute="width" secondItem="5g9-xI-DaY" secondAttribute="height" id="kVs-g3-pgL"/>
                         </constraints>
-                    </imageView>
+                    </view>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="jdC-Az-Slu" firstAttribute="centerY" secondItem="L7E-mH-Zl0" secondAttribute="centerY" id="1fr-6h-HAX"/>
-                    <constraint firstItem="jdC-Az-Slu" firstAttribute="trailing" secondItem="L7E-mH-Zl0" secondAttribute="trailing" id="DLi-1v-1HR"/>
                     <constraint firstItem="MYG-Sy-BgC" firstAttribute="trailing" secondItem="M86-Nr-Z7l" secondAttribute="trailing" id="GT7-xP-QYO"/>
                     <constraint firstItem="lPU-fk-BXR" firstAttribute="centerY" secondItem="L7E-mH-Zl0" secondAttribute="centerY" id="JwR-dv-yZK"/>
                     <constraint firstItem="JUf-60-Ilm" firstAttribute="leading" secondItem="L7E-mH-Zl0" secondAttribute="leading" constant="8" id="Pmm-5o-zbj"/>
                     <constraint firstItem="M86-Nr-Z7l" firstAttribute="trailing" secondItem="L7E-mH-Zl0" secondAttribute="trailing" constant="-40" id="Qyl-ov-GPv"/>
                     <constraint firstItem="JUf-60-Ilm" firstAttribute="top" secondItem="L7E-mH-Zl0" secondAttribute="top" constant="5" id="a52-H7-KGg"/>
+                    <constraint firstItem="5g9-xI-DaY" firstAttribute="trailing" secondItem="L7E-mH-Zl0" secondAttribute="trailingMargin" id="bdm-Fy-ROw"/>
                     <constraint firstItem="M86-Nr-Z7l" firstAttribute="leading" secondItem="JUf-60-Ilm" secondAttribute="trailing" constant="5" id="bnK-s5-24Z"/>
                     <constraint firstItem="MYG-Sy-BgC" firstAttribute="leading" secondItem="M86-Nr-Z7l" secondAttribute="leading" id="dOb-VU-s1G"/>
                     <constraint firstItem="JUf-60-Ilm" firstAttribute="bottom" secondItem="L7E-mH-Zl0" secondAttribute="bottom" constant="-5" id="eA6-1e-6lH"/>
                     <constraint firstItem="okp-sa-rRu" firstAttribute="centerY" secondItem="L7E-mH-Zl0" secondAttribute="centerY" id="gqP-Cc-uVL"/>
                     <constraint firstItem="M86-Nr-Z7l" firstAttribute="bottom" secondItem="L7E-mH-Zl0" secondAttribute="centerY" id="pek-Al-LCZ"/>
+                    <constraint firstItem="5g9-xI-DaY" firstAttribute="centerY" secondItem="L7E-mH-Zl0" secondAttribute="centerY" id="q9v-zF-mmX"/>
                     <constraint firstItem="lPU-fk-BXR" firstAttribute="trailing" secondItem="L7E-mH-Zl0" secondAttribute="trailing" id="ufz-t7-QHT"/>
                     <constraint firstItem="okp-sa-rRu" firstAttribute="trailing" secondItem="L7E-mH-Zl0" secondAttribute="trailing" constant="-5" id="uh6-w7-29f"/>
                     <constraint firstItem="MYG-Sy-BgC" firstAttribute="top" secondItem="M86-Nr-Z7l" secondAttribute="bottom" id="zv5-dC-WEZ"/>
@@ -110,7 +111,7 @@
                 <outlet property="addButton" destination="okp-sa-rRu" id="gky-9B-oiA"/>
                 <outlet property="artView" destination="vra-l8-XHu" id="chh-AC-ZaU"/>
                 <outlet property="descriptionLabel" destination="MYG-Sy-BgC" id="x1S-86-p9r"/>
-                <outlet property="percentImage" destination="jdC-Az-Slu" id="e4d-Q2-Ai1"/>
+                <outlet property="percentView" destination="5g9-xI-DaY" id="hmV-Jp-NNw"/>
                 <outlet property="rightLabel" destination="lPU-fk-BXR" id="lcN-Cm-GqZ"/>
                 <outlet property="rightTrailingLayoutConstraint" destination="ufz-t7-QHT" id="kPs-Ts-xRP"/>
                 <outlet property="titleBottomLayoutConstraint" destination="pek-Al-LCZ" id="ZY3-1p-xEf"/>

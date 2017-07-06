@@ -416,7 +416,7 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
             let gameToShow = self.gameFields[indexPath.row]
             
             cell.rightLabel?.text = ""
-            cell.percentImage?.isHidden = true
+            cell.percentView?.isHidden = true
             var inLibrary = false
             
             // Check if game is in library

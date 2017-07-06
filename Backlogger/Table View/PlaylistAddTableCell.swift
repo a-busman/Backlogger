@@ -15,7 +15,7 @@ class PlaylistAddTableCell: UITableViewCell {
     @IBOutlet weak var titleLabel:       UILabel?
     @IBOutlet weak var descriptionLabel: UILabel?
     @IBOutlet weak var rightLabel:       UILabel?
-    @IBOutlet weak var percentImage:     UIImageView?
+    @IBOutlet weak var percentView:      UIView?
     
     @IBOutlet weak var titleCenterLayoutConstraint:   NSLayoutConstraint?
     @IBOutlet weak var titleLeadingLayoutConstraint:  NSLayoutConstraint?
@@ -38,6 +38,20 @@ class PlaylistAddTableCell: UITableViewCell {
     var imageUrl: URL?
     var cacheCompletionHandler: CompletionHandler?
     
+    let percentViewController = PercentViewController()
+
+    private var _progress: Int = 0
+    
+    var progress: Int {
+        get {
+            return self._progress
+        }
+        set(newValue) {
+            self._progress = newValue
+            self.percentViewController.progress = newValue
+        }
+    }
+    
     var playlistState: PlaylistState {
         get {
             return self._playlistState
@@ -46,20 +60,6 @@ class PlaylistAddTableCell: UITableViewCell {
             self._playlistState = newState
         }
     }
-    
-    let percentageImages: [Int: UIImage] = [
-        0: #imageLiteral(resourceName: "0-percent"),
-        10: #imageLiteral(resourceName: "10-percent"),
-        20: #imageLiteral(resourceName: "20-percent"),
-        30: #imageLiteral(resourceName: "30-percent"),
-        40: #imageLiteral(resourceName: "40-percent"),
-        50: #imageLiteral(resourceName: "50-percent"),
-        60: #imageLiteral(resourceName: "60-percent"),
-        70: #imageLiteral(resourceName: "70-percent"),
-        80: #imageLiteral(resourceName: "80-percent"),
-        90: #imageLiteral(resourceName: "90-percent"),
-        100: #imageLiteral(resourceName: "100-percent")
-    ]
     
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -73,12 +73,18 @@ class PlaylistAddTableCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        self.percentViewController.view.translatesAutoresizingMaskIntoConstraints = false
         // Not using the right label for now
         self.rightLabel?.isHidden = true
+        self.percentView?.addSubview(self.percentViewController.view)
+        NSLayoutConstraint(item: self.percentViewController.view, attribute: .top, relatedBy: .equal, toItem: self.percentView, attribute: .top, multiplier: 1.0, constant: 0.0).isActive = true
+        NSLayoutConstraint(item: self.percentViewController.view, attribute: .bottom, relatedBy: .equal, toItem: self.percentView, attribute: .bottom, multiplier: 1.0, constant: 0.0).isActive = true
+        NSLayoutConstraint(item: self.percentViewController.view, attribute: .leading, relatedBy: .equal, toItem: self.percentView, attribute: .leading, multiplier: 1.0, constant: 0.0).isActive = true
+        NSLayoutConstraint(item: self.percentViewController.view, attribute: .trailing, relatedBy: .equal, toItem: self.percentView, attribute: .trailing, multiplier: 1.0, constant: 0.0).isActive = true
         if playlistState == .add {
             self.artViewBorder?.isHidden = true
             self.descriptionLabel?.isHidden = true
-            self.percentImage?.isHidden = true
+            self.percentView?.isHidden = true
             self.titleLabel?.text = "Add Games"
             self.titleLabel?.textColor = Util.appColor
             self.titleCenterLayoutConstraint?.constant = 0
@@ -86,7 +92,7 @@ class PlaylistAddTableCell: UITableViewCell {
         } else {
             self.artViewBorder?.isHidden = false
             self.descriptionLabel?.isHidden = false
-            self.percentImage?.isHidden = !self.isHandleHidden
+            self.percentView?.isHidden = !self.isHandleHidden
             if self.game != nil {
                 self.titleLabel?.text = self.game!.gameFields?.name
                 self.titleLabel?.textColor = .black
@@ -94,7 +100,7 @@ class PlaylistAddTableCell: UITableViewCell {
                 self.titleLeadingLayoutConstraint?.constant = 67
                 self.titleTrailingLayoutConstraint?.constant = self.isHandleHidden ? -40.0 : 0.0
                 self.descriptionLabel?.text = self.game!.platform?.name
-                self.percentImage?.image = self.percentageImages[self.game!.progress]!
+                self.percentViewController.progress = self.game!.progress
             }
         }
     }
