@@ -15,7 +15,7 @@ protocol PlaylistDetailsViewControllerDelegate {
     func didFinish(vc: PlaylistDetailsViewController, playlist: Playlist)
 }
 
-class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, PlaylistTitleCellDelegate, AddToPlaylistViewControllerDelegate, PlaylistFooterDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, PlaylistViewControllerDelegate {
+class PlaylistDetailsViewController: UITableViewController {
     
     @IBOutlet weak var noGamesView: UIView?
     
@@ -369,11 +369,6 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         return newImage!
     }
     
-    func dismissView(_ vc: AddToPlaylistViewController) {
-        self.isDismissing = true
-        vc.dismiss(animated: true, completion: nil)
-    }
-    
     func showCamera() {
         self.titleCell.showCamera()
     }
@@ -442,45 +437,6 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         self.imageCache = [:]
     }
     
-    func moreTapped(sender: UITapGestureRecognizer) {
-        let actions = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        let deleteAction = UIAlertAction(title: "Remove...", style: .default, handler: self.handleFirstDelete)
-        let addToAction = UIAlertAction(title: "Add to Playlist", style: .default, handler: self.handleAddToPlaylist)
-        let playNextAction = UIAlertAction(title: "Play Next", style: .default, handler: self.handlePlayNext)
-        let queueAction = UIAlertAction(title: "Play Later", style: .default, handler: self.handlePlayLater)
-        deleteAction.setValue(#imageLiteral(resourceName: "trash"), forKey: "image")
-        addToAction.setValue(#imageLiteral(resourceName: "add_to_playlist"), forKey: "image")
-        playNextAction.setValue(#imageLiteral(resourceName: "play_next"), forKey: "image")
-        queueAction.setValue(#imageLiteral(resourceName: "add_to_queue"), forKey: "image")
-        if !self.isFavourites {
-            actions.addAction(deleteAction)
-        }
-        if self.games.count > 0 {
-            actions.addAction(addToAction)
-            actions.addAction(playNextAction)
-            actions.addAction(queueAction)
-        }
-        actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        actions.popoverPresentationController?.sourceView = self.titleCell.moreButton
-        actions.popoverPresentationController?.sourceRect = self.titleCell.moreButton!.bounds
-        self.present(actions, animated: true, completion: nil)
-    }
-    
-    func artTapped(sender: UITapGestureRecognizer) {
-        let actions = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        let takeAction = UIAlertAction(title: "Take Photo", style: .default, handler: self.takePhoto)
-        let chooseAction = UIAlertAction(title: "Choose Photo", style: .default, handler: self.choosePhoto)
-        
-        actions.addAction(takeAction)
-        actions.addAction(chooseAction)
-        actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        
-        actions.popoverPresentationController?.sourceView = self.titleCell.artView
-        actions.popoverPresentationController?.sourceRect = self.titleCell.artView!.bounds
-
-        self.present(actions, animated: true, completion: nil)
-    }
-    
     func takePhoto(action: UIAlertAction) {
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
@@ -495,27 +451,6 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         imagePicker.allowsEditing = true
         imagePicker.sourceType = .photoLibrary
         self.present(imagePicker, animated: true, completion: nil)
-    }
-    
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        self.didPickImage = true
-        picker.dismiss(animated: true, completion: nil)
-    }
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        if let editedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
-            self.playlistImage = editedImage
-            self.playlistImageSource = .custom
-            self.titleCell.artImage = editedImage
-            self.titleCell.showImage()
-        } else if let originalImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            self.playlistImage = originalImage
-            self.playlistImageSource = .custom
-            self.titleCell.artImage = originalImage
-            self.titleCell.showImage()
-        }
-        self.didPickImage = true
-        picker.dismiss(animated: true, completion: nil)
     }
     
     func handleFirstDelete(sender: UIAlertAction) {
@@ -552,25 +487,6 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         playlistVc.isAddingGames = true
         playlistVc.delegate = self
         self.present(vc, animated: true, completion: nil)
-    }
-    
-    func chosePlaylist(vc: PlaylistViewController, playlist: Playlist, games: [Game], isNew: Bool) {
-        if !isNew {
-            playlist.update {
-                playlist.games.append(contentsOf: games)
-            }
-        }
-        vc.presentingViewController?.dismiss(animated: true, completion: {
-            var descString: String
-            if games.count == 1 {
-                descString = "Added 1 game to \"\(playlist.name!)\"."
-            } else {
-                descString = "Added \(games.count) games to \"\(playlist.name!)\"."
-            }
-            self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "add_to_playlist_large"), title: "Added to Playlist", description: descString)
-        })
-        vc.navigationController?.dismiss(animated: true, completion: nil)
-        self.tableView.reloadData()
     }
     
     func handlePlayNext(sender: UIAlertAction) {
@@ -754,19 +670,6 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
             }
             self.savePlaylistImage()
             self.delegate?.didFinish(vc: self, playlist: newPlaylist)
-        }
-    }
-    
-    func addTapped() {
-        self.performSegue(withIdentifier: "addToPlaylist", sender: self.playlistFooterView.addButton)
-
-    }
-    
-    func didChoose(games: List<Game>) {
-        self.games += games.map{$0}
-        self.imagesLoaded = 0
-        if _playlistState == .default {
-            self.saveCurrentState(playlist: nil)
         }
     }
     
@@ -1138,6 +1041,12 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         }
     }
     
+    func invalidateEditField() {
+        self.didEditField = false
+    }
+}
+
+extension PlaylistDetailsViewController: UITextViewDelegate {
     func textView(_ textView: UITextView?, sizeDidChange size: CGSize) {
         if self.didEditField {
             if textView == self.titleCell.titleTextView {
@@ -1151,17 +1060,13 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         }
     }
     
-    func invalidateEditField() {
-        self.didEditField = false
-    }
-    
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         if textView.textColor == .lightGray {
             textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
         }
         return true
     }
-
+    
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         // Combine the textView text and the replacement text to
         // create the updated text string
@@ -1195,12 +1100,118 @@ class PlaylistDetailsViewController: UITableViewController, UITextViewDelegate, 
         _ = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.invalidateEditField), userInfo: nil, repeats: false)
         return true
     }
-
+    
     func textViewDidChangeSelection(_ textView: UITextView) {
         if self.view.window != nil {
             if textView.textColor == UIColor.lightGray {
                 textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
             }
         }
+    }
+}
+
+extension PlaylistDetailsViewController: PlaylistTitleCellDelegate {
+    func moreTapped(sender: UITapGestureRecognizer) {
+        let actions = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let deleteAction = UIAlertAction(title: "Remove...", style: .default, handler: self.handleFirstDelete)
+        let addToAction = UIAlertAction(title: "Add to Playlist", style: .default, handler: self.handleAddToPlaylist)
+        let playNextAction = UIAlertAction(title: "Play Next", style: .default, handler: self.handlePlayNext)
+        let queueAction = UIAlertAction(title: "Play Later", style: .default, handler: self.handlePlayLater)
+        deleteAction.setValue(#imageLiteral(resourceName: "trash"), forKey: "image")
+        addToAction.setValue(#imageLiteral(resourceName: "add_to_playlist"), forKey: "image")
+        playNextAction.setValue(#imageLiteral(resourceName: "play_next"), forKey: "image")
+        queueAction.setValue(#imageLiteral(resourceName: "add_to_queue"), forKey: "image")
+        if !self.isFavourites {
+            actions.addAction(deleteAction)
+        }
+        if self.games.count > 0 {
+            actions.addAction(addToAction)
+            actions.addAction(playNextAction)
+            actions.addAction(queueAction)
+        }
+        actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        actions.popoverPresentationController?.sourceView = self.titleCell.moreButton
+        actions.popoverPresentationController?.sourceRect = self.titleCell.moreButton!.bounds
+        self.present(actions, animated: true, completion: nil)
+    }
+    
+    func artTapped(sender: UITapGestureRecognizer) {
+        let actions = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let takeAction = UIAlertAction(title: "Take Photo", style: .default, handler: self.takePhoto)
+        let chooseAction = UIAlertAction(title: "Choose Photo", style: .default, handler: self.choosePhoto)
+        
+        actions.addAction(takeAction)
+        actions.addAction(chooseAction)
+        actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        actions.popoverPresentationController?.sourceView = self.titleCell.artView
+        actions.popoverPresentationController?.sourceRect = self.titleCell.artView!.bounds
+        
+        self.present(actions, animated: true, completion: nil)
+    }
+}
+
+extension PlaylistDetailsViewController: AddToPlaylistViewControllerDelegate {
+    func didChoose(games: List<Game>) {
+        self.games += games.map{$0}
+        self.imagesLoaded = 0
+        if self.playlistState == .default {
+            self.saveCurrentState(playlist: nil)
+        }
+    }
+    
+    func dismissView(_ vc: AddToPlaylistViewController) {
+        self.isDismissing = true
+        vc.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension PlaylistDetailsViewController: PlaylistFooterDelegate {
+    func addTapped() {
+        self.performSegue(withIdentifier: "addToPlaylist", sender: self.playlistFooterView.addButton)
+    }
+}
+
+extension PlaylistDetailsViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        self.didPickImage = true
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        if let editedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
+            self.playlistImage = editedImage
+            self.playlistImageSource = .custom
+            self.titleCell.artImage = editedImage
+            self.titleCell.showImage()
+        } else if let originalImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            self.playlistImage = originalImage
+            self.playlistImageSource = .custom
+            self.titleCell.artImage = originalImage
+            self.titleCell.showImage()
+        }
+        self.didPickImage = true
+        picker.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension PlaylistDetailsViewController: PlaylistViewControllerDelegate {
+    func chosePlaylist(vc: PlaylistViewController, playlist: Playlist, games: [Game], isNew: Bool) {
+        if !isNew {
+            playlist.update {
+                playlist.games.append(contentsOf: games)
+            }
+        }
+        vc.presentingViewController?.dismiss(animated: true, completion: {
+            var descString: String
+            if games.count == 1 {
+                descString = "Added 1 game to \"\(playlist.name!)\"."
+            } else {
+                descString = "Added \(games.count) games to \"\(playlist.name!)\"."
+            }
+            self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "add_to_playlist_large"), title: "Added to Playlist", description: descString)
+        })
+        vc.navigationController?.dismiss(animated: true, completion: nil)
+        self.tableView.reloadData()
     }
 }

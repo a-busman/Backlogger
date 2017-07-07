@@ -13,7 +13,7 @@ protocol SteamLoginViewControllerDelegate {
     func got(steamId: String?, username: String?)
 }
 
-class SteamLoginViewController: UIViewController, WKNavigationDelegate {
+class SteamLoginViewController: UIViewController {
     
     var webView: WKWebView!
     var delegate: SteamLoginViewControllerDelegate?
@@ -21,25 +21,26 @@ class SteamLoginViewController: UIViewController, WKNavigationDelegate {
     override func loadView() {
         let config = WKWebViewConfiguration()
         config.websiteDataStore = WKWebsiteDataStore.nonPersistent()
-        webView = WKWebView(frame: .zero, configuration: config)
-        webView.navigationDelegate = self
-        view = webView
+        self.webView = WKWebView(frame: .zero, configuration: config)
+        self.webView.navigationDelegate = self
+        view = self.webView
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         let url = URL(string: "https://steamcommunity.com/login/home/?goto=%2Fmy%2Fprofile")!
-        webView.load(URLRequest(url: url))
-        webView.allowsBackForwardNavigationGestures = false
+        self.webView.load(URLRequest(url: url))
+        self.webView.allowsBackForwardNavigationGestures = false
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+}
 
+extension SteamLoginViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let url = navigationAction.request.url {
             if let scheme = url.scheme, scheme == "http" {
@@ -71,5 +72,4 @@ class SteamLoginViewController: UIViewController, WKNavigationDelegate {
             decisionHandler(.allow)
         }
     }
-
 }

@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class GameTableViewController: UIViewController, GameDetailsViewControllerDelegate, UIViewControllerPreviewingDelegate, PlaylistViewControllerDelegate, AddSteamGamesViewControllerDelegate {
+class GameTableViewController: UIViewController {
     
     @IBOutlet weak var tableView:         UITableView?
     @IBOutlet weak var headerView:        UIView?
@@ -88,12 +88,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
             } else {
                 self.title = platform.abbreviation
             }
-//            if let releaseDate = platform.releaseDate {
-//                let index = releaseDate.index(releaseDate.startIndex, offsetBy: 4)
-//                self.yearLabel?.text = "\(platform.company?.name ?? "") • \(releaseDate.substring(to: index))"
-//            } else {
-//                self.yearLabel?.text = "\(platform.company?.name ?? "")"
-//            }
+
             if !platform.hasDetails && !platform.custom {
                 platform.updateDetails { results in
                     if let error = results.error {
@@ -286,16 +281,8 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
                 vc.gameField = self.games![i].gameFields
                 vc.game = self.games![i]
                 vc.state = .inLibrary
-                vc.delegate = self
             }
         }
-    }
-    func gamesCreated(gameField: GameField) {
-        /*if games.count == 1 {
-            self.games[self.currentlySelectedRow] = games.first!
-        } else {
-            self.games.remove(at: self.currentlySelectedRow)
-        }*/
     }
     
     @IBAction func moreTapped(sender: UIBarButtonItem) {
@@ -538,47 +525,40 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         self.present(navVc, animated: true, completion: nil)
     }
     
-    func didSelectSteamGames(vc: AddSteamGamesViewController, games: [GameField]) {
-        if games.count > 0 {
-            var steamPlatform: Platform?
+    func addToUpNext(games: [Game], later: Bool) {
+        if later {
             autoreleasepool {
                 let realm = try! Realm()
-                if let plat = realm.object(ofType: Platform.self, forPrimaryKey: Steam.steamPlatformIdNumber) {
-                    steamPlatform = plat
-                } else {
-                    var company: Company
-                    if let comp = realm.object(ofType: Company.self, forPrimaryKey: 1374) {
-                        company = comp
-                    } else {
-                        company = Company()
-                        company.name = "Valve Corporation"
-                        company.idNumber = 1374
-                        company.apiDetailUrl = "https://www.giantbomb.com/api/company/3010-1374/"
-                        company.siteDetailUrl = "https://www.giantbomb.com/valve-corporation/3010-1374/"
-                        company.add()
+                let upNextPlaylist = realm.objects(Playlist.self).filter("isUpNext = true").first
+                if upNextPlaylist != nil {
+                    var currentGames = Array(upNextPlaylist!.games)
+                    currentGames.append(contentsOf: games)
+                    upNextPlaylist!.update {
+                        upNextPlaylist?.games.removeAll()
+                        upNextPlaylist?.games.append(contentsOf: currentGames)
                     }
-                    steamPlatform = Platform()
-                    steamPlatform?.idNumber = Steam.steamPlatformIdNumber
-                    steamPlatform?.name = "Steam"
-                    steamPlatform?.company = company
-                    steamPlatform?.hasDetails = true
-                    steamPlatform?.add()
                 }
             }
-            for game in games {
-                let newGame = Game()
-                newGame.inLibrary = true
-                newGame.fromSteam = true
-                newGame.add(game, steamPlatform)
+            self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "add_to_queue_large"), title: "Added to Queue", description: nil)
+        } else {
+            autoreleasepool {
+                let realm = try! Realm()
+                let upNextPlaylist = realm.objects(Playlist.self).filter("isUpNext = true").first
+                if upNextPlaylist != nil {
+                    var currentGames = games
+                    currentGames += upNextPlaylist!.games
+                    upNextPlaylist!.update {
+                        upNextPlaylist?.games.removeAll()
+                        upNextPlaylist?.games.append(contentsOf: currentGames)
+                    }
+                }
             }
+            self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "play_next_large"), title: "Added to Queue", description: "We'll play this one next.")
         }
-        vc.dismiss(animated: true, completion: nil)
     }
-    
-    func didDismiss(vc: AddSteamGamesViewController) {
-        vc.dismiss(animated: true, completion: nil)
-    }
-    
+}
+
+extension GameTableViewController: UIViewControllerPreviewingDelegate {
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         guard let indexPath = self.tableView?.indexPathForRow(at: location),
             let cell = self.tableView?.cellForRow(at: indexPath),
@@ -586,7 +566,7 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         let game = self.games![indexPath.row]
         let vc: GameDetailsViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "game_details") as! GameDetailsViewController
         var gameField: GameField!
-
+        
         autoreleasepool {
             let realm = try? Realm()
             gameField = realm?.object(ofType: GameField.self, forPrimaryKey: gameFields.idNumber)
@@ -597,7 +577,6 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
         
         vc.game = game
         vc.state = .inLibrary
-        vc.delegate = self
         vc.gameField = gameField
         
         previewingContext.sourceRect = cell.frame
@@ -631,50 +610,6 @@ class GameTableViewController: UIViewController, GameDetailsViewControllerDelega
             self.addToUpNext(games: [game], later: false)
         }
         return vc
-    }
-    
-    func addToUpNext(games: [Game], later: Bool) {
-        if later {
-            autoreleasepool {
-                let realm = try! Realm()
-                let upNextPlaylist = realm.objects(Playlist.self).filter("isUpNext = true").first
-                if upNextPlaylist != nil {
-                    var currentGames = Array(upNextPlaylist!.games)
-                    currentGames.append(contentsOf: games)
-                    upNextPlaylist!.update {
-                        upNextPlaylist?.games.removeAll()
-                        upNextPlaylist?.games.append(contentsOf: currentGames)
-                    }
-                }
-            }
-            self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "add_to_queue_large"), title: "Added to Queue", description: nil)
-        } else {
-            autoreleasepool {
-                let realm = try! Realm()
-                let upNextPlaylist = realm.objects(Playlist.self).filter("isUpNext = true").first
-                if upNextPlaylist != nil {
-                    var currentGames = games
-                    currentGames += upNextPlaylist!.games
-                    upNextPlaylist!.update {
-                        upNextPlaylist?.games.removeAll()
-                        upNextPlaylist?.games.append(contentsOf: currentGames)
-                    }
-                }
-            }
-            self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "play_next_large"), title: "Added to Queue", description: "We'll play this one next.")
-        }
-    }
-    
-    func chosePlaylist(vc: PlaylistViewController, playlist: Playlist, games: [Game], isNew: Bool) {
-        if !isNew {
-            playlist.update {
-                playlist.games.append(contentsOf: games)
-            }
-        }
-        vc.presentingViewController?.dismiss(animated: true, completion: {
-            self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "add_to_playlist_large"), title: "Added to Playlist", description: "Added to \"\(playlist.name!)\".")
-        })
-        vc.navigationController?.dismiss(animated: true, completion: nil)
     }
     
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
@@ -787,7 +722,6 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
                 }
                 self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: self.ascending!)
                 self.tableView?.deleteRows(at: [indexPath], with: .automatic)
-                //self.tableView?.reloadData()
             } else {
                 let _ = self.navigationController?.popViewController(animated: true)
             }
@@ -828,5 +762,62 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
                 self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.clear]
             }
         }
+    }
+}
+
+extension GameTableViewController: PlaylistViewControllerDelegate {
+    func chosePlaylist(vc: PlaylistViewController, playlist: Playlist, games: [Game], isNew: Bool) {
+        if !isNew {
+            playlist.update {
+                playlist.games.append(contentsOf: games)
+            }
+        }
+        vc.presentingViewController?.dismiss(animated: true, completion: {
+            self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "add_to_playlist_large"), title: "Added to Playlist", description: "Added to \"\(playlist.name!)\".")
+        })
+        vc.navigationController?.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension GameTableViewController: AddSteamGamesViewControllerDelegate {
+    func didSelectSteamGames(vc: AddSteamGamesViewController, games: [GameField]) {
+        if games.count > 0 {
+            var steamPlatform: Platform?
+            autoreleasepool {
+                let realm = try! Realm()
+                if let plat = realm.object(ofType: Platform.self, forPrimaryKey: Steam.steamPlatformIdNumber) {
+                    steamPlatform = plat
+                } else {
+                    var company: Company
+                    if let comp = realm.object(ofType: Company.self, forPrimaryKey: 1374) {
+                        company = comp
+                    } else {
+                        company = Company()
+                        company.name = "Valve Corporation"
+                        company.idNumber = 1374
+                        company.apiDetailUrl = "https://www.giantbomb.com/api/company/3010-1374/"
+                        company.siteDetailUrl = "https://www.giantbomb.com/valve-corporation/3010-1374/"
+                        company.add()
+                    }
+                    steamPlatform = Platform()
+                    steamPlatform?.idNumber = Steam.steamPlatformIdNumber
+                    steamPlatform?.name = "Steam"
+                    steamPlatform?.company = company
+                    steamPlatform?.hasDetails = true
+                    steamPlatform?.add()
+                }
+            }
+            for game in games {
+                let newGame = Game()
+                newGame.inLibrary = true
+                newGame.fromSteam = true
+                newGame.add(game, steamPlatform)
+            }
+        }
+        vc.dismiss(animated: true, completion: nil)
+    }
+    
+    func didDismiss(vc: AddSteamGamesViewController) {
+        vc.dismiss(animated: true, completion: nil)
     }
 }

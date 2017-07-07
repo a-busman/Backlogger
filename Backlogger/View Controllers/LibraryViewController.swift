@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class LibraryViewController: UIViewController, UITabBarDelegate {
+class LibraryViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView?
     @IBOutlet weak var searchBar: UISearchBar?
     @IBOutlet weak var addBackgroundView: UIView?
@@ -325,10 +325,6 @@ class LibraryViewController: UIViewController, UITabBarDelegate {
     
     func addGame() {
         self.performSegue(withIdentifier: "add_show_details", sender: nil)
-    }
-    
-    func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
-
     }
 }
 

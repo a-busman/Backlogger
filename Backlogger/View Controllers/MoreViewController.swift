@@ -26,7 +26,7 @@ class MoreViewController: UIViewController {
     }
 }
 
-extension MoreViewController: UITableViewDelegate, UITableViewDataSource, SteamLoginViewControllerDelegate, AddSteamGamesViewControllerDelegate {
+extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return stringList.count
@@ -65,6 +65,103 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource, SteamL
         self.steamVc?.dismiss(animated: true, completion: nil)
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch(indexPath.row) {
+        case 0:
+            if let _ = UserDefaults.standard.value(forKey: "steamName") as? String {
+                let actions = UIAlertController(title: "Unlink Steam account?", message: "This will remove all steam games from Backlogger.", preferredStyle: .alert)
+                actions.addAction(UIAlertAction(title: "Unlink", style: .destructive, handler: { _ in
+                    UserDefaults.standard.removeObject(forKey: "steamName")
+                    UserDefaults.standard.removeObject(forKey: "steamId")
+                    self.plainActivityIndicator?.startAnimating()
+                    self.plainLoadingView?.isHidden = false
+                    UIApplication.shared.beginIgnoringInteractionEvents()
+                    autoreleasepool {
+                        let realm = try! Realm()
+                        if let platform = realm.object(ofType: Platform.self, forPrimaryKey: Steam.steamPlatformIdNumber) {
+                            let ownedGames = platform.ownedGames
+                            for game in ownedGames {
+                                game.delete()
+                            }
+                        }
+                    }
+                    UIApplication.shared.endIgnoringInteractionEvents()
+                    self.plainLoadingView?.isHidden = true
+                    self.plainActivityIndicator?.stopAnimating()
+                    self.tableView?.reloadData()
+                    self.tabBarController!.viewControllers?[0] = self.storyboard!.instantiateViewController(withIdentifier: "NowPlayingNavigation")
+                    self.tabBarController!.viewControllers?[1] = self.storyboard!.instantiateViewController(withIdentifier: "PlaylistNavigation")
+                    self.tabBarController!.viewControllers?[2] = self.storyboard!.instantiateViewController(withIdentifier: "LibraryNavigation")
+                }))
+                actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                self.present(actions, animated: true, completion: nil)
+            } else {
+                let vc = SteamLoginViewController()
+                self.steamVc = UINavigationController(rootViewController: vc)
+                self.steamVc?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.tappedDone))
+                self.steamVc?.navigationBar.barTintColor = Util.appColor
+                self.steamVc?.navigationBar.tintColor = .white
+                self.steamVc?.navigationBar.barStyle = .black
+                self.steamVc?.navigationBar.isTranslucent = true
+                vc.delegate = self
+                self.present(self.steamVc!, animated: true, completion: nil)
+                
+            }
+        case 1:
+            var messageString: String = "This will remove all games and playlists in your library."
+            if let _ = UserDefaults.standard.value(forKey: "steamName") as? String {
+                messageString += " This will also unlink your steam account."
+            }
+            
+            let actions = UIAlertController(title: "Reset Data?", message: messageString, preferredStyle: .alert)
+            actions.addAction(UIAlertAction(title: "Reset", style: .destructive, handler: { _ in
+                UserDefaults.standard.removeObject(forKey: "steamName")
+                UserDefaults.standard.removeObject(forKey: "steamId")
+                autoreleasepool {
+                    let realm = try! Realm()
+                    try! realm.write {
+                        realm.deleteAll()
+                    }
+                }
+                // Delete all playlist images
+                let fileManager = FileManager.default
+                let dirPath = Util.getPlaylistImagesDirectory()
+                var directoryContents: [String] = []
+                do {
+                    directoryContents = try fileManager.contentsOfDirectory(atPath: dirPath.path)
+                } catch {
+                    NSLog("Could not retrieve directory")
+                }
+                for path in directoryContents {
+                    let fullPath = dirPath.appendingPathComponent(path)
+                    do {
+                        try fileManager.removeItem(atPath: fullPath.path)
+                    } catch {
+                        NSLog("Could not delete file: \(fullPath)")
+                    }
+                }
+                // Delete all cached images
+                ImageCache.default.clearDiskCache()
+                self.tableView?.reloadData()
+                self.tabBarController!.viewControllers?[0] = self.storyboard!.instantiateViewController(withIdentifier: "NowPlayingNavigation")
+                self.tabBarController!.viewControllers?[1] = self.storyboard!.instantiateViewController(withIdentifier: "PlaylistNavigation")
+                self.tabBarController!.viewControllers?[2] = self.storyboard!.instantiateViewController(withIdentifier: "LibraryNavigation")
+            }))
+            actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            self.present(actions, animated: true, completion: nil)
+            break
+        case 2:
+            let vc = self.storyboard!.instantiateViewController(withIdentifier: "about")
+            self.navigationController?.pushViewController(vc, animated: true)
+            self.navigationController?.navigationBar.tintColor = .white
+        default:
+            break
+        }
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+}
+
+extension MoreViewController: SteamLoginViewControllerDelegate {
     func got(steamId: String?, username: String?) {
         if steamId != nil {
             UserDefaults.standard.set(steamId, forKey: "steamId")
@@ -184,7 +281,9 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource, SteamL
         self.loadingView?.isHidden = false
         UIApplication.shared.beginIgnoringInteractionEvents()
     }
-    
+}
+
+extension MoreViewController: AddSteamGamesViewControllerDelegate {
     func didSelectSteamGames(vc: AddSteamGamesViewController, games: [GameField]) {
         vc.dismiss(animated: true, completion: nil)
         if games.count > 0 {
@@ -227,102 +326,8 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource, SteamL
             UIApplication.shared.endIgnoringInteractionEvents()
         }
     }
+    
     func didDismiss(vc: AddSteamGamesViewController) {
         vc.dismiss(animated: true, completion: nil)
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch(indexPath.row) {
-        case 0:
-            if let _ = UserDefaults.standard.value(forKey: "steamName") as? String {
-                let actions = UIAlertController(title: "Unlink Steam account?", message: "This will remove all steam games from Backlogger.", preferredStyle: .alert)
-                actions.addAction(UIAlertAction(title: "Unlink", style: .destructive, handler: { _ in
-                    UserDefaults.standard.removeObject(forKey: "steamName")
-                    UserDefaults.standard.removeObject(forKey: "steamId")
-                    self.plainActivityIndicator?.startAnimating()
-                    self.plainLoadingView?.isHidden = false
-                    UIApplication.shared.beginIgnoringInteractionEvents()
-                    autoreleasepool {
-                        let realm = try! Realm()
-                        if let platform = realm.object(ofType: Platform.self, forPrimaryKey: Steam.steamPlatformIdNumber) {
-                            let ownedGames = platform.ownedGames
-                            for game in ownedGames {
-                                game.delete()
-                            }
-                        }
-                    }
-                    UIApplication.shared.endIgnoringInteractionEvents()
-                    self.plainLoadingView?.isHidden = true
-                    self.plainActivityIndicator?.stopAnimating()
-                    self.tableView?.reloadData()
-                    self.tabBarController!.viewControllers?[0] = self.storyboard!.instantiateViewController(withIdentifier: "NowPlayingNavigation")
-                    self.tabBarController!.viewControllers?[1] = self.storyboard!.instantiateViewController(withIdentifier: "PlaylistNavigation")
-                    self.tabBarController!.viewControllers?[2] = self.storyboard!.instantiateViewController(withIdentifier: "LibraryNavigation")
-                }))
-                actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-                self.present(actions, animated: true, completion: nil)
-            } else {
-                let vc = SteamLoginViewController()
-                self.steamVc = UINavigationController(rootViewController: vc)
-                self.steamVc?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.tappedDone))
-                self.steamVc?.navigationBar.barTintColor = Util.appColor
-                self.steamVc?.navigationBar.tintColor = .white
-                self.steamVc?.navigationBar.barStyle = .black
-                self.steamVc?.navigationBar.isTranslucent = true
-                vc.delegate = self
-                self.present(self.steamVc!, animated: true, completion: nil)
-                
-            }
-        case 1:
-            var messageString: String = "This will remove all games and playlists in your library."
-            if let _ = UserDefaults.standard.value(forKey: "steamName") as? String {
-                messageString += " This will also unlink your steam account."
-            }
-            
-            let actions = UIAlertController(title: "Reset Data?", message: messageString, preferredStyle: .alert)
-            actions.addAction(UIAlertAction(title: "Reset", style: .destructive, handler: { _ in
-                UserDefaults.standard.removeObject(forKey: "steamName")
-                UserDefaults.standard.removeObject(forKey: "steamId")
-                autoreleasepool {
-                    let realm = try! Realm()
-                    try! realm.write {
-                        realm.deleteAll()
-                    }
-                }
-                // Delete all playlist images
-                let fileManager = FileManager.default
-                let dirPath = Util.getPlaylistImagesDirectory()
-                var directoryContents: [String] = []
-                do {
-                    directoryContents = try fileManager.contentsOfDirectory(atPath: dirPath.path)
-                } catch {
-                    NSLog("Could not retrieve directory")
-                }
-                for path in directoryContents {
-                    let fullPath = dirPath.appendingPathComponent(path)
-                    do {
-                        try fileManager.removeItem(atPath: fullPath.path)
-                    } catch {
-                        NSLog("Could not delete file: \(fullPath)")
-                    }
-                }
-                // Delete all cached images
-                ImageCache.default.clearDiskCache()
-                self.tableView?.reloadData()
-                self.tabBarController!.viewControllers?[0] = self.storyboard!.instantiateViewController(withIdentifier: "NowPlayingNavigation")
-                self.tabBarController!.viewControllers?[1] = self.storyboard!.instantiateViewController(withIdentifier: "PlaylistNavigation")
-                self.tabBarController!.viewControllers?[2] = self.storyboard!.instantiateViewController(withIdentifier: "LibraryNavigation")
-            }))
-            actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-            self.present(actions, animated: true, completion: nil)
-            break
-        case 2:
-            let vc = self.storyboard!.instantiateViewController(withIdentifier: "about")
-            self.navigationController?.pushViewController(vc, animated: true)
-            self.navigationController?.navigationBar.tintColor = .white
-        default:
-            break
-        }
-        tableView.deselectRow(at: indexPath, animated: true)
     }
 }

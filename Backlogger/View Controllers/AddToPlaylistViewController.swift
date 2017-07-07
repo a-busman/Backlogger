@@ -14,7 +14,7 @@ protocol AddToPlaylistViewControllerDelegate {
     func dismissView(_ vc: AddToPlaylistViewController)
 }
 
-class AddToPlaylistViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, TableViewCellDelegate, ConsoleSelectionTableViewControllerDelegate{
+class AddToPlaylistViewController: UIViewController {
     
     var allGames: Results<Game>?
     var filteredGames: Results<Game>?
@@ -150,42 +150,127 @@ class AddToPlaylistViewController: UIViewController, UITableViewDelegate, UITabl
         }
     }
     
-    func didSelectConsoles(_ consoles: [Platform]) {
-        let selectedRow = self.currentlySelectedRow
-        var gameList: [Game] = []
-        let gameField = self.gameFields[selectedRow]
-        autoreleasepool {
-            let realm = try! Realm()
-            if let dbGameField = realm.object(ofType: GameField.self, forPrimaryKey: gameField.idNumber) {
-                gameList = Array(dbGameField.ownedGames)
+    func showConsoleSelection(_ row: Int) {
+        self.currentlySelectedRow = row
+        let consoleSelection = ConsoleSelectionTableViewController(style: .grouped)
+        self.searchBar?.resignFirstResponder()
+        consoleSelection.delegate = self
+        consoleSelection.gameField = self.gameFields[row]
+        consoleSelection.playlist = true
+        self.navigationController?.pushViewController(consoleSelection, animated: true)
+    }
+    
+    func filterContent(for searchText: String, scope: String = "All") {
+        if searchText != "" {
+            filteredGames = allGames!.filter("gameFields.name contains[c] \"\(searchText)\"")
+        } else {
+            filteredGames = allGames
+        }
+        self.tableView?.reloadData()
+    }
+}
+
+extension AddToPlaylistViewController: UISearchBarDelegate {
+    // MARK: - UISearchBar Delegate
+    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        searchBar.placeholder = searchBar.scopeButtonTitles![selectedScope]
+        if selectedScope == 0 {
+            self.filterContent(for: searchBar.text!, scope: searchBar.scopeButtonTitles![selectedScope])
+            if self.bottomActivity!.isAnimating {
+                self.bottomActivity?.stopAnimating()
+            }
+            self.gameCountLabel?.text = "\(self.filteredGames!.count) games found."
+            if self.gameCountLabel!.isHidden {
+                self.gameCountLabel?.isHidden = false
+            }
+        } else {
+            if self.query != searchBar.text && searchBar.text != nil && searchBar.text != ""{
+                self.query = searchBar.text!
+                self.performSearch(withQuery: searchBar.text!)
+            }
+            if self.bottomActivity!.isAnimating {
+                self.bottomActivity?.stopAnimating()
+            }
+            if !self.gameCountLabel!.isHidden {
+                self.gameCountLabel?.isHidden = true
             }
         }
-        
-        var newGameList: [Game] = []
-        var currentPlatformList: [Int: Game] = [:]
-        for game in gameList {
-            currentPlatformList[game.platform!.idNumber] = game
-        }
-        let cell = self.tableView?.cellForRow(at: IndexPath(row: selectedRow, section: 0)) as! TableViewCell
-        if consoles.count > 0 {
-            for console in consoles {
-                let game = currentPlatformList[console.idNumber]
-                if game == nil {
-                    let newGameToSave = Game()
-                    newGameToSave.inLibrary = true
-                    newGameToSave.add(gameField, console)
-                    newGameList.append(newGameToSave)
-                } else {
-                    newGameList.append(game!)
+        self.tableView?.reloadData()
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(false, animated: true)
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(false, animated: true)
+        searchBar.resignFirstResponder()
+        return
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        if searchBar.selectedScopeButtonIndex == 0 {
+            self.filterContent(for: searchBar.text!)
+            if self.bottomActivity!.isAnimating {
+                self.bottomActivity?.stopAnimating()
+            }
+            self.gameCountLabel?.text = "\(self.filteredGames!.count) games found."
+            if self.gameCountLabel!.isHidden {
+                self.gameCountLabel?.isHidden = false
+            }
+        } else {
+            if self.query != searchBar.text && searchBar.text != nil && searchBar.text != ""{
+                self.query = searchBar.text!
+                self.performSearch(withQuery: searchBar.text!)
+                if self.bottomActivity!.isAnimating {
+                    self.bottomActivity?.stopAnimating()
+                }
+                if !self.gameCountLabel!.isHidden {
+                    self.gameCountLabel?.isHidden = true
                 }
             }
-            self.addedGames.append(contentsOf: newGameList)
-            cell.libraryState = .inPlaylist
-        } else {
-            cell.libraryState = .addPlaylist
         }
     }
     
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(true, animated: true)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.selectedScopeButtonIndex == 0 {
+            self.filterContent(for: searchText)
+            if self.bottomActivity!.isAnimating {
+                self.bottomActivity?.stopAnimating()
+            }
+            self.gameCountLabel?.text = "\(self.filteredGames!.count) games found."
+            if self.gameCountLabel!.isHidden {
+                self.gameCountLabel?.isHidden = false
+            }
+        } else {
+            if self.query != searchText && searchText != ""{
+                self.query = searchText
+                self.performSearch(withQuery: searchText)
+                if self.bottomActivity!.isAnimating {
+                    self.bottomActivity?.stopAnimating()
+                }
+                if !self.gameCountLabel!.isHidden {
+                    self.gameCountLabel?.isHidden = true
+                }
+            }
+        }
+    }
+    
+    private func performSearch(withQuery query: String) {
+        self.gameFields.removeAll()
+        self.activityIndicator?.startAnimating()
+        self.activityBackground?.isHidden = false
+        self.tableView?.reloadData()
+        self.loadFirstGame(withQuery: query)
+    }
+}
+
+extension AddToPlaylistViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 55
     }
@@ -369,138 +454,9 @@ class AddToPlaylistViewController: UIViewController, UITableViewDelegate, UITabl
         return cell
     }
     
-    func showConsoleSelection(_ row: Int) {
-        self.currentlySelectedRow = row
-        let consoleSelection = ConsoleSelectionTableViewController(style: .grouped)
-        self.searchBar?.resignFirstResponder()
-        consoleSelection.delegate = self
-        consoleSelection.gameField = self.gameFields[row]
-        consoleSelection.playlist = true
-        self.navigationController?.pushViewController(consoleSelection, animated: true)
-    }
-    
-    func addTapped(_ row: Int) {
-        if self.searchBar?.selectedScopeButtonIndex == 0 {
-            let cell = self.tableView?.cellForRow(at: IndexPath(row: row, section: 0)) as! TableViewCell
-            cell.libraryState = .inPlaylist
-            self.addedGames.append(self.filteredGames![row])
-        } else {
-            self.showConsoleSelection(row)
-        }
-    }
-    
-    func filterContent(for searchText: String, scope: String = "All") {
-        if searchText != "" {
-            filteredGames = allGames!.filter("gameFields.name contains[c] \"\(searchText)\"")
-        } else {
-            filteredGames = allGames
-        }
-        self.tableView?.reloadData()
-    }
-    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         self.searchBar?.resignFirstResponder()
         self.searchBar?.setShowsCancelButton(false, animated: true)
-    }
-}
-
-extension AddToPlaylistViewController: UISearchBarDelegate {
-    // MARK: - UISearchBar Delegate
-    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-        searchBar.placeholder = searchBar.scopeButtonTitles![selectedScope]
-        if selectedScope == 0 {
-            self.filterContent(for: searchBar.text!, scope: searchBar.scopeButtonTitles![selectedScope])
-            if self.bottomActivity!.isAnimating {
-                self.bottomActivity?.stopAnimating()
-            }
-            self.gameCountLabel?.text = "\(self.filteredGames!.count) games found."
-            if self.gameCountLabel!.isHidden {
-                self.gameCountLabel?.isHidden = false
-            }
-        } else {
-            if self.query != searchBar.text && searchBar.text != nil && searchBar.text != ""{
-                self.query = searchBar.text!
-                self.performSearch(withQuery: searchBar.text!)
-            }
-            if self.bottomActivity!.isAnimating {
-                self.bottomActivity?.stopAnimating()
-            }
-            if !self.gameCountLabel!.isHidden {
-                self.gameCountLabel?.isHidden = true
-            }
-        }
-        self.tableView?.reloadData()
-    }
-    
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        searchBar.setShowsCancelButton(false, animated: true)
-    }
-    
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.setShowsCancelButton(false, animated: true)
-        searchBar.resignFirstResponder()
-        return
-    }
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.resignFirstResponder()
-        if searchBar.selectedScopeButtonIndex == 0 {
-            self.filterContent(for: searchBar.text!)
-            if self.bottomActivity!.isAnimating {
-                self.bottomActivity?.stopAnimating()
-            }
-            self.gameCountLabel?.text = "\(self.filteredGames!.count) games found."
-            if self.gameCountLabel!.isHidden {
-                self.gameCountLabel?.isHidden = false
-            }
-        } else {
-            if self.query != searchBar.text && searchBar.text != nil && searchBar.text != ""{
-                self.query = searchBar.text!
-                self.performSearch(withQuery: searchBar.text!)
-                if self.bottomActivity!.isAnimating {
-                    self.bottomActivity?.stopAnimating()
-                }
-                if !self.gameCountLabel!.isHidden {
-                    self.gameCountLabel?.isHidden = true
-                }
-            }
-        }
-    }
-    
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        searchBar.setShowsCancelButton(true, animated: true)
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchBar.selectedScopeButtonIndex == 0 {
-            self.filterContent(for: searchText)
-            if self.bottomActivity!.isAnimating {
-                self.bottomActivity?.stopAnimating()
-            }
-            self.gameCountLabel?.text = "\(self.filteredGames!.count) games found."
-            if self.gameCountLabel!.isHidden {
-                self.gameCountLabel?.isHidden = false
-            }
-        } else {
-            if self.query != searchText && searchText != ""{
-                self.query = searchText
-                self.performSearch(withQuery: searchText)
-                if self.bottomActivity!.isAnimating {
-                    self.bottomActivity?.stopAnimating()
-                }
-                if !self.gameCountLabel!.isHidden {
-                    self.gameCountLabel?.isHidden = true
-                }
-            }
-        }
-    }
-    
-    private func performSearch(withQuery query: String) {
-        self.gameFields.removeAll()
-        self.activityIndicator?.startAnimating()
-        self.activityBackground?.isHidden = false
-        self.tableView?.reloadData()
-        self.loadFirstGame(withQuery: query)
     }
 }
 
@@ -510,5 +466,55 @@ extension AddToPlaylistViewController: UISearchResultsUpdating {
         let searchBar = searchController.searchBar
         let scope = searchBar.scopeButtonTitles![searchBar.selectedScopeButtonIndex]
         self.filterContent(for: searchController.searchBar.text!, scope: scope)
+    }
+}
+
+extension AddToPlaylistViewController: TableViewCellDelegate {
+    func addTapped(_ row: Int) {
+        if self.searchBar?.selectedScopeButtonIndex == 0 {
+            let cell = self.tableView?.cellForRow(at: IndexPath(row: row, section: 0)) as! TableViewCell
+            cell.libraryState = .inPlaylist
+            self.addedGames.append(self.filteredGames![row])
+        } else {
+            self.showConsoleSelection(row)
+        }
+    }
+}
+
+extension AddToPlaylistViewController: ConsoleSelectionTableViewControllerDelegate {
+    func didSelectConsoles(_ consoles: [Platform]) {
+        let selectedRow = self.currentlySelectedRow
+        var gameList: [Game] = []
+        let gameField = self.gameFields[selectedRow]
+        autoreleasepool {
+            let realm = try! Realm()
+            if let dbGameField = realm.object(ofType: GameField.self, forPrimaryKey: gameField.idNumber) {
+                gameList = Array(dbGameField.ownedGames)
+            }
+        }
+        
+        var newGameList: [Game] = []
+        var currentPlatformList: [Int: Game] = [:]
+        for game in gameList {
+            currentPlatformList[game.platform!.idNumber] = game
+        }
+        let cell = self.tableView?.cellForRow(at: IndexPath(row: selectedRow, section: 0)) as! TableViewCell
+        if consoles.count > 0 {
+            for console in consoles {
+                let game = currentPlatformList[console.idNumber]
+                if game == nil {
+                    let newGameToSave = Game()
+                    newGameToSave.inLibrary = true
+                    newGameToSave.add(gameField, console)
+                    newGameList.append(newGameToSave)
+                } else {
+                    newGameList.append(game!)
+                }
+            }
+            self.addedGames.append(contentsOf: newGameList)
+            cell.libraryState = .inPlaylist
+        } else {
+            cell.libraryState = .addPlaylist
+        }
     }
 }

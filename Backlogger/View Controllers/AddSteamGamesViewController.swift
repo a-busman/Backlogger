@@ -14,7 +14,7 @@ protocol AddSteamGamesViewControllerDelegate {
     func didDismiss(vc: AddSteamGamesViewController)
 }
 
-class AddSteamGamesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class AddSteamGamesViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView?
     
@@ -60,7 +60,9 @@ class AddSteamGamesViewController: UIViewController, UITableViewDataSource, UITa
         }
         self.delegate?.didSelectSteamGames(vc: self, games: returnFields)
     }
+}
 
+extension AddSteamGamesViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.gameFields.count
     }
@@ -83,14 +85,14 @@ class AddSteamGamesViewController: UIViewController, UITableViewDataSource, UITa
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: tableReuseIdentifier) as! TableViewCell
-
+        
         if self.gameFields.count >= indexPath.row {
             
             let gameToShow = self.gameFields[indexPath.row]
             
             cell.rightLabel?.text = ""
             cell.percentView?.isHidden = true
-
+            
             if let name = gameToShow.name {
                 cell.titleLabel?.text = name
             } else {
@@ -138,5 +140,4 @@ class AddSteamGamesViewController: UIViewController, UITableViewDataSource, UITa
         }
         return cell
     }
-
 }

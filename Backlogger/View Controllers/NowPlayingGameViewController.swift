@@ -15,7 +15,7 @@ protocol NowPlayingGameViewDelegate {
     func notesTyping(textView: UITextView)
 }
 
-class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewControllerDelegate, UITextViewDelegate {
+class NowPlayingGameViewController: UIViewController {
     @IBOutlet weak var coverImageView:       UIImageView?
     @IBOutlet weak var detailsContainerView: UIView?
     @IBOutlet weak var blurView:             UIVisualEffectView?
@@ -29,10 +29,10 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
     
     let gameDetailOverlayController = GameDetailOverlayViewController()
     
-    private var _game: Game?
+    fileprivate var _game: Game?
     var detailUrl: String?
     
-    private var isInEditMode = false
+    fileprivate var isInEditMode = false
     
     var mainImage: UIImage?
     
@@ -64,15 +64,15 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
         case full
     }
     
-    private var blurViewState = DetailState.minimal
-    private var blurViewMinimalY: CGFloat = 0.0
+    fileprivate var blurViewState = DetailState.minimal
+    fileprivate var blurViewMinimalY: CGFloat = 0.0
     
-    private var animator: UIDynamicAnimator!
-    private var gravity: UIGravityBehavior!
-    private var collision: UICollisionBehavior!
+    fileprivate var animator: UIDynamicAnimator!
+    fileprivate var gravity: UIGravityBehavior!
+    fileprivate var collision: UICollisionBehavior!
     
-    private let MINIMUM_TRANSFORM: CGFloat = 0.001
-    private let MAXIMUM_TRANSOFRM: CGFloat = 1.0
+    fileprivate let MINIMUM_TRANSFORM: CGFloat = 0.001
+    fileprivate let MAXIMUM_TRANSOFRM: CGFloat = 1.0
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -165,12 +165,6 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
         }
         self.deleteView?.transform = CGAffineTransform(scaleX: self.isInEditMode ? MAXIMUM_TRANSOFRM : MINIMUM_TRANSFORM,
                                                        y: self.isInEditMode ? MAXIMUM_TRANSOFRM : MINIMUM_TRANSFORM)
-    }
-    
-    func textViewDidChange(_ textView: UITextView) {
-        self._game?.update {
-            self._game?.notes = textView.text
-        }
     }
     
     func hideView() {
@@ -333,49 +327,7 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
             self.blurViewState = .hidden
         }
     }
-    
-    // MARK: handleTapDetails
-    
-    func didDelete(viewController: GameDetailOverlayViewController, uuid: String) {
-        self.delegate?.didDelete(viewController: self, uuid: uuid)
-    }
-    
-    func didTapDetails() {
-        if !self.isInEditMode {
-            // Show percent slider
-            if self.blurViewState == .minimal {
-                self.blurViewMinimalY = (self.blurView?.center.y)!
-                UIView.animate(withDuration: 0.4,
-                               delay: 0.0,
-                               usingSpringWithDamping: 1.0,
-                               initialSpringVelocity: 0,
-                               options: .curveEaseIn,
-                               animations: {
-                                   self.blurView?.center.y -= 40
-                               },
-                               completion: nil)
-                self.blurViewState = .percent
-                
-            // Hide percent slider
-            } else if self.blurViewState == .percent {
-                UIView.animate(withDuration: 0.4,
-                               delay: 0.0,
-                               usingSpringWithDamping: 1.0,
-                               initialSpringVelocity: 0,
-                               options: .curveEaseIn,
-                               animations: {
-                                   self.blurView?.center.y += 40
-                               },
-                               completion: nil)
-                self.blurViewState = .minimal
-            }
-        }
-    }
-    
-    func notesTyping(textView: UITextView) {
-        self.delegate?.notesTyping(textView: textView)
-    }
-    
+
     // MARK: handlePanDetails
     
     @IBAction func handlePanDetails(recognizer:UIPanGestureRecognizer) {
@@ -458,6 +410,56 @@ class NowPlayingGameViewController: UIViewController, GameDetailOverlayViewContr
                     })
                 }
             }
+        }
+    }
+}
+
+extension NowPlayingGameViewController: GameDetailOverlayViewControllerDelegate {
+    func didDelete(viewController: GameDetailOverlayViewController, uuid: String) {
+        self.delegate?.didDelete(viewController: self, uuid: uuid)
+    }
+    
+    func didTapDetails() {
+        if !self.isInEditMode {
+            // Show percent slider
+            if self.blurViewState == .minimal {
+                self.blurViewMinimalY = (self.blurView?.center.y)!
+                UIView.animate(withDuration: 0.4,
+                               delay: 0.0,
+                               usingSpringWithDamping: 1.0,
+                               initialSpringVelocity: 0,
+                               options: .curveEaseIn,
+                               animations: {
+                                self.blurView?.center.y -= 40
+                },
+                               completion: nil)
+                self.blurViewState = .percent
+                
+                // Hide percent slider
+            } else if self.blurViewState == .percent {
+                UIView.animate(withDuration: 0.4,
+                               delay: 0.0,
+                               usingSpringWithDamping: 1.0,
+                               initialSpringVelocity: 0,
+                               options: .curveEaseIn,
+                               animations: {
+                                self.blurView?.center.y += 40
+                },
+                               completion: nil)
+                self.blurViewState = .minimal
+            }
+        }
+    }
+    
+    func notesTyping(textView: UITextView) {
+        self.delegate?.notesTyping(textView: textView)
+    }
+}
+
+extension NowPlayingGameViewController: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        self._game?.update {
+            self._game?.notes = textView.text
         }
     }
 }

@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableViewControllerDelegate, GameDetailsViewControllerDelegate {
+class LibraryAddSearchViewController: UIViewController {
     
     @IBOutlet weak var tableView:          UITableView?
     @IBOutlet weak var searchTintView:     UIView?
@@ -216,128 +216,6 @@ class LibraryAddSearchViewController: UIViewController, ConsoleSelectionTableVie
         }
     }
     
-    func gamesCreated(gameField: GameField) {
-        let cell = self.tableView?.cellForRow(at: IndexPath(row: self.currentlySelectedRow, section: 0)) as! TableViewCell
-        if gameField.ownedGames.count > 0 {
-            cell.libraryState = .addPartial
-        } else {
-            cell.libraryState = .add
-        }
-    }
-    
-    func didSelectConsoles(_ consoles: [Platform]) {
-        let selectedRow = self.currentlySelectedRow
-        var gameList: [Game] = []
-        if !self.isAddingToPlaylist && !self.isAddingToPlayNext && !self.isAddingToPlayLater {
-            autoreleasepool {
-                let realm = try! Realm()
-                if let dbGameField = realm.object(ofType: GameField.self, forPrimaryKey: self.gameFields[selectedRow].idNumber) {
-                    gameList = Array(dbGameField.ownedGames)
-                }
-            }
-            var newGameList: [Game] = []
-            var currentPlatformList: [Platform] = [Platform]()
-            var gameField: GameField = self.gameFields[selectedRow].deepCopy()
-            var shouldDelete = true
-            let cell = self.tableView?.cellForRow(at: IndexPath(row: selectedRow, section: 0)) as! TableViewCell
-            if consoles.count > 0 {
-                for (index, game) in gameList.enumerated() {
-                    if !consoles.contains(game.platform!) {
-                        if index == (gameList.count - 1) && shouldDelete {
-                            gameField = game.deleteWithGameFieldCopy()
-                        } else {
-                            game.delete()
-                        }
-                    } else {
-                        shouldDelete = false
-                        newGameList.append(game)
-                        currentPlatformList.append(game.platform!)
-                    }
-                }
-                for platform in consoles[0..<consoles.endIndex] {
-                    if !currentPlatformList.contains(platform) {
-                        let newGameToSave = Game()
-                        newGameToSave.inLibrary = true
-                        newGameToSave.add(gameField, platform)
-                        newGameList.append(newGameToSave)
-                    }
-                }
-                cell.libraryState = .addPartial
-            } else {
-                for (index, game) in gameList.enumerated() {
-                    if index == (gameList.count - 1) {
-                        gameField = game.deleteWithGameFieldCopy()
-                    } else {
-                        game.delete()
-                    }
-                }
-                cell.libraryState = .add
-            }
-        } else {
-            if consoles.count > 0 {
-                var currentPlatformList: [Int] = []
-                var platformsToAdd: [Platform] = []
-                var consoleIds: [Int] = []
-                let idNumber = self.gameFields[selectedRow].idNumber
-                
-                var gameField: GameField?
-                autoreleasepool {
-                    let realm = try? Realm()
-                    gameField = realm?.object(ofType: GameField.self, forPrimaryKey: idNumber)
-                }
-                if gameField == nil {
-                    gameField = self.gameFields[selectedRow].deepCopy()
-                }
-                for game in (gameField?.ownedGames)! {
-                    if consoles.contains(game.platform!) {
-                        currentPlatformList.append(game.platform!.idNumber)
-                    }
-                }
-                for console in consoles {
-                    if !currentPlatformList.contains(console.idNumber) {
-                        platformsToAdd.append(console)
-                    }
-                    consoleIds.append(console.idNumber)
-                }
-                for platform in platformsToAdd {
-                    let newGameToSave = Game()
-                    newGameToSave.inLibrary = true
-                    newGameToSave.add(gameField, platform)
-                }
-                
-                autoreleasepool {
-                    let realm = try? Realm()
-                    gameField = realm?.object(ofType: GameField.self, forPrimaryKey: idNumber)
-                }
-                
-                var gamesToAdd: [Game] = []
-                for game in gameField!.ownedGames {
-                    let platform = game.platform!
-                    if consoleIds.contains(platform.idNumber) {
-                        gamesToAdd.append(game)
-                    }
-                }
-                    
-                if self.isAddingToPlaylist {
-                    let vc = self.storyboard?.instantiateViewController(withIdentifier: "PlaylistNavigation") as! UINavigationController
-                    let playlistVc = vc.viewControllers.first as! PlaylistViewController
-                    playlistVc.addingGames = gamesToAdd
-                    playlistVc.isAddingGames = true
-                    playlistVc.delegate = self
-                    self.present(vc, animated: true, completion: nil)
-                    self.isAddingToPlaylist = false
-                }
-                if self.isAddingToPlayNext {
-                    self.addToUpNext(games: gamesToAdd, later: false)
-                    self.isAddingToPlayNext = false
-                }
-                if self.isAddingToPlayLater {
-                    self.addToUpNext(games: gamesToAdd, later: true)
-                    self.isAddingToPlayLater = false
-                }
-            }
-        }
-    }
     func addToUpNext(games: [Game], later: Bool) {
         if later {
             autoreleasepool {
@@ -387,7 +265,54 @@ extension LibraryAddSearchViewController: PlaylistViewControllerDelegate {
     }
 }
 
-extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSource, UIViewControllerPreviewingDelegate {
+extension LibraryAddSearchViewController: UIViewControllerPreviewingDelegate {
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        guard let indexPath = self.tableView?.indexPathForRow(at: location),
+            let cell = self.tableView?.cellForRow(at: indexPath) else { return nil }
+        
+        let i = indexPath.row
+        let vc: GameDetailsViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "game_details") as! GameDetailsViewController
+        var gameField: GameField!
+        
+        self.searchBar?.resignFirstResponder()
+        autoreleasepool {
+            let realm = try? Realm()
+            gameField = realm?.object(ofType: GameField.self, forPrimaryKey: self.gameFields[i].idNumber)
+        }
+        if gameField == nil {
+            gameField = self.gameFields[i]
+        }
+        vc.gameField = gameField
+        vc.state = gameField.ownedGames.count > 0 ? .partialAddToLibrary : .addToLibrary
+        vc.delegate = self
+        
+        vc.addRemoveClosure = { (action, vc) -> Void in
+            self.addTapped(i)
+        }
+        vc.addToPlayLaterClosure = { (action, vc) -> Void in
+            self.isAddingToPlayLater = true
+            self.addTapped(i)
+        }
+        vc.addToPlaylistClosure = { (action, vc) -> Void in
+            self.isAddingToPlaylist = true
+            self.addTapped(i)
+        }
+        vc.addToPlayNextClosure = { (action, vc) -> Void in
+            self.isAddingToPlayNext = true
+            self.addTapped(i)
+        }
+        
+        previewingContext.sourceRect = cell.frame
+        
+        return vc
+    }
+    
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
+        self.navigationController?.show(viewControllerToCommit, sender: nil)
+    }
+}
+
+extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if self.gameFields.count == 0 {
             self.gameCountLabel?.isHidden = true
@@ -510,51 +435,6 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
         return cell
     }
     
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
-        guard let indexPath = self.tableView?.indexPathForRow(at: location),
-              let cell = self.tableView?.cellForRow(at: indexPath) else { return nil }
-        
-        let i = indexPath.row
-        let vc: GameDetailsViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "game_details") as! GameDetailsViewController
-        var gameField: GameField!
-        
-        self.searchBar?.resignFirstResponder()
-        autoreleasepool {
-            let realm = try? Realm()
-            gameField = realm?.object(ofType: GameField.self, forPrimaryKey: self.gameFields[i].idNumber)
-        }
-        if gameField == nil {
-            gameField = self.gameFields[i]
-        }
-        vc.gameField = gameField
-        vc.state = gameField.ownedGames.count > 0 ? .partialAddToLibrary : .addToLibrary
-        vc.delegate = self
-        
-        vc.addRemoveClosure = { (action, vc) -> Void in
-            self.addTapped(i)
-        }
-        vc.addToPlayLaterClosure = { (action, vc) -> Void in
-            self.isAddingToPlayLater = true
-            self.addTapped(i)
-        }
-        vc.addToPlaylistClosure = { (action, vc) -> Void in
-            self.isAddingToPlaylist = true
-            self.addTapped(i)
-        }
-        vc.addToPlayNextClosure = { (action, vc) -> Void in
-            self.isAddingToPlayNext = true
-            self.addTapped(i)
-        }
-        
-        previewingContext.sourceRect = cell.frame
-        
-        return vc
-    }
-    
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
-        self.navigationController?.show(viewControllerToCommit, sender: nil)
-    }
-    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         self.searchBar?.resignFirstResponder()
         self.searchBar?.setShowsCancelButton(false, animated: true)
@@ -675,5 +555,132 @@ extension LibraryAddSearchViewController: TableViewCellDelegate {
             consoleSelection.playlist = true
         }
         self.navigationController?.pushViewController(consoleSelection, animated: true)
+    }
+}
+
+extension LibraryAddSearchViewController: ConsoleSelectionTableViewControllerDelegate {
+    func didSelectConsoles(_ consoles: [Platform]) {
+        let selectedRow = self.currentlySelectedRow
+        var gameList: [Game] = []
+        if !self.isAddingToPlaylist && !self.isAddingToPlayNext && !self.isAddingToPlayLater {
+            autoreleasepool {
+                let realm = try! Realm()
+                if let dbGameField = realm.object(ofType: GameField.self, forPrimaryKey: self.gameFields[selectedRow].idNumber) {
+                    gameList = Array(dbGameField.ownedGames)
+                }
+            }
+            var newGameList: [Game] = []
+            var currentPlatformList: [Platform] = [Platform]()
+            var gameField: GameField = self.gameFields[selectedRow].deepCopy()
+            var shouldDelete = true
+            let cell = self.tableView?.cellForRow(at: IndexPath(row: selectedRow, section: 0)) as! TableViewCell
+            if consoles.count > 0 {
+                for (index, game) in gameList.enumerated() {
+                    if !consoles.contains(game.platform!) {
+                        if index == (gameList.count - 1) && shouldDelete {
+                            gameField = game.deleteWithGameFieldCopy()
+                        } else {
+                            game.delete()
+                        }
+                    } else {
+                        shouldDelete = false
+                        newGameList.append(game)
+                        currentPlatformList.append(game.platform!)
+                    }
+                }
+                for platform in consoles[0..<consoles.endIndex] {
+                    if !currentPlatformList.contains(platform) {
+                        let newGameToSave = Game()
+                        newGameToSave.inLibrary = true
+                        newGameToSave.add(gameField, platform)
+                        newGameList.append(newGameToSave)
+                    }
+                }
+                cell.libraryState = .addPartial
+            } else {
+                for (index, game) in gameList.enumerated() {
+                    if index == (gameList.count - 1) {
+                        gameField = game.deleteWithGameFieldCopy()
+                    } else {
+                        game.delete()
+                    }
+                }
+                cell.libraryState = .add
+            }
+        } else {
+            if consoles.count > 0 {
+                var currentPlatformList: [Int] = []
+                var platformsToAdd: [Platform] = []
+                var consoleIds: [Int] = []
+                let idNumber = self.gameFields[selectedRow].idNumber
+                
+                var gameField: GameField?
+                autoreleasepool {
+                    let realm = try? Realm()
+                    gameField = realm?.object(ofType: GameField.self, forPrimaryKey: idNumber)
+                }
+                if gameField == nil {
+                    gameField = self.gameFields[selectedRow].deepCopy()
+                }
+                for game in (gameField?.ownedGames)! {
+                    if consoles.contains(game.platform!) {
+                        currentPlatformList.append(game.platform!.idNumber)
+                    }
+                }
+                for console in consoles {
+                    if !currentPlatformList.contains(console.idNumber) {
+                        platformsToAdd.append(console)
+                    }
+                    consoleIds.append(console.idNumber)
+                }
+                for platform in platformsToAdd {
+                    let newGameToSave = Game()
+                    newGameToSave.inLibrary = true
+                    newGameToSave.add(gameField, platform)
+                }
+                
+                autoreleasepool {
+                    let realm = try? Realm()
+                    gameField = realm?.object(ofType: GameField.self, forPrimaryKey: idNumber)
+                }
+                
+                var gamesToAdd: [Game] = []
+                for game in gameField!.ownedGames {
+                    let platform = game.platform!
+                    if consoleIds.contains(platform.idNumber) {
+                        gamesToAdd.append(game)
+                    }
+                }
+                
+                if self.isAddingToPlaylist {
+                    let vc = self.storyboard?.instantiateViewController(withIdentifier: "PlaylistNavigation") as! UINavigationController
+                    let playlistVc = vc.viewControllers.first as! PlaylistViewController
+                    playlistVc.addingGames = gamesToAdd
+                    playlistVc.isAddingGames = true
+                    playlistVc.delegate = self
+                    self.present(vc, animated: true, completion: nil)
+                    self.isAddingToPlaylist = false
+                }
+                if self.isAddingToPlayNext {
+                    self.addToUpNext(games: gamesToAdd, later: false)
+                    self.isAddingToPlayNext = false
+                }
+                if self.isAddingToPlayLater {
+                    self.addToUpNext(games: gamesToAdd, later: true)
+                    self.isAddingToPlayLater = false
+                }
+            }
+        }
+    }
+}
+
+extension LibraryAddSearchViewController: GameDetailsViewControllerDelegate {
+    func gamesCreated(gameField: GameField) {
+        let cell = self.tableView?.cellForRow(at: IndexPath(row: self.currentlySelectedRow, section: 0)) as! TableViewCell
+        if gameField.ownedGames.count > 0 {
+            cell.libraryState = .addPartial
+        } else {
+            cell.libraryState = .add
+        }
     }
 }

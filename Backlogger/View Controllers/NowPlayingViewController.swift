@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
+class NowPlayingViewController: UIViewController {
     
     @IBOutlet weak var editBarButtonItem: UIBarButtonItem?
     @IBOutlet weak var addBarButtonItem:  UIBarButtonItem?
@@ -424,12 +424,6 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
         return interval + variance * random;
     }
     
-    func notesTyping(textView: UITextView) {
-        self.currentlyTypingTextView = textView
-        self.navigationController?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.doneTyping))
-        self.navigationController?.navigationBar.topItem?.leftBarButtonItem?.isEnabled = false
-    }
-    
     func doneTyping(sender: UIBarButtonItem) {
         self.currentlyTypingTextView?.resignFirstResponder()
         self.navigationController?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.addTapped))
@@ -438,33 +432,6 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
     
     func addTapped(sender: UIBarButtonItem) {
         self.performSegue(withIdentifier: "addToNowPlaying", sender: sender)
-    }
-    
-    func didDelete(viewController: NowPlayingGameViewController, uuid: String) {
-        for i in 0..<self.orderedViewControllers.count {
-            if self.orderedViewControllers[i].game?.uuid == uuid {
-                let _ = self.orderedViewControllers.remove(at: i)
-                let game = self.games.remove(at: i)
-                let _ = self.gameIds.remove(at: i)
-                game.update {
-                    game.nowPlaying = false
-                }
-                self.collectionView?.deleteItems(at: [IndexPath(item: i, section: 0)])
-                self.pageControl?.numberOfPages -= 1
-                break
-            }
-        }
-        if self.games.count == 0 {
-            if self.inEditMode {
-                self.handleTapEdit(sender: UIBarButtonItem())
-            } else {
-                self.navigationController?.navigationBar.topItem?.leftBarButtonItem = nil
-            }
-            UIView.transition(with: self.addBackgroundView!, duration: 0.25, options: .transitionCrossDissolve, animations: {
-                self.addBackgroundView?.isHidden = false
-            }, completion: nil)
-        }
-        self.updatePlaylist()
     }
     
     func updatePlaylist() {
@@ -622,6 +589,41 @@ class NowPlayingViewController: UIViewController, NowPlayingGameViewDelegate {
                 self.blurViewState = .minimal
             }
         }
+    }
+}
+
+extension NowPlayingViewController: NowPlayingGameViewDelegate {
+    func didDelete(viewController: NowPlayingGameViewController, uuid: String) {
+        for i in 0..<self.orderedViewControllers.count {
+            if self.orderedViewControllers[i].game?.uuid == uuid {
+                let _ = self.orderedViewControllers.remove(at: i)
+                let game = self.games.remove(at: i)
+                let _ = self.gameIds.remove(at: i)
+                game.update {
+                    game.nowPlaying = false
+                }
+                self.collectionView?.deleteItems(at: [IndexPath(item: i, section: 0)])
+                self.pageControl?.numberOfPages -= 1
+                break
+            }
+        }
+        if self.games.count == 0 {
+            if self.inEditMode {
+                self.handleTapEdit(sender: UIBarButtonItem())
+            } else {
+                self.navigationController?.navigationBar.topItem?.leftBarButtonItem = nil
+            }
+            UIView.transition(with: self.addBackgroundView!, duration: 0.25, options: .transitionCrossDissolve, animations: {
+                self.addBackgroundView?.isHidden = false
+            }, completion: nil)
+        }
+        self.updatePlaylist()
+    }
+
+    func notesTyping(textView: UITextView) {
+        self.currentlyTypingTextView = textView
+        self.navigationController?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.doneTyping))
+        self.navigationController?.navigationBar.topItem?.leftBarButtonItem?.isEnabled = false
     }
 }
 

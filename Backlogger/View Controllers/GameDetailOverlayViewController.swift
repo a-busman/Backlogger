@@ -15,7 +15,7 @@ protocol GameDetailOverlayViewControllerDelegate {
     func notesTyping(textView: UITextView)
 }
 
-class GameDetailOverlayViewController: UIViewController, UITextViewDelegate {
+class GameDetailOverlayViewController: UIViewController {
     @IBOutlet weak var titleLabel:           UILabel?
     @IBOutlet weak var completionPercentage: UILabel?
     @IBOutlet weak var platformLabel:        UILabel?
@@ -391,10 +391,6 @@ class GameDetailOverlayViewController: UIViewController, UITextViewDelegate {
         self.buttonState = .up
     }
     
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        self.delegate?.notesTyping(textView: textView)
-    }
-    
     @IBAction func statsControlTouchDown(sender: UIButton!) {
         self.notesTextView?.resignFirstResponder()
         if self.buttonState == .up {
@@ -409,5 +405,11 @@ class GameDetailOverlayViewController: UIViewController, UITextViewDelegate {
         self.buttonState = .up
         UIView.animate(withDuration: 0.1, animations: {sender.transform = CGAffineTransform.identity})
         self.notesTextView?.resignFirstResponder()
+    }
+}
+
+extension GameDetailOverlayViewController: UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        self.delegate?.notesTyping(textView: textView)
     }
 }

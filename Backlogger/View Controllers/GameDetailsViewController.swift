@@ -17,7 +17,7 @@ protocol GameDetailsViewControllerDelegate {
     func gamesCreated(gameField: GameField)
 }
 
-class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewControllerDelegate, UITextViewDelegate, PlaylistViewControllerDelegate {
+class GameDetailsViewController: UIViewController {
     @IBOutlet weak var mainImageView:            UIImageView?
     @IBOutlet weak var titleLabel:               UILabel?
     @IBOutlet weak var yearLabel:                UILabel?
@@ -117,13 +117,13 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
 
     let headerBorder = CALayer()
     
-    private var _selectedPlatforms = [Platform]()
+    fileprivate var _selectedPlatforms = [Platform]()
     
-    private var _state: State?
+    fileprivate var _state: State?
     
-    private var _gameField: GameField?
+    fileprivate var _gameField: GameField?
     
-    private var _game: Game?
+    fileprivate var _game: Game?
     
     var gameFieldId: Int?
     
@@ -761,12 +761,6 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         self.detailsScrollView?.isHidden = false
     }
 
-    func textViewDidChange(_ textView: UITextView) {
-        self._game?.update {
-            self._game?.notes = textView.text
-        }
-    }
-
     @IBAction func addTapped(sender: UITapGestureRecognizer?) {
         if self.state == .addToLibrary || self.isAddingToPlayLater || self.isAddingToPlayNext || self.isAddingToPlaylist {
             let consoleSelection = ConsoleSelectionTableViewController(style: .grouped)
@@ -809,7 +803,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         self.navigationController?.pushViewController(consoleSelection, animated: true)
     }
     
-    private func transitionToRemove() {
+    fileprivate func transitionToRemove() {
         self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Library", description: nil)
         self.state = .partialAddToLibrary
         if self._gameField?.ownedGames.count == 1 || (self._gameField == nil && self._game != nil) {
@@ -832,7 +826,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
         })
     }
     
-    private func transitionToAdd() {
+    fileprivate func transitionToAdd() {
         self.state = .addToLibrary
         self.addLabel?.text = "ADD"
         UIView.animate(withDuration: 0.2, animations: {
@@ -902,18 +896,6 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
 
         self.present(actions, animated: true, completion: nil)
 
-    }
-    
-    func chosePlaylist(vc: PlaylistViewController, playlist: Playlist, games: [Game], isNew: Bool) {
-        if !isNew {
-            playlist.update {
-                playlist.games.append(contentsOf: games)
-            }
-        }
-        vc.presentingViewController?.dismiss(animated: true, completion: {
-            self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "add_to_playlist_large"), title: "Added to Playlist", description: "Added to \"\(playlist.name!)\".")
-        })
-        vc.navigationController?.dismiss(animated: true, completion: nil)
     }
     
     func handleAddToPlaylist(sender: UIAlertAction) {
@@ -1297,7 +1279,9 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     @IBAction func handleTapDone() {
         self.notesTextView?.resignFirstResponder()
     }
-    
+}
+
+extension GameDetailsViewController: ConsoleSelectionTableViewControllerDelegate {
     func didSelectConsoles(_ consoles: [Platform]) {
         
         if !self.isAddingToPlaylist && !self.isAddingToPlayNext && !self.isAddingToPlayLater {
@@ -1313,12 +1297,12 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
                         currentPlatformList.append(game.platform!)
                     }
                 }
-
+                
                 var platformString = ""
-
+                
                 if consoles.count > 1 {
                     for platform in consoles[0..<consoles.endIndex - 1] {
-
+                        
                         if !currentPlatformList.contains(platform) {
                             let newGameToSave = Game()
                             newGameToSave.inLibrary = true
@@ -1359,7 +1343,7 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
                 }
                 self.transitionToRemove()
             } else {
-
+                
                 self._gameField = gameField
                 UIView.setAnimationsEnabled(false)
                 self.platformButton?.setTitle("", for: .normal)
@@ -1444,6 +1428,13 @@ class GameDetailsViewController: UIViewController, ConsoleSelectionTableViewCont
     }
 }
 
+extension GameDetailsViewController: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        self._game?.update {
+            self._game?.notes = textView.text
+        }
+    }
+}
 extension GameDetailsViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView == self.detailsScrollView! {
@@ -1509,11 +1500,21 @@ extension GameDetailsViewController: UIScrollViewDelegate {
                     targetContentOffset.pointee = CGPoint(x: 0.0, y: initialInset + heightRange)
                 }
             }
-        } else if let collectionView = scrollView as? UICollectionView {
-            if collectionView == self.imageCollectionView! {
-                let itemWidth = collectionView
+        }
+    }
+}
+
+extension GameDetailsViewController: PlaylistViewControllerDelegate {
+    func chosePlaylist(vc: PlaylistViewController, playlist: Playlist, games: [Game], isNew: Bool) {
+        if !isNew {
+            playlist.update {
+                playlist.games.append(contentsOf: games)
             }
         }
+        vc.presentingViewController?.dismiss(animated: true, completion: {
+            self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "add_to_playlist_large"), title: "Added to Playlist", description: "Added to \"\(playlist.name!)\".")
+        })
+        vc.navigationController?.dismiss(animated: true, completion: nil)
     }
 }
 
