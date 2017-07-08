@@ -247,7 +247,12 @@ class NowPlayingViewController: UIViewController {
     
     func handleLongGesture(gesture: UILongPressGestureRecognizer) {
         let location = gesture.location(in: self.collectionView!)
-        self.movingIndexPath = collectionView?.indexPathForItem(at: location)
+        let newIndexPath = self.collectionView?.indexPathForItem(at: location)
+        
+        if newIndexPath != nil {
+            self.movingIndexPath = newIndexPath
+        }
+
         let cell = (self.collectionView?.cellForItem(at: self.movingIndexPath!))!
         switch(gesture.state) {
             
