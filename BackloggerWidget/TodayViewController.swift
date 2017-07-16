@@ -102,7 +102,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     
     @IBAction func minusTapped(sender: UITapGestureRecognizer) {
         if self.progress! > 0 {
-            self.progress! -= 10
+            self.progress! -= 5
             autoreleasepool {
                 let realm = try! Realm()
                 if let game = realm.object(ofType: Game.self, forPrimaryKey: self.gameId!) {
@@ -120,7 +120,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     
     @IBAction func plusTapped(sender: UITapGestureRecognizer) {
         if self.progress! < 100 {
-            self.progress! += 10
+            self.progress! += 5
             autoreleasepool {
                 let realm = try! Realm()
                 if let game = realm.object(ofType: Game.self, forPrimaryKey: self.gameId!) {

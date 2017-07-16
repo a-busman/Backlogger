@@ -1114,12 +1114,12 @@ class GameDetailsViewController: UIViewController {
     }
     
     @IBAction func handleSlider(sender: UISlider) {
-        let remainder = Int(sender.value) % 10
+        let remainder = Int(sender.value) % 5
         var newValue: Int = 0
-        if remainder < 5 {
+        if remainder < 2 {
             newValue = Int(sender.value) - remainder
         } else {
-            newValue = Int(sender.value) + 10 - remainder
+            newValue = Int(sender.value) + 5 - remainder
         }
         sender.value = Float(newValue)
         self.percentageLabel?.text = "\(newValue)%"
