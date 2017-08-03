@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -86,9 +86,34 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="tyl-SM-4ai">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="tyl-SM-4ai">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <color key="backgroundColor" red="0.9370916485786438" green="0.93694382905960083" blue="0.95754462480545044" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <collectionView key="tableFooterView" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" prefetchingEnabled="NO" id="OS8-lr-iZ7">
+                                    <rect key="frame" x="0.0" y="100.5" width="375" height="350"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="gXn-1g-yYr">
+                                        <size key="itemSize" width="175" height="175"/>
+                                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                        <inset key="sectionInset" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
+                                    </collectionViewFlowLayout>
+                                    <cells>
+                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="progress_cell" id="bKd-CB-cW4" customClass="ProgressCell" customModule="Backlogger" customModuleProvider="target">
+                                            <rect key="frame" x="10" y="0.0" width="175" height="175"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                                <rect key="frame" x="0.0" y="0.0" width="175" height="175"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                            </view>
+                                        </collectionViewCell>
+                                    </cells>
+                                    <connections>
+                                        <outlet property="dataSource" destination="tdg-a6-umm" id="9Ef-HZ-x8z"/>
+                                        <outlet property="delegate" destination="tdg-a6-umm" id="zwH-8t-WC7"/>
+                                    </connections>
+                                </collectionView>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="customcell" textLabel="jeT-rQ-09O" detailTextLabel="wkm-nW-DvC" style="IBUITableViewCellStyleValue1" id="Rcr-S0-Trp">
                                         <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
@@ -195,6 +220,7 @@
                         <outlet property="plainActivityIndicator" destination="Gp6-Uj-Rgd" id="HaP-4j-FjH"/>
                         <outlet property="plainLoadingView" destination="SJd-Hk-JUB" id="efj-lw-b2g"/>
                         <outlet property="progressBar" destination="8XC-Vs-PWo" id="Tj2-VH-HNb"/>
+                        <outlet property="progressCollectionView" destination="OS8-lr-iZ7" id="HNP-PZ-2yE"/>
                         <outlet property="progressLabel" destination="La0-5o-s73" id="rDm-fb-0p8"/>
                         <outlet property="tableView" destination="tyl-SM-4ai" id="iFU-i1-Ate"/>
                         <outlet property="view" destination="SQN-Kv-7HW" id="MFr-JN-mSM"/>
@@ -492,12 +518,20 @@
                                     <outletCollection property="gestureRecognizers" destination="MUm-BE-fIg" appends="YES" id="oKg-Oz-bz1"/>
                                 </connections>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Version 1.0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8mm-Pw-bWL">
+                                <rect key="frame" x="145.5" y="140.5" width="83" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.9370916485786438" green="0.93694382905960083" blue="0.95754462480545044" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="3Ni-px-GDi" firstAttribute="top" secondItem="P5z-6L-sjX" secondAttribute="bottom" constant="40" id="ALq-Zh-AHJ"/>
                             <constraint firstItem="w9n-lm-8I3" firstAttribute="centerX" secondItem="AgY-T7-b5t" secondAttribute="centerX" id="Exa-2Q-j1n"/>
                             <constraint firstItem="RwV-fa-gj5" firstAttribute="top" secondItem="3Ni-px-GDi" secondAttribute="bottom" constant="20" id="JNM-Vc-xnA"/>
+                            <constraint firstItem="8mm-Pw-bWL" firstAttribute="centerX" secondItem="AgY-T7-b5t" secondAttribute="centerX" id="KXx-Uq-Rfk"/>
+                            <constraint firstItem="8mm-Pw-bWL" firstAttribute="top" secondItem="P5z-6L-sjX" secondAttribute="bottom" constant="5" id="Mft-Sm-LcE"/>
                             <constraint firstItem="P5z-6L-sjX" firstAttribute="top" secondItem="Naq-Ru-pix" secondAttribute="bottom" constant="30" id="PAj-xl-9Ab"/>
                             <constraint firstItem="w9n-lm-8I3" firstAttribute="top" secondItem="twQ-hG-Zia" secondAttribute="bottom" constant="20" id="Shk-vr-8i7"/>
                             <constraint firstItem="asg-c9-qfF" firstAttribute="top" secondItem="iij-Kq-dsb" secondAttribute="bottom" constant="20" id="VgV-e7-xwE"/>

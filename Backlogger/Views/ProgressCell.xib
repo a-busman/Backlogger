@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="progress_cell" id="PZn-Kk-BEE" customClass="ProgressCell" customModule="Backlogger" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="150" height="175"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="150" height="175"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EaF-vY-caI">
+                        <rect key="frame" x="12.5" y="15" width="125" height="125"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pAj-Fr-RLn">
+                                <rect key="frame" x="15" y="28.5" width="96.5" height="48"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Cb-a1-ots">
+                                <rect key="frame" x="47" y="76.5" width="31" height="14.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="125" id="DO1-KD-CJt"/>
+                            <constraint firstItem="7Cb-a1-ots" firstAttribute="top" secondItem="pAj-Fr-RLn" secondAttribute="bottom" id="IVM-eQ-rn0"/>
+                            <constraint firstItem="pAj-Fr-RLn" firstAttribute="centerY" secondItem="EaF-vY-caI" secondAttribute="centerY" constant="-10" id="Ozq-Dv-Xfh"/>
+                            <constraint firstItem="7Cb-a1-ots" firstAttribute="centerX" secondItem="EaF-vY-caI" secondAttribute="centerX" id="dgE-O7-ISa"/>
+                            <constraint firstItem="pAj-Fr-RLn" firstAttribute="centerX" secondItem="EaF-vY-caI" secondAttribute="centerX" id="fvj-hm-dXQ"/>
+                        </constraints>
+                    </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aia-JI-ymQ">
+                        <rect key="frame" x="0.0" y="150" width="150" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstItem="aia-JI-ymQ" firstAttribute="centerX" secondItem="PZn-Kk-BEE" secondAttribute="centerX" id="8ec-bg-WIG"/>
+                <constraint firstItem="aia-JI-ymQ" firstAttribute="width" secondItem="PZn-Kk-BEE" secondAttribute="width" id="8ll-zL-hvm"/>
+                <constraint firstItem="EaF-vY-caI" firstAttribute="width" secondItem="PZn-Kk-BEE" secondAttribute="width" constant="-25" id="Ahj-3D-1Ga"/>
+                <constraint firstItem="aia-JI-ymQ" firstAttribute="top" secondItem="EaF-vY-caI" secondAttribute="bottom" constant="10" id="KHL-Ep-C8q"/>
+                <constraint firstItem="EaF-vY-caI" firstAttribute="top" secondItem="PZn-Kk-BEE" secondAttribute="top" constant="15" id="U2r-2Q-VNC"/>
+                <constraint firstItem="EaF-vY-caI" firstAttribute="centerX" secondItem="PZn-Kk-BEE" secondAttribute="centerX" id="kSA-re-Uvu"/>
+            </constraints>
+            <size key="customSize" width="522" height="481"/>
+            <connections>
+                <outlet property="circleView" destination="EaF-vY-caI" id="cE2-1S-5ai"/>
+                <outlet property="denominatorLabel" destination="7Cb-a1-ots" id="RAI-4A-0LX"/>
+                <outlet property="numeratorLabel" destination="pAj-Fr-RLn" id="ND9-rS-eQg"/>
+                <outlet property="titleLabel" destination="aia-JI-ymQ" id="rd1-QM-pP2"/>
+            </connections>
+            <point key="canvasLocation" x="147.5" y="174.5"/>
+        </collectionViewCell>
+    </objects>
+</document>

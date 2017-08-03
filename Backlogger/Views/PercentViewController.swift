@@ -32,7 +32,7 @@ class PercentViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.progressLabel = UILabel()
-        self.progressLabel.textColor = Util.appColor
+        self.progressLabel.textColor = .darkGray
         self.progressLabel.text = "\(self._progress)"
         self.progressLabel.textAlignment = .center
         self.progressLabel.font = UIFont.systemFont(ofSize: 10.0, weight: 4.0)

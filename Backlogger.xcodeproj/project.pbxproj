@@ -78,6 +78,8 @@
 		FACCA6661EF84386005F1021 /* Publisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8E71CC1E80E61800E7400B /* Publisher.swift */; };
 		FACCA6671EF8438A005F1021 /* Developer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8E71CE1E80E66500E7400B /* Developer.swift */; };
 		FACCA66B1EF8E837005F1021 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FACCA66A1EF8E837005F1021 /* Assets.xcassets */; };
+		FACD42761F3262B500F6DA0C /* ProgressCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FACD42751F3262B500F6DA0C /* ProgressCell.xib */; };
+		FACD42781F32641C00F6DA0C /* ProgressCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACD42771F32641C00F6DA0C /* ProgressCell.swift */; };
 		FADA808B1E4C07570069943D /* PanDirectionGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808A1E4C07570069943D /* PanDirectionGestureRecognizer.swift */; };
 		FADA808E1E4C0D680069943D /* NowPlayingGameViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808D1E4C0D680069943D /* NowPlayingGameViewCell.swift */; };
 		FADA80901E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808F1E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift */; };
@@ -181,6 +183,8 @@
 		FACCA65D1EF8303B005F1021 /* Backlogger.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Backlogger.entitlements; sourceTree = "<group>"; };
 		FACCA6681EF8BAD7005F1021 /* BackloggerWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BackloggerWidget.entitlements; sourceTree = "<group>"; };
 		FACCA66A1EF8E837005F1021 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FACD42751F3262B500F6DA0C /* ProgressCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ProgressCell.xib; path = Views/ProgressCell.xib; sourceTree = "<group>"; };
+		FACD42771F32641C00F6DA0C /* ProgressCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProgressCell.swift; path = "Collection View/ProgressCell.swift"; sourceTree = "<group>"; };
 		FADA808A1E4C07570069943D /* PanDirectionGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PanDirectionGestureRecognizer.swift; path = "Gesture Recognizers/PanDirectionGestureRecognizer.swift"; sourceTree = "<group>"; };
 		FADA808D1E4C0D680069943D /* NowPlayingGameViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NowPlayingGameViewCell.swift; path = "Collection View/NowPlayingGameViewCell.swift"; sourceTree = "<group>"; };
 		FADA808F1E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TopAlignedCollectionViewFlowLayout.swift; path = "Collection View/TopAlignedCollectionViewFlowLayout.swift"; sourceTree = "<group>"; };
@@ -276,6 +280,7 @@
 		FA0915841E2AA9520052BCEC /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				FA545BE11F0E740800D2F185 /* PercentViewController.swift */,
 				FA358A691EC2777E001EE03D /* PlaylistDetailsViewController.swift */,
 				FA358A671EC27768001EE03D /* ConsoleSelectionTableViewController.swift */,
 				FA09158B1E2AA9AD0052BCEC /* NowPlayingViewController.swift */,
@@ -313,7 +318,7 @@
 				FA358A5F1EBF7484001EE03D /* PlaylistDescriptionCell.xib */,
 				FA358A631EBFC001001EE03D /* PlaylistAddTableCell.xib */,
 				FA1FFF7C1F0152450048D907 /* CharacterCell.xib */,
-				FA545BE11F0E740800D2F185 /* PercentViewController.swift */,
+				FACD42751F3262B500F6DA0C /* ProgressCell.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -345,6 +350,7 @@
 				FADA808F1E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift */,
 				FA4B44981E5E97C5006A843F /* ImageCell.swift */,
 				FA1FFF7E1F0153690048D907 /* CharacterCell.swift */,
+				FACD42771F32641C00F6DA0C /* ProgressCell.swift */,
 			);
 			name = "Collection View";
 			sourceTree = "<group>";
@@ -490,6 +496,7 @@
 				FADA809C1E4FB2D20069943D /* TableViewCell.xib in Resources */,
 				FA0915791E2AA4210052BCEC /* LaunchScreen.storyboard in Resources */,
 				FA358A5A1EBC22F6001EE03D /* PlaylistTitleCell.xib in Resources */,
+				FACD42761F3262B500F6DA0C /* ProgressCell.xib in Resources */,
 				FA68A8EF1ECBB06900C9CE2E /* PlaylistFooter.xib in Resources */,
 				FA358A541EBADF23001EE03D /* PlaylistTableCell.xib in Resources */,
 				FA358A641EBFC001001EE03D /* PlaylistAddTableCell.xib in Resources */,
@@ -624,6 +631,7 @@
 				FA1FFF811F0153E40048D907 /* GameCharacter.swift in Sources */,
 				FA0915881E2AA98C0052BCEC /* MoreViewController.swift in Sources */,
 				FA5C623D1E760413008558BF /* ToastOverlayViewController.swift in Sources */,
+				FACD42781F32641C00F6DA0C /* ProgressCell.swift in Sources */,
 				FA1FFF771EFDFBF50048D907 /* SteamLoginViewController.swift in Sources */,
 				FA4B44871E556AD3006A843F /* LibraryAddSearchViewController.swift in Sources */,
 				FA358A5C1EBC2BD2001EE03D /* PlaylistTitleCell.swift in Sources */,

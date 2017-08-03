@@ -18,11 +18,86 @@ class MoreViewController: UIViewController {
     @IBOutlet weak var progressBar: UIProgressView?
     @IBOutlet weak var plainLoadingView: UIView?
     @IBOutlet weak var plainActivityIndicator: UIActivityIndicatorView?
+    @IBOutlet weak var progressCollectionView: UICollectionView?
+    
+    let progressReuseId = "progress_cell"
     
     var steamVc: UINavigationController?
     let stringList: [String] = ["Link Steam Account", "Reset Data", "About"]
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tableView?.tableFooterView = self.progressCollectionView
+        self.progressCollectionView?.register(UINib(nibName: "ProgressCell", bundle: nil), forCellWithReuseIdentifier: self.progressReuseId)
+        self.progressCollectionView?.backgroundColor = .clear
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.progressCollectionView?.reloadData()
+        self.progressCollectionView?.collectionViewLayout.invalidateLayout()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if self.tableView!.contentSize.height > (self.tableView!.frame.height - self.navigationController!.navigationBar.frame.height - self.tabBarController!.tabBar.frame.height) {
+            self.progressCollectionView?.contentInset = UIEdgeInsets(top: 0, left: 10.0, bottom: 0, right: 10.0)
+            self.tableView?.bounces = true
+        } else {
+            self.progressCollectionView?.contentInset = UIEdgeInsets(top: 0, left: 16.0, bottom: 0, right: 16.0)
+
+        }
+    }
+}
+
+extension MoreViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 150, height: 175)
+    }
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 4
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.progressReuseId, for: indexPath) as! ProgressCell
+        autoreleasepool {
+            let realm = try! Realm()
+            let allObjects = realm.objects(Game.self)
+            let totalCount = allObjects.count
+            cell.denominator = totalCount
+            cell.progressType = .games
+            switch(indexPath.item) {
+            case 0:
+                let completeCount = allObjects.filter("finished = true").count
+                cell.numerator = completeCount
+                cell.titleString = "Finished"
+                break
+            case 1:
+                let hundoPCount = allObjects.filter("progress = 100").count
+                cell.numerator = hundoPCount
+                cell.titleString = "100% Complete"
+                break
+            case 2:
+                let startedCount = allObjects.filter("progress != 0").count
+                cell.numerator = startedCount
+                cell.titleString = "Started"
+                break
+            case 3:
+                let sumOfPercentages: Int = allObjects.sum(ofProperty: "progress")
+                if totalCount > 0 {
+                    cell.numerator = sumOfPercentages / totalCount
+                } else {
+                    cell.numerator = 0
+                }
+                cell.denominator = 100
+                cell.progressType = .percent
+                cell.titleString = "Total Progress"
+                break
+            default:
+                break
+            }
+        }
+        cell.layoutSubviews()
+        return cell
     }
 }
 
@@ -44,21 +119,6 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
             cell.detailTextLabel?.text = ""
         }
         return cell
-    }
-    
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 40.0
-    }
-    
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let versionLabel = UILabel(frame: CGRect(x: 0.0, y: 0.0, width: tableView.frame.width, height: 30.0))
-        guard let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String else {
-            return UIView(frame: .zero)
-        }
-        versionLabel.text = "Version \(version)"
-        versionLabel.textAlignment = .center
-        versionLabel.textColor = .lightGray
-        return versionLabel
     }
     
     func tappedDone(sender: UIBarButtonItem) {
