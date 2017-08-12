@@ -28,12 +28,8 @@ class Platform: Field {
     
     let ownedGames: LinkingObjects<Game> = LinkingObjects(fromType: Game.self, property: "platform")
 
-    var linkedGameFields: [GameField] {
-        if let objects = realm?.objects(GameField.self).filter("%@ IN platforms", self) {
-            return Array(objects)
-        } else {
-            return [GameField]()
-        }
+    var linkedGameFields: Results<GameField>? {
+        return realm?.objects(GameField.self).filter("%@ IN platforms", self)
     }
     
     var progress: Int {

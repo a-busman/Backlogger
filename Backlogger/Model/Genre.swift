@@ -8,15 +8,13 @@
 
 import Foundation
 import Realm
+import RealmSwift
 
 class Genre: Field {
-    var linkingGameFields: [GameField] {
-        if let objects = realm?.objects(GameField.self).filter("%@ IN genres", self) {
-            return Array(objects)
-        } else {
-            return [GameField]()
-        }
+    var linkingGameFields: Results<GameField>? {
+        return realm?.objects(GameField.self).filter("%@ IN genres", self)
     }
+    
     override init(json: [String : Any]) {
         super.init(json: json)
     }

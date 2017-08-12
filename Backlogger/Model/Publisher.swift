@@ -8,14 +8,11 @@
 
 import Foundation
 import Realm
+import RealmSwift
 
 class Publisher: Field {
-    var linkingGameFields: [GameField] {
-        if let objects = realm?.objects(GameField.self).filter("%@ IN publishers", self) {
-            return Array(objects)
-        } else {
-            return [GameField]()
-        }
+    var linkingGameFields: Results<GameField>? {
+        return realm?.objects(GameField.self).filter("%@ IN publishers", self)
     }
     
     override init(json: [String : Any]) {

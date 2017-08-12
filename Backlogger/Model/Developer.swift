@@ -8,15 +8,13 @@
 
 import Foundation
 import Realm
+import RealmSwift
 
 class Developer: Field {
-    var linkingGameFields: [GameField] {
-        if let objects = realm?.objects(GameField.self).filter("%@ IN developers", self) {
-            return Array(objects)
-        } else {
-            return [GameField]()
-        }
+    var linkingGameFields: Results<GameField>? {
+        return realm?.objects(GameField.self).filter("%@ IN developers", self)
     }
+    
     override init(json: [String : Any]) {
         super.init(json: json)
     }

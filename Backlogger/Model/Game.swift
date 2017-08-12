@@ -714,7 +714,7 @@ class GameField: Field {
             self.update {
                 platform = self.platforms.remove(at: 0)
             }
-            if platform.linkedGameFields.count == 0 && platform.ownedGames.count == 0 {
+            if (platform.linkedGameFields == nil || platform.linkedGameFields!.count == 0) && platform.ownedGames.count == 0 {
                 platform.delete()
             }
         }
@@ -723,7 +723,7 @@ class GameField: Field {
             self.update {
                 developer = self.developers.remove(at: 0)
             }
-            if developer.linkingGameFields.count == 0 {
+            if developer.linkingGameFields == nil || developer.linkingGameFields!.count == 0 {
                 developer.delete()
             }
         }
@@ -732,7 +732,7 @@ class GameField: Field {
             self.update {
                 publisher = self.publishers.remove(at: 0)
             }
-            if publisher.linkingGameFields.count == 0 {
+            if publisher.linkingGameFields == nil || publisher.linkingGameFields!.count == 0 {
                 publisher.delete()
             }
         }
@@ -741,7 +741,7 @@ class GameField: Field {
             self.update {
                 genre = self.genres.remove(at: 0)
             }
-            if genre.linkingGameFields.count == 0 {
+            if genre.linkingGameFields == nil || genre.linkingGameFields!.count == 0 {
                 genre.delete()
             }
         }
@@ -750,7 +750,7 @@ class GameField: Field {
             self.update {
                 character = self.characters.remove(at: 0)
             }
-            if character.linkedGameFields.count == 0 {
+            if character.linkedGameFields == nil || character.linkedGameFields!.count == 0 {
                 character.delete()
             }
         }
@@ -784,7 +784,7 @@ class GameField: Field {
             self.update {
                 platform = self.platforms.remove(at: 0)
             }
-            if platform.linkedGameFields.count == 0 && platform.ownedGames.count == 0 {
+            if (platform.linkedGameFields == nil || platform.linkedGameFields!.count == 0) && platform.ownedGames.count == 0 {
                 newGameField.platforms.append(platform.deleteRetainCopy())
             } else {
                 newGameField.platforms.append(platform.deepCopy())
@@ -796,7 +796,7 @@ class GameField: Field {
             self.update {
                 developer = self.developers.remove(at: 0)
             }
-            if developer.linkingGameFields.count == 0 {
+            if developer.linkingGameFields == nil || developer.linkingGameFields!.count == 0 {
                 newGameField.developers.append(developer.deleteRetainCopy())
             } else {
                 newGameField.developers.append(developer.deepCopy())
@@ -808,7 +808,7 @@ class GameField: Field {
             self.update {
                 publisher = self.publishers.remove(at: 0)
             }
-            if publisher.linkingGameFields.count == 0 {
+            if publisher.linkingGameFields == nil || publisher.linkingGameFields!.count == 0 {
                 newGameField.publishers.append(publisher.deleteRetainCopy())
             } else {
                 newGameField.publishers.append(publisher.deepCopy())
@@ -820,7 +820,7 @@ class GameField: Field {
             self.update {
                 genre = self.genres.remove(at: 0)
             }
-            if genre.linkingGameFields.count == 0 {
+            if genre.linkingGameFields == nil || genre.linkingGameFields!.count == 0 {
                 newGameField.genres.append(genre.deleteRetainCopy())
             } else {
                 newGameField.genres.append(genre.deepCopy())
@@ -832,7 +832,7 @@ class GameField: Field {
             self.update {
                 character = self.characters.remove(at: 0)
             }
-            if character.linkedGameFields.count == 0 {
+            if character.linkedGameFields == nil || character.linkedGameFields!.count == 0 {
                 newGameField.characters.append(character.deleteRetainCopy())
             } else {
                 newGameField.characters.append(character.deepCopy())
@@ -861,12 +861,8 @@ class Game: Object {
     dynamic var notes:      String?    = nil
     dynamic var fromSteam:  Bool       = false
     
-    var linkedPlaylists: [Playlist] {
-        if let objects = realm?.objects(Playlist.self).filter("%@ IN games", self) {
-            return Array(objects)
-        } else {
-            return [Playlist]()
-        }
+    var linkedPlaylists: Results<Playlist>? {
+        return realm?.objects(Playlist.self).filter("%@ IN games", self)
     }
     
     override static func primaryKey() -> String? {
@@ -904,7 +900,7 @@ class Game: Object {
         autoreleasepool {
             let realm = try? Realm()
             if let dbPlatform = realm?.object(ofType: Platform.self, forPrimaryKey: platformId) {
-                if dbPlatform.ownedGames.count == 0 && dbPlatform.linkedGameFields.count == 0 {
+                if dbPlatform.ownedGames.count == 0 && (dbPlatform.linkedGameFields == nil || dbPlatform.linkedGameFields!.count == 0) {
                     dbPlatform.delete()
                 }
             }
@@ -916,16 +912,18 @@ class Game: Object {
         }
         // Remove from all linked playlists.
         
-        for playlist in self.linkedPlaylists {
-            var games: [Game] = []
-            for game in playlist.games {
-                if game.uuid != self.uuid {
-                    games.append(game)
+        if self.linkedPlaylists != nil {
+            for playlist in self.linkedPlaylists! {
+                var games: [Game] = []
+                for game in playlist.games {
+                    if game.uuid != self.uuid {
+                        games.append(game)
+                    }
                 }
-            }
-            playlist.update {
-                playlist.games.removeAll()
-                playlist.games.append(contentsOf: games)
+                playlist.update {
+                    playlist.games.removeAll()
+                    playlist.games.append(contentsOf: games)
+                }
             }
         }
     }

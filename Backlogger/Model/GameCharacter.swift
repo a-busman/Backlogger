@@ -17,12 +17,8 @@ class GameCharacter: Field {
     
     static var loadingQueue: DispatchQueue = DispatchQueue(label: "character.load.queue")
     
-    var linkedGameFields: [GameField] {
-        if let objects = realm?.objects(GameField.self).filter("%@ IN characters", self) {
-            return Array(objects)
-        } else {
-            return [GameField]()
-        }
+    var linkedGameFields: Results<GameField>? {
+        return realm?.objects(GameField.self).filter("%@ IN characters", self)
     }
     
     override init(json: [String : Any]) {

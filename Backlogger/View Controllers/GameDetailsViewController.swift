@@ -585,9 +585,11 @@ class GameDetailsViewController: UIViewController {
         let playLater = UIPreviewAction(title: "Play Later", style: .default, handler: self.addToPlayLaterClosure!)
         playLater.setValue(#imageLiteral(resourceName: "add_to_queue"), forKey: "image")
         if let game = self._game {
-            for playlist in game.linkedPlaylists {
-                if playlist.isUpNext || playlist.isNowPlaying {
-                    return [addRemove, addToPlaylist]
+            if let linkedPlaylists = game.linkedPlaylists {
+                for playlist in linkedPlaylists {
+                    if playlist.isUpNext || playlist.isNowPlaying {
+                        return [addRemove, addToPlaylist]
+                    }
                 }
             }
         }
@@ -877,10 +879,12 @@ class GameDetailsViewController: UIViewController {
         var inNowPlaying = false
         
         if let game = self._game {
-            for playlist in game.linkedPlaylists {
-                if playlist.isUpNext || playlist.isNowPlaying {
-                    inNowPlaying = true
-                    break
+            if let linkedPlaylists = game.linkedPlaylists {
+                for playlist in linkedPlaylists {
+                    if playlist.isUpNext || playlist.isNowPlaying {
+                        inNowPlaying = true
+                        break
+                    }
                 }
             }
         }

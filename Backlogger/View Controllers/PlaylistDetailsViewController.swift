@@ -498,10 +498,12 @@ class PlaylistDetailsViewController: UITableViewController {
                 var currentGames = List<Game>()
                 for game in self.games {
                     var isNowPlaying = false
-                    for playlist in game.linkedPlaylists {
-                        if playlist.isNowPlaying || playlist.isUpNext {
-                            isNowPlaying = true
-                            break
+                    if let linkedPlaylists = game.linkedPlaylists {
+                        for playlist in linkedPlaylists {
+                            if playlist.isNowPlaying || playlist.isUpNext {
+                                isNowPlaying = true
+                                break
+                            }
                         }
                     }
                     if !isNowPlaying {
@@ -527,10 +529,12 @@ class PlaylistDetailsViewController: UITableViewController {
                 var currentGames = Array(upNextPlaylist!.games)
                 for game in self.games {
                     var isNowPlaying = false
-                    for playlist in game.linkedPlaylists {
-                        if playlist.isNowPlaying || playlist.isUpNext {
-                            isNowPlaying = true
-                            break
+                    if let linkedPlaylists = game.linkedPlaylists {
+                        for playlist in linkedPlaylists {
+                            if playlist.isNowPlaying || playlist.isUpNext {
+                                isNowPlaying = true
+                                break
+                            }
                         }
                     }
                     if !isNowPlaying {
