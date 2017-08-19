@@ -775,6 +775,8 @@ extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate {
         }
         game?.update {
             game?.nowPlaying = true
+            game?.inLibrary = true
+            game?.inWishlist = false
         }
         self.loadPlaylists()
         let newCell = self.orderedViewControllers.last

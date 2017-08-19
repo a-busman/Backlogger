@@ -330,6 +330,7 @@ extension AddToPlaylistViewController: UITableViewDelegate, UITableViewDataSourc
                 cell.titleLabel?.text = (game.gameFields?.name)!
                 cell.descriptionLabel?.text = (game.platform?.name)!
                 cell.rightLabel?.text = ""
+                cell.isWishlist = game.inWishlist
                 cell.percentView?.isHidden = true
                 if let gameField = game.gameFields {
                     if let image = gameField.image {

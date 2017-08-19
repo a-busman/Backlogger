@@ -125,6 +125,8 @@ class GameDetailsViewController: UIViewController {
     
     fileprivate var _game: Game?
     
+    var inWishlist = false
+    
     var gameFieldId: Int?
     
     var delegate: GameDetailsViewControllerDelegate?
@@ -135,12 +137,16 @@ class GameDetailsViewController: UIViewController {
     var isAddingToPlaylist  = false
     var isAddingToPlayNext  = false
     var isAddingToPlayLater = false
+    var isAddingToWishlist  = false
+    
+    var isRemovingFromWishlist = false
     var isExiting = false
     
     var addRemoveClosure:      ((UIPreviewAction, UIViewController) -> Void)?
     var addToPlaylistClosure:  ((UIPreviewAction, UIViewController) -> Void)?
     var addToPlayNextClosure:  ((UIPreviewAction, UIViewController) -> Void)?
     var addToPlayLaterClosure: ((UIPreviewAction, UIViewController) -> Void)?
+    var addToWishlistClosure:  ((UIPreviewAction, UIViewController) -> Void)?
     
     enum State {
         case addToLibrary
@@ -235,13 +241,23 @@ class GameDetailsViewController: UIViewController {
             }
         }
         if self._game == nil {
+            self._state = .addToLibrary
             if self._gameField!.ownedGames.count > 0 {
-                self._state = .partialAddToLibrary
-            } else {
-                self._state = .addToLibrary
+                for game in self._gameField!.ownedGames {
+                    if game.inLibrary {
+                        self._state = .partialAddToLibrary
+                    } else {
+                        self.inWishlist = true
+                    }
+                }
             }
         } else {
-            self._state = .inLibrary
+            if self._game!.inLibrary {
+                self._state = .inLibrary
+            } else {
+                self.inWishlist = true
+                self._state = .addToLibrary
+            }
             if self._game!.platform!.idNumber == Steam.steamPlatformIdNumber {
                 let username = UserDefaults.standard.value(forKey: "steamName") as! String
                 self.steamUserLabel?.text = username
@@ -573,6 +589,10 @@ class GameDetailsViewController: UIViewController {
             break
         }
         let addRemove = UIPreviewAction(title: addString, style: style, handler: self.addRemoveClosure!)
+        
+        let wishlistString: String = self.inWishlist ? "Remove from Wishlist" : "Add to Wishlist"
+        let wishlistAction = UIPreviewAction(title: wishlistString, style: .default, handler: self.addToWishlistClosure!)
+        wishlistAction.setValue(#imageLiteral(resourceName: "wishlist"), forKey: "image")
         if style == .destructive {
             addRemove.setValue(#imageLiteral(resourceName: "trash_red"), forKey: "image")
         } else {
@@ -593,7 +613,11 @@ class GameDetailsViewController: UIViewController {
                 }
             }
         }
-        return [addRemove, addToPlaylist, playNext, playLater]
+        if self._state == .inLibrary {
+            return [addRemove, addToPlaylist, playNext, playLater]
+        } else {
+            return [addRemove, addToPlaylist, playNext, playLater, wishlistAction]
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -612,6 +636,10 @@ class GameDetailsViewController: UIViewController {
             self.peekHeadingTopConstraint?.isActive = false
             self.headingTopConstraint = NSLayoutConstraint(item: self.headerView!, attribute: .top, relatedBy: .equal, toItem: self.topLayoutGuide, attribute: .bottom, multiplier: 1.0, constant: 0.0)
             self.headingTopConstraint?.isActive = true
+        }
+        
+        if self._game != nil{
+            self.inWishlist = self._game!.inWishlist
         }
     }
     
@@ -764,7 +792,7 @@ class GameDetailsViewController: UIViewController {
     }
 
     @IBAction func addTapped(sender: UITapGestureRecognizer?) {
-        if self.state == .addToLibrary || self.isAddingToPlayLater || self.isAddingToPlayNext || self.isAddingToPlaylist {
+        if (self.state == .addToLibrary || self.isAddingToPlayLater || self.isAddingToPlayNext || self.isAddingToPlaylist) && !self.isRemovingFromWishlist {
             let consoleSelection = ConsoleSelectionTableViewController(style: .grouped)
             consoleSelection.delegate = self
             consoleSelection.gameField = self._gameField
@@ -773,6 +801,9 @@ class GameDetailsViewController: UIViewController {
             }
             self.navigationController?.pushViewController(consoleSelection, animated: true)
         } else {
+            if self.isRemovingFromWishlist {
+                self.isRemovingFromWishlist = false
+            }
             if self._game != nil {
                 self._game?.delete()
                 self.navigationController?.popViewController(animated: true)
@@ -873,9 +904,13 @@ class GameDetailsViewController: UIViewController {
         let addAction = UIAlertAction(title: "Add to Playlist", style: .default, handler: self.handleAddToPlaylist)
         let playNextAction = UIAlertAction(title: "Play Next", style: .default, handler: self.handlePlayNext)
         let queueAction = UIAlertAction(title: "Play Later", style: .default, handler: self.handlePlayLater)
+        let wishlistString: String = self.inWishlist ? "Remove from Wishlist" : "Add to Wishlist"
+        let wishlistAction = UIAlertAction(title: wishlistString, style: .default, handler: self.handleWishlist)
         addAction.setValue(#imageLiteral(resourceName: "add_to_playlist"), forKey: "image")
         playNextAction.setValue(#imageLiteral(resourceName: "play_next"), forKey: "image")
         queueAction.setValue(#imageLiteral(resourceName: "add_to_queue"), forKey: "image")
+        wishlistAction.setValue(#imageLiteral(resourceName: "wishlist"), forKey: "image")
+        
         var inNowPlaying = false
         
         if let game = self._game {
@@ -894,6 +929,9 @@ class GameDetailsViewController: UIViewController {
             actions.addAction(playNextAction)
             actions.addAction(queueAction)
         }
+        if self._state == .addToLibrary {
+            actions.addAction(wishlistAction)
+        }
         actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         actions.popoverPresentationController?.sourceView = self.moreButton
         actions.popoverPresentationController?.sourceRect = self.moreButton!.bounds
@@ -902,11 +940,18 @@ class GameDetailsViewController: UIViewController {
 
     }
     
+    func handleWishlist(sender: UIAlertAction) {
+        if let game = self._game {
+            self.isRemovingFromWishlist = game.inWishlist
+        } else {
+            self.isAddingToWishlist = true
+        }
+        self.addTapped(sender: nil)
+    }
+    
     func handleAddToPlaylist(sender: UIAlertAction) {
         self.isAddingToPlaylist = true
-        if self._state! == .addToLibrary {
-            self.addTapped(sender: nil)
-        } else if self._state! == .inLibrary {
+        if self._state! == .inLibrary {
             let vc = self.storyboard?.instantiateViewController(withIdentifier: "PlaylistNavigation") as! UINavigationController
             let playlistVc = vc.viewControllers.first as! PlaylistViewController
             playlistVc.addingGames = [self._game!]
@@ -1287,7 +1332,6 @@ class GameDetailsViewController: UIViewController {
 
 extension GameDetailsViewController: ConsoleSelectionTableViewControllerDelegate {
     func didSelectConsoles(_ consoles: [Platform]) {
-        
         if !self.isAddingToPlaylist && !self.isAddingToPlayNext && !self.isAddingToPlayLater {
             self._selectedPlatforms = consoles
             var currentPlatformList: [Platform] = [Platform]()
@@ -1309,13 +1353,36 @@ extension GameDetailsViewController: ConsoleSelectionTableViewControllerDelegate
                         
                         if !currentPlatformList.contains(platform) {
                             let newGameToSave = Game()
-                            newGameToSave.inLibrary = true
+                            if self.isAddingToWishlist {
+                                newGameToSave.inWishlist = true
+                                newGameToSave.inLibrary = false
+                            } else {
+                                newGameToSave.inWishlist = false
+                                newGameToSave.inLibrary = true
+                            }
                             newGameToSave.add(gameField, platform)
-                        }
-                        if (platform.name?.characters.count)! < 10 {
-                            platformString += platform.name! + " • "
+                            if consoles.count == 1 {
+                                self._game = newGameToSave
+                            } else {
+                                self._game = nil
+                            }
                         } else {
-                            platformString += platform.abbreviation! + " • "
+                            self._game?.update {
+                                if self.isAddingToWishlist {
+                                    self._game?.inWishlist = true
+                                    self._game?.inLibrary = false
+                                } else {
+                                    self._game?.inWishlist = false
+                                    self._game?.inLibrary = true
+                                }
+                            }
+                        }
+                        if !self.isAddingToWishlist {
+                            if (platform.name?.characters.count)! < 10 {
+                                platformString += platform.name! + " • "
+                            } else {
+                                platformString += platform.abbreviation! + " • "
+                            }
                         }
                     }
                 }
@@ -1323,29 +1390,49 @@ extension GameDetailsViewController: ConsoleSelectionTableViewControllerDelegate
                 
                 if !currentPlatformList.contains(platform) {
                     let newGameToSave = Game()
-                    newGameToSave.inLibrary = true
+                    if self.isAddingToWishlist {
+                        newGameToSave.inWishlist = true
+                        newGameToSave.inLibrary = false
+                    } else {
+                        newGameToSave.inWishlist = false
+                        newGameToSave.inLibrary = true
+                    }
                     newGameToSave.add(gameField, platform)
                     if consoles.count == 1 {
                         self._game = newGameToSave
                     } else {
                         self._game = nil
                     }
-                }
-                if (platform.name?.characters.count)! < 10 {
-                    platformString += platform.name!
                 } else {
-                    platformString += platform.abbreviation!
+                    self._game?.update {
+                        if self.isAddingToWishlist {
+                            self._game?.inWishlist = true
+                            self._game?.inLibrary = false
+                        } else {
+                            self._game?.inWishlist = false
+                            self._game?.inLibrary = true
+                        }
+                    }
                 }
-                UIView.setAnimationsEnabled(false)
-                self.platformButton?.setTitle(platformString, for: .normal)
-                UIView.setAnimationsEnabled(true)
-                self.platformButton?.isEnabled = true
-                
+                if !self.isAddingToWishlist {
+                    if (platform.name?.characters.count)! < 10 {
+                        platformString += platform.name!
+                    } else {
+                        platformString += platform.abbreviation!
+                    }
+                    UIView.setAnimationsEnabled(false)
+                    self.platformButton?.setTitle(platformString, for: .normal)
+                    UIView.setAnimationsEnabled(true)
+                    self.platformButton?.isEnabled = true
+                    self.transitionToRemove()
+                } else {
+                    self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "wishlist_large"), title: "Added to Wishlist", description: nil)
+                    self.isAddingToWishlist = false
+                }
                 autoreleasepool {
                     let realm = try? Realm()
                     self._gameField = realm?.object(ofType: GameField.self, forPrimaryKey: (gameField?.idNumber)!) // get updated link
                 }
-                self.transitionToRemove()
             } else {
                 
                 self._gameField = gameField
@@ -1381,7 +1468,13 @@ extension GameDetailsViewController: ConsoleSelectionTableViewControllerDelegate
                 }
                 for platform in platformsToAdd {
                     let newGameToSave = Game()
-                    newGameToSave.inLibrary = true
+                    if self.isAddingToWishlist {
+                        newGameToSave.inWishlist = true
+                        newGameToSave.inLibrary = false
+                    } else {
+                        newGameToSave.inWishlist = false
+                        newGameToSave.inLibrary = true
+                    }
                     newGameToSave.add(gameField, platform)
                 }
                 
@@ -1395,6 +1488,10 @@ extension GameDetailsViewController: ConsoleSelectionTableViewControllerDelegate
                 for (i, game) in self._gameField!.ownedGames.enumerated() {
                     let platform = game.platform!
                     if consoleIds.contains(platform.idNumber) {
+                        game.update {
+                            game.inLibrary = true
+                            game.inWishlist = false
+                        }
                         gamesToAdd.append(game)
                     }
                     if (platform.name?.characters.count)! < 10 {
@@ -1426,6 +1523,9 @@ extension GameDetailsViewController: ConsoleSelectionTableViewControllerDelegate
                 if self.isAddingToPlayLater {
                     self.addToUpNext(games: gamesToAdd, later: true)
                     self.isAddingToPlayLater = false
+                }
+                if self.isAddingToWishlist {
+                    self.isAddingToWishlist = false
                 }
             }
         }

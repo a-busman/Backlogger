@@ -47,6 +47,8 @@ class TableViewCell: UITableViewCell {
     var cacheCompletionHandler: CompletionHandler?
     
     private var _progress: Int = 0
+    private var _complete: Bool = false
+    private var _isWishlist: Bool = false
     
     var progress: Int {
         get {
@@ -55,6 +57,32 @@ class TableViewCell: UITableViewCell {
         set(newValue) {
             self._progress = newValue
             self.percentViewController.progress = newValue
+        }
+    }
+    
+    var complete: Bool {
+        get {
+            return self._complete
+        }
+        set(newValue) {
+            self._complete = newValue
+            self.percentViewController.complete = newValue
+        }
+    }
+    
+    var isWishlist: Bool {
+        get {
+            return self._isWishlist
+        }
+        set(newValue) {
+            self._isWishlist = newValue
+            if newValue {
+                self.percentView.isHidden = true
+                self.titleLabel?.textColor = .lightGray
+            } else {
+                self.percentView.isHidden = false
+                self.titleLabel?.textColor = .black
+            }
         }
     }
     
@@ -115,7 +143,8 @@ class TableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.percentViewController.progress = self.progress
+        self.percentViewController.progress = self._progress
+        self.percentViewController.complete = self._complete
         self.percentViewController.view.translatesAutoresizingMaskIntoConstraints = false
         self.addButton?.isHidden = self.addButtonHidden
         if self.addButtonHidden {
@@ -140,12 +169,32 @@ class TableViewCell: UITableViewCell {
         if self.imageUrl != nil {
             self.artView?.kf.setImage(with: self.imageUrl, placeholder: #imageLiteral(resourceName: "table_placeholder_light"), completionHandler: self.cacheCompletionHandler)
         }
+        var progressView: UIView
+        if self._progress != 100 {
+            progressView = self.percentViewController.view
+        } else {
+            let progressLabel = UILabel()
+            progressLabel.textColor = .white
+            progressLabel.text = "100"
+            progressLabel.textAlignment = .center
+            progressLabel.font = UIFont.systemFont(ofSize: 6.0, weight: 4.0)
+            progressView = UIImageView(image: #imageLiteral(resourceName: "trophy"))
+            progressLabel.translatesAutoresizingMaskIntoConstraints = false
+            progressView.addSubview(progressLabel)
+            NSLayoutConstraint(item: progressLabel, attribute: .centerY, relatedBy: .equal, toItem: progressView, attribute: .centerY, multiplier: 1.0, constant: -4.0).isActive = true
+            NSLayoutConstraint(item: progressLabel, attribute: .centerX, relatedBy: .equal, toItem: progressView, attribute: .centerX, multiplier: 1.0, constant: 0.0).isActive = true
+        }
+        self.percentView.addSubview(progressView)
+        NSLayoutConstraint(item: progressView, attribute: .top, relatedBy: .equal, toItem: self.percentView, attribute: .top, multiplier: 1.0, constant: 0.0).isActive = true
+        NSLayoutConstraint(item: progressView, attribute: .bottom, relatedBy: .equal, toItem: self.percentView, attribute: .bottom, multiplier: 1.0, constant: 0.0).isActive = true
+        NSLayoutConstraint(item: progressView, attribute: .leading, relatedBy: .equal, toItem: self.percentView, attribute: .leading, multiplier: 1.0, constant: 0.0).isActive = true
+        NSLayoutConstraint(item: progressView, attribute: .trailing, relatedBy: .equal, toItem: self.percentView, attribute: .trailing, multiplier: 1.0, constant: 0.0).isActive = true
         
-        self.percentView.addSubview(self.percentViewController.view)
-        NSLayoutConstraint(item: self.percentViewController.view, attribute: .top, relatedBy: .equal, toItem: self.percentView, attribute: .top, multiplier: 1.0, constant: 0.0).isActive = true
-        NSLayoutConstraint(item: self.percentViewController.view, attribute: .bottom, relatedBy: .equal, toItem: self.percentView, attribute: .bottom, multiplier: 1.0, constant: 0.0).isActive = true
-        NSLayoutConstraint(item: self.percentViewController.view, attribute: .leading, relatedBy: .equal, toItem: self.percentView, attribute: .leading, multiplier: 1.0, constant: 0.0).isActive = true
-        NSLayoutConstraint(item: self.percentViewController.view, attribute: .trailing, relatedBy: .equal, toItem: self.percentView, attribute: .trailing, multiplier: 1.0, constant: 0.0).isActive = true
+        if self._isWishlist {
+            self.percentView.isHidden = true
+            self.titleLabel?.textColor = .lightGray
+            self.descriptionLabel?.textColor = .lightGray
+        }
         
     }
     
@@ -169,6 +218,12 @@ class TableViewCell: UITableViewCell {
         super.prepareForReuse()
         self.libraryState = .add
         self.addButtonHidden = true
+        for subview in self.percentView.subviews {
+            subview.removeFromSuperview()
+        }
+        self.percentView.isHidden = false
+        self.titleLabel?.textColor = .black
+        self.descriptionLabel?.textColor = .darkGray
         //self.laidOut = false
     }
 }

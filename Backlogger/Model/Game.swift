@@ -74,6 +74,13 @@ class GameField: Field {
     
     let ownedGames: LinkingObjects<Game> = LinkingObjects(fromType: Game.self, property: "gameFields")
     
+    var libraryGames: Results<Game>? {
+        return realm?.objects(Game.self).filter("inLibrary = true")
+    }
+    var wishlistGames: Results<Game>? {
+        return realm?.objects(Game.self).filter("inWishlist = true")
+    }
+    
     static var request:   DataRequest?
     static var requestTimer: Timer?
     
@@ -853,6 +860,7 @@ class Game: Object {
     dynamic var gameFields: GameField? = nil
     dynamic var platform:   Platform?  = nil
     dynamic var inLibrary:  Bool       = false
+    dynamic var inWishlist: Bool       = false
     dynamic var nowPlaying: Bool       = false
     dynamic var favourite:  Bool       = false
     dynamic var rating:     Int        = 0

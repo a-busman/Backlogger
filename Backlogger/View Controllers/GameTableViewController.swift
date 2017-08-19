@@ -29,7 +29,8 @@ class GameTableViewController: UIViewController {
     
     let shadowGradientLayer = CAGradientLayer()
     
-    var games: Results<Game>?
+    var games: LinkingObjects<Game>?
+    var filteredGames: Results<Game>?
     
     var platform: Platform?
     var platformId: Int?
@@ -72,6 +73,7 @@ class GameTableViewController: UIViewController {
     var hideComplete: Bool?
     var sortType: SortType?
     var ascending: Bool?
+    var showWishlist: Bool?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -82,7 +84,7 @@ class GameTableViewController: UIViewController {
         if let platform = self.platform {
             self.platformId = platform.idNumber
             self.titleLabel?.text = platform.name
-            self.games = platform.ownedGames.filter("platform.name = \"\(platform.name!)\"")
+            self.games = platform.ownedGames
             if platform.name!.characters.count < 10 {
                 self.title = platform.name
             } else {
@@ -197,6 +199,13 @@ class GameTableViewController: UIViewController {
             self.ascending = true
             UserDefaults.standard.set(self.ascending, forKey: "libraryAscending")
         }
+        
+        self.showWishlist = UserDefaults.standard.value(forKey: "libraryShowWishlist") as? Bool
+        if self.showWishlist == nil {
+            self.showWishlist = false
+            UserDefaults.standard.set(false, forKey: "libraryShowWishlist")
+        }
+        
         autoreleasepool {
             let realm = try? Realm()
             self.platform = realm?.object(ofType: Platform.self, forPrimaryKey: platformId)
@@ -205,33 +214,7 @@ class GameTableViewController: UIViewController {
             let _ = self.navigationController?.popViewController(animated: true)
             return
         }
-        var sortString: String
-        switch self.sortType! {
-        case .alphabetical:
-            sortString = "gameFields.name"
-            break
-        case .dateAdded:
-            sortString = "dateAdded"
-            break
-        case .releaseYear:
-            sortString = "gameFields.releaseDate"
-            break
-        case .percentComplete:
-            sortString = "progress"
-            break
-        case .completed:
-            sortString = "finished"
-            break
-        case .rating:
-            sortString = "rating"
-        }
-        if self.hideComplete! {
-            self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: self.ascending!).filter("finished = false")
-        } else {
-            self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: self.ascending!)
-        }
-        self.tableView?.reloadData()
-        
+        self.filterGames()
         
         if self.currentScrollPosition < 90.0 {
             let remainingWidth = self.currentScrollPosition - 65.0
@@ -242,7 +225,7 @@ class GameTableViewController: UIViewController {
         } else {
             self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.clear]
         }
-        if self.games!.count < 1 {
+        if self.filteredGames!.count < 1 {
             let _ = self.navigationController?.popViewController(animated: true)
             return
         }
@@ -278,8 +261,8 @@ class GameTableViewController: UIViewController {
                 
                 self.currentlySelectedRow = i
                 
-                vc.gameField = self.games![i].gameFields
-                vc.game = self.games![i]
+                vc.gameField = self.filteredGames![i].gameFields
+                vc.game = self.filteredGames![i]
                 vc.state = .inLibrary
             }
         }
@@ -292,16 +275,15 @@ class GameTableViewController: UIViewController {
         UIAlertAction(title: "Add Games", style: .default, handler: self.addGames) :
         UIAlertAction(title: "Sync with Steam", style: .default, handler: self.syncWithSteam)
         let sortAction = UIAlertAction(title: "Sort...", style: .default, handler: self.sortTapped)
-        var completeString: String
-        if self.hideComplete! {
-            completeString = "Show Finished"
-        } else {
-            completeString = "Hide Finished"
-        }
+        let wishlistString: String = self.showWishlist! ? "Hide Wishlist Games" : "Show Wishlist Games"
+        let completeString: String = self.hideComplete! ? "Show Finished" : "Hide Finished"
+        let showWishlistAction = UIAlertAction(title: wishlistString, style: .default, handler: self.showWishlist)
+
         let hideCompleteAction = UIAlertAction(title: completeString, style: .default, handler: self.hideTapped)
         
         actions.addAction(addAction)
         actions.addAction(sortAction)
+        actions.addAction(showWishlistAction)
         actions.addAction(hideCompleteAction)
         actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         actions.popoverPresentationController?.barButtonItem = self.navigationController?.navigationBar.topItem?.rightBarButtonItem
@@ -312,6 +294,17 @@ class GameTableViewController: UIViewController {
         self.hideComplete = !self.hideComplete!
         UserDefaults.standard.set(self.hideComplete, forKey: "hideComplete")
         
+        self.filterGames()
+    }
+    
+    func showWishlist(sender: UIAlertAction) {
+        self.showWishlist = !self.showWishlist!
+        UserDefaults.standard.set(self.showWishlist, forKey: "libraryShowWishlist")
+        
+        self.filterGames()
+    }
+    
+    private func filterGames() {
         var sortString: String
         switch self.sortType! {
         case .alphabetical:
@@ -332,11 +325,17 @@ class GameTableViewController: UIViewController {
         case .rating:
             sortString = "rating"
         }
+        self.games = self.platform?.ownedGames
+        self.filteredGames = self.games?.sorted(byKeyPath: sortString, ascending: self.ascending!)
+        
         if self.hideComplete! {
-            self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: self.ascending!).filter("finished = false")
-        } else {
-            self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: self.ascending!)
+            self.filteredGames = self.filteredGames?.filter("finished = false")
         }
+        
+        if !self.showWishlist! {
+            self.filteredGames = self.filteredGames?.filter("inLibrary = true")
+        }
+        
         self.tableView?.reloadData()
     }
     
@@ -346,62 +345,32 @@ class GameTableViewController: UIViewController {
         let alphaAction = UIAlertAction(title: "Title", style: .default, handler: { _ in
             self.ascending = self.sortType == .alphabetical ? !self.ascending! : true
             self.sortType = .alphabetical
-            if self.games != nil {
-                self.games = self.games!.sorted(byKeyPath: "gameFields.name", ascending: self.ascending!)
-            }
-            UserDefaults.standard.set(self.ascending!, forKey: "libraryAscending")
-            UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
-            self.tableView?.reloadData()
+            self.sortGames(by: "gameFields.name")
         })
         let dateAction = UIAlertAction(title: "Recently Added", style: .default, handler: { _ in
             self.ascending = self.sortType == .dateAdded ? !self.ascending! : false
             self.sortType = .dateAdded
-            if self.games != nil {
-                self.games = self.games!.sorted(byKeyPath: "dateAdded", ascending: self.ascending!)
-            }
-            UserDefaults.standard.set(self.ascending!, forKey: "libraryAscending")
-            UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
-            self.tableView?.reloadData()
+            self.sortGames(by: "dateAdded")
         })
         let releaseAction = UIAlertAction(title: "Release Date", style: .default, handler: { _ in
             self.ascending = self.sortType == .releaseYear ? !self.ascending! : true
             self.sortType = .releaseYear
-            if self.games != nil {
-                self.games = self.games!.sorted(byKeyPath: "gameFields.releaseDate", ascending: self.ascending!)
-            }
-            UserDefaults.standard.set(self.ascending!, forKey: "libraryAscending")
-            UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
-            self.tableView?.reloadData()
+            self.sortGames(by: "gameFields.releaseDate")
         })
         let percentAction = UIAlertAction(title: "Progress", style: .default, handler: { _ in
             self.ascending = self.sortType == .percentComplete ? !self.ascending! : true
             self.sortType = .percentComplete
-            if self.games != nil {
-                self.games = self.games!.sorted(byKeyPath: "progress", ascending: self.ascending!)
-            }
-            UserDefaults.standard.set(self.ascending!, forKey: "libraryAscending")
-            UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
-            self.tableView?.reloadData()
+            self.sortGames(by: "progress")
         })
         let completeAction = UIAlertAction(title: "Finished", style: .default, handler: { _ in
             self.ascending = self.sortType == .completed ? !self.ascending! : true
             self.sortType = .completed
-            if self.games != nil {
-                self.games = self.games!.sorted(byKeyPath: "finished", ascending: self.ascending!)
-            }
-            UserDefaults.standard.set(self.ascending!, forKey: "libraryAscending")
-            UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
-            self.tableView?.reloadData()
+            self.sortGames(by: "finished")
         })
         let ratingAction = UIAlertAction(title: "Rating", style: .default, handler: { _ in
             self.ascending = self.sortType == .rating ? !self.ascending! : false
             self.sortType = .rating
-            if self.games != nil {
-                self.games = self.games!.sorted(byKeyPath: "rating", ascending: self.ascending!)
-            }
-            UserDefaults.standard.set(self.ascending!, forKey: "libraryAscending")
-            UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
-            self.tableView?.reloadData()
+            self.sortGames(by: "rating")
         })
         
         alphaAction.setValue(false, forKey: "checked")
@@ -439,6 +408,15 @@ class GameTableViewController: UIViewController {
         actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         actions.popoverPresentationController?.barButtonItem = self.navigationController?.navigationBar.topItem?.rightBarButtonItem
         self.present(actions, animated: true, completion: nil)
+    }
+    
+    private func sortGames(by sortString: String) {
+        if self.filteredGames != nil {
+            self.filteredGames = self.filteredGames!.sorted(byKeyPath: sortString, ascending: self.ascending!)
+        }
+        UserDefaults.standard.set(self.ascending!, forKey: "libraryAscending")
+        UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
+        self.tableView?.reloadData()
     }
     
     func syncWithSteam(sender: UIAlertAction) {
@@ -562,8 +540,8 @@ extension GameTableViewController: UIViewControllerPreviewingDelegate {
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         guard let indexPath = self.tableView?.indexPathForRow(at: location),
             let cell = self.tableView?.cellForRow(at: indexPath),
-            let gameFields = self.games![indexPath.row].gameFields else { return nil }
-        let game = self.games![indexPath.row]
+            let gameFields = self.filteredGames![indexPath.row].gameFields else { return nil }
+        let game = self.filteredGames![indexPath.row]
         let vc: GameDetailsViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "game_details") as! GameDetailsViewController
         var gameField: GameField!
         
@@ -582,18 +560,26 @@ extension GameTableViewController: UIViewControllerPreviewingDelegate {
         previewingContext.sourceRect = cell.frame
         
         vc.addRemoveClosure = { (action, vc) -> Void in
-            let game = self.games![indexPath.row]
-            game.delete()
-            autoreleasepool {
-                let realm = try? Realm()
-                self.platform = realm?.object(ofType: Platform.self, forPrimaryKey: self.platform!.idNumber)
-            }
-            if self.platform != nil {
-                self.games = self.platform?.ownedGames.filter("platform.name = \"\(self.platform!.name!)\"")
-                self.tableView?.reloadData()
+            let game = self.filteredGames![indexPath.row]
+            if game.inLibrary {
+                game.delete()
+                autoreleasepool {
+                    let realm = try? Realm()
+                    self.platform = realm?.object(ofType: Platform.self, forPrimaryKey: self.platform!.idNumber)
+                }
+                if self.platform != nil {
+                    self.games = self.platform?.ownedGames
+                    self.tableView?.reloadData()
+                } else {
+                    let _ = self.navigationController?.popViewController(animated: true)
+                }
             } else {
-                let _ = self.navigationController?.popViewController(animated: true)
+                game.update {
+                    game.inLibrary = true
+                    game.inWishlist = false
+                }
             }
+            self.tableView?.reloadData()
         }
         vc.addToPlayLaterClosure = { (action, vc) -> Void in
             self.addToUpNext(games: [game], later: true)
@@ -609,6 +595,20 @@ extension GameTableViewController: UIViewControllerPreviewingDelegate {
         vc.addToPlayNextClosure = { (action, vc) -> Void in
             self.addToUpNext(games: [game], later: false)
         }
+        vc.addToWishlistClosure = { (action, vc) -> Void in
+            let game = self.filteredGames![indexPath.row]
+            game.delete()
+            autoreleasepool {
+                let realm = try? Realm()
+                self.platform = realm?.object(ofType: Platform.self, forPrimaryKey: self.platform!.idNumber)
+            }
+            if self.platform != nil {
+                self.games = self.platform?.ownedGames
+                self.tableView?.reloadData()
+            } else {
+                let _ = self.navigationController?.popViewController(animated: true)
+            }
+        }
         return vc
     }
     
@@ -621,17 +621,17 @@ extension GameTableViewController: UIViewControllerPreviewingDelegate {
 extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.games?.count ?? 0
+        return self.filteredGames?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: tableReuseIdentifier) as! TableViewCell
         cell.row = indexPath.row
         cell.accessoryType = .disclosureIndicator
-        let game = self.games![indexPath.row]
+        let game = self.filteredGames![indexPath.row]
         var indent: CGFloat = 0.0
         
-        if indexPath.row < self.games!.count - 1 {
+        if indexPath.row < self.filteredGames!.count - 1 {
             indent = 58.0
         }
         if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
@@ -659,6 +659,8 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
         cell.rightLabel?.text = ""
         cell.percentView?.isHidden = false
         cell.progress = game.progress
+        cell.complete = game.finished
+        cell.isWishlist = game.inWishlist
         if let image = game.gameFields?.image {
             cell.imageUrl = URL(string: image.iconUrl!)
         } else {
@@ -693,7 +695,7 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == UITableViewCellEditingStyle.delete) {
-            let game = games![indexPath.row]
+            let game = filteredGames![indexPath.row]
             game.delete()
             autoreleasepool {
                 let realm = try? Realm()
@@ -720,7 +722,17 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
                 case .rating:
                     sortString = "rating"
                 }
-                self.games = self.platform?.ownedGames.sorted(byKeyPath: sortString, ascending: self.ascending!)
+                self.games = self.platform?.ownedGames
+                self.filteredGames = self.games?.sorted(byKeyPath: sortString, ascending: self.ascending!)
+                
+                if self.hideComplete! {
+                    self.filteredGames = self.filteredGames?.filter("finished = false")
+                }
+                
+                if !self.showWishlist! {
+                    self.filteredGames = self.filteredGames?.filter("inLibrary = true")
+                }
+                
                 self.tableView?.deleteRows(at: [indexPath], with: .automatic)
             } else {
                 let _ = self.navigationController?.popViewController(animated: true)
@@ -772,6 +784,7 @@ extension GameTableViewController: PlaylistViewControllerDelegate {
                 playlist.games.append(contentsOf: games)
             }
         }
+        
         vc.presentingViewController?.dismiss(animated: true, completion: {
             self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "add_to_playlist_large"), title: "Added to Playlist", description: "Added to \"\(playlist.name!)\".")
         })

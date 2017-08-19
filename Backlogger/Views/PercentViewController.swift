@@ -13,6 +13,8 @@ class PercentViewController: UIViewController {
     
     private var _progress: Int = 0
     
+    private var _complete: Bool = false
+    
     let shapeLayer = CAShapeLayer()
     
     var progress: Int {
@@ -26,6 +28,20 @@ class PercentViewController: UIViewController {
             }
             let circlePath = UIBezierPath(arcCenter: CGPoint(x: 14, y: 14), radius: 14.0, startAngle: CGFloat(Double.pi * 1.5), endAngle:CGFloat(Double.pi * 2) * (CGFloat(self._progress) / 100.0) - CGFloat(Double.pi * 0.5) - (self._progress == 100 ? 0.00001 : 0), clockwise: true)
             self.shapeLayer.path = circlePath.cgPath
+        }
+    }
+    
+    var complete: Bool {
+        get {
+            return self._complete
+        }
+        set(newValue) {
+            self._complete = newValue
+            if newValue {
+                self.shapeLayer.strokeColor = UIColor(colorLiteralRed: 0.0, green: 0.8, blue: 0.0, alpha: 1.0).cgColor
+            } else {
+                self.shapeLayer.strokeColor = Util.appColor.cgColor
+            }
         }
     }
     
@@ -48,7 +64,11 @@ class PercentViewController: UIViewController {
         
         self.shapeLayer.path = circlePath.cgPath
         self.shapeLayer.fillColor = UIColor.clear.cgColor
-        self.shapeLayer.strokeColor = Util.appColor.cgColor
+        if self._complete {
+            self.shapeLayer.strokeColor = UIColor(colorLiteralRed: 0.0, green: 0.8, blue: 0.0, alpha: 1.0).cgColor
+        } else {
+            self.shapeLayer.strokeColor = Util.appColor.cgColor
+        }
         self.shapeLayer.lineWidth = 3.0
         self.shapeLayer.lineCap = kCALineCapRound
         

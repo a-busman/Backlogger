@@ -44,7 +44,7 @@ class LibraryAddSearchViewController: UIViewController {
     var isAddingToPlaylist  = false
     var isAddingToPlayNext  = false
     var isAddingToPlayLater = false
-    
+    var isAddingToWishlist  = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -283,7 +283,14 @@ extension LibraryAddSearchViewController: UIViewControllerPreviewingDelegate {
             gameField = self.gameFields[i]
         }
         vc.gameField = gameField
-        vc.state = gameField.ownedGames.count > 0 ? .partialAddToLibrary : .addToLibrary
+        var inLibrary = false
+        for game in gameField.ownedGames {
+            if game.inLibrary {
+                inLibrary = true
+            }
+        }
+        vc.state = inLibrary ? .partialAddToLibrary : .addToLibrary
+
         vc.delegate = self
         
         vc.addRemoveClosure = { (action, vc) -> Void in
@@ -301,7 +308,10 @@ extension LibraryAddSearchViewController: UIViewControllerPreviewingDelegate {
             self.isAddingToPlayNext = true
             self.addTapped(i)
         }
-        
+        vc.addToWishlistClosure = { (action, vc) -> Void in
+            self.isAddingToWishlist = true
+            self.addTapped(i)
+        }
         previewingContext.sourceRect = cell.frame
         
         return vc
@@ -591,9 +601,29 @@ extension LibraryAddSearchViewController: ConsoleSelectionTableViewControllerDel
                 for platform in consoles[0..<consoles.endIndex] {
                     if !currentPlatformList.contains(platform) {
                         let newGameToSave = Game()
-                        newGameToSave.inLibrary = true
+                        if self.isAddingToWishlist {
+                            newGameToSave.inWishlist = true
+                            newGameToSave.inLibrary = false
+                        } else {
+                            newGameToSave.inWishlist = false
+                            newGameToSave.inLibrary = true
+                        }
                         newGameToSave.add(gameField, platform)
                         newGameList.append(newGameToSave)
+                    } else {
+                        for game in newGameList {
+                            if game.platform!.name! == platform.name! {
+                                game.update {
+                                    if self.isAddingToWishlist {
+                                        game.inWishlist = true
+                                        game.inLibrary = false
+                                    } else {
+                                        game.inWishlist = false
+                                        game.inLibrary = true
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
                 cell.libraryState = .addPartial
@@ -635,7 +665,13 @@ extension LibraryAddSearchViewController: ConsoleSelectionTableViewControllerDel
                 }
                 for platform in platformsToAdd {
                     let newGameToSave = Game()
-                    newGameToSave.inLibrary = true
+                    if self.isAddingToWishlist {
+                        newGameToSave.inWishlist = true
+                        newGameToSave.inLibrary = false
+                    } else {
+                        newGameToSave.inWishlist = false
+                        newGameToSave.inLibrary = true
+                    }
                     newGameToSave.add(gameField, platform)
                 }
                 
@@ -668,6 +704,9 @@ extension LibraryAddSearchViewController: ConsoleSelectionTableViewControllerDel
                 if self.isAddingToPlayLater {
                     self.addToUpNext(games: gamesToAdd, later: true)
                     self.isAddingToPlayLater = false
+                }
+                if self.isAddingToWishlist {
+                    self.isAddingToWishlist = false
                 }
             }
         }
