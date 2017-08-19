@@ -1436,7 +1436,7 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="371.5"/>
                                                     <subviews>
                                                         <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="svR-H5-UZm">
-                                                            <rect key="frame" x="18" y="5" width="339" height="31"/>
+                                                            <rect key="frame" x="38" y="5" width="299" height="31"/>
                                                             <connections>
                                                                 <action selector="handleSliderWithSender:" destination="Yjd-tz-avt" eventType="valueChanged" id="wSH-w7-ix5"/>
                                                             </connections>
@@ -1566,7 +1566,7 @@
                                                         <constraint firstItem="AKm-ni-gKx" firstAttribute="leading" secondItem="Zpl-ms-vop" secondAttribute="leading" constant="80" id="GBR-xO-bY7"/>
                                                         <constraint firstItem="UZu-hR-rcl" firstAttribute="top" secondItem="AKm-ni-gKx" secondAttribute="bottom" constant="20" id="KM3-hN-Ozo"/>
                                                         <constraint firstItem="svR-H5-UZm" firstAttribute="centerX" secondItem="Zpl-ms-vop" secondAttribute="centerX" id="LIc-CJ-qXP"/>
-                                                        <constraint firstItem="svR-H5-UZm" firstAttribute="width" secondItem="Zpl-ms-vop" secondAttribute="width" constant="-40" id="Wm5-eO-Blh"/>
+                                                        <constraint firstItem="svR-H5-UZm" firstAttribute="width" secondItem="Zpl-ms-vop" secondAttribute="width" constant="-80" id="Wm5-eO-Blh"/>
                                                         <constraint firstItem="UZu-hR-rcl" firstAttribute="centerX" secondItem="Zpl-ms-vop" secondAttribute="centerX" constant="4" id="Yfw-QN-lZ8"/>
                                                         <constraint firstItem="TqV-3K-Cbc" firstAttribute="top" secondItem="UZu-hR-rcl" secondAttribute="bottom" constant="10" id="Z28-v7-Obl"/>
                                                         <constraint firstItem="WZj-NR-Sbk" firstAttribute="leading" secondItem="TqV-3K-Cbc" secondAttribute="leading" id="ZiC-Vk-PQD"/>
