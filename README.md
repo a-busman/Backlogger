@@ -13,12 +13,14 @@ up one day (I'm mostly a firmware guy), so feel free to criticize anything you w
 (like if you wanted to beat Half-Life on your iPod mini).
 * Make playlists so that you can create a list of games you'd like to play in any order you'd like. Make a spooky games list, or
 games in a series, it really doesn't matter what you do, just don't not make any. That's sad :(
+* Add games from your Steam library by logging in under the More tab. It's not perfect with matching games from Steam to GiantBomb, but it's not the worst. You can review the matches after logging in. It might take a bit for larger libraries, as GiantBomb restricts API queries to 1 per second.
 
 ## Bugs
+* Performance of the Now Playing tab isn't the greatest.
 * Since this is not complete, bugs are tracked in the Issues tab. Feel free to add some.
 
 ## Future
-* I want to add steam support, and possibly Facebook and Twitter sharing for things like "I just completed this game! Neato!"
+* I want to add Facebook and Twitter sharing for things like "I just completed this game! Neato!"
 * If you want to see any particular features, again, feel free to add some to the Issues tab.
 
 ## Screenshots
