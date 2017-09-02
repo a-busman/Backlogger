@@ -652,6 +652,9 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
             let year = releaseDate.substring(to: releaseDate.index(releaseDate.startIndex, offsetBy: 4))
             cell.descriptionLabel?.text = year
             cell.showDetails()
+        } else if let releaseDate = game.gameFields?.expectedDate, releaseDate > 0 {
+            cell.descriptionLabel?.text = "\(releaseDate)"
+            cell.showDetails()
         } else {
             cell.descriptionLabel?.text = ""
             cell.hideDetails()

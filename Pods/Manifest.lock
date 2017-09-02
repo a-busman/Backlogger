@@ -1,0 +1,33 @@
+PODS:
+  - Alamofire (4.5.0)
+  - Crashlytics (3.8.5):
+    - Fabric (~> 1.6.3)
+  - Fabric (1.6.12)
+  - ImageViewer (4.1.0)
+  - Kingfisher (3.11.0)
+  - Realm (2.9.1):
+    - Realm/Headers (= 2.9.1)
+  - Realm/Headers (2.9.1)
+  - RealmSwift (2.9.1):
+    - Realm (= 2.9.1)
+
+DEPENDENCIES:
+  - Alamofire
+  - Crashlytics
+  - Fabric
+  - ImageViewer
+  - Kingfisher
+  - RealmSwift
+
+SPEC CHECKSUMS:
+  Alamofire: f28cdffd29de33a7bfa022cbd63ae95a27fae140
+  Crashlytics: dfbae35ef22ca189240d230ad501feea4ee85d2d
+  Fabric: f050464eac45a2ce5a8e6e6a07e977c0df32fe28
+  ImageViewer: 163e5832e0a09e31a3e3482cce6e5e9029356174
+  Kingfisher: c8911a7672c6217dec8c0520fb6e76ec4b7e0780
+  Realm: f91fb43bd474c4f731a116ebf7392c75dd015920
+  RealmSwift: 207f12a4a36b696c5183c60a1c06d70234a23e56
+
+PODFILE CHECKSUM: 7f501ee1283df602d2da47ef2c53babe33255afc
+
+COCOAPODS: 1.2.1

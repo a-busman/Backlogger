@@ -139,6 +139,7 @@ class PlaylistAddTableCell: UITableViewCell {
     
     func loadImage(url: URL) {
         if self.imageUrl != url {
+            self.artView.kf.cancelDownloadTask()
             self.artView.kf.setImage(with: url, placeholder: #imageLiteral(resourceName: "table_placeholder_light"), completionHandler: self.cacheCompletionHandler)
             self.imageUrl = url
         }

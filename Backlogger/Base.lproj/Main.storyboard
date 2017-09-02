@@ -1619,6 +1619,7 @@
                         <constraints>
                             <constraint firstItem="UB4-1H-riR" firstAttribute="width" secondItem="UB4-1H-riR" secondAttribute="height" id="20U-yD-sjM"/>
                             <constraint firstItem="thQ-co-ZR8" firstAttribute="width" secondItem="HOp-Pa-rLP" secondAttribute="width" id="4hn-Ny-GMX"/>
+                            <constraint firstItem="thQ-co-ZR8" firstAttribute="bottom" secondItem="8Yh-gY-jcp" secondAttribute="bottom" id="5Kk-mF-4sq"/>
                             <constraint firstItem="8Yh-gY-jcp" firstAttribute="centerX" secondItem="HOp-Pa-rLP" secondAttribute="centerX" id="7PH-6A-WEl"/>
                             <constraint firstItem="thQ-co-ZR8" firstAttribute="centerX" secondItem="HOp-Pa-rLP" secondAttribute="centerX" id="7nx-5X-dur"/>
                             <constraint firstItem="8Yh-gY-jcp" firstAttribute="width" secondItem="HOp-Pa-rLP" secondAttribute="width" id="CVC-wO-F75"/>
@@ -1634,7 +1635,6 @@
                             <constraint firstItem="thQ-co-ZR8" firstAttribute="top" secondItem="esg-nU-ufh" secondAttribute="bottom" id="kHC-vp-fjF"/>
                             <constraint firstItem="UB4-1H-riR" firstAttribute="centerX" secondItem="HOp-Pa-rLP" secondAttribute="centerX" id="rW7-RM-KG7"/>
                             <constraint firstItem="esg-nU-ufh" firstAttribute="centerX" secondItem="HOp-Pa-rLP" secondAttribute="centerX" id="vTX-Ec-mp9"/>
-                            <constraint firstItem="thQ-co-ZR8" firstAttribute="bottom" secondItem="bbH-kg-UuN" secondAttribute="top" id="wkq-jb-1iE"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Details" id="MTX-6M-HlP">
@@ -2469,6 +2469,7 @@
                         <outlet property="collectionView" destination="utv-38-NNd" id="prV-vK-AYZ"/>
                         <outlet property="dimView" destination="FTa-49-Kk3" id="s3F-b2-aF7"/>
                         <outlet property="editBarButtonItem" destination="0sM-0E-Gbf" id="Fon-qO-5ss"/>
+                        <outlet property="keyboardHeightLayoutConstraint" destination="IMt-uY-Jas" id="sGN-3g-ZBq"/>
                         <outlet property="pageControl" destination="g3B-5A-f1o" id="H3j-nl-4Fr"/>
                         <outlet property="upNextTableView" destination="X2n-21-OGj" id="Tia-iX-fQC"/>
                         <outlet property="visibleView" destination="bMs-wG-lFu" id="rIF-ve-17Z"/>

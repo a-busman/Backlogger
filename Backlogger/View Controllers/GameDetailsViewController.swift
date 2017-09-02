@@ -1306,23 +1306,27 @@ class GameDetailsViewController: UIViewController {
         self.notesTextView?.resignFirstResponder()
     }
     func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y == 0{
-                self.view.frame.origin.y -= (keyboardSize.height - (self.tabBarController?.tabBar.frame.height)!)
+        if self.notesTextView!.isFirstResponder {
+            if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+                if self.view.frame.origin.y == 0{
+                    self.view.frame.origin.y -= (keyboardSize.height - (self.tabBarController?.tabBar.frame.height)!)
+                }
             }
+            self.doneButton?.isEnabled = true
+            UIView.animate(withDuration: 0.2, animations: {self.doneButton?.title = "Done"})
         }
-        self.doneButton?.isEnabled = true
-        UIView.animate(withDuration: 0.2, animations: {self.doneButton?.title = "Done"})
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y != 0 {
-                self.view.frame.origin.y += keyboardSize.height - (self.tabBarController?.tabBar.frame.height)!
+        if self.notesTextView!.isFirstResponder {
+            if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+                if self.view.frame.origin.y != 0 {
+                    self.view.frame.origin.y += keyboardSize.height - (self.tabBarController?.tabBar.frame.height)!
+                }
             }
+            self.doneButton?.isEnabled = false
+            UIView.animate(withDuration: 0.2, animations: {self.doneButton?.title = " "})
         }
-        self.doneButton?.isEnabled = false
-        UIView.animate(withDuration: 0.2, animations: {self.doneButton?.title = " "})
     }
     
     @IBAction func handleTapDone() {
@@ -1744,6 +1748,7 @@ extension GameDetailsViewController: UICollectionViewDelegate, UICollectionViewD
                 } else {
                     characterImageView.image = nil
                     cell.showImage()
+                    characterImageView.kf.cancelDownloadTask()
                     characterImageView.kf.setImage(with: URL(string: urlString)!, placeholder: nil, completionHandler: {
                         (image, error, cacheType, imageUrl) in
                         if image != nil {

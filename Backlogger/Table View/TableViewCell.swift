@@ -167,6 +167,7 @@ class TableViewCell: UITableViewCell {
         }
 
         if self.imageUrl != nil {
+            self.artView?.kf.cancelDownloadTask()
             self.artView?.kf.setImage(with: self.imageUrl, placeholder: #imageLiteral(resourceName: "table_placeholder_light"), completionHandler: self.cacheCompletionHandler)
         }
         var progressView: UIView

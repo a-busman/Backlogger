@@ -22,6 +22,7 @@ class NowPlayingViewController: UIViewController {
     @IBOutlet weak var dimView:           UIView?
     
     @IBOutlet weak var blurTopLayoutConstraint: NSLayoutConstraint?
+    @IBOutlet weak var keyboardHeightLayoutConstraint: NSLayoutConstraint?
     
     var flowLayout: TopAlignedCollectionViewFlowLayout {
         return self.collectionView?.collectionViewLayout as! TopAlignedCollectionViewFlowLayout
@@ -34,6 +35,7 @@ class NowPlayingViewController: UIViewController {
     
     var currentIndex = 0
     var inEditMode = false
+    var notesEditing = false
     
     let reuseIdentifier = "cell"
     
@@ -112,9 +114,8 @@ class NowPlayingViewController: UIViewController {
         }
         self._isDismissing = false
         self.pageControl?.numberOfPages = orderedViewControllers.count
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardDidShow), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -123,16 +124,54 @@ class NowPlayingViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
-    func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y == 0{
-                self.view.frame.origin.y -= (keyboardSize.height - (self.tabBarController?.tabBar.frame.height)! - 50.0)
+    func keyboardNotification(notification: NSNotification) {
+        if self.notesEditing {
+            if let userInfo = notification.userInfo {
+                let endFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+                let duration:TimeInterval = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0
+                let animationCurveRawNSN = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber
+                let animationCurveRaw = animationCurveRawNSN?.uintValue ?? UIViewAnimationOptions.curveEaseInOut.rawValue
+                let animationCurve:UIViewAnimationOptions = UIViewAnimationOptions(rawValue: animationCurveRaw)
+                if (endFrame?.origin.y)! >= UIScreen.main.bounds.size.height {
+                    UIView.animate(withDuration: duration,
+                                   delay: TimeInterval(0),
+                                   options: animationCurve,
+                                   animations: { self.view.frame.origin.y += endFrame!.height - (self.tabBarController?.tabBar.frame.height)! - 50.0
+                    },
+                                   completion: nil)
+                } else {
+                    UIView.animate(withDuration: duration,
+                                   delay: TimeInterval(0),
+                                   options: animationCurve,
+                                   animations: { self.view.frame.origin.y -= endFrame!.height - (self.tabBarController?.tabBar.frame.height)! - 50.0
+                    },
+                                   completion: nil)
+                }
+
             }
         }
-        self.navigationController?.navigationBar.topItem?.leftBarButtonItem?.isEnabled = false
-        UIView.setAnimationsEnabled(false)
-        self.navigationController?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.dismissKeyboard))
-        UIView.setAnimationsEnabled(true)
+    }
+    
+    func keyboardDidShow(notification: NSNotification) {
+        if self.notesEditing {
+            if let userInfo = notification.userInfo {
+                if self.view.frame.origin.y == 0 {
+                    let endFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+                    let duration:TimeInterval = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0
+                    let animationCurveRawNSN = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber
+                    let animationCurveRaw = animationCurveRawNSN?.uintValue ?? UIViewAnimationOptions.curveEaseInOut.rawValue
+                    let animationCurve:UIViewAnimationOptions = UIViewAnimationOptions(rawValue: animationCurveRaw)
+                    UIView.animate(withDuration: duration,
+                                   delay: TimeInterval(0),
+                                   options: animationCurve,
+                                   animations: { self.view.frame.origin.y -= endFrame!.height - (self.tabBarController?.tabBar.frame.height)! - 50.0
+                    },
+                                   completion: nil)
+                }
+            }
+            self.navigationController?.navigationBar.topItem?.leftBarButtonItem?.isEnabled = false
+            self.navigationController?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.dismissKeyboard))
+        }
     }
     
     func dismissKeyboard(sender: UIBarButtonItem) {
@@ -140,15 +179,18 @@ class NowPlayingViewController: UIViewController {
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y != 0 {
-                self.view.frame.origin.y += keyboardSize.height - (self.tabBarController?.tabBar.frame.height)! - 50.0
+        if self.notesEditing {
+            if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+                if self.view.frame.origin.y != 0 {
+                    self.view.frame.origin.y += keyboardSize.height - (self.tabBarController?.tabBar.frame.height)! - 50.0
+                }
             }
+            self.navigationController?.navigationBar.topItem?.leftBarButtonItem?.isEnabled = true
+            UIView.setAnimationsEnabled(false)
+            self.navigationController?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.addTapped))
+            UIView.setAnimationsEnabled(true)
+            self.notesEditing = false
         }
-        self.navigationController?.navigationBar.topItem?.leftBarButtonItem?.isEnabled = true
-        UIView.setAnimationsEnabled(false)
-        self.navigationController?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.addTapped))
-        UIView.setAnimationsEnabled(true)
     }
     
     func refreshFirstGame() {
@@ -629,6 +671,7 @@ extension NowPlayingViewController: NowPlayingGameViewDelegate {
         self.currentlyTypingTextView = textView
         self.navigationController?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.doneTyping))
         self.navigationController?.navigationBar.topItem?.leftBarButtonItem?.isEnabled = false
+        self.notesEditing = true
     }
 }
 
