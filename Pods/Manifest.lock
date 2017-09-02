@@ -5,11 +5,14 @@ PODS:
   - Fabric (1.6.13)
   - ImageViewer (4.1.0)
   - Kingfisher (3.13.1)
-  - Realm (2.10.1):
-    - Realm/Headers (= 2.10.1)
-  - Realm/Headers (2.10.1)
-  - RealmSwift (2.10.1):
-    - Realm (= 2.10.1)
+  - MMWormhole (2.0.0):
+    - MMWormhole/Core (= 2.0.0)
+  - MMWormhole/Core (2.0.0)
+  - Realm (2.10.2):
+    - Realm/Headers (= 2.10.2)
+  - Realm/Headers (2.10.2)
+  - RealmSwift (2.10.2):
+    - Realm (= 2.10.2)
   - Zephyr (2.2.3)
   - Zip (0.8.0)
 
@@ -19,6 +22,7 @@ DEPENDENCIES:
   - Fabric
   - ImageViewer
   - Kingfisher (~> 3.13.1)
+  - MMWormhole
   - RealmSwift
   - Zephyr (from `https://github.com/ArtSabintsev/Zephyr.git`, branch `swift3.2`)
   - Zip (~> 0.8.0)
@@ -39,11 +43,12 @@ SPEC CHECKSUMS:
   Fabric: 2fb5676bc811af011a04513451f463dac6803206
   ImageViewer: 163e5832e0a09e31a3e3482cce6e5e9029356174
   Kingfisher: ed9707a409cc47fddafbcd12a43a9757e3600af5
-  Realm: fc7a317a5c2c9ba91f5f235ede4e2ea76e9eba0c
-  RealmSwift: 505ed6c15942a2e76f5cfa78a8667cfa997ee75b
+  MMWormhole: 0cd3fd35a9118b2e2d762b499f54eeaace0be791
+  Realm: 0ef72b837fb67e9f4b098bac771ddd72c7fdbb69
+  RealmSwift: 07a9ae0505091eda6b2ee7c190c3786d6e90a7b0
   Zephyr: bf2a177c211999f5181b6798bb9ee9a34acd26d7
   Zip: bb7d8370de00e50699633d91e03f2ec84f1ee437
 
-PODFILE CHECKSUM: 6b405f469e993aa924858d137334c315649bf177
+PODFILE CHECKSUM: e8ea64cd6ae6ba0efde6ba21c2743063bfc9ac86
 
 COCOAPODS: 1.2.1

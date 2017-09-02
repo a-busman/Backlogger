@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '9853054772A9481E5FC082AD1C1867F0'
+               BlueprintIdentifier = 'F1A24CD3FFA69D9DD88A2FE59A0A7FAC'
                BlueprintName = 'Zephyr'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'Zephyr.framework'>

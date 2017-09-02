@@ -1,11 +1,16 @@
 source 'https://github.com/CocoaPods/Specs.git'
-platform :ios, '10.3'
 use_frameworks!
 
+def sharedPods
+  pod 'Alamofire'
+  pod 'Kingfisher', '~> 3.13.1'
+  pod 'RealmSwift'
+  pod 'MMWormhole'
+end
+
 target 'Backlogger' do
-    pod 'Alamofire'
-    pod 'RealmSwift'
-    pod 'Kingfisher', '~> 3.13.1'
+    platform :ios, '10.3'
+    sharedPods
     pod 'ImageViewer'
     pod 'Fabric'
     pod 'Crashlytics'
@@ -14,11 +19,20 @@ target 'Backlogger' do
 end
 
 target 'BackloggerWidget' do
-    pod 'Alamofire'
-    pod 'RealmSwift'
-    pod 'Kingfisher', '~> 3.13.1'
+    platform :ios, '10.3'
+    sharedPods
     pod 'Fabric'
     pod 'Crashlytics'
+end
+
+target 'BackloggerWatch' do
+    platform :watchos, '3.2'
+    sharedPods
+end
+
+target 'BackloggerWatch Extension' do
+    platform :watchos, '3.2'
+    sharedPods
 end
 
 post_install do |installer|

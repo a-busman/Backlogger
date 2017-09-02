@@ -10,6 +10,7 @@ import Foundation
 import Alamofire
 import RealmSwift
 import Realm
+import UIKit
 
 enum ImageFields: String {
     case IconUrl   = "icon_url"
