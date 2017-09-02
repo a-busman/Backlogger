@@ -21,6 +21,7 @@ games in a series, it really doesn't matter what you do, just don't not make any
 
 ## Future
 * I want to add Facebook and Twitter sharing for things like "I just completed this game! Neato!"
+* Apple Watch support would be nice to update games in the Now Playing tab.
 * If you want to see any particular features, again, feel free to add some to the Issues tab.
 
 ## Screenshots
