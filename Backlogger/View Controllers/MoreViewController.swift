@@ -40,7 +40,7 @@ class MoreViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         if self.tableView!.contentSize.height > (self.tableView!.frame.height - self.navigationController!.navigationBar.frame.height - self.tabBarController!.tabBar.frame.height - 20.0) {
-            self.progressCollectionView?.contentInset = UIEdgeInsets(top: 0, left: 10.0, bottom: 0, right: 10.0)
+            self.progressCollectionView?.contentInset = UIEdgeInsets(top: 0, left: 0.0, bottom: 0, right: 0.0)
             self.tableView?.bounces = true
         } else {
             self.progressCollectionView?.contentInset = UIEdgeInsets(top: 0, left: 16.0, bottom: 0, right: 16.0)

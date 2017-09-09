@@ -387,7 +387,7 @@
                                 </connections>
                             </view>
                             <view tag="3" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MVV-uV-QJq" userLabel="Alamo View">
-                                <rect key="frame" x="151" y="257" width="73" height="20.5"/>
+                                <rect key="frame" x="151" y="247" width="73" height="20.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Alamofire" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DOt-j4-z2p">
                                         <rect key="frame" x="0.0" y="0.0" width="73" height="20.5"/>
@@ -409,7 +409,7 @@
                                 </connections>
                             </view>
                             <view tag="4" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iij-Kq-dsb" userLabel="Realm View">
-                                <rect key="frame" x="164" y="297.5" width="47.5" height="20.5"/>
+                                <rect key="frame" x="164" y="277.5" width="47.5" height="20.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Realm" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5mb-iN-H1X">
                                         <rect key="frame" x="0.0" y="0.0" width="47.5" height="20.5"/>
@@ -431,7 +431,7 @@
                                 </connections>
                             </view>
                             <view tag="5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="asg-c9-qfF" userLabel="Kingfisher View">
-                                <rect key="frame" x="149" y="338" width="77.5" height="20.5"/>
+                                <rect key="frame" x="149" y="308" width="77.5" height="20.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Kingfisher" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="axX-6u-6Na">
                                         <rect key="frame" x="0.0" y="0.0" width="77.5" height="20.5"/>
@@ -453,7 +453,7 @@
                                 </connections>
                             </view>
                             <view tag="6" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="twQ-hG-Zia" userLabel="ImageViewer View">
-                                <rect key="frame" x="138.5" y="378.5" width="98.5" height="20.5"/>
+                                <rect key="frame" x="138.5" y="338.5" width="98.5" height="20.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ImageViewer" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P0b-a9-wHC">
                                         <rect key="frame" x="0.0" y="0.0" width="98.5" height="20.5"/>
@@ -475,7 +475,7 @@
                                 </connections>
                             </view>
                             <view tag="7" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w9n-lm-8I3" userLabel="Steam View">
-                                <rect key="frame" x="163" y="419" width="49" height="20.5"/>
+                                <rect key="frame" x="163" y="369" width="49" height="20.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Steam" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hia-91-m1G">
                                         <rect key="frame" x="0.0" y="0.0" width="49" height="20.5"/>
@@ -497,7 +497,7 @@
                                 </connections>
                             </view>
                             <view tag="8" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oRe-Di-wlS" userLabel="Crashlytics View">
-                                <rect key="frame" x="145" y="459.5" width="85.5" height="20.5"/>
+                                <rect key="frame" x="145" y="399.5" width="85.5" height="20.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Crashlytics" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aHv-wf-y8P">
                                         <rect key="frame" x="0.0" y="0.0" width="85.5" height="21"/>
@@ -533,22 +533,25 @@
                             <constraint firstItem="8mm-Pw-bWL" firstAttribute="centerX" secondItem="AgY-T7-b5t" secondAttribute="centerX" id="KXx-Uq-Rfk"/>
                             <constraint firstItem="8mm-Pw-bWL" firstAttribute="top" secondItem="P5z-6L-sjX" secondAttribute="bottom" constant="5" id="Mft-Sm-LcE"/>
                             <constraint firstItem="P5z-6L-sjX" firstAttribute="top" secondItem="Naq-Ru-pix" secondAttribute="bottom" constant="30" id="PAj-xl-9Ab"/>
-                            <constraint firstItem="w9n-lm-8I3" firstAttribute="top" secondItem="twQ-hG-Zia" secondAttribute="bottom" constant="20" id="Shk-vr-8i7"/>
-                            <constraint firstItem="asg-c9-qfF" firstAttribute="top" secondItem="iij-Kq-dsb" secondAttribute="bottom" constant="20" id="VgV-e7-xwE"/>
+                            <constraint firstItem="w9n-lm-8I3" firstAttribute="top" secondItem="twQ-hG-Zia" secondAttribute="bottom" constant="10" id="Shk-vr-8i7"/>
+                            <constraint firstItem="asg-c9-qfF" firstAttribute="top" secondItem="iij-Kq-dsb" secondAttribute="bottom" constant="10" id="VgV-e7-xwE"/>
                             <constraint firstItem="iij-Kq-dsb" firstAttribute="centerX" secondItem="AgY-T7-b5t" secondAttribute="centerX" id="WWr-hx-wuE"/>
-                            <constraint firstItem="oRe-Di-wlS" firstAttribute="top" secondItem="w9n-lm-8I3" secondAttribute="bottom" constant="20" id="aY1-gv-g5f"/>
-                            <constraint firstItem="iij-Kq-dsb" firstAttribute="top" secondItem="MVV-uV-QJq" secondAttribute="bottom" constant="20" id="bPT-0z-LYq"/>
+                            <constraint firstItem="oRe-Di-wlS" firstAttribute="top" secondItem="w9n-lm-8I3" secondAttribute="bottom" constant="10" id="aY1-gv-g5f"/>
+                            <constraint firstItem="iij-Kq-dsb" firstAttribute="top" secondItem="MVV-uV-QJq" secondAttribute="bottom" constant="10" id="bPT-0z-LYq"/>
                             <constraint firstItem="3Ni-px-GDi" firstAttribute="centerX" secondItem="AgY-T7-b5t" secondAttribute="centerX" id="fhs-eD-IxN"/>
                             <constraint firstItem="RwV-fa-gj5" firstAttribute="centerX" secondItem="AgY-T7-b5t" secondAttribute="centerX" id="mUc-bV-Fel"/>
                             <constraint firstItem="asg-c9-qfF" firstAttribute="centerX" secondItem="AgY-T7-b5t" secondAttribute="centerX" id="psL-zh-vVZ"/>
                             <constraint firstItem="twQ-hG-Zia" firstAttribute="centerX" secondItem="AgY-T7-b5t" secondAttribute="centerX" id="qe3-Gh-3U2"/>
-                            <constraint firstItem="twQ-hG-Zia" firstAttribute="top" secondItem="asg-c9-qfF" secondAttribute="bottom" constant="20" id="rjw-d7-frI"/>
+                            <constraint firstItem="twQ-hG-Zia" firstAttribute="top" secondItem="asg-c9-qfF" secondAttribute="bottom" constant="10" id="rjw-d7-frI"/>
                             <constraint firstItem="MVV-uV-QJq" firstAttribute="centerX" secondItem="AgY-T7-b5t" secondAttribute="centerX" id="tn2-eC-NXq"/>
-                            <constraint firstItem="MVV-uV-QJq" firstAttribute="top" secondItem="RwV-fa-gj5" secondAttribute="bottom" constant="20" id="tyh-r0-8WG"/>
+                            <constraint firstItem="MVV-uV-QJq" firstAttribute="top" secondItem="RwV-fa-gj5" secondAttribute="bottom" constant="10" id="tyh-r0-8WG"/>
                             <constraint firstItem="oRe-Di-wlS" firstAttribute="centerX" secondItem="AgY-T7-b5t" secondAttribute="centerX" id="yAI-O6-mnm"/>
                             <constraint firstItem="P5z-6L-sjX" firstAttribute="centerX" secondItem="AgY-T7-b5t" secondAttribute="centerX" id="zVV-fv-O7Q"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="versionLabel" destination="8mm-Pw-bWL" id="6hU-Yj-qwL"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="k5h-Er-nUf" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="aOC-YQ-P7y">

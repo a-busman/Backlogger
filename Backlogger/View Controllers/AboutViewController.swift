@@ -9,6 +9,8 @@
 import UIKit
 
 class AboutViewController: UIViewController {
+    @IBOutlet weak var versionLabel: UILabel?
+    
     let urlStrings: [String] = [
         "https://github.com/a-busman",
         "https://giantbomb.com/api",
@@ -25,5 +27,13 @@ class AboutViewController: UIViewController {
         }
         
         UIApplication.shared.open(URL(string: self.urlStrings[view.tag - 1])!, options: [:], completionHandler: nil)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        let nsObject: Any? = Bundle.main.infoDictionary?["CFBundleShortVersionString"]
+        let version = nsObject as! String
+        self.versionLabel?.text = "Version \(version)"
+
     }
 }

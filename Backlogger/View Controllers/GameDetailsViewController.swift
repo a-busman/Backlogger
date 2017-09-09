@@ -230,6 +230,7 @@ class GameDetailsViewController: UIViewController {
         if screenSize.width == 320.0 {
             self.titleLabel?.numberOfLines = 2
             self.yearLabel?.isHidden = true
+            self.percentageLabel?.font = self.percentageLabel?.font.withSize(32.0)
         }
         autoreleasepool {
             let realm = try? Realm()
