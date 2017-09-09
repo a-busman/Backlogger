@@ -1,15 +1,15 @@
 PODS:
-  - Alamofire (4.5.0)
-  - Crashlytics (3.8.5):
+  - Alamofire (4.5.1)
+  - Crashlytics (3.8.6):
     - Fabric (~> 1.6.3)
-  - Fabric (1.6.12)
+  - Fabric (1.6.13)
   - ImageViewer (4.1.0)
-  - Kingfisher (3.11.0)
-  - Realm (2.9.1):
-    - Realm/Headers (= 2.9.1)
-  - Realm/Headers (2.9.1)
-  - RealmSwift (2.9.1):
-    - Realm (= 2.9.1)
+  - Kingfisher (3.12.2)
+  - Realm (2.10.0):
+    - Realm/Headers (= 2.10.0)
+  - Realm/Headers (2.10.0)
+  - RealmSwift (2.10.0):
+    - Realm (= 2.10.0)
 
 DEPENDENCIES:
   - Alamofire
@@ -20,13 +20,13 @@ DEPENDENCIES:
   - RealmSwift
 
 SPEC CHECKSUMS:
-  Alamofire: f28cdffd29de33a7bfa022cbd63ae95a27fae140
-  Crashlytics: dfbae35ef22ca189240d230ad501feea4ee85d2d
-  Fabric: f050464eac45a2ce5a8e6e6a07e977c0df32fe28
+  Alamofire: 2d95912bf4c34f164fdfc335872e8c312acaea4a
+  Crashlytics: 95d05f4e4c19a771250c4bd9ce344d996de32bbf
+  Fabric: 2fb5676bc811af011a04513451f463dac6803206
   ImageViewer: 163e5832e0a09e31a3e3482cce6e5e9029356174
-  Kingfisher: c8911a7672c6217dec8c0520fb6e76ec4b7e0780
-  Realm: f91fb43bd474c4f731a116ebf7392c75dd015920
-  RealmSwift: 207f12a4a36b696c5183c60a1c06d70234a23e56
+  Kingfisher: 320626678acadfcf47008b3c6841cd882050737b
+  Realm: 98b3a25643cf6b3e07d2b99fb43fe0eb9c801dec
+  RealmSwift: 34073ad3a31232bbaf7c0db898c037940284cba2
 
 PODFILE CHECKSUM: 7f501ee1283df602d2da47ef2c53babe33255afc
 
