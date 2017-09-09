@@ -90,21 +90,21 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" red="0.9370916485786438" green="0.93694382905960083" blue="0.95754462480545044" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <collectionView key="tableFooterView" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" prefetchingEnabled="NO" id="OS8-lr-iZ7">
-                                    <rect key="frame" x="0.0" y="100.5" width="375" height="350"/>
+                                    <rect key="frame" x="0.0" y="100.5" width="375" height="340"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="gXn-1g-yYr">
-                                        <size key="itemSize" width="175" height="175"/>
+                                        <size key="itemSize" width="170" height="170"/>
                                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                         <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                         <inset key="sectionInset" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
                                     </collectionViewFlowLayout>
                                     <cells>
                                         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="progress_cell" id="bKd-CB-cW4" customClass="ProgressCell" customModule="Backlogger" customModuleProvider="target">
-                                            <rect key="frame" x="10" y="0.0" width="175" height="175"/>
+                                            <rect key="frame" x="10" y="0.0" width="170" height="170"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                                <rect key="frame" x="0.0" y="0.0" width="175" height="175"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="170" height="170"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </view>
                                         </collectionViewCell>
@@ -228,7 +228,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KhP-Ek-gRi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1649" y="1280"/>
+            <point key="canvasLocation" x="1648.8" y="1279.6101949025488"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="S1M-1C-VFC">
@@ -593,6 +593,120 @@
                 </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2448.8000000000002" y="1279.6101949025488"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Jga-Gi-Mxd">
+            <objects>
+                <navigationController storyboardIdentifier="wishlist_nav_vc" id="Nzp-UW-zHv" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="eFi-J8-ea4">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.0" green="0.72525911350000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="Gx3-BN-eem" kind="relationship" relationship="rootViewController" id="udp-bb-CDm"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2Jw-pp-x2O" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2449" y="1988"/>
+        </scene>
+        <!--Wish List-->
+        <scene sceneID="q9Z-dk-cmY">
+            <objects>
+                <viewController id="Gx3-BN-eem" customClass="WishlistViewController" customModule="Backlogger" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="KwJ-wV-Chi"/>
+                        <viewControllerLayoutGuide type="bottom" id="b88-W9-71e"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="xUN-cg-HO3">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelectionDuringEditing="YES" allowsMultipleSelectionDuringEditing="YES" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="OOA-Fl-CC7">
+                                <rect key="frame" x="-0.5" y="-0.5" width="375" height="667"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="table_cell" id="QUZ-hP-wmp" customClass="TableViewCell" customModule="Backlogger" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QUZ-hP-wmp" id="oca-3i-Wqe">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="Yjd-tz-avt" kind="show" identifier="wishlist_show_details" id="GgV-LA-jd5"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="Gx3-BN-eem" id="yzS-pT-CJg"/>
+                                    <outlet property="delegate" destination="Gx3-BN-eem" id="0s1-Wy-Rp7"/>
+                                </connections>
+                            </tableView>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qnX-ds-4zi">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You don't currently have anything in your Wish List." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ebt-1x-ohJ">
+                                        <rect key="frame" x="20" y="286" width="335" height="41"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wish List" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KNs-vi-17n">
+                                        <rect key="frame" x="126.5" y="240" width="121.5" height="36"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.93709164860000005" green="0.93694382909999996" blue="0.95754462480000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="ebt-1x-ohJ" firstAttribute="centerY" secondItem="qnX-ds-4zi" secondAttribute="centerY" constant="5" id="Glc-c6-XoQ"/>
+                                    <constraint firstItem="ebt-1x-ohJ" firstAttribute="width" secondItem="qnX-ds-4zi" secondAttribute="width" constant="-40" id="UcS-1A-IAS"/>
+                                    <constraint firstItem="KNs-vi-17n" firstAttribute="bottom" secondItem="ebt-1x-ohJ" secondAttribute="top" constant="-10" id="dpy-EC-g48"/>
+                                    <constraint firstItem="ebt-1x-ohJ" firstAttribute="centerX" secondItem="qnX-ds-4zi" secondAttribute="centerX" id="e4x-KB-jFw"/>
+                                    <constraint firstItem="KNs-vi-17n" firstAttribute="centerX" secondItem="qnX-ds-4zi" secondAttribute="centerX" id="yfI-or-oml"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="OOA-Fl-CC7" firstAttribute="height" secondItem="xUN-cg-HO3" secondAttribute="height" id="4zB-bj-1QO"/>
+                            <constraint firstItem="qnX-ds-4zi" firstAttribute="top" secondItem="KwJ-wV-Chi" secondAttribute="bottom" id="DNg-vf-F75"/>
+                            <constraint firstItem="OOA-Fl-CC7" firstAttribute="centerX" secondItem="xUN-cg-HO3" secondAttribute="centerX" id="Mzr-nN-73N"/>
+                            <constraint firstItem="OOA-Fl-CC7" firstAttribute="width" secondItem="xUN-cg-HO3" secondAttribute="width" id="Ncv-kl-IGS"/>
+                            <constraint firstItem="qnX-ds-4zi" firstAttribute="leading" secondItem="xUN-cg-HO3" secondAttribute="leading" id="R6z-hI-dJM"/>
+                            <constraint firstItem="OOA-Fl-CC7" firstAttribute="centerY" secondItem="xUN-cg-HO3" secondAttribute="centerY" id="XaJ-Zg-501"/>
+                            <constraint firstItem="qnX-ds-4zi" firstAttribute="bottom" secondItem="b88-W9-71e" secondAttribute="top" id="bVi-FF-8DX"/>
+                            <constraint firstAttribute="trailing" secondItem="qnX-ds-4zi" secondAttribute="trailing" id="uFa-WZ-TWX"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Wish List" id="Wgh-O3-gac">
+                        <barButtonItem key="leftBarButtonItem" title="Edit" style="plain" id="oNK-Ff-dEz">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <action selector="leftTappedWithSender:" destination="Gx3-BN-eem" id="SXp-Ny-fRk"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Done" style="done" id="wxm-1j-Goe">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <action selector="rightTappedWithSender:" destination="Gx3-BN-eem" id="n9z-2W-lfi"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="leftBarButtonItem" destination="oNK-Ff-dEz" id="gVX-aQ-HGh"/>
+                        <outlet property="noGamesView" destination="qnX-ds-4zi" id="dQq-0K-NAU"/>
+                        <outlet property="rightBarButtonItem" destination="wxm-1j-Goe" id="xDF-ih-qc3"/>
+                        <outlet property="tableView" destination="OOA-Fl-CC7" id="VOr-fW-P80"/>
+                        <outlet property="view" destination="xUN-cg-HO3" id="cdK-Ot-b3O"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Otu-ru-btu" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3448.8000000000002" y="1987.5562218890557"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="bYu-qd-YPI">
@@ -2513,8 +2627,8 @@
         <image name="steam_logo_tiny" width="20" height="20"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="io8-Qh-LNs"/>
         <segue reference="wid-M9-uTf"/>
         <segue reference="4UJ-d8-tRw"/>
+        <segue reference="GgV-LA-jd5"/>
     </inferredMetricsTieBreakers>
 </document>

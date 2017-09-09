@@ -586,7 +586,7 @@ extension LibraryAddSearchViewController: ConsoleSelectionTableViewControllerDel
             let cell = self.tableView?.cellForRow(at: IndexPath(row: selectedRow, section: 0)) as! TableViewCell
             if consoles.count > 0 {
                 for (index, game) in gameList.enumerated() {
-                    if !consoles.contains(game.platform!) {
+                    if !consoles.contains(game.platform!) && game.inLibrary {
                         if index == (gameList.count - 1) && shouldDelete {
                             gameField = game.deleteWithGameFieldCopy()
                         } else {

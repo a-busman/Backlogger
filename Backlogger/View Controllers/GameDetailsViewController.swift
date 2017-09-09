@@ -1343,7 +1343,7 @@ extension GameDetailsViewController: ConsoleSelectionTableViewControllerDelegate
             
             if consoles.count > 0 {
                 for game in (self._gameField?.ownedGames)! {
-                    if !consoles.contains(game.platform!) {
+                    if !consoles.contains(game.platform!) && game.inLibrary {
                         game.delete()
                     } else {
                         currentPlatformList.append(game.platform!)

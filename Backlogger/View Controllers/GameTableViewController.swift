@@ -35,8 +35,6 @@ class GameTableViewController: UIViewController {
     var platform: Platform?
     var platformId: Int?
     
-    var currentlySelectedRow = 0
-    
     var toastOverlay = ToastOverlayViewController()
     
     var steamVc: UINavigationController?
@@ -258,8 +256,6 @@ class GameTableViewController: UIViewController {
             if let cell = sender as? UITableViewCell {
                 let i = (self.tableView?.indexPath(for: cell)?.row)!
                 let vc = segue.destination as! GameDetailsViewController
-                
-                self.currentlySelectedRow = i
                 
                 vc.gameField = self.filteredGames![i].gameFields
                 vc.game = self.filteredGames![i]
@@ -698,13 +694,13 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == UITableViewCellEditingStyle.delete) {
-            let game = filteredGames![indexPath.row]
+            let game = self.filteredGames![indexPath.row]
             game.delete()
             autoreleasepool {
                 let realm = try? Realm()
                 self.platform = realm?.object(ofType: Platform.self, forPrimaryKey: self.platformId)
             }
-            if self.platform != nil {
+            if self.platform?.ownedGames.count ?? 0 > 0 {
                 var sortString: String
                 switch self.sortType! {
                 case .alphabetical:

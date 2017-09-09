@@ -31,7 +31,6 @@ class AddSteamGamesViewController: UIViewController {
         self.tableView?.setEditing(true, animated: false)
         self.tableView?.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: self.tableReuseIdentifier)
         self.tableView?.tableFooterView = UIView(frame: .zero)
-        // Do any additional setup after loading the view.
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -40,11 +39,6 @@ class AddSteamGamesViewController: UIViewController {
             self.selected.append(true)
             self.tableView?.selectRow(at: IndexPath(row: i, section: 0), animated: false, scrollPosition: .none)
         }
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     @IBAction func cancelTapped(sender: UIBarButtonItem) {

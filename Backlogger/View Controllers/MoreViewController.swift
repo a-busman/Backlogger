@@ -23,7 +23,7 @@ class MoreViewController: UIViewController {
     let progressReuseId = "progress_cell"
     
     var steamVc: UINavigationController?
-    let stringList: [String] = ["Link Steam Account", "Reset Data", "About"]
+    let stringList: [String] = ["Link Steam Account", "Wishlist", "Reset Data", "About"]
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView?.tableFooterView = self.progressCollectionView
@@ -39,7 +39,7 @@ class MoreViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        if self.tableView!.contentSize.height > (self.tableView!.frame.height - self.navigationController!.navigationBar.frame.height - self.tabBarController!.tabBar.frame.height) {
+        if self.tableView!.contentSize.height > (self.tableView!.frame.height - self.navigationController!.navigationBar.frame.height - self.tabBarController!.tabBar.frame.height - 20.0) {
             self.progressCollectionView?.contentInset = UIEdgeInsets(top: 0, left: 10.0, bottom: 0, right: 10.0)
             self.tableView?.bounces = true
         } else {
@@ -51,7 +51,7 @@ class MoreViewController: UIViewController {
 
 extension MoreViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 150, height: 175)
+        return CGSize(width: 145, height: 170)
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 4
@@ -168,6 +168,9 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
                 
             }
         case 1:
+            let vc = self.storyboard!.instantiateViewController(withIdentifier: "wishlist_nav_vc")
+            self.present(vc, animated: true, completion: nil)
+        case 2:
             var messageString: String = "This will remove all games and playlists in your library."
             if let _ = UserDefaults.standard.value(forKey: "steamName") as? String {
                 messageString += " This will also unlink your steam account."
@@ -210,7 +213,7 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
             actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.present(actions, animated: true, completion: nil)
             break
-        case 2:
+        case 3:
             let vc = self.storyboard!.instantiateViewController(withIdentifier: "about")
             self.navigationController?.pushViewController(vc, animated: true)
             self.navigationController?.navigationBar.tintColor = .white
