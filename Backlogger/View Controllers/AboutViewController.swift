@@ -19,7 +19,9 @@ class AboutViewController: UIViewController {
         "https://github.com/onevcat/Kingfisher",
         "https://github.com/MailOnline/ImageViewer",
         "https://steamcommunity.com/dev",
-        "https://fabric.io/kits/android/crashlytics"
+        "https://fabric.io/kits/android/crashlytics",
+        "https://github.com/marmelroy/Zip",
+        "https://github.com/ArtSabintsev/Zephyr"
     ]
     @IBAction func tappedLink(sender: UITapGestureRecognizer) {
         guard let view = sender.view else {
