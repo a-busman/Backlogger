@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import Zephyr
 
 protocol PlaylistViewControllerDelegate {
     func chosePlaylist(vc: PlaylistViewController, playlist: Playlist, games: [Game], isNew: Bool)
@@ -41,6 +42,7 @@ class PlaylistViewController: UIViewController {
     var selectedRow = -1
     override func viewDidLoad() {
         super.viewDidLoad()
+        Zephyr.sync()
         let sort = UserDefaults.standard.value(forKey: "playlistSortType")
         if sort == nil {
             self.sortType = .dateAdded
@@ -53,6 +55,7 @@ class PlaylistViewController: UIViewController {
             self.ascending = true
             UserDefaults.standard.set(self.ascending, forKey: "playlistAscending")
         }
+        Zephyr.sync(keys: ["playlistSortType", "playlistAscending"])
         self.tableView?.register(UINib(nibName: "PlaylistTableCell", bundle: nil), forCellReuseIdentifier: self.cellReuseIdentifier)
         self.tableView?.tableFooterView = UIView(frame: .zero)
         self.navigationController?.navigationBar.tintColor = .white
@@ -123,6 +126,8 @@ class PlaylistViewController: UIViewController {
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "playlistSortType")
             self.tableView?.reloadData()
         })
+        
+        Zephyr.sync(keys: ["playlistAscending", "playlistSortType"])
         
         switch self.sortType! {
         case .alphabetical:

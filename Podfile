@@ -9,6 +9,8 @@ target 'Backlogger' do
     pod 'ImageViewer'
     pod 'Fabric'
     pod 'Crashlytics'
+    pod 'Zip'
+    pod 'Zephyr'
 end
 
 target 'BackloggerWidget' do

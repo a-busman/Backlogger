@@ -10,6 +10,8 @@ PODS:
   - Realm/Headers (2.10.0)
   - RealmSwift (2.10.0):
     - Realm (= 2.10.0)
+  - Zephyr (2.2.3)
+  - Zip (0.7.0)
 
 DEPENDENCIES:
   - Alamofire
@@ -18,6 +20,8 @@ DEPENDENCIES:
   - ImageViewer
   - Kingfisher
   - RealmSwift
+  - Zephyr
+  - Zip
 
 SPEC CHECKSUMS:
   Alamofire: 2d95912bf4c34f164fdfc335872e8c312acaea4a
@@ -27,7 +31,9 @@ SPEC CHECKSUMS:
   Kingfisher: 320626678acadfcf47008b3c6841cd882050737b
   Realm: 98b3a25643cf6b3e07d2b99fb43fe0eb9c801dec
   RealmSwift: 34073ad3a31232bbaf7c0db898c037940284cba2
+  Zephyr: 9620401cbbd18305b1b4e2752dd67cc283bae30a
+  Zip: e34513299ac38c0686d5b24504da7ce343799ab9
 
-PODFILE CHECKSUM: 7f501ee1283df602d2da47ef2c53babe33255afc
+PODFILE CHECKSUM: e1493eaabaef5c0c806740ddbfe76ab34dae9070
 
 COCOAPODS: 1.2.1

@@ -39,15 +39,30 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Zephyr.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Zip.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>0826D0EE89BE51424483A416AB3AC420</key>
+		<key>176A37F3939293A0523E346D0CD59F12</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>6B8C259C200F75123A23A8A65022397B</key>
+		<key>376CDD73B8153241CA0B608DF9BE592B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>52DDBA0EBE771E2647DD9321E59EBD71</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -67,7 +82,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>99B8FC473DF735FBC27AE07991988BEA</key>
+		<key>9853054772A9481E5FC082AD1C1867F0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E80DD74847092991419C144BB4F2C327</key>
 		<dict>
 			<key>primary</key>
 			<true/>

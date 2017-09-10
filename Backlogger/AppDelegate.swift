@@ -11,6 +11,7 @@ import Realm
 import RealmSwift
 import Fabric
 import Crashlytics
+import Zephyr
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -37,6 +38,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         (UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self])).tintColor = Util.appColor
         UISlider.appearance().tintColor = Util.appColor
         self.window?.tintColor = Util.appColor
+        
+        Zephyr.sync()
         
         if let shortcutItem = launchOptions?[UIApplicationLaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem {
             self.shortcutItem = shortcutItem

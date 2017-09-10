@@ -91,5 +91,17 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+    <key>NSUbiquitousContainers</key>
+    <dict>
+        <key>iCloud.com.alexbusman.Backlogger</key>
+        <dict>
+            <key>NSUbiquitousContainerIsDocumentScopePublic</key>
+            <true/>
+            <key>NSUbiquitousContainerSupportedFolderLevels</key>
+            <string>Any</string>
+            <key>NSUbiquitousContainerName</key>
+            <string>Backlogger</string>
+        </dict>
+    </dict>
 </dict>
 </plist>
