@@ -54,7 +54,12 @@ class LibraryViewController: UIViewController {
             self.sortType = .dateAdded
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
         } else {
-            self.sortType = SortType.init(rawValue: sort as! Int)
+            if let value = sort as? Int {
+                self.sortType = SortType.init(rawValue: value)
+            } else {
+                self.sortType = .dateAdded
+                UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
+            }
         }
         
         self.ascending = UserDefaults.standard.value(forKey: "libraryAscending") as? Bool

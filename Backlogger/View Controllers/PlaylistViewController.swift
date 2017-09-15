@@ -48,7 +48,12 @@ class PlaylistViewController: UIViewController {
             self.sortType = .dateAdded
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "playlistSortType")
         } else {
-            self.sortType = SortType.init(rawValue: sort as! Int)
+            if let value = sort as? Int {
+                self.sortType = SortType.init(rawValue: value)
+            } else {
+                self.sortType = .dateAdded
+                UserDefaults.standard.set(self.sortType!.rawValue, forKey: "playlistSortType")
+            }
         }
         self.ascending = UserDefaults.standard.value(forKey: "playlistAscending") as? Bool
         if self.ascending == nil {

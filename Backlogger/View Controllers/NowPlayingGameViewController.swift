@@ -325,6 +325,18 @@ class NowPlayingGameViewController: UIViewController {
                            },
                            completion: nil)
             self.blurViewState = .hidden
+        } else if self.blurViewState == .percent {
+            UIView.animate(withDuration: 0.4,
+                           delay: 0.0,
+                           usingSpringWithDamping: 1.0,
+                           initialSpringVelocity: 0,
+                           options: .curveEaseOut,
+                           animations: {
+                            self.blurView?.center.y += 40
+                            self.view.layoutIfNeeded()
+            },
+                           completion: nil)
+            self.blurViewState = .minimal
         }
     }
 
