@@ -38,8 +38,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         (UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self])).tintColor = Util.appColor
         UISlider.appearance().tintColor = Util.appColor
         self.window?.tintColor = Util.appColor
-        
-        Zephyr.sync()
+        Zephyr.syncUbiquitousKeyValueStoreOnChange = true
+        if Util.isICloudContainerAvailable {
+            Zephyr.addKeysToBeMonitored(keys: ["librarySortType", "libraryAscending", "steamName", "steamId", "libraryShowWishlist", "playlistSortType", "playlistAscending", "hideComplete"])
+            Zephyr.sync()
+        }
         
         if let shortcutItem = launchOptions?[UIApplicationLaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem {
             self.shortcutItem = shortcutItem

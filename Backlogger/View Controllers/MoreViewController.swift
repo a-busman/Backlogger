@@ -37,7 +37,9 @@ class MoreViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        Zephyr.sync()
+        if Util.isICloudContainerAvailable {
+            Zephyr.sync()
+        }
         self.progressCollectionView?.reloadData()
         self.progressCollectionView?.collectionViewLayout.invalidateLayout()
     }
@@ -159,13 +161,14 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.section == 0 {
             switch indexPath.row {
             case 0:
-                Zephyr.sync(keys: ["steamName"])
+                if Util.isICloudContainerAvailable {
+                    Zephyr.sync(keys: ["steamName"])
+                }
                 if let _ = UserDefaults.standard.value(forKey: "steamName") as? String {
                     let actions = UIAlertController(title: "Unlink Steam account?", message: "This will remove all steam games from Backlogger.", preferredStyle: .alert)
                     actions.addAction(UIAlertAction(title: "Unlink", style: .destructive, handler: { _ in
                         UserDefaults.standard.removeObject(forKey: "steamName")
                         UserDefaults.standard.removeObject(forKey: "steamId")
-                        Zephyr.sync(keys: ["steamName", "steamId"])
                         self.plainActivityIndicator?.startAnimating()
                         self.plainLoadingView?.isHidden = false
                         UIApplication.shared.beginIgnoringInteractionEvents()
@@ -226,7 +229,9 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
                 self.present(documentPicker, animated: true, completion: nil)
             case 2:
                 var messageString: String = "This will remove all games and playlists in your library."
-                Zephyr.sync(keys: ["steamName"])
+                if Util.isICloudContainerAvailable {
+                    Zephyr.sync(keys: ["steamName"])
+                }
                 if let _ = UserDefaults.standard.value(forKey: "steamName") as? String {
                     messageString += " This will also unlink your steam account."
                 }
@@ -235,7 +240,6 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
                 actions.addAction(UIAlertAction(title: "Reset", style: .destructive, handler: { _ in
                     UserDefaults.standard.removeObject(forKey: "steamName")
                     UserDefaults.standard.removeObject(forKey: "steamId")
-                    Zephyr.sync(keys: ["steamName", "steamId"])
                     autoreleasepool {
                         let realm = try! Realm()
                         try! realm.write {
@@ -433,7 +437,6 @@ extension MoreViewController: SteamLoginViewControllerDelegate {
                 }
             }
         }
-        Zephyr.sync(keys: ["steamName", "steamId"])
         self.tableView?.reloadData()
         self.steamVc?.dismiss(animated: true, completion: nil)
         self.activityIndicator?.startAnimating()

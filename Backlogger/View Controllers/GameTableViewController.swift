@@ -180,7 +180,10 @@ class GameTableViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        Zephyr.sync()
+        if Util.isICloudContainerAvailable {
+            Zephyr.sync()
+        }
+
         self.hideComplete = UserDefaults.standard.value(forKey: "hideComplete") as? Bool
         if self.hideComplete == nil {
             self.hideComplete = false
@@ -210,7 +213,6 @@ class GameTableViewController: UIViewController {
             self.showWishlist = false
             UserDefaults.standard.set(false, forKey: "libraryShowWishlist")
         }
-        Zephyr.sync(keys: ["hideComplete", "librarySortType", "libraryAscending", "libraryShowWishlist"])
         autoreleasepool {
             let realm = try? Realm()
             self.platform = realm?.object(ofType: Platform.self, forPrimaryKey: platformId)
@@ -296,14 +298,12 @@ class GameTableViewController: UIViewController {
     func hideTapped(sender: UIAlertAction) {
         self.hideComplete = !self.hideComplete!
         UserDefaults.standard.set(self.hideComplete, forKey: "hideComplete")
-        Zephyr.sync(keys: ["hideComplete"])
         self.filterGames()
     }
     
     func showWishlist(sender: UIAlertAction) {
         self.showWishlist = !self.showWishlist!
         UserDefaults.standard.set(self.showWishlist, forKey: "libraryShowWishlist")
-        Zephyr.sync(keys: ["libraryShowWishlist"])
         self.filterGames()
     }
     
@@ -419,12 +419,13 @@ class GameTableViewController: UIViewController {
         }
         UserDefaults.standard.set(self.ascending!, forKey: "libraryAscending")
         UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
-        Zephyr.sync(keys: ["libraryAscending", "librarySortType"])
         self.tableView?.reloadData()
     }
     
     func syncWithSteam(sender: UIAlertAction) {
-        Zephyr.sync(keys: ["steamId"])
+        if Util.isICloudContainerAvailable {
+            Zephyr.sync(keys: ["steamId"])
+        }
         let steamId = UserDefaults.standard.value(forKey: "steamId") as! String
         Steam.getUserGameList(with: steamId) { results in
             if let listError = results.error {

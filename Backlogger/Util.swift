@@ -33,6 +33,16 @@ class Util {
         return String(text.characters.filter {okayChars.contains($0) })
     }
     
+    class var isICloudContainerAvailable: Bool {
+        get {
+            if let _ = FileManager.default.ubiquityIdentityToken {
+                return true
+            } else {
+                return false
+            }
+        }
+    }
+    
     class func toRoman(number: Int) -> String {
         let romanValues = ["M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"]
         let arabicValues = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1]

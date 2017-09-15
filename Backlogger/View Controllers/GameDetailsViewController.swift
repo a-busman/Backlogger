@@ -261,7 +261,9 @@ class GameDetailsViewController: UIViewController {
                 self._state = .addToLibrary
             }
             if self._game!.platform!.idNumber == Steam.steamPlatformIdNumber {
-                Zephyr.sync(keys: ["steamName"])
+                if Util.isICloudContainerAvailable {
+                    Zephyr.sync(keys: ["steamName"])
+                }
                 let username = UserDefaults.standard.value(forKey: "steamName") as! String
                 self.steamUserLabel?.text = username
                 self.steamUserLabel?.isHidden = false

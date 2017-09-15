@@ -48,7 +48,9 @@ class LibraryViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        Zephyr.sync()
+        if Util.isICloudContainerAvailable {
+            Zephyr.sync()
+        }
         let sort = UserDefaults.standard.value(forKey: "librarySortType")
         if sort == nil {
             self.sortType = .dateAdded
@@ -67,7 +69,6 @@ class LibraryViewController: UIViewController {
             self.ascending = true
             UserDefaults.standard.set(self.ascending, forKey: "libraryAscending")
         }
-        Zephyr.sync(keys: ["librarySortType", "libraryAscending"])
         autoreleasepool {
             let realm = try! Realm()
             var sortString: String
@@ -282,7 +283,6 @@ class LibraryViewController: UIViewController {
             UserDefaults.standard.set(self.sortType!.rawValue, forKey: "librarySortType")
             self.tableView?.reloadData()
         })
-        Zephyr.sync(keys: ["libraryAscending", "librarySortType"])
         
         alphaAction.setValue(false, forKey: "checked")
         dateAction.setValue(false, forKey: "checked")
