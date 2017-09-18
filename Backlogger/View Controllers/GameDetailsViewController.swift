@@ -1550,10 +1550,10 @@ extension GameDetailsViewController: UITextViewDelegate {
 }
 extension GameDetailsViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView == self.detailsScrollView! {
+        if scrollView == self.detailsScrollView! && scrollView.contentSize.height > (scrollView.bounds.height - self.minimumHeaderHeight - 25.0 - (self.navigationController?.navigationBar.bounds.height ?? 20.0)) {
+            let heightRange = self.maximumHeaderHeight - self.minimumHeaderHeight
             let offset = scrollView.contentOffset.y
             let initialInset = -(self.maximumHeaderHeight + 25.0 + (self.navigationController?.navigationBar.bounds.height ?? -20.0))
-            let heightRange = self.maximumHeaderHeight - self.minimumHeaderHeight
             var newConstant: CGFloat = 0
             var newBorderConstant: CGFloat = 0
             var newBottomConstant: CGFloat = 0
@@ -1600,9 +1600,9 @@ extension GameDetailsViewController: UIScrollViewDelegate {
             self.steamUserLabel?.alpha = heightPercentage
         }
     }
-    
+
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        if scrollView == self.detailsScrollView {
+        if scrollView == self.detailsScrollView && scrollView.contentSize.height > (scrollView.bounds.height - self.minimumHeaderHeight - 25.0 - (self.navigationController?.navigationBar.bounds.height ?? 20.0)) {
             let offset = targetContentOffset.pointee.y
             let initialInset = -(self.maximumHeaderHeight + 25.0 + (self.navigationController?.navigationBar.bounds.height ?? -20.0))
             let heightRange = self.maximumHeaderHeight - self.minimumHeaderHeight

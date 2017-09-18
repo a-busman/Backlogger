@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -48,15 +48,6 @@
                     </constraints>
                     <connections>
                         <outletCollection property="gestureRecognizers" destination="wVp-pk-uzb" appends="YES" id="s3P-dv-ziR"/>
-                    </connections>
-                </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uoT-Ft-gFZ" userLabel="Completion Gesture View">
-                    <rect key="frame" x="259.5" y="0.0" width="55.5" height="30"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="30" id="reb-en-tmf"/>
-                    </constraints>
-                    <connections>
-                        <outletCollection property="gestureRecognizers" destination="5XI-2C-jjc" appends="YES" id="f9C-Mi-gPE"/>
                     </connections>
                 </view>
                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wiq-RU-zg6">
@@ -205,6 +196,7 @@
                             <gestureRecognizers/>
                             <constraints>
                                 <constraint firstItem="0Z5-xb-8sB" firstAttribute="top" secondItem="wIK-yH-Oqj" secondAttribute="top" id="Cp6-NR-meQ"/>
+                                <constraint firstAttribute="width" constant="190" id="M28-c3-tZ1"/>
                                 <constraint firstItem="0Z5-xb-8sB" firstAttribute="bottom" secondItem="wIK-yH-Oqj" secondAttribute="bottom" id="c7i-ha-nhy"/>
                                 <constraint firstAttribute="height" constant="20" id="kLt-he-K3P"/>
                                 <constraint firstItem="0Z5-xb-8sB" firstAttribute="trailing" secondItem="wIK-yH-Oqj" secondAttribute="trailing" id="r3a-W0-XZ5"/>
@@ -281,14 +273,13 @@
                         <constraint firstItem="gkS-pG-4hV" firstAttribute="leading" secondItem="iRM-dG-gbm" secondAttribute="trailing" constant="76" id="4Ue-WS-YQP"/>
                         <constraint firstItem="W6r-Gw-umG" firstAttribute="trailing" secondItem="pco-tc-wrJ" secondAttribute="trailing" constant="-10" id="91l-lm-iGb"/>
                         <constraint firstItem="wIK-yH-Oqj" firstAttribute="top" secondItem="pco-tc-wrJ" secondAttribute="top" constant="10" id="ASC-rM-KaS"/>
+                        <constraint firstItem="wIK-yH-Oqj" firstAttribute="centerX" secondItem="pco-tc-wrJ" secondAttribute="centerX" id="CIe-jx-DYQ"/>
                         <constraint firstItem="gkS-pG-4hV" firstAttribute="width" secondItem="UOY-Gk-eaF" secondAttribute="width" id="JWw-Bi-Soy"/>
                         <constraint firstItem="iRM-dG-gbm" firstAttribute="centerX" secondItem="pco-tc-wrJ" secondAttribute="centerX" constant="4" id="KS1-kK-6Jq"/>
                         <constraint firstItem="uvJ-VS-nab" firstAttribute="top" secondItem="iRM-dG-gbm" secondAttribute="bottom" constant="10" id="L44-vA-W9y"/>
                         <constraint firstItem="UOY-Gk-eaF" firstAttribute="centerY" secondItem="iRM-dG-gbm" secondAttribute="centerY" id="LfN-Xw-jit"/>
-                        <constraint firstItem="wIK-yH-Oqj" firstAttribute="trailing" secondItem="pco-tc-wrJ" secondAttribute="trailing" constant="-65" id="Myn-47-iOX"/>
                         <constraint firstItem="UOY-Gk-eaF" firstAttribute="trailing" secondItem="iRM-dG-gbm" secondAttribute="leading" constant="-84" id="Tfs-hs-n6D"/>
                         <constraint firstItem="uvJ-VS-nab" firstAttribute="leading" secondItem="pco-tc-wrJ" secondAttribute="leading" constant="10" id="WTm-Hu-M9P"/>
-                        <constraint firstItem="wIK-yH-Oqj" firstAttribute="leading" secondItem="pco-tc-wrJ" secondAttribute="leading" constant="65" id="fMN-5f-wbx"/>
                         <constraint firstItem="iRM-dG-gbm" firstAttribute="top" secondItem="pco-tc-wrJ" secondAttribute="top" constant="50" id="iYe-9B-7yz"/>
                         <constraint firstItem="gkS-pG-4hV" firstAttribute="height" secondItem="UOY-Gk-eaF" secondAttribute="height" id="l3a-TB-vAT"/>
                         <constraint firstItem="gkS-pG-4hV" firstAttribute="centerY" secondItem="iRM-dG-gbm" secondAttribute="centerY" id="pu9-uR-l0f"/>
@@ -301,19 +292,16 @@
                 <constraint firstItem="Fb5-H8-6ns" firstAttribute="trailing" secondItem="daT-CM-8mV" secondAttribute="leading" id="Cxt-LQ-TuR"/>
                 <constraint firstItem="pco-tc-wrJ" firstAttribute="top" secondItem="Ix9-3j-a1e" secondAttribute="bottom" id="DTN-el-0K0"/>
                 <constraint firstItem="E80-4d-4gx" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="GFV-GG-uqP"/>
-                <constraint firstItem="uoT-Ft-gFZ" firstAttribute="top" secondItem="E80-4d-4gx" secondAttribute="top" id="GRi-oR-YCJ"/>
                 <constraint firstItem="wiq-RU-zg6" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" constant="-10" id="Imo-tk-YJ1"/>
                 <constraint firstItem="Ix9-3j-a1e" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" constant="-5" id="Mfq-2s-8vx"/>
                 <constraint firstItem="AAw-mt-efn" firstAttribute="bottom" secondItem="daT-CM-8mV" secondAttribute="bottom" id="N6Q-vO-ET6"/>
                 <constraint firstItem="AAw-mt-efn" firstAttribute="trailing" secondItem="daT-CM-8mV" secondAttribute="leading" id="NPD-lt-lM0"/>
                 <constraint firstItem="Fb5-H8-6ns" firstAttribute="top" secondItem="wiq-RU-zg6" secondAttribute="bottom" constant="5" id="NmX-lM-Krl"/>
-                <constraint firstItem="uoT-Ft-gFZ" firstAttribute="trailing" secondItem="E80-4d-4gx" secondAttribute="trailing" constant="-5" id="QtA-vf-hqq"/>
                 <constraint firstItem="wiq-RU-zg6" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="TqB-uF-gzL"/>
                 <constraint firstItem="E80-4d-4gx" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="VrQ-hD-7KN"/>
                 <constraint firstItem="Fb5-H8-6ns" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="5" id="dLd-je-feW"/>
                 <constraint firstItem="pco-tc-wrJ" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="dok-7X-eEE"/>
                 <constraint firstItem="pco-tc-wrJ" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="gqb-Zt-lSP"/>
-                <constraint firstItem="uoT-Ft-gFZ" firstAttribute="width" secondItem="3TZ-CP-MFR" secondAttribute="width" id="mP0-Dd-W6d"/>
                 <constraint firstItem="E80-4d-4gx" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="nHg-xi-nxX"/>
                 <constraint firstItem="wiq-RU-zg6" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="5" id="qXr-kI-7gD"/>
                 <constraint firstItem="Ix9-3j-a1e" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="5" id="r58-9g-uRW"/>
@@ -326,11 +314,6 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="34" y="-229.5"/>
         </view>
-        <tapGestureRecognizer cancelsTouchesInView="NO" delaysTouchesEnded="NO" id="5XI-2C-jjc">
-            <connections>
-                <action selector="tappedCompletionViewWithSender:" destination="-1" id="avd-TO-nH0"/>
-            </connections>
-        </tapGestureRecognizer>
         <tapGestureRecognizer id="wVp-pk-uzb">
             <connections>
                 <action selector="tappedDetailsWithSender:" destination="-1" id="4V2-qv-ygN"/>
