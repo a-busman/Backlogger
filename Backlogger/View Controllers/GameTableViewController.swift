@@ -54,9 +54,8 @@ class GameTableViewController: UIViewController {
     fileprivate let headerMinHeight:      CGFloat = 80.0
     fileprivate let platformMaxMargin:    CGFloat = 20.0
     fileprivate let platformMinMargin:    CGFloat = 10.0
-    fileprivate let startInset:           CGFloat = 229.0
+    fileprivate var startInset:           CGFloat = 0.0
     fileprivate var headerTravelDistance: CGFloat = 0.0
-    fileprivate var insetToHeader:        CGFloat = 0.0
     
     fileprivate let tableReuseIdentifier = "table_cell"
     
@@ -79,7 +78,6 @@ class GameTableViewController: UIViewController {
         self.navigationController?.navigationBar.tintColor = .white
         self.tableView?.tableFooterView = UIView(frame: .zero)
         self.headerTravelDistance = self.headerMaxHeight - self.headerMinHeight
-        self.insetToHeader = startInset - headerMaxHeight
         if let platform = self.platform {
             self.platformId = platform.idNumber
             self.titleLabel?.text = platform.name
@@ -224,7 +222,7 @@ class GameTableViewController: UIViewController {
         self.filterGames()
         
         if self.currentScrollPosition < 90.0 {
-            let remainingWidth = self.currentScrollPosition - 65.0
+            let remainingWidth = self.currentScrollPosition
             let newColor = UIColor(white: 1.0, alpha: (25.0 - remainingWidth) / 25.0)
             self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: newColor]
         } else if self.currentScrollPosition < 65.0 {
@@ -240,18 +238,18 @@ class GameTableViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-
+        self.startInset = (self.navigationController?.navigationBar.bounds.height ?? 0.0) + 165 + UIApplication.shared.statusBarFrame.height
         if !self.didLayout {
             self.shadowGradientLayer.frame = CGRect(x: 0.0, y: 0.0, width: UIScreen.main.bounds.width, height: (self.shadowView?.frame.height)!)
             let darkColor = UIColor(white: 0.0, alpha: 0.3).cgColor
             self.shadowGradientLayer.colors = [UIColor.clear.cgColor, darkColor]
             self.shadowGradientLayer.locations = [0.7, 1.0]
-            self.tableView?.contentInset.top = self.startInset
-            self.tableView?.contentInset.bottom = 49.0
-            self.tableView?.scrollIndicatorInsets.top = self.startInset
-            self.tableView?.scrollIndicatorInsets.bottom = 50.0
+            self.tableView?.contentInset.top = 165.0
+            self.tableView?.contentInset.bottom = 0.0
+            self.tableView?.scrollIndicatorInsets.top = 165.0
+            self.tableView?.scrollIndicatorInsets.bottom = 0.0
             self.tableView?.setContentOffset(CGPoint(x: 0.0, y: -self.startInset), animated: false)
-            self.shadowView?.layer.addSublayer(shadowGradientLayer)
+            self.shadowView?.layer.addSublayer(self.shadowGradientLayer)
         }
         self.didLayout = true
     }
@@ -768,18 +766,18 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
                 self.imageHeightLayoutConstraint?.constant = self.imageHeightInitial
             }
             self.currentScrollPosition = offset
-            if offset < 90.0 {
-                if offset < 65.0 {
-                    self.tableView?.scrollIndicatorInsets.top = 65.0
+            if offset < ((self.titleLabel?.bounds.height ?? 0) + (self.navigationController?.navigationBar.bounds.height ?? 0) + UIApplication.shared.statusBarFrame.height) {
+                if offset < 0.0 {
+                    self.tableView?.scrollIndicatorInsets.top = 0.0
                     self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
                 } else {
-                    self.tableView?.scrollIndicatorInsets.top = offset
-                    let remainingWidth = offset - 65.0
-                    let newColor = UIColor(white: 1.0, alpha: (25.0 - remainingWidth) / 25.0)
+                    self.tableView?.scrollIndicatorInsets.top = offset - ((self.navigationController?.navigationBar.bounds.height ?? 0.0) + UIApplication.shared.statusBarFrame.height)
+                    let remainingWidth = offset - ((self.navigationController?.navigationBar.bounds.height ?? 0) + UIApplication.shared.statusBarFrame.height)
+                    let newColor = UIColor(white: 1.0, alpha: ((self.titleLabel?.bounds.height ?? 0) - remainingWidth) / (self.titleLabel?.bounds.height ?? 1))
                     self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: newColor]
                 }
             } else {
-                self.tableView?.scrollIndicatorInsets.top = offset
+                self.tableView?.scrollIndicatorInsets.top = offset - ((self.navigationController?.navigationBar.bounds.height ?? 0.0) + UIApplication.shared.statusBarFrame.height)
                 self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.clear]
             }
         }

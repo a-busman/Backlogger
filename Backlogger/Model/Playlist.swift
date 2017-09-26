@@ -28,7 +28,11 @@ class Playlist: Object {
         for game in self.games {
             progressSum += game.progress
         }
-        return progressSum / self.games.count
+        if self.games.count > 0 {
+            return progressSum / self.games.count
+        } else {
+            return 0
+        }
     }
     
     var finished: Int {

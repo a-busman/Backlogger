@@ -1,13 +1,13 @@
-# Zephyr
+# Zephyr 🌬️
 
 ### Effortlessly sync UserDefaults over iCloud
-[![Platform](https://img.shields.io/cocoapods/p/Zephyr.svg?style=flat)](http://cocoadocs.org/docsets/Zephyr)
+[![Platform](https://img.shields.io/badge/Platforms-iOS%20%7c%20tvOS%20%7c%20watchOS-lightgray.svg?style=flat)](http://cocoadocs.org/docsets/Zephyr)
 
-[![CocoaPods](https://img.shields.io/cocoapods/v/Zephyr.svg)]()  [![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)]() [![SwiftPM Compatible](https://img.shields.io/badge/SwiftPM-Compatible-brightgreen.svg)]() [![CocoaPods](https://img.shields.io/cocoapods/dt/Zephyr.svg)]() [![CocoaPods](https://img.shields.io/cocoapods/dm/Zephyr.svg)]()
+[![CocoaPods](https://img.shields.io/cocoapods/v/Zephyr.svg)]()  [![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)]() [![SwiftPM Compatible](https://img.shields.io/badge/SwiftPM-Compatible-brightgreen.svg)](https://swift.org/package-manager/) [![CocoaPods](https://img.shields.io/cocoapods/dt/Zephyr.svg)](https://cocoapods.org/pods/Zephyr) [![CocoaPods](https://img.shields.io/cocoapods/dm/Zephyr.svg)](https://cocoapods.org/pods/Zephyr)
 ---
 ### About
 
-Zephyr synchronizes specific keys and/or all of your [NSUserDefaults](https://developer.apple.com/library/ios/documentation/Cocoa/Reference/Foundation/Classes/NSUserDefaults_Class/) over iCloud using [NSUbiquitousKeyValueStore](https://developer.apple.com/library/ios/documentation/Foundation/Reference/NSUbiquitousKeyValueStore_class/).
+Zephyr synchronizes specific keys and/or all of your [UserDefaults](https://developer.apple.com/documentation/foundation/userdefaults) over iCloud using [NSUbiquitousKeyValueStore](https://developer.apple.com/library/ios/documentation/Foundation/Reference/NSUbiquitousKeyValueStore_class/).
 
 Zephyr has built in monitoring, allowing it to sync specific keys in the background as they change.
 
@@ -15,10 +15,11 @@ For the latest updates, refer to the [Releases](https://github.com/ArtSabintsev/
 
 ### Features
 - [x] CocoaPods Support
-- [x] Syncs all your NSUserDefaults (if you wish)
-- [x] Syncs only specific keys in NSUserDefaults
-- [x] Background monitoring and synchronization between NSUserDefaults and NSUbiquitousKeyValueStore
+- [x] Syncs all your UserDefaults (if you wish)
+- [x] Syncs only specific keys in UserDefaults
+- [x] Background monitoring and synchronization between UserDefaults and NSUbiquitousKeyValueStore
 - [x] Detailed Logging
+- [x] Documentation at http://sabintsev.com/Zephyr/
 
 ### Installation Instructions
 
@@ -29,23 +30,17 @@ For Swift 3 support:
 pod 'Zephyr'
 ```
 
-For Swift 2.3 support:
-
+For Swift 4 support:
 ```ruby
-pod 'Zephyr', :git => 'https://github.com/ArtSabintsev/Zephyr.git', :branch => 'swift2.3'
+pod 'Zephyr', :git => 'https://github.com/ArtSabintsev/Zephyr.git', :branch => 'swift4'
 ```
+
 
 ### Carthage
 For Swift 3 support:
 
 ``` swift
 github "ArtSabintsev/Zephyr"
-```
-
-For Swift 2.3 support:
-
-``` swift
-github "ArtSabintsev/Zephyr" "swift2.3"
 ```
 
 ### Swift Package Manager
@@ -72,9 +67,9 @@ In Xcode, open your app's project/workspace file:
 
 #### Integrate Zephyr into your App
 
-Before performing each sync, Zephyr automatically checks to see if the data in NSUserDefaults or NSUbiquitousKeyValueStore is newer. To make sure there's no overwriting going on in a fresh installation of your app on a new device that's connected to the same iCloud account, make sure that your NSUserDefaults are registered ***BEFORE*** calling any of the Zephyr methods.
+Before performing each sync, Zephyr automatically checks to see if the data in UserDefaults or NSUbiquitousKeyValueStore is newer. To make sure there's no overwriting going on in a fresh installation of your app on a new device that's connected to the same iCloud account, make sure that your UserDefaults are registered ***BEFORE*** calling any of the Zephyr methods.
 
-**Sync all NSUserDefaults**
+**Sync all UserDefaults**
 ```Swift
 Zephyr.sync()
 ```

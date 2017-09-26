@@ -37,7 +37,11 @@ class Platform: Field {
         for game in self.ownedGames {
             progressSum += game.progress
         }
-        return progressSum / self.ownedGames.count
+        if self.ownedGames.count > 0 {
+            return progressSum / self.ownedGames.count
+        } else {
+            return 0
+        }
     }
     
     var finished: Int {

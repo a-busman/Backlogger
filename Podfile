@@ -5,18 +5,18 @@ use_frameworks!
 target 'Backlogger' do
     pod 'Alamofire'
     pod 'RealmSwift'
-    pod 'Kingfisher'
+    pod 'Kingfisher', '~> 3.13.1'
     pod 'ImageViewer'
     pod 'Fabric'
     pod 'Crashlytics'
-    pod 'Zip'
-    pod 'Zephyr'
+    pod 'Zip', '~> 0.8.0'
+    pod 'Zephyr', :git => 'https://github.com/ArtSabintsev/Zephyr.git', :branch => 'swift3.2'
 end
 
 target 'BackloggerWidget' do
     pod 'Alamofire'
     pod 'RealmSwift'
-    pod 'Kingfisher'
+    pod 'Kingfisher', '~> 3.13.1'
     pod 'Fabric'
     pod 'Crashlytics'
 end

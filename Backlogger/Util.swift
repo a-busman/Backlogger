@@ -167,7 +167,7 @@ extension String {
                 let targetIdx = j - l - 1
                 let transposition = d[k - 1][l - 1] + selfIdx + 1 + targetIdx
                 
-                d[i][j] = min(
+                d[i][j] = Swift.min(
                     substition,
                     injection,
                     deletion,

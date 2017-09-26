@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import Alamofire
 import Kingfisher
 import ImageViewer
 import Zephyr
@@ -149,6 +150,8 @@ class GameDetailsViewController: UIViewController {
     var addToPlayLaterClosure: ((UIPreviewAction, UIViewController) -> Void)?
     var addToWishlistClosure:  ((UIPreviewAction, UIViewController) -> Void)?
     
+    var canRefresh = true
+    
     enum State {
         case addToLibrary
         case partialAddToLibrary
@@ -226,6 +229,8 @@ class GameDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.detailsScrollView?.refreshControl = UIRefreshControl()
+        self.detailsScrollView?.refreshControl?.addTarget(self, action: #selector(self.handleRefresh), for: .valueChanged)
         let screenSize = UIScreen.main.bounds
         let setGameField = self._gameField?.deepCopy()
         if screenSize.width == 320.0 {
@@ -304,45 +309,7 @@ class GameDetailsViewController: UIViewController {
         var gameFields: GameField?
         gameFields = self._gameField ?? GameField()
         if !(gameFields?.hasDetails)! && Util.isInternetAvailable() {
-            gameFields?.updateGameDetails { result in
-                if let error = result.error {
-                    NSLog("error: \(error.localizedDescription)")
-                    self.networkConnectionLabel?.isHidden = false
-                    self.activityBackground?.isHidden = true
-                    self.activityIndicator?.stopAnimating()
-                    return
-                }
-                if gameFields!.characters.count > 0 {
-                    for character in gameFields!.characters {
-                        if !character.hasImage {
-                            let characterId = character.idNumber
-                            self.queue.async {
-                                if !self.isExiting {
-                                    character.updateDetails(id: characterId) { result in
-                                        if let error = result.error {
-                                            NSLog("error: \(error.localizedDescription)")
-                                            return
-                                        }
-                                        if !self.isExiting {
-                                            character.updateDetailsFromJson(json: result.value! as! [String: Any], fromDb: true)
-                                            self.charactersCollectionView?.reloadData()
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
-                            self.charactersCollectionView?.reloadData()
-                            self.updateGameDetails()
-                        }
-                    }
-                } else {
-                    self.charactersCollectionView?.isHidden = true
-                    self.charactersTitleLabel?.isHidden = true
-                    self.bottomConstraint?.isActive = false
-                    NSLayoutConstraint(item: self.detailsContentView!, attribute: .bottom, relatedBy: .equal, toItem: self.genresLabel, attribute: .bottom, multiplier: 1.0, constant: 0.0).isActive = true
-                }
-                self.updateGameDetails()
-            }
+            gameFields?.updateGameDetails(self.updateGameDetailsFromRemote)
         } else if !Util.isInternetAvailable() {
             self.networkConnectionLabel?.isHidden = false
             self.activityBackground?.isHidden = true
@@ -567,8 +534,8 @@ class GameDetailsViewController: UIViewController {
     }
     
     override func viewDidLayoutSubviews() {
-        self.detailsScrollView?.scrollIndicatorInsets = UIEdgeInsets(top: self.maximumHeaderHeight + 20.0 + (self.navigationController?.navigationBar.bounds.height ?? -20.0), left: 0, bottom: self.tabBarController?.tabBar.bounds.height ?? 0.0, right: 0)
-        self.detailsScrollView?.contentInset = UIEdgeInsets(top: self.maximumHeaderHeight + 25.0 + (self.navigationController?.navigationBar.bounds.height ?? -20.0), left: 0.0, bottom: self.tabBarController?.tabBar.bounds.height ?? 0.0, right: 0.0)
+        self.detailsScrollView?.scrollIndicatorInsets = UIEdgeInsets(top: self.maximumHeaderHeight + 20.0 + (self.navigationController?.navigationBar.bounds.height ?? 40.0) - (self.detailsScrollView!.refreshControl!.frame.height), left: 0, bottom: 0, right: 0)
+        self.detailsScrollView?.contentInset = UIEdgeInsets(top: self.maximumHeaderHeight + 25.0 + (self.navigationController?.navigationBar.bounds.height ?? 40.0) - (self.detailsScrollView!.refreshControl!.frame.height), left: 0.0, bottom: 0, right: 0.0)
 
         self.statsButton?.isHidden = self.hideStats
         
@@ -657,7 +624,58 @@ class GameDetailsViewController: UIViewController {
         }
     }
     
-    private func updateGameDetails() {
+    func handleRefresh(sender: UIRefreshControl) {
+        var gameField = self._gameField
+        if gameField == nil {
+            gameField = self._game?.gameFields
+        }
+        gameField?.updateGameDetails(self.updateGameDetailsFromRemote)
+    }
+    
+    fileprivate func updateGameDetailsFromRemote(_ result: Result<Any>) {
+        
+        if let error = result.error {
+            NSLog("error: \(error.localizedDescription)")
+            self.networkConnectionLabel?.isHidden = false
+            self.activityBackground?.isHidden = true
+            self.activityIndicator?.stopAnimating()
+            self.detailsScrollView?.refreshControl?.endRefreshing()
+            return
+        }
+        var gameFields = self._gameField ?? GameField()
+        if gameFields.characters.count > 0 {
+            for character in gameFields.characters {
+                if !character.hasImage {
+                    let characterId = character.idNumber
+                    self.queue.async {
+                        if !self.isExiting {
+                            character.updateDetails(id: characterId) { result in
+                                if let error = result.error {
+                                    NSLog("error: \(error.localizedDescription)")
+                                    return
+                                }
+                                if !self.isExiting {
+                                    character.updateDetailsFromJson(json: result.value! as! [String: Any], fromDb: true)
+                                    self.charactersCollectionView?.reloadData()
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    self.charactersCollectionView?.reloadData()
+                    self.updateGameDetails()
+                }
+            }
+        } else {
+            self.charactersCollectionView?.isHidden = true
+            self.charactersTitleLabel?.isHidden = true
+            self.bottomConstraint?.isActive = false
+            NSLayoutConstraint(item: self.detailsContentView!, attribute: .bottom, relatedBy: .equal, toItem: self.genresLabel, attribute: .bottom, multiplier: 1.0, constant: 0.0).isActive = true
+        }
+        self.updateGameDetails()
+    }
+    
+    fileprivate func updateGameDetails() {
         self.charactersCollectionView?.reloadData()
         // Download all images at once
         var gameField: GameField
@@ -792,6 +810,7 @@ class GameDetailsViewController: UIViewController {
         self.genresLabel?.text = genresString
         
         self.activityIndicator?.stopAnimating()
+        self.detailsScrollView?.refreshControl?.endRefreshing()
         self.activityBackground?.isHidden = true
         self.detailsScrollView?.isHidden = false
     }
@@ -1550,54 +1569,56 @@ extension GameDetailsViewController: UITextViewDelegate {
 }
 extension GameDetailsViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView == self.detailsScrollView! && scrollView.contentSize.height > (scrollView.bounds.height - self.minimumHeaderHeight - 25.0 - (self.navigationController?.navigationBar.bounds.height ?? 20.0)) {
-            let heightRange = self.maximumHeaderHeight - self.minimumHeaderHeight
-            let offset = scrollView.contentOffset.y
-            let initialInset = -(self.maximumHeaderHeight + 25.0 + (self.navigationController?.navigationBar.bounds.height ?? -20.0))
-            var newConstant: CGFloat = 0
-            var newBorderConstant: CGFloat = 0
-            var newBottomConstant: CGFloat = 0
-            var heightPercentage = 1 - (offset - initialInset) / heightRange
-            if offset >= initialInset && offset <= (initialInset + heightRange) {
-                newBorderConstant = heightPercentage * (self.maximumShadowSpacing - self.minimumShadowSpacing) + self.minimumShadowSpacing
-                newBottomConstant = -(heightPercentage * (self.maximumShadowBottom - self.minimumShadowBottom) + self.minimumShadowBottom)
-                newConstant = self.maximumHeaderHeight - (offset - initialInset)
-                self.addBackground?.isHidden = false
-                self.statsButton?.isHidden = self.hideStats
-                self.moreButton?.isHidden = false
-                self.platformButton?.isHidden = false
-            } else if offset < initialInset {
-                newBorderConstant = self.maximumShadowSpacing
-                newBottomConstant = -self.maximumShadowBottom
-                newConstant = self.maximumHeaderHeight
-                self.addBackground?.isHidden = false
-                self.statsButton?.isHidden = self.hideStats
-                self.moreButton?.isHidden = false
-                self.platformButton?.isHidden = false
-                heightPercentage = 1.0
-            } else if offset > (initialInset + heightRange) {
-                newBorderConstant = self.minimumShadowSpacing
-                newBottomConstant = -self.minimumShadowBottom
-                newConstant = self.minimumHeaderHeight
-                self.addBackground?.isHidden = true
-                self.statsButton?.isHidden = true
-                self.moreButton?.isHidden = true
-                self.platformButton?.isHidden = true
-                heightPercentage = 0.0
+        if scrollView == self.detailsScrollView! {
+            if scrollView.contentSize.height > (scrollView.bounds.height - self.minimumHeaderHeight - 25.0 - (self.navigationController?.navigationBar.bounds.height ?? 20.0)) {
+                let heightRange = self.maximumHeaderHeight - self.minimumHeaderHeight
+                let offset = scrollView.contentOffset.y
+                let initialInset = -(self.maximumHeaderHeight + 25.0 + (self.navigationController?.navigationBar.bounds.height ?? -20.0))
+                var newConstant: CGFloat = 0
+                var newBorderConstant: CGFloat = 0
+                var newBottomConstant: CGFloat = 0
+                var heightPercentage = 1 - (offset - initialInset) / heightRange
+                if offset >= initialInset && offset <= (initialInset + heightRange) {
+                    newBorderConstant = heightPercentage * (self.maximumShadowSpacing - self.minimumShadowSpacing) + self.minimumShadowSpacing
+                    newBottomConstant = -(heightPercentage * (self.maximumShadowBottom - self.minimumShadowBottom) + self.minimumShadowBottom)
+                    newConstant = self.maximumHeaderHeight - (offset - initialInset)
+                    self.addBackground?.isHidden = false
+                    self.statsButton?.isHidden = self.hideStats
+                    self.moreButton?.isHidden = false
+                    self.platformButton?.isHidden = false
+                } else if offset < initialInset {
+                    newBorderConstant = self.maximumShadowSpacing
+                    newBottomConstant = -self.maximumShadowBottom
+                    newConstant = self.maximumHeaderHeight
+                    self.addBackground?.isHidden = false
+                    self.statsButton?.isHidden = self.hideStats
+                    self.moreButton?.isHidden = false
+                    self.platformButton?.isHidden = false
+                    heightPercentage = 1.0
+                } else if offset > (initialInset + heightRange) {
+                    newBorderConstant = self.minimumShadowSpacing
+                    newBottomConstant = -self.minimumShadowBottom
+                    newConstant = self.minimumHeaderHeight
+                    self.addBackground?.isHidden = true
+                    self.statsButton?.isHidden = true
+                    self.moreButton?.isHidden = true
+                    self.platformButton?.isHidden = true
+                    heightPercentage = 0.0
+                }
+                self.headerHeightConstraint?.constant = newConstant
+                self.shadowTopConstraint?.constant = newBorderConstant
+                self.shadowLeadingConstraint?.constant = newBorderConstant
+                self.shadowBottomConstraint?.constant = newBottomConstant
+                self.addBackground?.alpha = heightPercentage
+                self.statsButton?.alpha = heightPercentage
+                self.moreButton?.alpha = heightPercentage
+                self.yearLabel?.alpha = heightPercentage
+                self.platformButton?.alpha = heightPercentage
+                self.completionLabel?.alpha = heightPercentage
+                self.completionImageView?.alpha = heightPercentage
+                self.steamLogo?.alpha = heightPercentage
+                self.steamUserLabel?.alpha = heightPercentage
             }
-            self.headerHeightConstraint?.constant = newConstant
-            self.shadowTopConstraint?.constant = newBorderConstant
-            self.shadowLeadingConstraint?.constant = newBorderConstant
-            self.shadowBottomConstraint?.constant = newBottomConstant
-            self.addBackground?.alpha = heightPercentage
-            self.statsButton?.alpha = heightPercentage
-            self.moreButton?.alpha = heightPercentage
-            self.yearLabel?.alpha = heightPercentage
-            self.platformButton?.alpha = heightPercentage
-            self.completionLabel?.alpha = heightPercentage
-            self.completionImageView?.alpha = heightPercentage
-            self.steamLogo?.alpha = heightPercentage
-            self.steamUserLabel?.alpha = heightPercentage
         }
     }
 
