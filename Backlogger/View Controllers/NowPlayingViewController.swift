@@ -793,12 +793,12 @@ extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.cellForRow(at: indexPath) as! PlaylistAddTableCell
         tableView.deselectRow(at: indexPath, animated: true)
         let center = CGPoint(x: cell.center.x, y: cell.center.y + self.navigationController!.navigationBar.frame.maxY + self.blurView!.frame.minY + tableView.frame.minY)
-        let snapshotView = self.snapshotOfCell(cell.contentView)
+        let snapshotView = self.snapshotOfCell(cell.contentView) as! UIVisualEffectView
         let whiteView = UIView(frame: snapshotView.frame)
         let shadowView = UIView(frame: snapshotView.frame)
         whiteView.backgroundColor = .white
         whiteView.alpha = 0.0
-        snapshotView.addSubview(whiteView)
+        snapshotView.contentView.addSubview(whiteView)
         shadowView.addSubview(snapshotView)
         shadowView.layer.shadowRadius = 20.0
         shadowView.layer.shadowOffset = CGSize(width: 0.0, height: 20.0)
@@ -885,7 +885,7 @@ extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate {
         let image: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         let cellSnapshot : UIView = UIImageView(image: image)
-        visualView.addSubview(cellSnapshot)
+        visualView.contentView.addSubview(cellSnapshot)
         return visualView
     }
     
