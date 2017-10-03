@@ -308,13 +308,12 @@ class NowPlayingViewController: UIViewController {
                            initialSpringVelocity: 1.0,
                            options: .curveEaseOut,
                            animations: {
-                            cell.contentView.alpha = 0.8
-                            cell.contentView.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+                            cell.contentView.alpha = 0.7
             },
                            completion: nil)
-            collectionView?.beginInteractiveMovementForItem(at: indexPath)
+            self.collectionView?.beginInteractiveMovementForItem(at: indexPath)
         case .changed:
-            collectionView?.updateInteractiveMovementTargetPosition(location)
+            self.collectionView?.updateInteractiveMovementTargetPosition(location)
         case .ended:
             UIView.animate(withDuration: 0.25,
                            delay: 0.0,
@@ -323,11 +322,10 @@ class NowPlayingViewController: UIViewController {
                            options: .curveEaseOut,
                            animations: {
                             cell.contentView.alpha = 1.0
-                            cell.contentView.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
             },
                            completion: nil)
             self.addWiggleAnimation(to: cell)
-            collectionView?.endInteractiveMovement()
+            self.collectionView?.endInteractiveMovement()
             self.scroll(to: (self.movingIndexPath?.item)!)
         default:
             UIView.animate(withDuration: 0.25,
@@ -337,11 +335,10 @@ class NowPlayingViewController: UIViewController {
                            options: .curveEaseOut,
                            animations: {
                             cell.contentView.alpha = 1.0
-                            cell.contentView.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
             },
                            completion: nil)
             self.addWiggleAnimation(to: cell)
-            collectionView?.cancelInteractiveMovement()
+            self.collectionView?.cancelInteractiveMovement()
             self.scroll(to: (self.movingIndexPath?.item)!)
         }
     }

@@ -518,6 +518,7 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
             let game = self.filteredGames![indexPath.row]
             cell.titleLabel?.text = game.gameFields!.name
             cell.descriptionLabel?.text = game.platform!.name
+            cell.showDetails()
             cell.percentView?.isHidden = true
             cell.rightLabel?.text = ""
             if let image = game.gameFields!.image {

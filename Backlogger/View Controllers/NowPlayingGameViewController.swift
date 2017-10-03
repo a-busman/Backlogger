@@ -25,6 +25,8 @@ class NowPlayingGameViewController: UIViewController {
     @IBOutlet weak var detailsPanRecognizer: PanDirectionGestureRecognizer?
     @IBOutlet weak var hideTapRecognizer:    UITapGestureRecognizer?
     
+    @IBOutlet weak var blurViewTopConstraint: NSLayoutConstraint?
+    
     var delegate: NowPlayingGameViewDelegate?
     
     let gameDetailOverlayController = GameDetailOverlayViewController()
@@ -73,6 +75,8 @@ class NowPlayingGameViewController: UIViewController {
     
     fileprivate let MINIMUM_TRANSFORM: CGFloat = 0.001
     fileprivate let MAXIMUM_TRANSOFRM: CGFloat = 1.0
+    fileprivate let MINIMUM_BLUR_TOP: CGFloat = -65.0
+    fileprivate var didLayout = false
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -158,11 +162,10 @@ class NowPlayingGameViewController: UIViewController {
         self.shadowView?.layer.shadowColor = UIColor.black.cgColor
         self.shadowView?.layer.shadowPath = UIBezierPath(roundedRect: (self.shadowView?.bounds)!, cornerRadius: 10).cgPath
         self.shadowView?.layer.shadowOffset = CGSize.zero
-        
-        if self.blurViewMinimalY != 0.0 {
+        if self.blurViewMinimalY == 0.0 && self.didLayout {
             self.blurViewState = .minimal
-            self.blurView?.center.y = self.blurViewMinimalY
         }
+        self.didLayout = true
         self.deleteView?.transform = CGAffineTransform(scaleX: self.isInEditMode ? MAXIMUM_TRANSOFRM : MINIMUM_TRANSFORM,
                                                        y: self.isInEditMode ? MAXIMUM_TRANSOFRM : MINIMUM_TRANSFORM)
     }
@@ -279,7 +282,7 @@ class NowPlayingGameViewController: UIViewController {
                            initialSpringVelocity: 0,
                            options: .curveEaseIn,
                            animations: {
-                            self.blurView?.center.y = self.blurViewMinimalY
+                            self.blurViewTopConstraint?.constant = self.MINIMUM_BLUR_TOP
             },
                            completion: nil)
             self.blurViewState = .minimal
@@ -297,47 +300,29 @@ class NowPlayingGameViewController: UIViewController {
     
     @IBAction func handleTapArt(recognizer:UITapGestureRecognizer) {
         
-        // Show minimal details bar
-        if self.blurViewState == .hidden {
-            UIView.animate(withDuration: 0.4,
-                           delay: 0.0,
-                           usingSpringWithDamping: 1.0,
-                           initialSpringVelocity: 0,
-                           options: .curveEaseOut,
-                           animations: {
-                               self.blurView?.center.y -= 65
-                               self.view.layoutIfNeeded()
-                           },
-                           completion: nil)
+        switch (self.blurViewState) {
+        case .hidden:
+            self.blurViewTopConstraint?.constant = self.MINIMUM_BLUR_TOP
             self.blurViewState = .minimal
-            
-        // Hide all details and just show cover art
-        } else if self.blurViewState == .minimal {
-            self.blurViewMinimalY = (self.blurView?.center.y)!
-            UIView.animate(withDuration: 0.4,
-                           delay: 0.0,
-                           usingSpringWithDamping: 1.0,
-                           initialSpringVelocity: 0,
-                           options: .curveEaseIn,
-                           animations: {
-                               self.view.layoutIfNeeded()
-                               self.blurView?.center.y += 65
-                           },
-                           completion: nil)
+        case .minimal:
+            self.blurViewTopConstraint?.constant = 0.0
             self.blurViewState = .hidden
-        } else if self.blurViewState == .percent {
-            UIView.animate(withDuration: 0.4,
-                           delay: 0.0,
-                           usingSpringWithDamping: 1.0,
-                           initialSpringVelocity: 0,
-                           options: .curveEaseOut,
-                           animations: {
-                            self.blurView?.center.y += 40
-                            self.view.layoutIfNeeded()
-            },
-                           completion: nil)
+        case .percent:
+            self.blurViewTopConstraint?.constant = self.MINIMUM_BLUR_TOP
+            self.blurViewState = .minimal
+        default:
+            self.blurViewTopConstraint?.constant = self.MINIMUM_BLUR_TOP
             self.blurViewState = .minimal
         }
+        UIView.animate(withDuration: 0.4,
+                       delay: 0.0,
+                       usingSpringWithDamping: 1.0,
+                       initialSpringVelocity: 0,
+                       options: .curveEaseOut,
+                       animations: {
+                        self.view.layoutIfNeeded()
+        },
+                       completion: nil)
     }
 
     // MARK: handlePanDetails
@@ -346,9 +331,6 @@ class NowPlayingGameViewController: UIViewController {
         
         // Set inital y of blur view in minimal mode to get reference to move back to
         if recognizer.state == .began {
-            if self.blurViewState == .minimal {
-                self.blurViewMinimalY = (self.blurView?.center.y)!
-            }
             UIView.animate(withDuration: 0.2, animations: {
                 self.view.layoutIfNeeded()
             })
@@ -357,19 +339,20 @@ class NowPlayingGameViewController: UIViewController {
         // Update view when user drags it around
         if recognizer.state == .began || recognizer.state == .changed {
             let translation = recognizer.translation(in: self.view)
+            self.animator.removeAllBehaviors()
             if let view = self.blurView {
                 var newY: CGFloat = 0.0
                 
                 // If above the limit, resist pan
                 if view.center.y - 50 + translation.y < self.view.center.y {
-                    newY = view.center.y + (translation.y / 2.0)
+                    newY = self.blurViewTopConstraint!.constant + (translation.y / 2.0)
                 } else {
-                    newY = view.center.y + translation.y
+                    newY = self.blurViewTopConstraint!.constant + translation.y
                 }
-                view.center = CGPoint(x:view.center.x,
-                                      y:newY)
+                self.blurViewTopConstraint?.constant = newY
             }
             recognizer.setTranslation(CGPoint.zero, in: self.view)
+            self.view.layoutIfNeeded()
             
         // When the pan ends, determine where the view should go
         } else if recognizer.state == .ended {
@@ -378,13 +361,14 @@ class NowPlayingGameViewController: UIViewController {
                 
                 // If the view is above the top, spring down to a full view
                 if view.center.y < self.view.center.y {
+                    self.blurViewTopConstraint?.constant = self.coverImageView!.frame.minY + 50
                     UIView.animate(withDuration: 0.4,
                                    delay: 0.0,
                                    usingSpringWithDamping: 0.6,
                                    initialSpringVelocity: 1.0,
                                    options: .curveEaseOut,
                                    animations: {
-                                       self.blurView?.center.y = (self.coverImageView?.center.y)! + 50
+                                       self.view.layoutIfNeeded()
                                    },
                                    completion: nil)
                     self.blurViewState = .full
@@ -402,24 +386,24 @@ class NowPlayingGameViewController: UIViewController {
                         self.animator.addBehavior(self.collision)
                         self.animator.addBehavior(self.gravity)
                     }
+                    self.blurViewTopConstraint?.constant = -self.coverImageView!.frame.height
                     self.blurViewState = .full
                     
                 // If the view is below the middle, or if the user was swiping down when they ended, return to minimal state with a spring bounce
                 } else if (view.center.y > self.view.bounds.maxY && velocity > -300) || velocity > 300 {
                     let animationTime: TimeInterval = ((0.4 - 1.0) * (min(Double(velocity), 1000.0) - 300)/(1000 - 300) + 1.0)
+                    self.blurViewTopConstraint?.constant = self.MINIMUM_BLUR_TOP
                     UIView.animate(withDuration: animationTime,
                                    delay: 0.0,
                                    usingSpringWithDamping: 0.6,
                                    initialSpringVelocity: 1.0,
                                    options: .curveEaseOut,
                                    animations: {
-                                       self.blurView?.center.y = self.blurViewMinimalY
+                                    self.view.layoutIfNeeded()
+
                                    },
                                    completion: nil)
                     self.blurViewState = .minimal
-                    UIView.animate(withDuration: 0.2, animations: {
-                        self.view.layoutIfNeeded()
-                    })
                 }
             }
         }
@@ -435,27 +419,28 @@ extension NowPlayingGameViewController: GameDetailOverlayViewControllerDelegate 
         if !self.isInEditMode {
             // Show percent slider
             if self.blurViewState == .minimal {
-                self.blurViewMinimalY = (self.blurView?.center.y)!
+                self.blurViewTopConstraint?.constant = self.MINIMUM_BLUR_TOP - 40.0
                 UIView.animate(withDuration: 0.4,
                                delay: 0.0,
                                usingSpringWithDamping: 1.0,
                                initialSpringVelocity: 0,
                                options: .curveEaseIn,
                                animations: {
-                                self.blurView?.center.y -= 40
+                                self.view.layoutIfNeeded()
                 },
                                completion: nil)
                 self.blurViewState = .percent
                 
                 // Hide percent slider
             } else if self.blurViewState == .percent {
+                self.blurViewTopConstraint?.constant = self.MINIMUM_BLUR_TOP
                 UIView.animate(withDuration: 0.4,
                                delay: 0.0,
                                usingSpringWithDamping: 1.0,
                                initialSpringVelocity: 0,
                                options: .curveEaseIn,
                                animations: {
-                                self.blurView?.center.y += 40
+                                self.view.layoutIfNeeded()
                 },
                                completion: nil)
                 self.blurViewState = .minimal
