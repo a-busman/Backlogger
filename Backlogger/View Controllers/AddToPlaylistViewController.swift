@@ -162,7 +162,7 @@ class AddToPlaylistViewController: UIViewController {
     
     func filterContent(for searchText: String, scope: String = "All") {
         if searchText != "" {
-            filteredGames = allGames!.filter("gameFields.name contains[c] \"\(searchText)\"")
+            filteredGames = allGames!.filter("gameFields.name contains[c] %@", searchText.replacingOccurrences(of: "’", with: "\'"))
         } else {
             filteredGames = allGames
         }

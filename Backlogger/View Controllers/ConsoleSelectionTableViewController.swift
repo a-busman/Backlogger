@@ -167,7 +167,7 @@ class ConsoleSelectionTableViewController: UITableViewController {
                             autoreleasepool {
                             let realm = try? Realm()
                                 // Check if platform already exists
-                                var newPlatform = realm?.objects(Platform.self).filter("name = '\((textField.text)!)'").first
+                                var newPlatform = realm?.objects(Platform.self).filter("name = %@", textField.text!.replacingOccurrences(of: "’", with: "\'")).first
                                 if newPlatform == nil {
                                     newPlatform = Platform()
                                     
@@ -251,7 +251,7 @@ class ConsoleSelectionTableViewController: UITableViewController {
                         autoreleasepool {
                             let realm = try? Realm()
                             // Check if platform already exists
-                            var newPlatform = realm?.objects(Platform.self).filter("name = '\((textField.text)!)'").first
+                            var newPlatform = realm?.objects(Platform.self).filter("name = %@", textField.text!).first
                             if newPlatform == nil {
                                 newPlatform = Platform()
                                 

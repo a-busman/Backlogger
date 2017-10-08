@@ -403,7 +403,7 @@ extension LibraryViewController: UISearchBarDelegate {
             sortString = "rating"
         }
         if searchText != "" {
-            self.filteredGames = allGames!.filter("gameFields.name contains[c] \"\(searchText)\"").sorted(byKeyPath: sortString, ascending: self.ascending!)
+            self.filteredGames = allGames!.filter("gameFields.name contains[c] %@", searchText.replacingOccurrences(of: "’", with: "\'")).sorted(byKeyPath: sortString, ascending: self.ascending!)
         } else {
             self.filteredGames = allGames?.sorted(byKeyPath: sortString)
         }

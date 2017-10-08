@@ -521,12 +521,12 @@ class GameField: Field {
     }
     
     class func getGames(from steamName: String, _ completionHandler: @escaping (Result<SearchResults>) -> Void) {
-        let queryUrl = SearchResults.endpointForSearch() + "name%3A" + steamName.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
+        let queryUrl = SearchResults.endpointForSearch() + ("name%%3A" + steamName.replacingOccurrences(of: "’", with: "\'")).addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
         getGames(atPath:queryUrl, allowsCancel: false, completionHandler)
     }
     
     class func getGames(withQuery query:String, _ completionHandler: @escaping (Result<SearchResults>) -> Void) {
-        let queryUrl = SearchResults.endpointForGames() + "&filter=name%3A" + query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
+        let queryUrl = SearchResults.endpointForGames() + ("&filter=name:" + query.replacingOccurrences(of: "’", with: "\'")).addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
         getGames(atPath:queryUrl, allowsCancel: true, completionHandler)
     }
     
@@ -542,7 +542,7 @@ class GameField: Field {
             return
         }
         if (pageNum - 1) * limit < totalResults {
-            let queryUrl = SearchResults.endpointForGames() + "&filter=name%3A" + query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)! + "&offset=\((pageNum - 1) * limit)"
+            let queryUrl = SearchResults.endpointForGames() + ("&filter=name%3A" + query.replacingOccurrences(of: "’", with: "\'") + "&offset=\((pageNum - 1) * limit)").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
             getGames(atPath:queryUrl, allowsCancel: true, completionHandler)
         } else {
             let error = BackendError.objectSerialization(reason: "Page index out of bounds")
