@@ -187,7 +187,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
             self.finished = game?.finished
             self.gameId = game?.uuid
         }
-        if self.imageUrl != nil {
+        if self.imageUrl != nil, !self.imageUrl!.absoluteString.hasSuffix("gblogo.png") {
             self.artView?.kf.setImage(with: self.imageUrl!, placeholder: #imageLiteral(resourceName: "info_image_placeholder"), options: nil, progressBlock: nil, completionHandler: {
                 (image, error, cacheType, imageUrl) in
                 if image != nil {

@@ -174,7 +174,7 @@ extension WishlistViewController: UITableViewDelegate, UITableViewDataSource {
             cell.rightLabel?.isHidden = true
             cell.accessoryType = .disclosureIndicator
 
-            if let image = game.gameFields?.image {
+            if let image = game.gameFields?.image, !image.iconUrl!.hasSuffix("gblogo.png") {
                 cell.imageUrl = URL(string: image.iconUrl!)
             } else {
                 cell.artView?.image = #imageLiteral(resourceName: "table_placeholder_light")

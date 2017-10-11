@@ -45,7 +45,7 @@ class NowPlayingGameViewController: UIViewController {
         set(newGame) {
             self._game = newGame
             if let gameField = self._game?.gameFields {
-                if !gameField.hasDetails {
+                if !gameField.isInvalidated && !gameField.hasDetails {
                     gameField.updateGameDetails { result in
                         if result.error != nil {
                             NSLog("\((result.error?.localizedDescription)!)")

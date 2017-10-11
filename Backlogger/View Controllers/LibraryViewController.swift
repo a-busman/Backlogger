@@ -458,7 +458,7 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
                             cell.descriptionLabel?.text = ""
                             cell.hideDetails()
                         }
-                        if let image = platform.image {
+                        if let image = platform.image, !image.iconUrl!.hasSuffix("gblogo.png") {
                             cell.imageUrl = URL(string: image.iconUrl!)
                         } else {
                             cell.set(image: #imageLiteral(resourceName: "table_placeholder_light"))
@@ -492,7 +492,7 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
                 }
                 
                 if platform.idNumber != Steam.steamPlatformIdNumber {
-                    if let image = platform.image {
+                    if let image = platform.image, !image.iconUrl!.hasSuffix("gblogo.png") {
                         cell.imageUrl = URL(string: image.iconUrl!)
                     } else {
                         cell.set(image: #imageLiteral(resourceName: "table_placeholder_light"))
@@ -521,7 +521,7 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
             cell.showDetails()
             cell.percentView?.isHidden = true
             cell.rightLabel?.text = ""
-            if let image = game.gameFields!.image {
+            if let image = game.gameFields!.image, !image.iconUrl!.hasSuffix("gblogo.png") {
                 cell.imageUrl = URL(string: image.iconUrl!)
             }
             cell.cacheCompletionHandler = {

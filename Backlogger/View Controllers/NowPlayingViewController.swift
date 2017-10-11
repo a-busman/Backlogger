@@ -233,7 +233,7 @@ class NowPlayingViewController: UIViewController {
         var newGameIds = [String]()
         for game in self.games {
             if let gameField = game.gameFields {
-                if !gameField.hasDetails {
+                if !gameField.isInvalidated && !gameField.hasDetails {
                     gameField.updateGameDetails { result in
                         if let error = result.error {
                             NSLog("error: \(error.localizedDescription)")
@@ -294,12 +294,14 @@ class NowPlayingViewController: UIViewController {
         if newIndexPath != nil {
             self.movingIndexPath = newIndexPath
         }
+        guard let indexPath = self.movingIndexPath,
+        let cell = self.collectionView?.cellForItem(at: indexPath) else {
+            return
+        }
 
-        let cell = (self.collectionView?.cellForItem(at: self.movingIndexPath!))!
         switch(gesture.state) {
             
         case .began:
-            guard let indexPath = self.movingIndexPath else { break }
             self.setEditing(true, animated: true)
             self.removeWiggleAnimation(from: cell)
             UIView.animate(withDuration: 0.25,
@@ -326,7 +328,7 @@ class NowPlayingViewController: UIViewController {
                            completion: nil)
             self.addWiggleAnimation(to: cell)
             self.collectionView?.endInteractiveMovement()
-            self.scroll(to: (self.movingIndexPath?.item)!)
+            self.scroll(to: indexPath.item)
         default:
             UIView.animate(withDuration: 0.25,
                            delay: 0.0,
@@ -339,7 +341,7 @@ class NowPlayingViewController: UIViewController {
                            completion: nil)
             self.addWiggleAnimation(to: cell)
             self.collectionView?.cancelInteractiveMovement()
-            self.scroll(to: (self.movingIndexPath?.item)!)
+            self.scroll(to: indexPath.item)
         }
     }
     

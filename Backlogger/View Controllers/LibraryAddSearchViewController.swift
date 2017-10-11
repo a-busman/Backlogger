@@ -209,7 +209,7 @@ class LibraryAddSearchViewController: UIViewController {
                 if gameField == nil {
                     gameField = self.gameFields[i]
                 }
-                vc.gameField = gameField
+                vc.gameField = gameField.deepCopy()
                 vc.gameFieldId = gameField.idNumber
                 vc.delegate = self
             }
@@ -419,7 +419,7 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
                 }
             }
 
-            if let image = gameToShow.image {
+            if let image = gameToShow.image, !image.iconUrl!.hasSuffix("gblogo.png") {
                 cell.imageUrl = URL(string: image.iconUrl!)
             } else {
                 cell.imageUrl = nil
@@ -721,5 +721,10 @@ extension LibraryAddSearchViewController: GameDetailsViewControllerDelegate {
         } else {
             cell.libraryState = .add
         }
+    }
+    func gameDeleted(gameField: GameField) {
+        let cell = self.tableView?.cellForRow(at: IndexPath(row: self.currentlySelectedRow, section: 0)) as! TableViewCell
+        self.gameFields[self.currentlySelectedRow] = gameField
+        cell.libraryState = .add
     }
 }

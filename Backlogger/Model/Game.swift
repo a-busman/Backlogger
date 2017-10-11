@@ -542,7 +542,7 @@ class GameField: Field {
             return
         }
         if (pageNum - 1) * limit < totalResults {
-            let queryUrl = SearchResults.endpointForGames() + ("&filter=name%3A" + query.replacingOccurrences(of: "’", with: "\'") + "&offset=\((pageNum - 1) * limit)").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
+            let queryUrl = SearchResults.endpointForGames() + ("&filter=name:" + query.replacingOccurrences(of: "’", with: "\'") + "&offset=\((pageNum - 1) * limit)").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
             getGames(atPath:queryUrl, allowsCancel: true, completionHandler)
         } else {
             let error = BackendError.objectSerialization(reason: "Page index out of bounds")

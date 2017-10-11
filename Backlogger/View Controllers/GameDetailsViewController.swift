@@ -17,6 +17,7 @@ extension UIImageView : DisplaceableView {}
 
 protocol GameDetailsViewControllerDelegate {
     func gamesCreated(gameField: GameField)
+    func gameDeleted(gameField: GameField)
 }
 
 class GameDetailsViewController: UIViewController {
@@ -308,7 +309,7 @@ class GameDetailsViewController: UIViewController {
         
         var gameFields: GameField?
         gameFields = self._gameField ?? GameField()
-        if !(gameFields?.hasDetails)! && Util.isInternetAvailable() {
+        if !gameFields!.isInvalidated && !gameFields!.hasDetails && Util.isInternetAvailable() {
             gameFields?.updateGameDetails(self.updateGameDetailsFromRemote)
         } else if !Util.isInternetAvailable() {
             self.networkConnectionLabel?.isHidden = false
@@ -629,7 +630,9 @@ class GameDetailsViewController: UIViewController {
         if gameField == nil {
             gameField = self._game?.gameFields
         }
-        gameField?.updateGameDetails(self.updateGameDetailsFromRemote)
+        if gameField != nil && !gameField!.isInvalidated {
+            gameField?.updateGameDetails(self.updateGameDetailsFromRemote)
+        }
     }
     
     fileprivate func updateGameDetailsFromRemote(_ result: Result<Any>) {
@@ -829,7 +832,10 @@ class GameDetailsViewController: UIViewController {
                 self.isRemovingFromWishlist = false
             }
             if self._game != nil {
-                self._game?.delete()
+                if let gameField = self._game?.deleteWithGameFieldCopy() {
+                    self.delegate?.gameDeleted(gameField: gameField)
+                    self._gameField = gameField
+                }
                 self.navigationController?.popViewController(animated: true)
             } else {
                 var gameFieldCopy: GameField?
@@ -863,7 +869,7 @@ class GameDetailsViewController: UIViewController {
     fileprivate func transitionToRemove() {
         self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "checkmark"), title: "Added to Library", description: nil)
         self.state = .partialAddToLibrary
-        if self._gameField?.ownedGames.count == 1 || (self._gameField == nil && self._game != nil) {
+        if self._gameField?.ownedGames.count == 1 || self._game != nil {
             self.addLabel?.text = "REMOVE"
         } else {
             self.addLabel?.text = "REMOVE ALL"
@@ -1768,7 +1774,7 @@ extension GameDetailsViewController: UICollectionViewDelegate, UICollectionViewD
             NSLayoutConstraint(item: characterImageView, attribute: .trailing, relatedBy: .equal, toItem: cell.characterBorder!, attribute: .trailing, multiplier: 1.0, constant: -0.5).isActive = true
 
             if let urlString = character.image?.mediumUrl {
-                if urlString.hasSuffix("question_mark.jpg") {
+                if urlString.hasSuffix("question_mark.jpg") || urlString.hasSuffix("gblogo.png") {
                     characterImageView.image = #imageLiteral(resourceName: "new_playlist")
                     cell.hideImage()
                 } else {

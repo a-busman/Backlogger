@@ -333,7 +333,7 @@ extension AddToPlaylistViewController: UITableViewDelegate, UITableViewDataSourc
                 cell.isWishlist = game.inWishlist
                 cell.percentView?.isHidden = true
                 if let gameField = game.gameFields {
-                    if let image = gameField.image {
+                    if let image = gameField.image, !image.iconUrl!.hasSuffix("gblogo.png") {
                         cell.imageUrl = URL(string: image.iconUrl!)
                     }
                     cell.cacheCompletionHandler = {
@@ -430,7 +430,7 @@ extension AddToPlaylistViewController: UITableViewDelegate, UITableViewDataSourc
                     }
                 }
                 
-                if let image = gameToShow.image {
+                if let image = gameToShow.image, !image.iconUrl!.hasSuffix("gblogo.png") {
                     cell.imageUrl = URL(string: image.iconUrl!)
                 }
                 cell.cacheCompletionHandler = {
