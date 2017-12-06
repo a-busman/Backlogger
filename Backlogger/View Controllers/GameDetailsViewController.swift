@@ -1337,9 +1337,9 @@ class GameDetailsViewController: UIViewController {
     }
     func keyboardWillShow(notification: NSNotification) {
         if self.notesTextView!.isFirstResponder {
-            if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
                 if self.view.frame.origin.y == 0{
-                    self.view.frame.origin.y -= (keyboardSize.height - (self.tabBarController?.tabBar.frame.height)!)
+                    self.view.frame.origin.y -= (keyboardSize.height - (self.tabBarController?.tabBar.frame.height ?? 0))
                 }
             }
             self.doneButton?.isEnabled = true
@@ -1349,10 +1349,8 @@ class GameDetailsViewController: UIViewController {
     
     func keyboardWillHide(notification: NSNotification) {
         if self.notesTextView!.isFirstResponder {
-            if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-                if self.view.frame.origin.y != 0 {
-                    self.view.frame.origin.y += keyboardSize.height - (self.tabBarController?.tabBar.frame.height)!
-                }
+            if self.view.frame.origin.y != 0 {
+                self.view.frame.origin.y = 0
             }
             self.doneButton?.isEnabled = false
             UIView.animate(withDuration: 0.2, animations: {self.doneButton?.title = " "})

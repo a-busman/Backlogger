@@ -166,26 +166,18 @@ class NowPlayingViewController: UIViewController {
                     UIView.animate(withDuration: duration,
                                    delay: TimeInterval(0),
                                    options: animationCurve,
-                                   animations: { self.view.frame.origin.y -= endFrame!.height - (self.tabBarController?.tabBar.frame.height)! - 50.0
+                                   animations: { self.view.frame.origin.y -= endFrame!.height - (self.tabBarController?.tabBar.frame.height ?? 0) - 50.0
                     },
                                    completion: nil)
                 }
             }
-            self.navigationController?.navigationBar.topItem?.leftBarButtonItem?.isEnabled = false
-            self.navigationController?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.dismissKeyboard))
         }
-    }
-    
-    func dismissKeyboard(sender: UIBarButtonItem) {
-        self.currentlyTypingTextView?.resignFirstResponder()
     }
     
     func keyboardWillHide(notification: NSNotification) {
         if self.notesEditing {
-            if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-                if self.view.frame.origin.y != 0 {
-                    self.view.frame.origin.y += keyboardSize.height - (self.tabBarController?.tabBar.frame.height)! - 50.0
-                }
+            if self.view.frame.origin.y != 0 {
+                self.view.frame.origin.y = 0
             }
             self.navigationController?.navigationBar.topItem?.leftBarButtonItem?.isEnabled = true
             UIView.setAnimationsEnabled(false)
