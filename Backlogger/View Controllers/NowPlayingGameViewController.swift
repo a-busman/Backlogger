@@ -361,7 +361,7 @@ class NowPlayingGameViewController: UIViewController {
                 
                 // If the view is above the top, spring down to a full view
                 if view.center.y < self.view.center.y {
-                    self.blurViewTopConstraint?.constant = self.coverImageView!.frame.minY + 50
+                    self.blurViewTopConstraint?.constant = -self.coverImageView!.frame.height
                     UIView.animate(withDuration: 0.4,
                                    delay: 0.0,
                                    usingSpringWithDamping: 0.6,
