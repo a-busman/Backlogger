@@ -100,6 +100,8 @@ class NowPlayingViewController: UIViewController {
         self.longPressGesture?.isEnabled = false
         
         self.loadPlaylists()
+        
+        self.navigationController?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.addTapped))
 
         if self.games.count > 0 {
             let newButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(handleTapEdit))

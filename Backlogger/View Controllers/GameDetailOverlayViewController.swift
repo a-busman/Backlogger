@@ -412,4 +412,10 @@ extension GameDetailOverlayViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         self.delegate?.notesTyping(textView: textView)
     }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        self.game?.update {
+            self.game?.notes = textView.text
+        }
+    }
 }
