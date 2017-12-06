@@ -38,7 +38,7 @@ class PercentViewController: UIViewController {
         set(newValue) {
             self._complete = newValue
             if newValue {
-                self.shapeLayer.strokeColor = UIColor(colorLiteralRed: 0.0, green: 0.8, blue: 0.0, alpha: 1.0).cgColor
+                self.shapeLayer.strokeColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0).cgColor
             } else {
                 self.shapeLayer.strokeColor = Util.appColor.cgColor
             }
@@ -65,7 +65,7 @@ class PercentViewController: UIViewController {
         self.shapeLayer.path = circlePath.cgPath
         self.shapeLayer.fillColor = UIColor.clear.cgColor
         if self._complete {
-            self.shapeLayer.strokeColor = UIColor(colorLiteralRed: 0.0, green: 0.8, blue: 0.0, alpha: 1.0).cgColor
+            self.shapeLayer.strokeColor = UIColor(red: 0.0, green: 0.8, blue: 0.0, alpha: 1.0).cgColor
         } else {
             self.shapeLayer.strokeColor = Util.appColor.cgColor
         }

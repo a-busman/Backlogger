@@ -82,7 +82,7 @@ class GameTableViewController: UIViewController {
             self.platformId = platform.idNumber
             self.titleLabel?.text = platform.name
             self.games = platform.ownedGames
-            if platform.name!.characters.count < 10 {
+            if platform.name!.count < 10 {
                 self.title = platform.name
             } else {
                 self.title = platform.abbreviation

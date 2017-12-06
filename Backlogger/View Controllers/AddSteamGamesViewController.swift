@@ -97,14 +97,14 @@ extension AddSteamGamesViewController: UITableViewDelegate, UITableViewDataSourc
             if platforms.count > 0 {
                 if platforms.count > 1 {
                     for platform in platforms[0..<platforms.endIndex - 1] {
-                        if platform.name!.characters.count < 10 {
+                        if platform.name!.count < 10 {
                             platformString += platform.name! + " • "
                         } else {
                             platformString += platform.abbreviation! + " • "
                         }
                     }
                 }
-                if platforms[platforms.endIndex - 1].name!.characters.count < 10 {
+                if platforms[platforms.endIndex - 1].name!.count < 10 {
                     platformString += platforms[platforms.endIndex - 1].name!
                 } else {
                     platformString += platforms[platforms.endIndex - 1].abbreviation!

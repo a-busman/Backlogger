@@ -13,7 +13,7 @@ import SystemConfiguration
 class Util {
     
     class var appColor: UIColor {
-        return UIColor(colorLiteralRed: 0.0, green: 0.725, blue: 1.0, alpha: 1.0)
+        return UIColor(red: 0.0, green: 0.725, blue: 1.0, alpha: 1.0)
     }
     
     class func getDocumentsDirectory() -> URL {
@@ -29,8 +29,8 @@ class Util {
     
     class func removeSpecialCharsFromString(text: String) -> String {
         let okayChars : Set<Character> =
-            Set("abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLKMNOPQRSTUVWXYZ1234567890+-*=(),.:!_".characters)
-        return String(text.characters.filter {okayChars.contains($0) })
+            Set("abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLKMNOPQRSTUVWXYZ1234567890+-*=(),.:!_")
+        return String(text.filter {okayChars.contains($0) })
     }
     
     class var isICloudContainerAvailable: Bool {
@@ -96,11 +96,6 @@ class Util {
 }
 
 extension String {
-    
-    var count: Int {
-        return self.characters.count
-    }
-    
     func index(_ i: Int) -> String.CharacterView.Index {
         if i >= 0 {
             return self.index(self.startIndex, offsetBy: i)

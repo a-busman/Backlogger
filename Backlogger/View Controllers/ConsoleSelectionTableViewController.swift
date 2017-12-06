@@ -163,7 +163,7 @@ class ConsoleSelectionTableViewController: UITableViewController {
                         
                         let textField = alertController.textFields![0] as UITextField
                         
-                        if (textField.text?.characters.count)! > 0 {
+                        if textField.text!.count > 0 {
                             autoreleasepool {
                             let realm = try? Realm()
                                 // Check if platform already exists
@@ -247,7 +247,7 @@ class ConsoleSelectionTableViewController: UITableViewController {
                     
                     let textField = alertController.textFields![0] as UITextField
                     
-                    if (textField.text?.characters.count)! > 0 {
+                    if textField.text!.count > 0 {
                         autoreleasepool {
                             let realm = try? Realm()
                             // Check if platform already exists

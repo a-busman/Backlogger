@@ -137,7 +137,7 @@ class Steam {
                                 // make sure at least 1 word is in the game
                                 for component in gameNameComponents {
                                     var strippedComponent = component
-                                    if component.characters.last == ":" {
+                                    if component.last == ":" {
                                         strippedComponent = component[0..<component.count - 1]
                                     }
                                     if game.name!.lowercased().contains(strippedComponent) {
@@ -154,7 +154,7 @@ class Steam {
                                 
                                 for component in gbNameComponents {
                                     var strippedComponent = component
-                                    if component.characters.last == ":" {
+                                    if component.last == ":" {
                                         strippedComponent = component[0..<component.count - 1]
                                     }
                                     if let _ = Int(strippedComponent) {

@@ -377,14 +377,14 @@ class GameDetailsViewController: UIViewController {
                 if aGameList.count > 0 {
                     for i in 0..<(aGameList.endIndex - 1) {
                         let game = aGameList[i]
-                        if (game.platform?.name?.characters.count)! < 10 {
+                        if (game.platform?.name?.count)! < 10 {
                             platformString += (game.platform?.name)! + " • "
                         } else {
                             platformString += (game.platform?.abbreviation)! + " • "
                         }
                     }
                     let lastGame = aGameList[aGameList.endIndex - 1]
-                    if (lastGame.platform?.name?.characters.count)! < 10 {
+                    if (lastGame.platform?.name?.count)! < 10 {
                         platformString += (lastGame.platform?.name)!
                     } else {
                         platformString += (lastGame.platform?.abbreviation)!
@@ -392,7 +392,7 @@ class GameDetailsViewController: UIViewController {
                 }
             }
         } else {
-            if (self._game?.platform?.name?.characters.count)! < 10 {
+            if (self._game?.platform?.name?.count)! < 10 {
                 platformString += (self._game?.platform?.name)!
             } else {
                 platformString += (self._game?.platform?.abbreviation)!
@@ -645,7 +645,7 @@ class GameDetailsViewController: UIViewController {
             self.detailsScrollView?.refreshControl?.endRefreshing()
             return
         }
-        var gameFields = self._gameField ?? GameField()
+        let gameFields = self._gameField ?? GameField()
         if gameFields.characters.count > 0 {
             for character in gameFields.characters {
                 if !character.hasImage {
@@ -745,14 +745,14 @@ class GameDetailsViewController: UIViewController {
             if platforms.count > 0 {
                 if platforms.count > 1 {
                     for platform in platforms[0..<platforms.endIndex - 1] {
-                        if platform.name!.characters.count < 10 {
+                        if platform.name!.count < 10 {
                             platformString += platform.name! + ", "
                         } else {
                             platformString += platform.abbreviation! + ", "
                         }
                     }
                 }
-                if platforms[platforms.endIndex - 1].name!.characters.count < 10 {
+                if platforms[platforms.endIndex - 1].name!.count < 10 {
                     platformString += (platforms.last?.name)!
                 } else {
                     platformString += (platforms.last?.abbreviation)!
@@ -1412,7 +1412,7 @@ extension GameDetailsViewController: ConsoleSelectionTableViewControllerDelegate
                             }
                         }
                         if !self.isAddingToWishlist {
-                            if (platform.name?.characters.count)! < 10 {
+                            if (platform.name?.count)! < 10 {
                                 platformString += platform.name! + " • "
                             } else {
                                 platformString += platform.abbreviation! + " • "
@@ -1449,7 +1449,7 @@ extension GameDetailsViewController: ConsoleSelectionTableViewControllerDelegate
                     }
                 }
                 if !self.isAddingToWishlist {
-                    if (platform.name?.characters.count)! < 10 {
+                    if platform.name!.count < 10 {
                         platformString += platform.name!
                     } else {
                         platformString += platform.abbreviation!
@@ -1528,7 +1528,7 @@ extension GameDetailsViewController: ConsoleSelectionTableViewControllerDelegate
                         }
                         gamesToAdd.append(game)
                     }
-                    if (platform.name?.characters.count)! < 10 {
+                    if platform.name!.count < 10 {
                         platformString += platform.name! + (i == (self._gameField!.ownedGames.count - 1) ? "" : " • ")
                     } else {
                         platformString += platform.abbreviation! + (i == (self._gameField!.ownedGames.count - 1) ? "" : " • ")
