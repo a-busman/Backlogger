@@ -255,6 +255,8 @@ class NowPlayingGameViewController: UIViewController {
             } else {
                 self.deleteView?.transform = CGAffineTransform(scaleX: editMode ? MAXIMUM_TRANSOFRM : MINIMUM_TRANSFORM,
                                                                y: editMode ? MAXIMUM_TRANSOFRM : MINIMUM_TRANSFORM)
+                self.blurViewTopConstraint?.constant = self.MINIMUM_BLUR_TOP
+                self.blurViewState = .minimal
             }
             self.isInEditMode = editMode
             self.detailsPanRecognizer?.isEnabled = !editMode
@@ -276,16 +278,17 @@ class NowPlayingGameViewController: UIViewController {
                        },
                        completion: nil)
         if self.blurViewState != .minimal {
+            self.blurViewTopConstraint?.constant = self.MINIMUM_BLUR_TOP
             UIView.animate(withDuration: 0.2,
                            delay: 0.0,
                            usingSpringWithDamping: 1.0,
                            initialSpringVelocity: 0,
                            options: .curveEaseIn,
                            animations: {
-                            self.blurViewTopConstraint?.constant = self.MINIMUM_BLUR_TOP
+                            self.view.layoutIfNeeded()
             },
-                           completion: nil)
-            self.blurViewState = .minimal
+                           completion: { complete in self.blurViewState = .minimal })
+            
         }
     }
     

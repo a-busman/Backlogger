@@ -1146,8 +1146,10 @@ class GameDetailsViewController: UIViewController {
                     let realm = try! Realm()
                     let nowPlayingPlaylist = realm.objects(Playlist.self).filter("isNowPlaying = true").first
                     if nowPlayingPlaylist != nil {
-                        nowPlayingPlaylist?.update {
-                            nowPlayingPlaylist?.games.append(self._game!)
+                        if let game = self._game {
+                            nowPlayingPlaylist?.update {
+                                nowPlayingPlaylist?.games.append(game)
+                            }
                         }
                     }
                 }
@@ -1586,7 +1588,7 @@ extension GameDetailsViewController: UIScrollViewDelegate {
                     newBorderConstant = heightPercentage * (self.maximumShadowSpacing - self.minimumShadowSpacing) + self.minimumShadowSpacing
                     newBottomConstant = -(heightPercentage * (self.maximumShadowBottom - self.minimumShadowBottom) + self.minimumShadowBottom)
                     newConstant = self.maximumHeaderHeight - (offset - initialInset)
-                    self.addBackground?.isHidden = false
+                    self.addBackground?.isHidden = !self.showAddButton
                     self.statsButton?.isHidden = self.hideStats
                     self.moreButton?.isHidden = false
                     self.platformButton?.isHidden = false
@@ -1594,7 +1596,7 @@ extension GameDetailsViewController: UIScrollViewDelegate {
                     newBorderConstant = self.maximumShadowSpacing
                     newBottomConstant = -self.maximumShadowBottom
                     newConstant = self.maximumHeaderHeight
-                    self.addBackground?.isHidden = false
+                    self.addBackground?.isHidden = !self.showAddButton
                     self.statsButton?.isHidden = self.hideStats
                     self.moreButton?.isHidden = false
                     self.platformButton?.isHidden = false

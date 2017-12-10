@@ -126,34 +126,6 @@ class NowPlayingViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
-    func keyboardNotification(notification: NSNotification) {
-        if self.notesEditing {
-            if let userInfo = notification.userInfo {
-                let endFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
-                let duration:TimeInterval = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0
-                let animationCurveRawNSN = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber
-                let animationCurveRaw = animationCurveRawNSN?.uintValue ?? UIViewAnimationOptions.curveEaseInOut.rawValue
-                let animationCurve:UIViewAnimationOptions = UIViewAnimationOptions(rawValue: animationCurveRaw)
-                if (endFrame?.origin.y)! >= UIScreen.main.bounds.size.height {
-                    UIView.animate(withDuration: duration,
-                                   delay: TimeInterval(0),
-                                   options: animationCurve,
-                                   animations: { self.view.frame.origin.y += endFrame!.height - (self.tabBarController?.tabBar.frame.height)! - 50.0
-                    },
-                                   completion: nil)
-                } else {
-                    UIView.animate(withDuration: duration,
-                                   delay: TimeInterval(0),
-                                   options: animationCurve,
-                                   animations: { self.view.frame.origin.y -= endFrame!.height - (self.tabBarController?.tabBar.frame.height)! - 50.0
-                    },
-                                   completion: nil)
-                }
-
-            }
-        }
-    }
-    
     func keyboardDidShow(notification: NSNotification) {
         if self.notesEditing {
             if let userInfo = notification.userInfo {
@@ -370,6 +342,9 @@ class NowPlayingViewController: UIViewController {
             } else {
                 let newButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(handleTapEdit))
                 newButton.tintColor = .white
+                for vc in orderedViewControllers {
+                    vc.setEditMode(editMode: self.inEditMode, animated: true)
+                }
                 self.startWiggle()
                 self.longPressGesture?.isEnabled = true
                 self.inEditMode = true
@@ -377,9 +352,7 @@ class NowPlayingViewController: UIViewController {
 
                 self.addBarButtonItem?.isEnabled = false
             }
-            for vc in orderedViewControllers {
-                vc.setEditMode(editMode: self.inEditMode, animated: true)
-            }
+
         }
     }
     

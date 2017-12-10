@@ -70,7 +70,7 @@ extension MoreViewController: UICollectionViewDelegate, UICollectionViewDataSour
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.progressReuseId, for: indexPath) as! ProgressCell
         autoreleasepool {
             let realm = try! Realm()
-            let allObjects = realm.objects(Game.self)
+            let allObjects = realm.objects(Game.self).filter("inLibrary = true")
             let totalCount = allObjects.count
             cell.denominator = totalCount
             cell.progressType = .games
