@@ -279,7 +279,13 @@ class NowPlayingViewController: UIViewController {
                             cell.contentView.alpha = 0.7
             },
                            completion: nil)
-            self.collectionView?.beginInteractiveMovementForItem(at: indexPath)
+            if #available(iOS 11.0, *) {
+                if !self.collectionView!.hasActiveDrag {
+                    self.collectionView?.beginInteractiveMovementForItem(at: indexPath)
+                }
+            } else {
+                self.collectionView?.beginInteractiveMovementForItem(at: indexPath)
+            }
         case .changed:
             self.collectionView?.updateInteractiveMovementTargetPosition(location)
         case .ended:
