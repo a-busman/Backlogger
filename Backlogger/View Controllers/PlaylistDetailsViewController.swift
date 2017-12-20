@@ -971,7 +971,7 @@ class PlaylistDetailsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let game = self.games.remove(at: sourceIndexPath.row)
+        let game = self.games.remove(at: sourceIndexPath.row) as Game
         self.games.insert(game, at: destinationIndexPath.row)
         self.imagesLoaded = 0
     }

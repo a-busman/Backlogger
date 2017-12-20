@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "FC3E452D9DCA8764D456A432BCC61C1B"
+               BlueprintIdentifier = "D4FC4D8121776DED8FCEFE3547F87EE7"
                BuildableName = "Pods_BackloggerWidget.framework"
                BlueprintName = "Pods-BackloggerWidget"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -47,7 +47,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "FC3E452D9DCA8764D456A432BCC61C1B"
+            BlueprintIdentifier = "D4FC4D8121776DED8FCEFE3547F87EE7"
             BuildableName = "Pods_BackloggerWidget.framework"
             BlueprintName = "Pods-BackloggerWidget"
             ReferencedContainer = "container:Pods.xcodeproj">

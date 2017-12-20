@@ -324,7 +324,7 @@ class GameDetailOverlayViewController: UIViewController {
                             item.uuid == self._game!.uuid
                         }) {
                             nowPlayingPlaylist?.update {
-                                nowPlayingPlaylist?.games.remove(objectAtIndex: index)
+                                nowPlayingPlaylist?.games.remove(at: index)
                             }
                         }
                     }

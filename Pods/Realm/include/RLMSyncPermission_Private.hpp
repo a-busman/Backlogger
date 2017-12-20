@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////
 //
-// Copyright 2016 Realm Inc.
+// Copyright 2017 Realm Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,24 +16,14 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
-#import "RLMSyncPermissionChange.h"
+#import "RLMSyncPermission.h"
 
-NS_ASSUME_NONNULL_BEGIN
+#import "sync/sync_permission.hpp"
 
-@interface RLMSyncPermissionChange()
+@interface RLMSyncPermission ()
 
-@property (readwrite) NSString *id;
-@property (readwrite) NSDate *createdAt;
-@property (readwrite) NSDate *updatedAt;
-@property (nullable, readwrite) NSNumber<RLMInt> *statusCode;
-@property (nullable, readwrite) NSString *statusMessage;
-@property (readwrite) NSString *realmUrl;
-@property (readwrite) NSString *userId;
+- (instancetype)initWithPermission:(realm::Permission)permission;
 
-@property (nullable, readwrite) NSNumber<RLMBool> *mayRead;
-@property (nullable, readwrite) NSNumber<RLMBool> *mayWrite;
-@property (nullable, readwrite) NSNumber<RLMBool> *mayManage;
+- (realm::Permission)rawPermission;
 
 @end
-
-NS_ASSUME_NONNULL_END
