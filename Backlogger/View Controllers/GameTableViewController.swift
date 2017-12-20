@@ -272,7 +272,6 @@ class GameTableViewController: UIViewController {
     }
     
     @IBAction func moreTapped(sender: UIBarButtonItem) {
-        /*
         let actions = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let addAction = self.platform!.idNumber != Steam.steamPlatformIdNumber ?
         UIAlertAction(title: "Add Games", style: .default, handler: self.addGames) :
@@ -290,8 +289,7 @@ class GameTableViewController: UIViewController {
         actions.addAction(hideCompleteAction)
         actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         actions.popoverPresentationController?.barButtonItem = self.navigationController?.navigationBar.topItem?.rightBarButtonItem
-        self.present(actions, animated: true, completion: nil)*/
-        NSLog("offset: \(self.tableView?.contentOffset.y ?? 0.0)")
+        self.present(actions, animated: true, completion: nil)
     }
     
     func hideTapped(sender: UIAlertAction) {
