@@ -238,15 +238,15 @@ class GameTableViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.startInset = (self.navigationController?.navigationBar.bounds.height ?? 0.0) + 165 + UIApplication.shared.statusBarFrame.height
+        self.startInset = (self.navigationController?.navigationBar.bounds.height ?? 0.0) + self.backgroundTopInitial + UIApplication.shared.statusBarFrame.height
         if !self.didLayout {
             self.shadowGradientLayer.frame = CGRect(x: 0.0, y: 0.0, width: UIScreen.main.bounds.width, height: (self.shadowView?.frame.height)!)
             let darkColor = UIColor(white: 0.0, alpha: 0.3).cgColor
             self.shadowGradientLayer.colors = [UIColor.clear.cgColor, darkColor]
             self.shadowGradientLayer.locations = [0.7, 1.0]
-            self.tableView?.contentInset.top = 165.0
+            self.tableView?.contentInset.top = self.backgroundTopInitial
             self.tableView?.contentInset.bottom = 0.0
-            self.tableView?.scrollIndicatorInsets.top = 165.0
+            self.tableView?.scrollIndicatorInsets.top = self.backgroundTopInitial
             self.tableView?.scrollIndicatorInsets.bottom = 0.0
             self.tableView?.setContentOffset(CGPoint(x: 0.0, y: -self.startInset), animated: false)
             self.shadowView?.layer.addSublayer(self.shadowGradientLayer)
@@ -272,7 +272,7 @@ class GameTableViewController: UIViewController {
     }
     
     @IBAction func moreTapped(sender: UIBarButtonItem) {
-        
+        /*
         let actions = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let addAction = self.platform!.idNumber != Steam.steamPlatformIdNumber ?
         UIAlertAction(title: "Add Games", style: .default, handler: self.addGames) :
@@ -290,7 +290,8 @@ class GameTableViewController: UIViewController {
         actions.addAction(hideCompleteAction)
         actions.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         actions.popoverPresentationController?.barButtonItem = self.navigationController?.navigationBar.topItem?.rightBarButtonItem
-        self.present(actions, animated: true, completion: nil)
+        self.present(actions, animated: true, completion: nil)*/
+        NSLog("offset: \(self.tableView?.contentOffset.y ?? 0.0)")
     }
     
     func hideTapped(sender: UIAlertAction) {
@@ -766,19 +767,20 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
                 self.imageHeightLayoutConstraint?.constant = self.imageHeightInitial
             }
             self.currentScrollPosition = offset
+            self.tableView?.scrollIndicatorInsets.top =  self.startInset - ((self.navigationController?.navigationBar.bounds.height ?? 0.0) + UIApplication.shared.statusBarFrame.height)
             if offset < ((self.titleLabel?.bounds.height ?? 0) + (self.navigationController?.navigationBar.bounds.height ?? 0) + UIApplication.shared.statusBarFrame.height) {
                 if offset < 0.0 {
-                    self.tableView?.scrollIndicatorInsets.top = 0.0
                     self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
                 } else {
-                    self.tableView?.scrollIndicatorInsets.top = offset - ((self.navigationController?.navigationBar.bounds.height ?? 0.0) + UIApplication.shared.statusBarFrame.height)
                     let remainingWidth = offset - ((self.navigationController?.navigationBar.bounds.height ?? 0) + UIApplication.shared.statusBarFrame.height)
                     let newColor = UIColor(white: 1.0, alpha: ((self.titleLabel?.bounds.height ?? 0) - remainingWidth) / (self.titleLabel?.bounds.height ?? 1))
                     self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: newColor]
                 }
             } else {
-                self.tableView?.scrollIndicatorInsets.top = offset - ((self.navigationController?.navigationBar.bounds.height ?? 0.0) + UIApplication.shared.statusBarFrame.height)
                 self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.clear]
+                if offset > self.startInset {
+                    self.tableView?.scrollIndicatorInsets.top = offset - ((self.navigationController?.navigationBar.bounds.height ?? 0.0) + UIApplication.shared.statusBarFrame.height)
+                }
             }
         }
     }
