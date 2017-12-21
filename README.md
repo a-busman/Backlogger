@@ -1,5 +1,6 @@
 # Backlogger
 
+[![Build Status](https://travis-ci.org/a-busman/Backlogger.svg?branch=master)](https://travis-ci.org/a-busman/Backlogger)
 This is my simple video game backlog managing app for iOS. I didn't really like the current offerings on iOS, as they seemed kind of
 clunky and non-straightforward. I built this using RealmSwift, Alamofire, and the GiantBomb API. This is my first swift iOS app, but
 it's going pretty well so far. I took inspiration from Apple Music for some of my design choices as I like the organization of the
