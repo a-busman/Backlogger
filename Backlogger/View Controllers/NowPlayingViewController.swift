@@ -348,15 +348,17 @@ class NowPlayingViewController: UIViewController {
             } else {
                 let newButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(handleTapEdit))
                 newButton.tintColor = .white
-                for vc in orderedViewControllers {
-                    vc.setEditMode(editMode: self.inEditMode, animated: true)
-                }
+
                 self.startWiggle()
                 self.longPressGesture?.isEnabled = true
                 self.inEditMode = true
+
                 self.navigationController?.navigationBar.topItem?.leftBarButtonItem = newButton
 
                 self.addBarButtonItem?.isEnabled = false
+            }
+            for vc in orderedViewControllers {
+                vc.setEditMode(editMode: self.inEditMode, animated: true)
             }
 
         }

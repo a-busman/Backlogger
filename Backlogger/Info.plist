@@ -28,7 +28,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>3</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -46,9 +46,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>$(PRODUCT_NAME) uses camera</string>
+	<string>$(PRODUCT_NAME) uses the camera to take photos for playlists</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>$(PRODUCT_NAME) uses photos</string>
+	<string>$(PRODUCT_NAME) uses photos to import for playlists</string>
 	<key>NSUbiquitousContainers</key>
 	<dict>
 		<key>iCloud.com.alexbusman.Backlogger</key>
