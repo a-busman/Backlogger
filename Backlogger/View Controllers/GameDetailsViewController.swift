@@ -340,7 +340,7 @@ class GameDetailsViewController: UIViewController {
                 self.charactersCollectionView?.isHidden = true
                 self.charactersTitleLabel?.isHidden = true
                 self.bottomConstraint?.isActive = false
-                NSLayoutConstraint(item: self.detailsContentView!, attribute: .bottom, relatedBy: .equal, toItem: self.genresLabel, attribute: .bottom, multiplier: 1.0, constant: 0.0).isActive = true
+                self.detailsContentView?.bottomAnchor.constraint(equalTo: self.genresLabel!.bottomAnchor).isActive = true
             }
             self.updateGameDetails()
         }
@@ -424,30 +424,9 @@ class GameDetailsViewController: UIViewController {
         self.descriptionView?.text = gameFields?.deck
         self.toastOverlay.view.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(toastOverlay.view)
-        NSLayoutConstraint(item: toastOverlay.view,
-                           attribute: .centerX,
-                           relatedBy: .equal,
-                           toItem: self.view,
-                           attribute: .centerX,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: toastOverlay.view,
-                           attribute: .centerY,
-                           relatedBy: .equal,
-                           toItem: self.view,
-                           attribute: .centerY,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: toastOverlay.view,
-                           attribute: .width,
-                           relatedBy: .equal,
-                           toItem: nil,
-                           attribute: .notAnAttribute,
-                           multiplier: 1.0,
-                           constant: 300.0
-            ).isActive = true
+        toastOverlay.view.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        toastOverlay.view.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+        toastOverlay.view.widthAnchor.constraint(equalToConstant: 300.0).isActive = true
         if let game = self._game {
             if !game.favourite {
                 self.favouriteButton?.setImage(#imageLiteral(resourceName: "heart-empty"), for: .normal)
@@ -605,13 +584,11 @@ class GameDetailsViewController: UIViewController {
             self.navigationController?.popViewController(animated: false)
         }
         if self.navigationController == nil {
-            self.headingTopConstraint?.isActive = false
             self.peekHeadingTopConstraint = NSLayoutConstraint(item: self.headerView!, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .top, multiplier: 1.0, constant: 0.0)
             self.peekHeadingTopConstraint?.isActive = true
         } else {
             self.peekHeadingTopConstraint?.isActive = false
-            self.headingTopConstraint = NSLayoutConstraint(item: self.headerView!, attribute: .top, relatedBy: .equal, toItem: self.topLayoutGuide, attribute: .bottom, multiplier: 1.0, constant: 0.0)
-            self.headingTopConstraint?.isActive = true
+            self.headerView!.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
         }
         
         if self._game != nil{
@@ -676,7 +653,7 @@ class GameDetailsViewController: UIViewController {
             self.charactersCollectionView?.isHidden = true
             self.charactersTitleLabel?.isHidden = true
             self.bottomConstraint?.isActive = false
-            NSLayoutConstraint(item: self.detailsContentView!, attribute: .bottom, relatedBy: .equal, toItem: self.genresLabel, attribute: .bottom, multiplier: 1.0, constant: 0.0).isActive = true
+            self.detailsContentView?.bottomAnchor.constraint(equalTo: self.genresLabel!.bottomAnchor).isActive = true
         }
         self.updateGameDetails()
     }
@@ -1720,38 +1697,11 @@ extension GameDetailsViewController: UICollectionViewDelegate, UICollectionViewD
                 imageView.clipsToBounds = true
                 
                 cellView.addSubview(imageView)
-                NSLayoutConstraint(item: imageView,
-                                   attribute: .leading,
-                                   relatedBy: .equal,
-                                   toItem: cellView,
-                                   attribute: .leading,
-                                   multiplier: 1.0,
-                                   constant: 0.5
-                    ).isActive = true
-                NSLayoutConstraint(item: imageView,
-                                   attribute: .trailing,
-                                   relatedBy: .equal,
-                                   toItem: cellView,
-                                   attribute: .trailing,
-                                   multiplier: 1.0,
-                                   constant: -0.5
-                    ).isActive = true
-                NSLayoutConstraint(item: imageView,
-                                   attribute: .top,
-                                   relatedBy: .equal,
-                                   toItem: cellView,
-                                   attribute: .top,
-                                   multiplier: 1.0,
-                                   constant: 0.5
-                    ).isActive = true
-                NSLayoutConstraint(item: imageView,
-                                   attribute: .bottom,
-                                   relatedBy: .equal,
-                                   toItem: cellView,
-                                   attribute: .bottom,
-                                   multiplier: 1.0,
-                                   constant: -0.5
-                    ).isActive = true
+                imageView.leadingAnchor.constraint(equalTo: cellView.leadingAnchor, constant: 0.5).isActive = true
+                imageView.trailingAnchor.constraint(equalTo: cellView.trailingAnchor, constant: -0.5).isActive = true
+                imageView.topAnchor.constraint(equalTo: cellView.topAnchor, constant: 0.5).isActive = true
+                imageView.bottomAnchor.constraint(equalTo: cellView.bottomAnchor, constant: -0.5).isActive = true
+
             }
             return cell
         } else {
@@ -1774,10 +1724,10 @@ extension GameDetailsViewController: UICollectionViewDelegate, UICollectionViewD
             characterImageView.clipsToBounds = true
             characterImageView.layer.cornerRadius = 52.0
             cell.characterBorder?.addSubview(characterImageView)
-            NSLayoutConstraint(item: characterImageView, attribute: .top, relatedBy: .equal, toItem: cell.characterBorder!, attribute: .top, multiplier: 1.0, constant: 0.5).isActive = true
-            NSLayoutConstraint(item: characterImageView, attribute: .bottom, relatedBy: .equal, toItem: cell.characterBorder!, attribute: .bottom, multiplier: 1.0, constant: -0.5).isActive = true
-            NSLayoutConstraint(item: characterImageView, attribute: .leading, relatedBy: .equal, toItem: cell.characterBorder!, attribute: .leading, multiplier: 1.0, constant: 0.5).isActive = true
-            NSLayoutConstraint(item: characterImageView, attribute: .trailing, relatedBy: .equal, toItem: cell.characterBorder!, attribute: .trailing, multiplier: 1.0, constant: -0.5).isActive = true
+            characterImageView.topAnchor.constraint(equalTo: cell.characterBorder!.topAnchor, constant: 0.5).isActive = true
+            characterImageView.bottomAnchor.constraint(equalTo: cell.characterBorder!.bottomAnchor, constant: -0.5).isActive = true
+            characterImageView.leadingAnchor.constraint(equalTo: cell.characterBorder!.leadingAnchor, constant: 0.5).isActive = true
+            characterImageView.trailingAnchor.constraint(equalTo: cell.characterBorder!.trailingAnchor, constant: -0.5).isActive = true
 
             if let urlString = character.image?.mediumUrl {
                 if urlString.hasSuffix("question_mark.jpg") || urlString.hasSuffix("gblogo.png") {

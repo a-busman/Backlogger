@@ -910,39 +910,11 @@ extension NowPlayingViewController: UICollectionViewDataSource, UICollectionView
         cell.layer.rasterizationScale = UIScreen.main.scale
         cell.contentView.addSubview(nowPlayingView)
 
-        NSLayoutConstraint(item: nowPlayingView,
-                           attribute: .leading,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .leading,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: nowPlayingView,
-                           attribute: .trailing,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .trailing,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: nowPlayingView,
-                           attribute: .top,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .top,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: nowPlayingView,
-                           attribute: .bottom,
-                           relatedBy: .equal,
-                           toItem: cell.contentView,
-                           attribute: .bottom,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        
+        nowPlayingView.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor).isActive = true
+        nowPlayingView.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor).isActive = true
+        nowPlayingView.topAnchor.constraint(equalTo: cell.contentView.topAnchor).isActive = true
+        nowPlayingView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor).isActive = true
+
         if inEditMode {
             self.addWiggleAnimation(to: cell as UICollectionViewCell)
         }

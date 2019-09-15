@@ -156,30 +156,9 @@ class GameTableViewController: UIViewController {
         }
         self.toastOverlay.view.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(toastOverlay.view)
-        NSLayoutConstraint(item: toastOverlay.view,
-                           attribute: .centerX,
-                           relatedBy: .equal,
-                           toItem: self.view,
-                           attribute: .centerX,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: toastOverlay.view,
-                           attribute: .centerY,
-                           relatedBy: .equal,
-                           toItem: self.view,
-                           attribute: .centerY,
-                           multiplier: 1.0,
-                           constant: 0.0
-            ).isActive = true
-        NSLayoutConstraint(item: toastOverlay.view,
-                           attribute: .width,
-                           relatedBy: .equal,
-                           toItem: nil,
-                           attribute: .notAnAttribute,
-                           multiplier: 1.0,
-                           constant: 300.0
-            ).isActive = true
+        toastOverlay.view.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        toastOverlay.view.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+        toastOverlay.view.widthAnchor.constraint(equalToConstant: 300.0).isActive = true
     }
     
     override func viewWillAppear(_ animated: Bool) {

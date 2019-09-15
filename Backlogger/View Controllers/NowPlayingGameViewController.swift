@@ -102,38 +102,10 @@ class NowPlayingGameViewController: UIViewController {
             self.detailsContainerView?.addSubview(detailView)
             detailView.translatesAutoresizingMaskIntoConstraints = false
             
-            NSLayoutConstraint(item: detailView,
-                               attribute: .top,
-                               relatedBy: .equal,
-                               toItem: self.detailsContainerView,
-                               attribute: .top,
-                               multiplier: 1.0,
-                               constant: 0
-                ).isActive = true
-            NSLayoutConstraint(item: detailView,
-                               attribute: .bottom,
-                               relatedBy: .equal,
-                               toItem: self.detailsContainerView,
-                               attribute: .bottom,
-                               multiplier: 1.0,
-                               constant: -100
-                ).isActive = true
-            NSLayoutConstraint(item: detailView,
-                               attribute: .leading,
-                               relatedBy: .equal,
-                               toItem: self.detailsContainerView,
-                               attribute: .leading,
-                               multiplier: 1.0,
-                               constant: 0
-                ).isActive = true
-            NSLayoutConstraint(item: detailView,
-                               attribute: .trailing,
-                               relatedBy: .equal,
-                               toItem: self.detailsContainerView,
-                               attribute: .trailing,
-                               multiplier: 1.0,
-                               constant: 0
-                ).isActive = true
+            detailView.topAnchor.constraint(equalTo: self.detailsContainerView!.topAnchor).isActive = true
+            detailView.bottomAnchor.constraint(equalTo: self.detailsContainerView!.bottomAnchor, constant: -100.0).isActive = true
+            detailView.leadingAnchor.constraint(equalTo: self.detailsContainerView!.leadingAnchor).isActive = true
+            detailView.trailingAnchor.constraint(equalTo: self.detailsContainerView!.trailingAnchor).isActive = true
         }
         self.animator = UIDynamicAnimator(referenceView: self.view)
         self.gravity = UIGravityBehavior(items: [self.blurView!])

@@ -79,9 +79,9 @@ class PercentViewController: UIViewController {
         
         self.view.backgroundColor = .clear
         self.progressLabel.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint(item: self.progressLabel, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .top, multiplier: 1.0, constant: 0.0).isActive = true
-        NSLayoutConstraint(item: self.progressLabel, attribute: .bottom, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1.0, constant: 0.0).isActive = true
-        NSLayoutConstraint(item: self.progressLabel, attribute: .leading, relatedBy: .equal, toItem: self.view, attribute: .leading, multiplier: 1.0, constant: 0.0).isActive = true
-        NSLayoutConstraint(item: self.progressLabel, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1.0, constant: 0.0).isActive = true
+        self.progressLabel.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
+        self.progressLabel.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+        self.progressLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        self.progressLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
     }
 }

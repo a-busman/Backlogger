@@ -151,9 +151,9 @@ class PlaylistDetailsViewController: UITableViewController {
         self.toastOverlay.view.translatesAutoresizingMaskIntoConstraints = false
         let window = UIApplication.shared.keyWindow!
         window.addSubview(toastOverlay.view)
-        NSLayoutConstraint(item: toastOverlay.view, attribute: .centerY, relatedBy: .equal, toItem: window, attribute: .centerY, multiplier: 1.0, constant: 0.0).isActive = true
-        NSLayoutConstraint(item: toastOverlay.view, attribute: .centerX, relatedBy: .equal, toItem: window, attribute: .centerX, multiplier: 1.0, constant: 0.0).isActive = true
-        NSLayoutConstraint(item: toastOverlay.view, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 300.0).isActive = true
+        toastOverlay.view.centerYAnchor.constraint(equalTo: window.centerYAnchor).isActive = true
+        toastOverlay.view.centerXAnchor.constraint(equalTo: window.centerXAnchor).isActive = true
+        toastOverlay.view.widthAnchor.constraint(equalToConstant: 300.0).isActive = true
     }
     
     func refreshTable() {
@@ -711,38 +711,11 @@ class PlaylistDetailsViewController: UITableViewController {
                     view.removeFromSuperview()
                 }
                 cell.contentView.addSubview(self.titleCell.view)
-                NSLayoutConstraint(item: self.titleCell.view,
-                                   attribute: .leading,
-                                   relatedBy: .equal,
-                                   toItem: cell.contentView,
-                                   attribute: .leading,
-                                   multiplier: 1.0,
-                                   constant: 0.0
-                    ).isActive = true
-                NSLayoutConstraint(item: self.titleCell.view,
-                                   attribute: .trailing,
-                                   relatedBy: .equal,
-                                   toItem: cell.contentView,
-                                   attribute: .trailing,
-                                   multiplier: 1.0,
-                                   constant: 0.0
-                    ).isActive = true
-                NSLayoutConstraint(item: self.titleCell.view,
-                                   attribute: .top,
-                                   relatedBy: .equal,
-                                   toItem: cell.contentView,
-                                   attribute: .top,
-                                   multiplier: 1.0,
-                                   constant: 0.0
-                    ).isActive = true
-                NSLayoutConstraint(item: self.titleCell.view,
-                                   attribute: .bottom,
-                                   relatedBy: .equal,
-                                   toItem: cell.contentView,
-                                   attribute: .bottom,
-                                   multiplier: 1.0,
-                                   constant: 0.0
-                    ).isActive = true
+                self.titleCell.view.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor).isActive = true
+                self.titleCell.view.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor).isActive = true
+                self.titleCell.view.topAnchor.constraint(equalTo: cell.contentView.topAnchor).isActive = true
+                self.titleCell.view.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor).isActive = true
+
                 if self.shouldUpdateImage {
                     self.updatePlaylistImage()
                 }
@@ -768,38 +741,11 @@ class PlaylistDetailsViewController: UITableViewController {
                     view.removeFromSuperview()
                 }
                 cell.contentView.addSubview(self.descCell.view)
-                NSLayoutConstraint(item: self.descCell.view,
-                                   attribute: .leading,
-                                   relatedBy: .equal,
-                                   toItem: cell.contentView,
-                                   attribute: .leading,
-                                   multiplier: 1.0,
-                                   constant: 0.0
-                    ).isActive = true
-                NSLayoutConstraint(item: self.descCell.view,
-                                   attribute: .trailing,
-                                   relatedBy: .equal,
-                                   toItem: cell.contentView,
-                                   attribute: .trailing,
-                                   multiplier: 1.0,
-                                   constant: 0.0
-                    ).isActive = true
-                NSLayoutConstraint(item: self.descCell.view,
-                                   attribute: .top,
-                                   relatedBy: .equal,
-                                   toItem: cell.contentView,
-                                   attribute: .top,
-                                   multiplier: 1.0,
-                                   constant: 0.0
-                    ).isActive = true
-                NSLayoutConstraint(item: self.descCell.view,
-                                   attribute: .bottom,
-                                   relatedBy: .equal,
-                                   toItem: cell.contentView,
-                                   attribute: .bottom,
-                                   multiplier: 1.0,
-                                   constant: 0.0
-                    ).isActive = true
+                self.descCell.view.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor).isActive = true
+                self.descCell.view.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor).isActive = true
+                self.descCell.view.topAnchor.constraint(equalTo: cell.contentView.topAnchor).isActive = true
+                self.descCell.view.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor).isActive = true
+
                 if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
                     cell.separatorInset = UIEdgeInsets.init(top: 0, left: 15.0, bottom: 0, right: 0)
                 }

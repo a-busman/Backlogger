@@ -182,14 +182,14 @@ class TableViewCell: UITableViewCell {
             progressView = UIImageView(image: #imageLiteral(resourceName: "trophy"))
             progressLabel.translatesAutoresizingMaskIntoConstraints = false
             progressView.addSubview(progressLabel)
-            NSLayoutConstraint(item: progressLabel, attribute: .centerY, relatedBy: .equal, toItem: progressView, attribute: .centerY, multiplier: 1.0, constant: -4.0).isActive = true
-            NSLayoutConstraint(item: progressLabel, attribute: .centerX, relatedBy: .equal, toItem: progressView, attribute: .centerX, multiplier: 1.0, constant: 0.0).isActive = true
+            progressLabel.centerYAnchor.constraint(equalTo: progressView.centerYAnchor, constant: -4.0).isActive = true
+            progressLabel.centerXAnchor.constraint(equalTo: progressView.centerXAnchor).isActive = true
         }
         self.percentView.addSubview(progressView)
-        NSLayoutConstraint(item: progressView, attribute: .top, relatedBy: .equal, toItem: self.percentView, attribute: .top, multiplier: 1.0, constant: 0.0).isActive = true
-        NSLayoutConstraint(item: progressView, attribute: .bottom, relatedBy: .equal, toItem: self.percentView, attribute: .bottom, multiplier: 1.0, constant: 0.0).isActive = true
-        NSLayoutConstraint(item: progressView, attribute: .leading, relatedBy: .equal, toItem: self.percentView, attribute: .leading, multiplier: 1.0, constant: 0.0).isActive = true
-        NSLayoutConstraint(item: progressView, attribute: .trailing, relatedBy: .equal, toItem: self.percentView, attribute: .trailing, multiplier: 1.0, constant: 0.0).isActive = true
+        progressView.topAnchor.constraint(equalTo: self.percentView.topAnchor).isActive = true
+        progressView.bottomAnchor.constraint(equalTo: self.percentView.bottomAnchor).isActive = true
+        progressView.leadingAnchor.constraint(equalTo: self.percentView.leadingAnchor).isActive = true
+        progressView.trailingAnchor.constraint(equalTo: self.percentView.trailingAnchor).isActive = true
         
         if self._isWishlist {
             self.percentView.isHidden = true
