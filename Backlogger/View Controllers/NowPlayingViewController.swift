@@ -574,7 +574,8 @@ class NowPlayingViewController: UIViewController {
                 // If the view is above middle, or if the user was swiping up when they ended, fling to top and collide with top boundary
             } else if (self.blurTopLayoutConstraint!.constant < (maxHeight / 2.0) && velocity < 300) || velocity < -300 {
                 self.blurTopLayoutConstraint?.constant = maxHeight
-                let animationTime: TimeInterval = ((0.4 - 1.0) * (min(Double(velocity * -1.0), 1000.0) - 300)/(1000 - 300) + 1.0)
+                let minVelocity = min(Double(velocity * -1.0), 1000.0)
+                let animationTime: TimeInterval = ((-0.6) * ((minVelocity - 300)/700) + 1.0)
                 UIView.animate(withDuration: animationTime,
                                delay: 0.0,
                                usingSpringWithDamping: 1.0,
@@ -595,7 +596,8 @@ class NowPlayingViewController: UIViewController {
                 
                 // If the view is below the middle, or if the user was swiping down when they ended, return to minimal state with a spring bounce
             } else if (self.blurTopLayoutConstraint!.constant > (maxHeight / 2.0) && velocity > -300) || velocity > 300 {
-                let animationTime: TimeInterval = ((0.4 - 1.0) * (min(Double(velocity), 1000.0) - 300)/(1000 - 300) + 1.0)
+                let minVelocity = min(Double(velocity), 1000.0)
+                let animationTime: TimeInterval = ((-0.6) * ((minVelocity - 300)/700) + 1.0)
                 self.blurTopLayoutConstraint?.constant = -50
                 UIView.animate(withDuration: animationTime,
                                delay: 0.0,

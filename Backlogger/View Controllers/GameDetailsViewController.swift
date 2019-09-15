@@ -1105,7 +1105,7 @@ class GameDetailsViewController: UIViewController {
                     let realm = try! Realm()
                     let nowPlayingPlaylist = realm.objects(Playlist.self).filter("isNowPlaying = true").first
                     if nowPlayingPlaylist != nil {
-                        if let index = nowPlayingPlaylist?.games.index(where: { (item) -> Bool in
+                        if let index = nowPlayingPlaylist?.games.firstIndex(where: { (item) -> Bool in
                             item.uuid == self._game!.uuid
                         }) {
                             nowPlayingPlaylist?.update {

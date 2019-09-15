@@ -244,7 +244,7 @@ class PlaylistDetailsViewController: UITableViewController {
         }
         if self.playlistImage != nil {
             let data = self.playlistImage!.pngData()
-            try? data?.write(to: filename)
+            ((try? data?.write(to: filename)) as ()??)
         } else {
             try? FileManager.default.removeItem(at: filename)
         }
@@ -325,7 +325,7 @@ class PlaylistDetailsViewController: UITableViewController {
                         }
                     }
                 }
-                let offset = (CGFloat)(images.index(of: image)!)
+                let offset = (CGFloat)(images.firstIndex(of: image)!)
                 if croppedImage == nil {
                     let rect =  AVMakeRect(aspectRatio: image.size, insideRect: isVertical ?
                         CGRect(x: 0, y: maxSize.height * offset, width: maxSize.width, height: maxSize.height) :

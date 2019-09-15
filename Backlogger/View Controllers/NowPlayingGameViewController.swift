@@ -369,7 +369,8 @@ class NowPlayingGameViewController: UIViewController {
                     
                 // If the view is below the middle, or if the user was swiping down when they ended, return to minimal state with a spring bounce
                 } else if (view.center.y > self.view.bounds.maxY && velocity > -300) || velocity > 300 {
-                    let animationTime: TimeInterval = ((0.4 - 1.0) * (min(Double(velocity), 1000.0) - 300)/(1000 - 300) + 1.0)
+                    let minVelocity = min(Double(velocity), 1000.0)
+                    let animationTime: TimeInterval = ((-0.6) * ((minVelocity - 300)/700) + 1.0)
                     self.blurViewTopConstraint?.constant = self.MINIMUM_BLUR_TOP
                     UIView.animate(withDuration: animationTime,
                                    delay: 0.0,
