@@ -1,5 +1,6 @@
 language: swift
 osx_image: xcode11.0
-xcode_project: Backlogger.xcodeproj
+xcode_workspace: Backlogger.xcworkspace
 xcode_sceme: Backlogger
+xcode_sdk: iphonesimulator12.0
 xcode_destination: platform=iOS Simulator,OS=12,name=iPhone X
