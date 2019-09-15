@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "3284F1D1-EAE8-48E4-B24E-4259C02FE9F0",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Backlogger.xcodeproj",
+        "identifier" : "FA135770232EEE31008A5A3F",
+        "name" : "BackloggerTests"
+      }
+    }
+  ],
+  "version" : 1
+}
