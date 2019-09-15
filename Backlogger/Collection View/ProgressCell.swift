@@ -61,7 +61,7 @@ class ProgressCell: UICollectionViewCell {
         self.shapeLayer.fillColor = UIColor.clear.cgColor
         self.shapeLayer.strokeColor = Util.appColor.cgColor
         self.shapeLayer.lineWidth = 15.0
-        self.shapeLayer.lineCap = kCALineCapRound
+        self.shapeLayer.lineCap = CAShapeLayerLineCap.round
         
         self.circleView.layer.addSublayer(self.backgroundLayer)
         self.circleView.layer.addSublayer(self.shapeLayer)

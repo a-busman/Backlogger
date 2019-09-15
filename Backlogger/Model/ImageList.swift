@@ -22,16 +22,16 @@ enum ImageFields: String {
     case Tags       = "tags"
 }
 
-class ImageList: Object {
-    dynamic var iconUrl:   String? = nil
-    dynamic var mediumUrl: String? = nil
-    dynamic var screenUrl: String? = nil
-    dynamic var smallUrl:  String? = nil
-    dynamic var superUrl:  String? = nil
-    dynamic var thumbUrl:  String? = nil
-    dynamic var tinyUrl:   String? = nil
-    dynamic var tags:      String? = nil
-    dynamic var id:        String? = nil
+class ImageList: BLObject {
+    @objc dynamic var iconUrl:   String? = nil
+    @objc dynamic var mediumUrl: String? = nil
+    @objc dynamic var screenUrl: String? = nil
+    @objc dynamic var smallUrl:  String? = nil
+    @objc dynamic var superUrl:  String? = nil
+    @objc dynamic var thumbUrl:  String? = nil
+    @objc dynamic var tinyUrl:   String? = nil
+    @objc dynamic var tags:      String? = nil
+    @objc dynamic var id:        String? = nil
     
     required init(json: [String : Any]) {
         super.init()
@@ -77,7 +77,7 @@ class ImageList: Object {
     
     func deleteRetainCopy() -> ImageList {
         let newImageList = self.deepCopy()
-        super.delete()
+        self.delete()
         return newImageList
     }
 

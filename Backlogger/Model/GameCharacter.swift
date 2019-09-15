@@ -12,8 +12,8 @@ import Realm
 import Alamofire
 
 class GameCharacter: Field {
-    dynamic var image: ImageList? = nil
-    dynamic var hasImage: Bool = false
+    @objc dynamic var image: ImageList? = nil
+    @objc dynamic var hasImage: Bool = false
     
     static var loadingQueue: DispatchQueue = DispatchQueue(label: "character.load.queue")
     

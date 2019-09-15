@@ -3,23 +3,23 @@ use_frameworks!
 
 def sharedPods
   pod 'Alamofire'
-  pod 'Kingfisher', '~> 3.13.1'
+  pod 'Kingfisher'
   pod 'RealmSwift'
   pod 'MMWormhole'
 end
 
 target 'Backlogger' do
-    platform :ios, '10.3'
+    platform :ios, '12'
     sharedPods
-    pod 'ImageViewer', '~> 4.1.0'
+    pod 'ImageViewer', :git => 'https://github.com/Krisiacik/ImageViewer.git', :commit => '9afa043ffcaf3fd5114a13d5fabcd9bcf5013265'
     pod 'Fabric'
     pod 'Crashlytics'
-    pod 'Zip', '~> 0.8.0'
-    pod 'Zephyr', :git => 'https://github.com/ArtSabintsev/Zephyr.git', :branch => 'swift3.2'
+    pod 'Zip'
+    pod 'Zephyr', :git => 'https://github.com/ArtSabintsev/Zephyr.git', :branch => 'swift4.2'
 end
 
 target 'BackloggerWidget' do
-    platform :ios, '10.3'
+    platform :ios, '12'
     sharedPods
     pod 'Fabric'
     pod 'Crashlytics'
@@ -38,7 +38,7 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
-      config.build_settings['SWIFT_VERSION'] = '3.0'
+      config.build_settings['SWIFT_VERSION'] = '4.2'
     end
   end
 end

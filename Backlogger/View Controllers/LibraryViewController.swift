@@ -131,7 +131,7 @@ class LibraryViewController: UIViewController {
         }
         self.tableView?.reloadData()
 
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        self.navigationController?.navigationBar.titleTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.foregroundColor.rawValue: UIColor.white])
         if platforms.count > 0 {
             self.addBackgroundView?.isHidden = true
             self.tableView?.isHidden = false
@@ -429,7 +429,7 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
             indent = 58.0
         }
         if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
-            cell.separatorInset = UIEdgeInsetsMake(0, indent, 0, 0)
+            cell.separatorInset = UIEdgeInsets.init(top: 0, left: indent, bottom: 0, right: 0)
         }
         if cell.responds(to: #selector(setter: UIView.layoutMargins)) {
             cell.layoutMargins = .zero
@@ -464,20 +464,24 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
                             cell.set(image: #imageLiteral(resourceName: "table_placeholder_light"))
                         }
                         cell.cacheCompletionHandler = {
-                            (image, error, cacheType, imageUrl) in
-                            if let cellUrl = cell.imageUrl {
-                                if imageUrl == cellUrl {
-                                    if image != nil {
-                                        if cacheType == .none || cacheType == .disk {
+                            result in
+                            switch result {
+                            case .success(let value):
+                                if let cellUrl = cell.imageUrl {
+                                    if value.source.url == cellUrl {
+                                        if value.cacheType == .none || value.cacheType == .disk {
                                             UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                                                cell.set(image: image!)
+                                                cell.set(image: value.image)
                                             }, completion: nil)
                                         } else {
-                                            cell.set(image: image!)
+                                            cell.set(image: value.image)
                                         }
                                     }
                                 }
+                            case .failure(let error):
+                                NSLog("Error \(error)")
                             }
+                            
                         }
                         cell.setNeedsLayout()
                     }
@@ -498,15 +502,18 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
                         cell.set(image: #imageLiteral(resourceName: "table_placeholder_light"))
                     }
                     cell.cacheCompletionHandler = {
-                        (image, error, cacheType, imageUrl) in
-                        if image != nil {
-                            if cacheType == .none || cacheType == .disk {
+                        result in
+                        switch result {
+                        case .success(let value):
+                            if value.cacheType == .none || value.cacheType == .disk {
                                 UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                                    cell.set(image: image!)
+                                    cell.set(image: value.image)
                                 }, completion: nil)
                             } else {
-                                cell.set(image: image!)
+                                cell.set(image: value.image)
                             }
+                        case .failure(let error):
+                            NSLog("Error: \(error)")
                         }
                     }
                 } else {
@@ -525,15 +532,18 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.imageUrl = URL(string: image.iconUrl!)
             }
             cell.cacheCompletionHandler = {
-                (image, error, cacheType, imageUrl) in
-                if image != nil {
-                    if cacheType == .none || cacheType == .disk {
+                result in
+                switch result {
+                case .success(let value):
+                    if value.cacheType == .none || value.cacheType == .disk {
                         UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                            cell.set(image: image!)
+                            cell.set(image: value.image)
                         }, completion: nil)
                     } else {
-                        cell.set(image: image!)
+                        cell.set(image: value.image)
                     }
+                case .failure(let error):
+                    NSLog("Error: \(error)")
                 }
             }
         }
@@ -570,4 +580,10 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         self.searchBar?.resignFirstResponder()
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
 }

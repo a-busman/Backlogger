@@ -189,13 +189,16 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         }
         if self.imageUrl != nil, !self.imageUrl!.absoluteString.hasSuffix("gblogo.png") {
             self.artView?.kf.setImage(with: self.imageUrl!, placeholder: #imageLiteral(resourceName: "info_image_placeholder"), options: nil, progressBlock: nil, completionHandler: {
-                (image, error, cacheType, imageUrl) in
-                if image != nil {
+                result in
+                switch result {
+                case .success(let value):
                     UIView.transition(with: self.artView!,
                                       duration:0.5,
                                       options: .transitionCrossDissolve,
-                                      animations: { self.artView?.image = image },
+                                      animations: { self.artView?.image = value.image },
                                       completion: nil)
+                case .failure(let error):
+                    NSLog("Error: \(error)")
                 }
             })
         } else {

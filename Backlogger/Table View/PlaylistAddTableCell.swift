@@ -36,7 +36,7 @@ class PlaylistAddTableCell: UITableViewCell {
     var artImage: UIImage?
     
     var imageUrl: URL?
-    var cacheCompletionHandler: CompletionHandler?
+    var cacheCompletionHandler: ((Result<RetrieveImageResult, KingfisherError>) -> Void)?
     
     let percentViewController = PercentViewController()
 
@@ -91,7 +91,7 @@ class PlaylistAddTableCell: UITableViewCell {
                 progressLabel.textColor = .white
                 progressLabel.text = "100"
                 progressLabel.textAlignment = .center
-                progressLabel.font = UIFont.systemFont(ofSize: 6.0, weight: 4.0)
+                progressLabel.font = UIFont.systemFont(ofSize: 6.0, weight: UIFont.Weight(rawValue: 4.0))
                 progressView = UIImageView(image: #imageLiteral(resourceName: "trophy"))
                 progressLabel.translatesAutoresizingMaskIntoConstraints = false
                 progressView.addSubview(progressLabel)

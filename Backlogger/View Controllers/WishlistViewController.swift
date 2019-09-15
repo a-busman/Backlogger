@@ -157,7 +157,7 @@ extension WishlistViewController: UITableViewDelegate, UITableViewDataSource {
                 indent = 58.0
             }
             if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
-                cell.separatorInset = UIEdgeInsetsMake(0, indent, 0, 0)
+                cell.separatorInset = UIEdgeInsets.init(top: 0, left: indent, bottom: 0, right: 0)
             }
             if cell.responds(to: #selector(setter: UIView.layoutMargins)) {
                 cell.layoutMargins = .zero
@@ -180,19 +180,22 @@ extension WishlistViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.artView?.image = #imageLiteral(resourceName: "table_placeholder_light")
             }
             cell.cacheCompletionHandler = {
-                (image, error, cacheType, imageUrl) in
-                if let cellUrl = cell.imageUrl {
-                    if imageUrl == cellUrl {
-                        if image != nil {
-                            if cacheType == .none || cacheType == .disk {
+                result in
+                switch result {
+                case .success(let value):
+                    if let cellUrl = cell.imageUrl {
+                        if value.source.url == cellUrl {
+                            if value.cacheType == .none || value.cacheType == .disk {
                                 UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                                    cell.set(image: image!)
+                                    cell.set(image: value.image)
                                 }, completion: nil)
                             } else {
-                                cell.set(image: image!)
+                                cell.set(image: value.image)
                             }
                         }
                     }
+                case .failure(let error):
+                    NSLog("Error: \(error)")
                 }
             }
         }
@@ -206,8 +209,8 @@ extension WishlistViewController: UITableViewDelegate, UITableViewDataSource {
         return true
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if (editingStyle == UITableViewCellEditingStyle.delete) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if (editingStyle == UITableViewCell.EditingStyle.delete) {
             let game = self.wishlistGames![indexPath.row]
             game.delete()
             tableView.deleteRows(at: [indexPath], with: .automatic)

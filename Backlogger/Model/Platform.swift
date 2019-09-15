@@ -19,12 +19,12 @@ enum PlatformFields: String {
 }
 
 class Platform: Field {
-    dynamic var abbreviation: String?    = nil
-    dynamic var company:      Company?   = nil
-    dynamic var image:        ImageList? = nil
-    dynamic var releaseDate:  String?    = nil
-    dynamic var custom:       Bool       = false
-    dynamic var hasDetails:   Bool       = false
+    @objc dynamic var abbreviation: String?    = nil
+    @objc dynamic var company:      Company?   = nil
+    @objc dynamic var image:        ImageList? = nil
+    @objc dynamic var releaseDate:  String?    = nil
+    @objc dynamic var custom:       Bool       = false
+    @objc dynamic var hasDetails:   Bool       = false
     
     let ownedGames: LinkingObjects<Game> = LinkingObjects(fromType: Game.self, property: "platform")
 

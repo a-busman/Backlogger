@@ -111,8 +111,8 @@ class LibraryAddSearchViewController: UIViewController {
             self.isLoadingGames = false
             if let error = result.error {
                 if error.localizedDescription != "cancelled" {
-                    let alert = UIAlertController(title: "Error", message: "Could not load first game :( \(error.localizedDescription)", preferredStyle: UIAlertControllerStyle.alert)
-                    alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
+                    let alert = UIAlertController(title: "Error", message: "Could not load first game :( \(error.localizedDescription)", preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
                     return
                 } else {
@@ -149,8 +149,8 @@ class LibraryAddSearchViewController: UIViewController {
                 self.isLoadingGames = false
                 if let error = result.error {
                     if error.localizedDescription != "cancelled" {
-                        let alert = UIAlertController(title: "Error", message: "Could not load more games :( \(error.localizedDescription)", preferredStyle: UIAlertControllerStyle.alert)
-                        alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
+                        let alert = UIAlertController(title: "Error", message: "Could not load more games :( \(error.localizedDescription)", preferredStyle: UIAlertController.Style.alert)
+                        alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
                         self.present(alert, animated: true, completion: nil)
                         return
                     } else {
@@ -226,7 +226,7 @@ class LibraryAddSearchViewController: UIViewController {
                     currentGames.append(contentsOf: games)
                     upNextPlaylist!.update {
                         upNextPlaylist?.games.removeAll()
-                        upNextPlaylist?.games.append(contentsOf: currentGames)
+                        upNextPlaylist?.games.append(objectsIn: currentGames)
                     }
                 }
             }
@@ -241,7 +241,7 @@ class LibraryAddSearchViewController: UIViewController {
                     currentGames += upNextPlaylist!.games
                     upNextPlaylist!.update {
                         upNextPlaylist?.games.removeAll()
-                        upNextPlaylist?.games.append(contentsOf: currentGames)
+                        upNextPlaylist?.games.append(objectsIn: currentGames)
                     }
                 }
             }
@@ -255,7 +255,7 @@ extension LibraryAddSearchViewController: PlaylistViewControllerDelegate {
     func chosePlaylist(vc: PlaylistViewController, playlist: Playlist, games: [Game], isNew: Bool) {
         if !isNew {
             playlist.update {
-                playlist.games.append(contentsOf: games)
+                playlist.games.append(objectsIn: games)
             }
         }
         vc.presentingViewController?.dismiss(animated: true, completion: {
@@ -337,7 +337,7 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
         cell.row = indexPath.row
 
         if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
-            cell.separatorInset = UIEdgeInsetsMake(0, 58.0, 0, 0)
+            cell.separatorInset = UIEdgeInsets.init(top: 0, left: 58.0, bottom: 0, right: 0)
         }
         if cell.responds(to: #selector(setter: UIView.layoutMargins)) {
             cell.layoutMargins = .zero
@@ -425,20 +425,24 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
                 cell.imageUrl = nil
             }
             cell.cacheCompletionHandler = {
-                (image, error, cacheType, imageUrl) in
-                if let cellUrl = cell.imageUrl {
-                    if imageUrl == cellUrl {
-                        if image != nil {
-                            if cacheType == .none || cacheType == .disk {
+                result in
+                switch result {
+                case .success(let value):
+                    if let cellUrl = cell.imageUrl {
+                        if value.source.url == cellUrl {
+                            if value.cacheType == .none || value.cacheType == .disk {
                                 UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                                    cell.set(image: image!)
+                                    cell.set(image: value.image)
                                 }, completion: nil)
                             } else {
-                                cell.set(image: image!)
+                                cell.set(image: value.image)
                             }
                         }
                     }
+                case .failure(let error):
+                    NSLog("Error: \(error)")
                 }
+                
             }
         }
         

@@ -86,11 +86,11 @@ class PlaylistTitleCell: UIViewController {
         })
     }
     
-    func moreTapped(sender: UITapGestureRecognizer) {
+    @objc func moreTapped(sender: UITapGestureRecognizer) {
         self.delegate?.moreTapped(sender: sender)
     }
     
-    func artTapped(sender: UITapGestureRecognizer) {
+    @objc func artTapped(sender: UITapGestureRecognizer) {
         self.delegate?.artTapped(sender: sender)
     }
     

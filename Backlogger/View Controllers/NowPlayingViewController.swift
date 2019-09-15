@@ -89,7 +89,7 @@ class NowPlayingViewController: UIViewController {
         self.upNextTableView?.separatorColor = .lightGray
         //self.upNextTableView?.separatorInset = UIEdgeInsetsMake(0, 75, 0, 0)
         self.upNextTableView?.contentInset.bottom = 55.0
-        NotificationCenter.default.addObserver(self, selector: #selector(refreshFirstGame), name: .UIApplicationWillEnterForeground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshFirstGame), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -116,25 +116,25 @@ class NowPlayingViewController: UIViewController {
         }
         self._isDismissing = false
         self.pageControl?.numberOfPages = orderedViewControllers.count
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardDidShow), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardDidShow), name: UIResponder.keyboardDidShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    func keyboardDidShow(notification: NSNotification) {
+    @objc func keyboardDidShow(notification: NSNotification) {
         if self.notesEditing {
             if let userInfo = notification.userInfo {
                 if self.view.frame.origin.y == 0 {
-                    let endFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
-                    let duration:TimeInterval = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0
-                    let animationCurveRawNSN = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber
-                    let animationCurveRaw = animationCurveRawNSN?.uintValue ?? UIViewAnimationOptions.curveEaseInOut.rawValue
-                    let animationCurve:UIViewAnimationOptions = UIViewAnimationOptions(rawValue: animationCurveRaw)
+                    let endFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+                    let duration:TimeInterval = (userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0
+                    let animationCurveRawNSN = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber
+                    let animationCurveRaw = animationCurveRawNSN?.uintValue ?? UIView.AnimationOptions.curveEaseInOut.rawValue
+                    let animationCurve:UIView.AnimationOptions = UIView.AnimationOptions(rawValue: animationCurveRaw)
                     UIView.animate(withDuration: duration,
                                    delay: TimeInterval(0),
                                    options: animationCurve,
@@ -146,7 +146,7 @@ class NowPlayingViewController: UIViewController {
         }
     }
     
-    func keyboardWillHide(notification: NSNotification) {
+    @objc func keyboardWillHide(notification: NSNotification) {
         if self.notesEditing {
             if self.view.frame.origin.y != 0 {
                 self.view.frame.origin.y = 0
@@ -159,7 +159,7 @@ class NowPlayingViewController: UIViewController {
         }
     }
     
-    func refreshFirstGame() {
+    @objc func refreshFirstGame() {
         if self.tabBarController?.selectedIndex == 0 {
             let _ = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { _ in
                 if let firstGameController = self.orderedViewControllers.first {
@@ -242,7 +242,7 @@ class NowPlayingViewController: UIViewController {
     func saveNowPlaying() {
         self.nowPlayingPlaylist.update {
             self.nowPlayingPlaylist.games.removeAll()
-            self.nowPlayingPlaylist.games.append(contentsOf: self.games)
+            self.nowPlayingPlaylist.games.append(objectsIn: self.games)
         }
     }
     
@@ -253,7 +253,7 @@ class NowPlayingViewController: UIViewController {
         return array1.sorted() == array2.sorted()
     }
     
-    func handleLongGesture(gesture: UILongPressGestureRecognizer) {
+    @objc func handleLongGesture(gesture: UILongPressGestureRecognizer) {
         let location = gesture.location(in: self.collectionView!)
         let newIndexPath = self.collectionView?.indexPathForItem(at: location)
         
@@ -445,20 +445,20 @@ class NowPlayingViewController: UIViewController {
         return interval + variance * random;
     }
     
-    func doneTyping(sender: UIBarButtonItem) {
+    @objc func doneTyping(sender: UIBarButtonItem) {
         self.currentlyTypingTextView?.resignFirstResponder()
         self.navigationController?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.addTapped))
         self.navigationController?.navigationBar.topItem?.leftBarButtonItem?.isEnabled = true
     }
     
-    func addTapped(sender: UIBarButtonItem) {
+    @objc func addTapped(sender: UIBarButtonItem) {
         self.performSegue(withIdentifier: "addToNowPlaying", sender: sender)
     }
     
     func updatePlaylist() {
         self.nowPlayingPlaylist.update {
             self.nowPlayingPlaylist.games.removeAll()
-            self.nowPlayingPlaylist.games.append(contentsOf: self.games)
+            self.nowPlayingPlaylist.games.append(objectsIn: self.games)
         }
     }
     
@@ -666,12 +666,12 @@ extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate {
         return false
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             self.gamesUpNext.remove(at: indexPath.row)
             self.upNextPlaylist.update {
                 self.upNextPlaylist.games.removeAll()
-                self.upNextPlaylist.games.append(contentsOf: self.gamesUpNext)
+                self.upNextPlaylist.games.append(objectsIn: self.gamesUpNext)
             }
             self.upNextTableView?.deleteRows(at: [indexPath], with: .automatic)
             
@@ -695,7 +695,7 @@ extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
     
-    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         return .delete
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -704,7 +704,7 @@ extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate {
         cell.backgroundColor = .clear
 
         if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
-            cell.separatorInset = UIEdgeInsetsMake(0, 67.0, 0, 0)
+            cell.separatorInset = UIEdgeInsets.init(top: 0, left: 67.0, bottom: 0, right: 0)
         }
         if cell.responds(to: #selector(setter: UIView.layoutMargins)) {
             cell.layoutMargins = .zero
@@ -719,15 +719,18 @@ extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate {
         cell.isHandleHidden = false
         if let smallUrl = game.gameFields?.image?.smallUrl {
             cell.cacheCompletionHandler = {
-                (image, error, cacheType, imageUrl) in
-                if image != nil {
-                    if cacheType == .none || cacheType == .disk {
+                result in
+                switch result {
+                case .success(let value):
+                    if value.cacheType == .none || value.cacheType == .disk {
                         UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                            cell.set(image: image!)
+                            cell.set(image: value.image)
                         }, completion: nil)
                     } else {
-                        cell.set(image: image!)
+                        cell.set(image: value.image)
                     }
+                case .failure(let error):
+                    NSLog("Error: \(error)")
                 }
             }
             if let url = URL(string: smallUrl) {
@@ -785,7 +788,8 @@ extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate {
         self.handleTapDimView(sender: UITapGestureRecognizer())
         var game: Game?
         self.upNextPlaylist?.update {
-            game = self.upNextPlaylist!.games.remove(at: indexPath.row)
+            game = self.upNextPlaylist!.games[indexPath.row]
+            self.upNextPlaylist!.games.remove(at: indexPath.row)
         }
         self.nowPlayingPlaylist?.update {
             self.nowPlayingPlaylist!.games.append(game!)
@@ -806,7 +810,7 @@ extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate {
         cornerRadiusAnimation.toValue = 5.0
         cornerRadiusAnimation.duration = 0.5
         cornerRadiusAnimation.isRemovedOnCompletion = false
-        cornerRadiusAnimation.fillMode = kCAFillModeForwards
+        cornerRadiusAnimation.fillMode = CAMediaTimingFillMode.forwards
         
         snapshotView.layer.add(cornerRadiusAnimation, forKey: "cornerRadius")
         shadowView.layer.add(cornerRadiusAnimation, forKey: "cornerRadius")
@@ -816,14 +820,14 @@ extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate {
         distanceAnimation.toValue = CGSize(width: 0.0, height: 0.0)
         distanceAnimation.duration = 0.5
         distanceAnimation.isRemovedOnCompletion = false
-        distanceAnimation.fillMode = kCAFillModeForwards
+        distanceAnimation.fillMode = CAMediaTimingFillMode.forwards
         
         let shadowRadiusAnimation = CABasicAnimation(keyPath: "shadowRadius")
         shadowRadiusAnimation.fromValue = 20.0
         shadowRadiusAnimation.toValue = 1.0
         shadowRadiusAnimation.duration = 0.5
         shadowRadiusAnimation.isRemovedOnCompletion = false
-        shadowRadiusAnimation.fillMode = kCAFillModeForwards
+        shadowRadiusAnimation.fillMode = CAMediaTimingFillMode.forwards
 
         UIView.transition(with: self.addBackgroundView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
             let newButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(self.handleTapEdit))

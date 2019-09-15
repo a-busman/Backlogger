@@ -56,21 +56,21 @@ enum BackendError: Error {
 }
 
 class GameField: Field {
-    dynamic var deck:         String?         = nil
-    dynamic var releaseDate:  String?         = nil
-    dynamic var expectedDate: Int             = 0
-    dynamic var imageUrl:     String?         = nil
-    dynamic var image:        ImageList?      = nil
-    dynamic var hasDetails:   Bool            = false
-    dynamic var numReviews:   Int             = 0
-    dynamic var steamAppId:   Int             = 0
-    dynamic var onlySteam:    Bool            = false
-            var images:       List<ImageList> = List<ImageList>()
-            var developers:   List<Developer> = List<Developer>()
-            var genres:       List<Genre>     = List<Genre>()
-            var publishers:   List<Publisher> = List<Publisher>()
-            var platforms:    List<Platform>  = List<Platform>()
-            var characters:   List<GameCharacter> = List<GameCharacter>()
+    @objc dynamic var deck:         String?             = nil
+    @objc dynamic var releaseDate:  String?             = nil
+    @objc dynamic var expectedDate: Int                 = 0
+    @objc dynamic var imageUrl:     String?             = nil
+    @objc dynamic var image:        ImageList?          = nil
+    @objc dynamic var hasDetails:   Bool                = false
+    @objc dynamic var numReviews:   Int                 = 0
+    @objc dynamic var steamAppId:   Int                 = 0
+    @objc dynamic var onlySteam:    Bool                = false
+                  var images:       List<ImageList>     = List<ImageList>()
+                  var developers:   List<Developer>     = List<Developer>()
+                  var genres:       List<Genre>         = List<Genre>()
+                  var publishers:   List<Publisher>     = List<Publisher>()
+                  var platforms:    List<Platform>      = List<Platform>()
+                  var characters:   List<GameCharacter> = List<GameCharacter>()
     
     let ownedGames: LinkingObjects<Game> = LinkingObjects(fromType: Game.self, property: "gameFields")
     
@@ -81,7 +81,7 @@ class GameField: Field {
         return realm?.objects(Game.self).filter("inWishlist = true")
     }
     
-    static var request:   DataRequest?
+    static var request:      DataRequest?
     static var requestTimer: Timer?
     
     required init(json: [String: Any], fromDb: Bool) {
@@ -719,7 +719,8 @@ class GameField: Field {
         while self.platforms.count > 0 {
             var platform: Platform!
             self.update {
-                platform = self.platforms.remove(at: 0)
+                platform = self.platforms[0]
+                self.platforms.remove(at: 0)
             }
             if (platform.linkedGameFields == nil || platform.linkedGameFields!.count == 0) && platform.ownedGames.count == 0 {
                 platform.delete()
@@ -728,7 +729,8 @@ class GameField: Field {
         while self.developers.count > 0 {
             var developer: Developer!
             self.update {
-                developer = self.developers.remove(at: 0)
+                developer = self.developers[0]
+                self.developers.remove(at: 0)
             }
             if developer.linkingGameFields == nil || developer.linkingGameFields!.count == 0 {
                 developer.delete()
@@ -737,7 +739,8 @@ class GameField: Field {
         while self.publishers.count > 0 {
             var publisher: Publisher!
             self.update {
-                publisher = self.publishers.remove(at: 0)
+                publisher = self.publishers[0]
+                self.publishers.remove(at: 0)
             }
             if publisher.linkingGameFields == nil || publisher.linkingGameFields!.count == 0 {
                 publisher.delete()
@@ -746,7 +749,8 @@ class GameField: Field {
         while self.genres.count > 0 {
             var genre: Genre!
             self.update {
-                genre = self.genres.remove(at: 0)
+                genre = self.genres[0]
+                self.genres.remove(at: 0)
             }
             if genre.linkingGameFields == nil || genre.linkingGameFields!.count == 0 {
                 genre.delete()
@@ -755,7 +759,8 @@ class GameField: Field {
         while self.characters.count > 0 {
             var character: GameCharacter!
             self.update {
-                character = self.characters.remove(at: 0)
+                character = self.characters[0]
+                self.characters.remove(at: 0)
             }
             if character.linkedGameFields == nil || character.linkedGameFields!.count == 0 {
                 character.delete()
@@ -789,7 +794,8 @@ class GameField: Field {
         while self.platforms.count > 0 {
             var platform: Platform!
             self.update {
-                platform = self.platforms.remove(at: 0)
+                platform = self.platforms[0]
+                self.platforms.remove(at: 0)
             }
             if (platform.linkedGameFields == nil || platform.linkedGameFields!.count == 0) && platform.ownedGames.count == 0 {
                 newGameField.platforms.append(platform.deleteRetainCopy())
@@ -801,7 +807,8 @@ class GameField: Field {
         while self.developers.count > 0 {
             var developer: Developer!
             self.update {
-                developer = self.developers.remove(at: 0)
+                developer = self.developers[0]
+                self.developers.remove(at: 0)
             }
             if developer.linkingGameFields == nil || developer.linkingGameFields!.count == 0 {
                 newGameField.developers.append(developer.deleteRetainCopy())
@@ -813,7 +820,8 @@ class GameField: Field {
         while self.publishers.count > 0 {
             var publisher: Publisher!
             self.update {
-                publisher = self.publishers.remove(at: 0)
+                publisher = self.publishers[0]
+                self.publishers.remove(at: 0)
             }
             if publisher.linkingGameFields == nil || publisher.linkingGameFields!.count == 0 {
                 newGameField.publishers.append(publisher.deleteRetainCopy())
@@ -825,7 +833,8 @@ class GameField: Field {
         while self.genres.count > 0 {
             var genre: Genre!
             self.update {
-                genre = self.genres.remove(at: 0)
+                genre = self.genres[0]
+                self.genres.remove(at: 0)
             }
             if genre.linkingGameFields == nil || genre.linkingGameFields!.count == 0 {
                 newGameField.genres.append(genre.deleteRetainCopy())
@@ -837,7 +846,8 @@ class GameField: Field {
         while self.characters.count > 0 {
             var character: GameCharacter!
             self.update {
-                character = self.characters.remove(at: 0)
+                character = self.characters[0]
+                self.characters.remove(at: 0)
             }
             if character.linkedGameFields == nil || character.linkedGameFields!.count == 0 {
                 newGameField.characters.append(character.deleteRetainCopy())
@@ -853,21 +863,21 @@ class GameField: Field {
     }
 }
 
-class Game: Object {
-    private(set) dynamic var uuid      = NSUUID().uuidString
-    private(set) dynamic var dateAdded = Date()
+class Game: BLObject {
+    @objc private(set) dynamic var uuid      = NSUUID().uuidString
+    @objc private(set) dynamic var dateAdded = Date()
 
-    dynamic var gameFields: GameField? = nil
-    dynamic var platform:   Platform?  = nil
-    dynamic var inLibrary:  Bool       = false
-    dynamic var inWishlist: Bool       = false
-    dynamic var nowPlaying: Bool       = false
-    dynamic var favourite:  Bool       = false
-    dynamic var rating:     Int        = 0
-    dynamic var progress:   Int        = 0
-    dynamic var finished:   Bool       = false
-    dynamic var notes:      String?    = nil
-    dynamic var fromSteam:  Bool       = false
+    @objc dynamic var gameFields: GameField? = nil
+    @objc dynamic var platform:   Platform?  = nil
+    @objc dynamic var inLibrary:  Bool       = false
+    @objc dynamic var inWishlist: Bool       = false
+    @objc dynamic var nowPlaying: Bool       = false
+    @objc dynamic var favourite:  Bool       = false
+    @objc dynamic var rating:     Int        = 0
+    @objc dynamic var progress:   Int        = 0
+    @objc dynamic var finished:   Bool       = false
+    @objc dynamic var notes:      String?    = nil
+    @objc dynamic var fromSteam:  Bool       = false
     
     var linkedPlaylists: Results<Playlist>? {
         return realm?.objects(Playlist.self).filter("%@ IN games", self)
@@ -930,7 +940,7 @@ class Game: Object {
                 }
                 playlist.update {
                     playlist.games.removeAll()
-                    playlist.games.append(contentsOf: games)
+                    playlist.games.append(objectsIn: games)
                 }
             }
         }

@@ -17,11 +17,37 @@ enum GenericFields: String {
     case SiteDetailUrl = "site_detail_url"
 }
 
-class Field: Object {
-    dynamic var apiDetailUrl:  String? = nil
-    dynamic var idNumber:      Int     = 0
-    dynamic var name:          String? = nil
-    dynamic var siteDetailUrl: String? = nil
+class BLObject: Object {
+    func add() {
+        autoreleasepool {
+            let realm = try? Realm()
+            try! realm?.write {
+                realm?.add(self, update: .modified)
+            }
+        }
+    }
+    func update(updateBlock: () -> ()) {
+        autoreleasepool {
+            let realm = try? Realm()
+            try! realm?.write(updateBlock)
+        }
+    }
+    
+    func delete() {
+        autoreleasepool {
+            let realm = try? Realm()
+            try! realm?.write {
+                realm?.delete(self)
+            }
+        }
+    }
+}
+
+class Field: BLObject {
+    @objc dynamic var apiDetailUrl:  String? = nil
+    @objc dynamic var idNumber:      Int     = 0
+    @objc dynamic var name:          String? = nil
+    @objc dynamic var siteDetailUrl: String? = nil
         
     init(json: [String : Any]) {
         super.init()
@@ -54,30 +80,16 @@ class Field: Object {
     func deleteRetainCopy() -> Field {
         fatalError("Must override deleteRetainCopy")
     }
-}
-
-extension Object {
-    func add() {
-        autoreleasepool {
-            let realm = try? Realm()
-            try! realm?.write {
-                realm?.add(self, update: true)
-            }
-        }
-    }
-    func update(updateBlock: () -> ()) {
-        autoreleasepool {
-            let realm = try? Realm()
-            try! realm?.write(updateBlock)
-        }
+    
+    override func add() {
+        super.add()
     }
     
-    func delete() {
-        autoreleasepool {
-            let realm = try? Realm()
-            try! realm?.write {
-                realm?.delete(self)
-            }
-        }
+    override func update(updateBlock: () -> ()) {
+        super.update(updateBlock: updateBlock)
+    }
+    
+    override func delete() {
+        super.delete()
     }
 }

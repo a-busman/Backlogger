@@ -191,7 +191,7 @@ class NowPlayingGameViewController: UIViewController {
         gradientAnimation.toValue = self.view.bounds.size.height + 300
         gradientAnimation.duration = 0.5
         gradientAnimation.isRemovedOnCompletion = false
-        gradientAnimation.fillMode = kCAFillModeForwards
+        gradientAnimation.fillMode = CAMediaTimingFillMode.forwards
         let maskView = UIView(frame: self.view.frame)
         maskView.backgroundColor = .clear
 
@@ -224,18 +224,21 @@ class NowPlayingGameViewController: UIViewController {
         } else {
             if let superUrl = currentGame.gameFields?.image?.superUrl {
                 self.coverImageView?.kf.setImage(with: URL(string: superUrl), placeholder: #imageLiteral(resourceName: "now_playing_placeholder"), completionHandler: {
-                    (image, error, cacheType, imageUrl) in
-                    if image != nil {
-                        if cacheType == .none {
+                    result in
+                    switch result {
+                    case .success(let value):
+                        if value.cacheType == .none {
                             UIView.transition(with: self.coverImageView!,
                                               duration:0.5,
                                               options: .transitionCrossDissolve,
-                                              animations: { self.coverImageView?.image = image! },
+                                              animations: { self.coverImageView?.image = value.image },
                                               completion: nil)
                         } else {
-                            self.coverImageView?.image = image!
+                            self.coverImageView?.image = value.image
                         }
-                        self.mainImage = image!
+                        self.mainImage = value.image
+                    case .failure(let error):
+                        NSLog("Error: \(error)")
                     }
                 })
             } else {

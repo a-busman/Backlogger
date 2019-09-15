@@ -28,7 +28,7 @@ class AboutViewController: UIViewController {
             return
         }
         
-        UIApplication.shared.open(URL(string: self.urlStrings[view.tag - 1])!, options: [:], completionHandler: nil)
+        UIApplication.shared.open(URL(string: self.urlStrings[view.tag - 1])!, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: nil)
     }
     
     override func viewDidLoad() {
@@ -38,4 +38,9 @@ class AboutViewController: UIViewController {
         self.versionLabel?.text = "Version \(version)"
 
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
 }

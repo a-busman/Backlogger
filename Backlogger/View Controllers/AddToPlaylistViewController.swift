@@ -87,8 +87,8 @@ class AddToPlaylistViewController: UIViewController {
             if let error = result.error {
                 self.isLoadingGames = false
                 if error.localizedDescription != "cancelled" {
-                    let alert = UIAlertController(title: "Error", message: "Could not load first game :( \(error.localizedDescription)", preferredStyle: UIAlertControllerStyle.alert)
-                    alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.default, handler: nil))
+                    let alert = UIAlertController(title: "Error", message: "Could not load first game :( \(error.localizedDescription)", preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "Click", style: UIAlertAction.Style.default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
                     return
                 } else {
@@ -117,8 +117,8 @@ class AddToPlaylistViewController: UIViewController {
                 if let error = result.error {
                     self.isLoadingGames = false
                     if error.localizedDescription != "cancelled" {
-                        let alert = UIAlertController(title: "Error", message: "Could not load more games :( \(error.localizedDescription)", preferredStyle: UIAlertControllerStyle.alert)
-                        alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.default, handler: nil))
+                        let alert = UIAlertController(title: "Error", message: "Could not load more games :( \(error.localizedDescription)", preferredStyle: UIAlertController.Style.alert)
+                        alert.addAction(UIAlertAction(title: "Click", style: UIAlertAction.Style.default, handler: nil))
                         self.present(alert, animated: true, completion: nil)
                         return
                     } else {
@@ -311,7 +311,7 @@ extension AddToPlaylistViewController: UITableViewDelegate, UITableViewDataSourc
         cell.row = indexPath.row
         
         if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
-            cell.separatorInset = UIEdgeInsetsMake(0, 58.0, 0, 0)
+            cell.separatorInset = UIEdgeInsets.init(top: 0, left: 58.0, bottom: 0, right: 0)
         }
         if cell.responds(to: #selector(setter: UIView.layoutMargins)) {
             cell.layoutMargins = .zero
@@ -337,15 +337,18 @@ extension AddToPlaylistViewController: UITableViewDelegate, UITableViewDataSourc
                         cell.imageUrl = URL(string: image.iconUrl!)
                     }
                     cell.cacheCompletionHandler = {
-                        (image, error, cacheType, imageUrl) in
-                        if image != nil {
-                            if cacheType == .none || cacheType == .disk {
+                        result in
+                        switch result {
+                        case .success(let value):
+                            if value.cacheType == .none || value.cacheType == .disk {
                                 UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                                    cell.set(image: image!)
+                                    cell.set(image: value.image)
                                 }, completion: nil)
                             } else {
-                                cell.set(image: image!)
+                                cell.set(image: value.image)
                             }
+                        case .failure(let error):
+                            NSLog("Error: \(error)")
                         }
                     }
                 }
@@ -434,19 +437,22 @@ extension AddToPlaylistViewController: UITableViewDelegate, UITableViewDataSourc
                     cell.imageUrl = URL(string: image.iconUrl!)
                 }
                 cell.cacheCompletionHandler = {
-                    (image, error, cacheType, imageUrl) in
-                    if let cellUrl = cell.imageUrl {
-                        if imageUrl == cellUrl {
-                            if image != nil {
-                                if cacheType == .none || cacheType == .disk {
+                    result in
+                    switch result {
+                    case .success(let value):
+                        if let cellUrl = cell.imageUrl {
+                            if value.source.url == cellUrl {
+                                if value.cacheType == .none || value.cacheType == .disk {
                                     UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                                        cell.set(image: image!)
+                                        cell.set(image: value.image)
                                     }, completion: nil)
                                 } else {
-                                    cell.set(image: image!)
+                                    cell.set(image: value.image)
                                 }
                             }
                         }
+                    case .failure(let error):
+                        NSLog("Error: \(error)")
                     }
                 }
             }
@@ -512,7 +518,7 @@ extension AddToPlaylistViewController: ConsoleSelectionTableViewControllerDelega
                     newGameList.append(game!)
                 }
             }
-            self.addedGames.append(contentsOf: newGameList)
+            self.addedGames.append(objectsIn: newGameList)
             cell.libraryState = .inPlaylist
         } else {
             cell.libraryState = .addPlaylist

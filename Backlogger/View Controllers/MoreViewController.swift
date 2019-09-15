@@ -153,7 +153,7 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
-    func tappedDone(sender: UIBarButtonItem) {
+    @objc func tappedDone(sender: UIBarButtonItem) {
         self.steamVc?.dismiss(animated: true, completion: nil)
     }
     

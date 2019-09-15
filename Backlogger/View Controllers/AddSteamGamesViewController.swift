@@ -116,19 +116,22 @@ extension AddSteamGamesViewController: UITableViewDelegate, UITableViewDataSourc
                 cell.imageUrl = URL(string: image.iconUrl!)
             }
             cell.cacheCompletionHandler = {
-                (image, error, cacheType, imageUrl) in
-                if let cellUrl = cell.imageUrl {
-                    if imageUrl == cellUrl {
-                        if image != nil {
-                            if cacheType == .none || cacheType == .disk {
+                result in
+                switch result {
+                case .success(let value):
+                    if let cellUrl = cell.imageUrl {
+                        if value.source.url == cellUrl {
+                            if value.cacheType == .none || value.cacheType == .disk {
                                 UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                                    cell.set(image: image!)
+                                    cell.set(image: value.image)
                                 }, completion: nil)
                             } else {
-                                cell.set(image: image!)
+                                cell.set(image: value.image)
                             }
                         }
                     }
+                case .failure(let error):
+                    NSLog("Error: \(error)")
                 }
             }
         }

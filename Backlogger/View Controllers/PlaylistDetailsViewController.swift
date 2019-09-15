@@ -243,7 +243,7 @@ class PlaylistDetailsViewController: UITableViewController {
             filename = Util.getPlaylistImagesDirectory().appendingPathComponent("\(self.playlist!.uuid).png")
         }
         if self.playlistImage != nil {
-            let data = UIImagePNGRepresentation(self.playlistImage!)
+            let data = self.playlistImage!.pngData()
             try? data?.write(to: filename)
         } else {
             try? FileManager.default.removeItem(at: filename)
@@ -389,7 +389,7 @@ class PlaylistDetailsViewController: UITableViewController {
                     self.navigationController?.popViewController(animated: false)
                     return
                 }
-                self.games.append(contentsOf: games)
+                self.games.append(objectsIn: games)
             }
         }
         
@@ -397,7 +397,7 @@ class PlaylistDetailsViewController: UITableViewController {
             if self._playlistState == .default {
                 if let playlist = self.playlist {
                     self.games.removeAll()
-                    self.games.append(contentsOf: playlist.games)
+                    self.games.append(objectsIn: playlist.games)
                 }
                 self.playlistFooterView.update(count: self.games.count)
                 var percent = 0
@@ -426,7 +426,7 @@ class PlaylistDetailsViewController: UITableViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        if self.isMovingFromParentViewController {
+        if self.isMovingFromParent {
             self.titleCell.titleTextView?.removeObserver(self, forKeyPath: "contentSize")
             self.descCell.descriptionTextView?.removeObserver(self, forKeyPath: "contentSize")
         }
@@ -495,7 +495,7 @@ class PlaylistDetailsViewController: UITableViewController {
             let realm = try! Realm()
             let upNextPlaylist = realm.objects(Playlist.self).filter("isUpNext = true").first
             if upNextPlaylist != nil {
-                var currentGames = List<Game>()
+                let currentGames = List<Game>()
                 for game in self.games {
                     var isNowPlaying = false
                     if let linkedPlaylists = game.linkedPlaylists {
@@ -510,10 +510,10 @@ class PlaylistDetailsViewController: UITableViewController {
                         currentGames.append(game)
                     }
                 }
-                currentGames += upNextPlaylist!.games
+                currentGames.append(objectsIn: upNextPlaylist!.games)
                 upNextPlaylist!.update {
                     upNextPlaylist?.games.removeAll()
-                    upNextPlaylist?.games.append(contentsOf: currentGames)
+                    upNextPlaylist?.games.append(objectsIn: currentGames)
                 }
             }
         }
@@ -543,14 +543,14 @@ class PlaylistDetailsViewController: UITableViewController {
                 }
                 upNextPlaylist!.update {
                     upNextPlaylist?.games.removeAll()
-                    upNextPlaylist?.games.append(contentsOf: currentGames)
+                    upNextPlaylist?.games.append(objectsIn: currentGames)
                 }
             }
         }
     }
     
     //Cancel or back
-    func leftTapped(sender: UIBarButtonItem) {
+    @objc func leftTapped(sender: UIBarButtonItem) {
         self.titleCell.titleTextView?.resignFirstResponder()
         self.descCell.descriptionTextView?.resignFirstResponder()
         if self._playlistState == .new {
@@ -564,7 +564,7 @@ class PlaylistDetailsViewController: UITableViewController {
             self.tableView.tableFooterView = self.playlistFooterView.view
             self.tableView.setEditing(false, animated: false)
             self.games.removeAll()
-            self.games.append(contentsOf: self.playlist!.games)
+            self.games.append(objectsIn: self.playlist!.games)
             self.imagesLoaded = 0
             self.reloadDataWithCrossDissolve()
         } else {
@@ -576,7 +576,7 @@ class PlaylistDetailsViewController: UITableViewController {
         if playlist == nil {
             self.playlist?.update {
                 self.playlist?.games.removeAll()
-                self.playlist?.games.append(contentsOf: self.games)
+                self.playlist?.games.append(objectsIn: self.games)
                 if self.titleCell.titleTextView?.textColor != .lightGray {
                     self.playlist?.name = self.titleCell.titleTextView?.text
                     self.titleCell.titleLabel?.text = self.titleCell.titleTextView?.text
@@ -596,7 +596,7 @@ class PlaylistDetailsViewController: UITableViewController {
             }
         } else {
             playlist?.games.removeAll()
-            playlist?.games.append(contentsOf: self.games)
+            playlist?.games.append(objectsIn: self.games)
             if self.titleCell.titleTextView?.textColor != .lightGray {
                 playlist?.name = self.titleCell.titleTextView?.text
             } else {
@@ -747,7 +747,7 @@ class PlaylistDetailsViewController: UITableViewController {
                     self.updatePlaylistImage()
                 }
                 if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
-                    cell.separatorInset = UIEdgeInsetsMake(0, 15.0, 0, 0)
+                    cell.separatorInset = UIEdgeInsets.init(top: 0, left: 15.0, bottom: 0, right: 0)
                 }
                 if cell.responds(to: #selector(setter: UIView.layoutMargins)) {
                     cell.layoutMargins = .zero
@@ -801,7 +801,7 @@ class PlaylistDetailsViewController: UITableViewController {
                                    constant: 0.0
                     ).isActive = true
                 if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
-                    cell.separatorInset = UIEdgeInsetsMake(0, 15.0, 0, 0)
+                    cell.separatorInset = UIEdgeInsets.init(top: 0, left: 15.0, bottom: 0, right: 0)
                 }
                 if cell.responds(to: #selector(setter: UIView.layoutMargins)) {
                     cell.layoutMargins = .zero
@@ -815,7 +815,7 @@ class PlaylistDetailsViewController: UITableViewController {
                 newCell.playlistState = .add
                 cell = newCell
                 if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
-                    cell.separatorInset = UIEdgeInsetsMake(0, 47.5, 0, 0)
+                    cell.separatorInset = UIEdgeInsets.init(top: 0, left: 47.5, bottom: 0, right: 0)
                 }
                 if cell.responds(to: #selector(setter: UIView.layoutMargins)) {
                     cell.layoutMargins = .zero
@@ -853,26 +853,29 @@ class PlaylistDetailsViewController: UITableViewController {
                 }
             } else {
                 gameCell.cacheCompletionHandler = {
-                    (image, error, cacheType, imageUrl) in
-                    if image != nil {
-                        if cacheType == .none || cacheType == .disk {
+                    result in
+                    switch result {
+                    case .success(let value):
+                        if value.cacheType == .none || value.cacheType == .disk {
                             UIView.transition(with: gameCell.artView!,
                                               duration: 0.5,
                                               options: .transitionCrossDissolve,
                                               animations: {
-                                                gameCell.set(image: image!)
-                                              },
+                                                gameCell.set(image: value.image)
+                            },
                                               completion: nil)
                         } else {
-                            gameCell.set(image: image!)
+                            gameCell.set(image: value.image)
                         }
-                        self.imageCache[game.idNumber] = image!
+                        self.imageCache[game.idNumber] = value.image
                         if indexPath.row < 4 && self.firstLoaded {
                             self.imagesLoaded += 1
                             if self.imagesLoaded == (self.games.count < 4 ? self.games.count : 4) && self.playlistImageSource != .custom {
                                 self.updatePlaylistImage()
                             }
                         }
+                    case .failure(let error):
+                        NSLog("Error: \(error)")
                     }
                 }
                 if let smallUrl = game.image?.smallUrl {
@@ -895,7 +898,7 @@ class PlaylistDetailsViewController: UITableViewController {
             }
             
             if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
-                cell.separatorInset = UIEdgeInsetsMake(0, indent, 0, 0)
+                cell.separatorInset = UIEdgeInsets.init(top: 0, left: indent, bottom: 0, right: 0)
             }
             if cell.responds(to: #selector(setter: UIView.layoutMargins)) {
                 cell.layoutMargins = .zero
@@ -971,12 +974,13 @@ class PlaylistDetailsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let game = self.games.remove(at: sourceIndexPath.row) as Game
+        let game = self.games[sourceIndexPath.row]
+        self.games.remove(at: sourceIndexPath.row)
         self.games.insert(game, at: destinationIndexPath.row)
         self.imagesLoaded = 0
     }
     
-    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         if indexPath.section == 1 && !self.isFavourites {
             return .delete
         } else if indexPath.section == 0 && indexPath.row == 2 {
@@ -1022,7 +1026,7 @@ class PlaylistDetailsViewController: UITableViewController {
         return cellSnapshot
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             self.games.remove(at: indexPath.row)
             self.tableView.deleteRows(at: [indexPath], with: .fade)
@@ -1045,7 +1049,7 @@ class PlaylistDetailsViewController: UITableViewController {
         }
     }
     
-    func invalidateEditField() {
+    @objc func invalidateEditField() {
         self.didEditField = false
     }
 }
@@ -1157,7 +1161,7 @@ extension PlaylistDetailsViewController: PlaylistTitleCellDelegate {
 
 extension PlaylistDetailsViewController: AddToPlaylistViewControllerDelegate {
     func didChoose(games: List<Game>) {
-        self.games += games.map{$0}
+        self.games.append(objectsIn: games)
         self.imagesLoaded = 0
         if self.playlistState == .default {
             self.saveCurrentState(playlist: nil)
@@ -1182,13 +1186,16 @@ extension PlaylistDetailsViewController: UIImagePickerControllerDelegate, UINavi
         picker.dismiss(animated: true, completion: nil)
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        if let editedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+// Local variable inserted by Swift 4.2 migrator.
+let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
+
+        if let editedImage = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.editedImage)] as? UIImage {
             self.playlistImage = editedImage
             self.playlistImageSource = .custom
             self.titleCell.artImage = editedImage
             self.titleCell.showImage()
-        } else if let originalImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+        } else if let originalImage = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as? UIImage {
             self.playlistImage = originalImage
             self.playlistImageSource = .custom
             self.titleCell.artImage = originalImage
@@ -1203,7 +1210,7 @@ extension PlaylistDetailsViewController: PlaylistViewControllerDelegate {
     func chosePlaylist(vc: PlaylistViewController, playlist: Playlist, games: [Game], isNew: Bool) {
         if !isNew {
             playlist.update {
-                playlist.games.append(contentsOf: games)
+                playlist.games.append(objectsIn: games)
             }
         }
         vc.presentingViewController?.dismiss(animated: true, completion: {
@@ -1218,4 +1225,14 @@ extension PlaylistDetailsViewController: PlaylistViewControllerDelegate {
         vc.navigationController?.dismiss(animated: true, completion: nil)
         self.tableView.reloadData()
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
+	return input.rawValue
 }

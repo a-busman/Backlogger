@@ -103,7 +103,7 @@ class Steam {
             if gameName.lowercased().contains("biohazard") && gameName.lowercased().contains("resident") {
                 
                 let index = gameName.lowercased().index(gameName.lowercased().range(of: "biohazard")!.lowerBound, offsetBy: -2)
-                gameName = gameName[gameName.startIndex..<index]
+                gameName = String(gameName[gameName.startIndex..<index])
             }
             gameName = gameName.trimmingCharacters(in: .whitespacesAndNewlines)
             GameField.getGames(from: gameName) { results in

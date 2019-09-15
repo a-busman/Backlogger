@@ -81,10 +81,10 @@ class GameDetailsViewController: UIViewController {
     
     var toastOverlay = ToastOverlayViewController()
     
-    @IBOutlet weak var informationTopConstraint:         NSLayoutConstraint?
+    @IBOutlet      var informationTopConstraint:         NSLayoutConstraint?
     @IBOutlet weak var statsLeadingToLeadingConstraint:  NSLayoutConstraint?
     @IBOutlet weak var statsLeadingToTrailingConstraint: NSLayoutConstraint?
-    @IBOutlet weak var headingTopConstraint:             NSLayoutConstraint?
+    @IBOutlet      var headingTopConstraint:             NSLayoutConstraint?
     @IBOutlet weak var bottomConstraint:                 NSLayoutConstraint?
     @IBOutlet weak var headerHeightConstraint:           NSLayoutConstraint?
     @IBOutlet weak var shadowLeadingConstraint:          NSLayoutConstraint?
@@ -206,7 +206,7 @@ class GameDetailsViewController: UIViewController {
             if let releaseDate = newGame?.releaseDate {
                 if !releaseDate.isEmpty {
                     let index = releaseDate.index(releaseDate.startIndex, offsetBy: 4)
-                    yearLabelText = releaseDate.substring(to: index)
+                    yearLabelText = String(releaseDate[..<index])
                 } else {
                     if let expectedDate = newGame?.expectedDate {
                         if expectedDate > 0 {
@@ -351,7 +351,7 @@ class GameDetailsViewController: UIViewController {
         if let releaseDate = gameFields?.releaseDate {
             if !releaseDate.isEmpty {
                 let index = releaseDate.index(releaseDate.startIndex, offsetBy: 4)
-                yearLabelText = releaseDate.substring(to: index)
+                yearLabelText = String(releaseDate[..<index])
             } else {
                 if let expectedDate = gameFields?.expectedDate {
                     if expectedDate > 0 {
@@ -403,15 +403,18 @@ class GameDetailsViewController: UIViewController {
         UIView.setAnimationsEnabled(true)
         if let mediumUrl = self._gameField?.image?.mediumUrl {
             self.mainImageView?.kf.setImage(with: URL(string: mediumUrl), placeholder: #imageLiteral(resourceName: "info_image_placeholder"), completionHandler: {
-                (image, error, cacheType, imageUrl) in
-                if image != nil {
-                    if cacheType == .none {
+                result in
+                switch result {
+                case .success(let value):
+                    if value.cacheType == .none {
                         UIView.transition(with: self.mainImageView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                            self.mainImageView?.image = image
+                            self.mainImageView?.image = value.image
                         }, completion: nil)
                     } else {
-                        self.mainImageView?.image = image
+                        self.mainImageView?.image = value.image
                     }
+                case .failure(let error):
+                    NSLog("Error \(error)")
                 }
             })
         } else {
@@ -546,7 +549,7 @@ class GameDetailsViewController: UIViewController {
     }
     override var previewActionItems: [UIPreviewActionItem] {
         var addString: String
-        var style: UIPreviewActionStyle
+        var style: UIPreviewAction.Style
         switch self._state! {
         case .addToLibrary:
             addString = "Add"
@@ -595,9 +598,9 @@ class GameDetailsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        self.navigationController?.navigationBar.titleTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.foregroundColor.rawValue: UIColor.white])
         if !self.showAddButton && self._game!.isInvalidated {
             self.navigationController?.popViewController(animated: false)
         }
@@ -617,15 +620,15 @@ class GameDetailsViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-        if self.isMovingFromParentViewController {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+        if self.isMovingFromParent {
             self.isExiting = true
             self.delegate?.gamesCreated(gameField: self._gameField!)
         }
     }
     
-    func handleRefresh(sender: UIRefreshControl) {
+    @objc func handleRefresh(sender: UIRefreshControl) {
         var gameField = self._gameField
         if gameField == nil {
             gameField = self._game?.gameFields
@@ -635,7 +638,7 @@ class GameDetailsViewController: UIViewController {
         }
     }
     
-    fileprivate func updateGameDetailsFromRemote(_ result: Result<Any>) {
+    fileprivate func updateGameDetailsFromRemote(_ result: Alamofire.Result<Any>) {
         
         if let error = result.error {
             NSLog("error: \(error.localizedDescription)")
@@ -706,18 +709,21 @@ class GameDetailsViewController: UIViewController {
             self.images[i] = item
             if imageView.image == nil {
                 imageView.kf.setImage(with: URL(string: newUrl), placeholder: #imageLiteral(resourceName: "info_image_placeholder"), completionHandler: {
-                    (image, error, cacheType, imageUrl) in
-                    if image != nil {
-                        if cacheType == .none {
+                    result in
+                    switch result {
+                    case .success(let value):
+                        if value.cacheType == .none {
                             UIView.transition(with: imageView,
                                               duration:0.5,
                                               options: .transitionCrossDissolve,
-                                              animations: { imageView.image = image },
+                                              animations: { imageView.image = value.image },
                                               completion: nil)
                         } else {
-                            imageView.image = image
+                            imageView.image = value.image
                         }
-                        self.images[i]?.galleryItem = GalleryItem.image { $0(image) }
+                        self.images[i]?.galleryItem = GalleryItem.image { $0(value.image) }
+                    case .failure(let error):
+                        NSLog("Error: \(error)")
                     }
                 })
             }
@@ -1013,7 +1019,7 @@ class GameDetailsViewController: UIViewController {
                     currentGames.append(contentsOf: games)
                     upNextPlaylist!.update {
                         upNextPlaylist?.games.removeAll()
-                        upNextPlaylist?.games.append(contentsOf: currentGames)
+                        upNextPlaylist?.games.append(objectsIn: currentGames)
                     }
                 }
             }
@@ -1027,7 +1033,7 @@ class GameDetailsViewController: UIViewController {
                     currentGames += upNextPlaylist!.games
                     upNextPlaylist!.update {
                         upNextPlaylist?.games.removeAll()
-                        upNextPlaylist?.games.append(contentsOf: currentGames)
+                        upNextPlaylist?.games.append(objectsIn: currentGames)
                     }
                 }
             }
@@ -1337,9 +1343,9 @@ class GameDetailsViewController: UIViewController {
         }
         self.notesTextView?.resignFirstResponder()
     }
-    func keyboardWillShow(notification: NSNotification) {
+    @objc func keyboardWillShow(notification: NSNotification) {
         if self.notesTextView!.isFirstResponder {
-            if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
                 if self.view.frame.origin.y == 0{
                     self.view.frame.origin.y -= (keyboardSize.height - (self.tabBarController?.tabBar.frame.height ?? 0))
                 }
@@ -1349,7 +1355,7 @@ class GameDetailsViewController: UIViewController {
         }
     }
     
-    func keyboardWillHide(notification: NSNotification) {
+    @objc func keyboardWillHide(notification: NSNotification) {
         if self.notesTextView!.isFirstResponder {
             if self.view.frame.origin.y != 0 {
                 self.view.frame.origin.y = 0
@@ -1648,7 +1654,7 @@ extension GameDetailsViewController: PlaylistViewControllerDelegate {
     func chosePlaylist(vc: PlaylistViewController, playlist: Playlist, games: [Game], isNew: Bool) {
         if !isNew {
             playlist.update {
-                playlist.games.append(contentsOf: games)
+                playlist.games.append(objectsIn: games)
             }
         }
         vc.presentingViewController?.dismiss(animated: true, completion: {
@@ -1782,15 +1788,18 @@ extension GameDetailsViewController: UICollectionViewDelegate, UICollectionViewD
                     cell.showImage()
                     characterImageView.kf.cancelDownloadTask()
                     characterImageView.kf.setImage(with: URL(string: urlString)!, placeholder: nil, completionHandler: {
-                        (image, error, cacheType, imageUrl) in
-                        if image != nil {
-                            if cacheType == .none {
+                        result in
+                        switch result {
+                        case .success(let value):
+                            if value.cacheType == .none {
                                 UIView.transition(with: characterImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                                    characterImageView.image = image
+                                    characterImageView.image = value.image
                                 }, completion: nil)
                             } else {
-                                characterImageView.image = image
+                                characterImageView.image = value.image
                             }
+                        case .failure(let error):
+                            NSLog("Error: \(error)")
                         }
                     })
                 }
@@ -1828,7 +1837,7 @@ extension GameDetailsViewController: UICollectionViewDelegate, UICollectionViewD
             GalleryConfigurationItem.overlayColor(UIColor(white: 0.035, alpha: 1)),
             GalleryConfigurationItem.overlayColorOpacity(1),
             GalleryConfigurationItem.overlayBlurOpacity(1),
-            GalleryConfigurationItem.overlayBlurStyle(UIBlurEffectStyle.light),
+            GalleryConfigurationItem.overlayBlurStyle(UIBlurEffect.Style.light),
             
             GalleryConfigurationItem.videoControlsColor(.white),
             
@@ -1863,4 +1872,10 @@ extension GameDetailsViewController: UICollectionViewDelegate, UICollectionViewD
             GalleryConfigurationItem.deleteButtonMode(.none)
         ]
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
 }

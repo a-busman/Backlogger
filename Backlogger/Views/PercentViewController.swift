@@ -51,7 +51,7 @@ class PercentViewController: UIViewController {
         self.progressLabel.textColor = .darkGray
         self.progressLabel.text = "\(self._progress)"
         self.progressLabel.textAlignment = .center
-        self.progressLabel.font = UIFont.systemFont(ofSize: 10.0, weight: 4.0)
+        self.progressLabel.font = UIFont.systemFont(ofSize: 10.0, weight: UIFont.Weight(rawValue: 4.0))
         
         let backgroundCirclePath = UIBezierPath(arcCenter: CGPoint(x: 14, y: 14), radius: 14.0, startAngle: 0.0, endAngle: CGFloat(Double.pi * 2), clockwise: true)
         let circlePath = UIBezierPath(arcCenter: CGPoint(x: 14, y: 14), radius: 14.0, startAngle: CGFloat(Double.pi * 1.5), endAngle:CGFloat(Double.pi * 2) * (CGFloat(self._progress) / 100.0) - CGFloat(Double.pi * 0.5) - (self._progress == 100 ? 0.00001 : 0), clockwise: true)
@@ -70,7 +70,7 @@ class PercentViewController: UIViewController {
             self.shapeLayer.strokeColor = Util.appColor.cgColor
         }
         self.shapeLayer.lineWidth = 3.0
-        self.shapeLayer.lineCap = kCALineCapRound
+        self.shapeLayer.lineCap = CAShapeLayerLineCap.round
         
         self.view.layer.addSublayer(backgroundLayer)
         self.view.layer.addSublayer(shapeLayer)

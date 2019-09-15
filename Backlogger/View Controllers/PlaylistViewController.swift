@@ -167,7 +167,7 @@ class PlaylistViewController: UIViewController {
         actions.popoverPresentationController?.barButtonItem = self.navigationController?.navigationBar.topItem?.rightBarButtonItem
         self.present(actions, animated: true, completion: nil)
     }
-    func cancelTapped(sender: UIBarButtonItem) {
+    @objc func cancelTapped(sender: UIBarButtonItem) {
         self.navigationController?.dismiss(animated: true, completion: nil)
     }
     
@@ -241,7 +241,7 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
             indent = 129.5
         }
         if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
-            cell.separatorInset = UIEdgeInsetsMake(0, indent, 0, 0)
+            cell.separatorInset = UIEdgeInsets.init(top: 0, left: indent, bottom: 0, right: 0)
         }
         if cell.responds(to: #selector(setter: UIView.layoutMargins)) {
             cell.layoutMargins = .zero
@@ -276,7 +276,7 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
             details.playlistState = .new
             if self.isAddingGames {
                 details.delegate = self
-                details.games.append(contentsOf: self.addingGames)
+                details.games.append(objectsIn: self.addingGames)
             }
         } else if self.selectedRow == 1 && self.showFavourites {
             let details = segue.destination as! PlaylistDetailsViewController
@@ -296,7 +296,7 @@ extension PlaylistViewController: UITableViewDelegate, UITableViewDataSource {
             vc.playlistState = .new
             vc.delegate = self
             if self.isAddingGames {
-                vc.games.append(contentsOf: self.addingGames)
+                vc.games.append(objectsIn: self.addingGames)
             }
             navVc.navigationBar.barTintColor = Util.appColor
             navVc.navigationBar.barStyle = .black

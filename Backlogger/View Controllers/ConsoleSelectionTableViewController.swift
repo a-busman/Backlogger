@@ -30,7 +30,7 @@ class ConsoleSelectionTableViewController: UITableViewController {
     
     let reuseIdentifier = "console_selection_cell"
     
-    weak var okAlertAction: UIAlertAction?
+    var okAlertAction: UIAlertAction?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -203,7 +203,7 @@ class ConsoleSelectionTableViewController: UITableViewController {
                     
                     alertController.addTextField { textField in
                         textField.placeholder = "Enter Platform Name"
-                        NotificationCenter.default.addObserver(self, selector: #selector(self.handleTextFieldTextDidChangeNotification), name: NSNotification.Name.UITextFieldTextDidChange, object: textField)
+                        NotificationCenter.default.addObserver(self, selector: #selector(self.handleTextFieldTextDidChangeNotification), name: UITextField.textDidChangeNotification, object: textField)
                     }
                     self.okAlertAction?.isEnabled = false
                     alertController.addAction(self.okAlertAction!)
@@ -287,7 +287,7 @@ class ConsoleSelectionTableViewController: UITableViewController {
                 
                 alertController.addTextField { textField in
                     textField.placeholder = "Enter Platform Name"
-                    NotificationCenter.default.addObserver(self, selector: #selector(self.handleTextFieldTextDidChangeNotification), name: NSNotification.Name.UITextFieldTextDidChange, object: textField)
+                    NotificationCenter.default.addObserver(self, selector: #selector(self.handleTextFieldTextDidChangeNotification), name: UITextField.textDidChangeNotification, object: textField)
                 }
                 self.okAlertAction?.isEnabled = false
                 alertController.addAction(self.okAlertAction!)
@@ -312,7 +312,7 @@ class ConsoleSelectionTableViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    func handleTextFieldTextDidChangeNotification(notification: NSNotification) {
+    @objc func handleTextFieldTextDidChangeNotification(notification: NSNotification) {
         let textField = notification.object as! UITextField
         
         self.okAlertAction!.isEnabled = (textField.text?.utf16.count)! >= 1

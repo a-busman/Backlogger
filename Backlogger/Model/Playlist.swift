@@ -10,16 +10,16 @@ import Foundation
 import RealmSwift
 import Realm
 
-class Playlist: Object {
+class Playlist: BLObject {
     
-    private(set) dynamic var uuid      = NSUUID().uuidString
-    private(set) dynamic var dateAdded = Date()
+    @objc private(set) dynamic var uuid      = NSUUID().uuidString
+    @objc private(set) dynamic var dateAdded = Date()
 
-    dynamic var name:            String? = nil
-    dynamic var imageUrl:        String? = nil
-    dynamic var descriptionText: String? = nil
-    dynamic var isNowPlaying:    Bool    = false
-    dynamic var isUpNext:        Bool    = false
+    @objc dynamic var name:            String? = nil
+    @objc dynamic var imageUrl:        String? = nil
+    @objc dynamic var descriptionText: String? = nil
+    @objc dynamic var isNowPlaying:    Bool    = false
+    @objc dynamic var isUpNext:        Bool    = false
     
     var games: List<Game> = List<Game>()
     
@@ -60,7 +60,7 @@ class Playlist: Object {
     }
     
     func set(image: UIImage) {
-        let data = UIImagePNGRepresentation(image)
+        let data = image.pngData()
         let filename = randomString(length: 8) + ".png"
         let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
         let writePath = URL(fileURLWithPath: documentsPath + filename)

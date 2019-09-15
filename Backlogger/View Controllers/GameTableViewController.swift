@@ -96,17 +96,20 @@ class GameTableViewController: UIViewController {
                     } else {
                         if let superUrl = platform.image?.superUrl {
                             self.platformImage?.kf.setImage(with: URL(string: superUrl), placeholder: #imageLiteral(resourceName: "now_playing_placeholder"), completionHandler: {
-                                (image, error, cacheType, imageUrl) in
-                                if image != nil {
-                                    if cacheType == .none {
+                                result in
+                                switch result {
+                                case .success(let value):
+                                    if value.cacheType == .none {
                                         UIView.transition(with: self.platformImage!,
                                                           duration:0.5,
                                                           options: .transitionCrossDissolve,
-                                                          animations: { self.platformImage?.image = image },
+                                                          animations: { self.platformImage?.image = value.image },
                                                           completion: nil)
                                     } else {
-                                        self.platformImage?.image = image
+                                        self.platformImage?.image = value.image
                                     }
+                                case .failure(let error):
+                                    NSLog("Error \(error)")
                                 }
                             })
                         } else {
@@ -118,17 +121,20 @@ class GameTableViewController: UIViewController {
                 if platform.idNumber != Steam.steamPlatformIdNumber {
                     if let superUrl = platform.image?.superUrl {
                         self.platformImage?.kf.setImage(with: URL(string: superUrl), placeholder: #imageLiteral(resourceName: "now_playing_placeholder"), completionHandler: {
-                            (image, error, cacheType, imageUrl) in
-                            if image != nil {
-                                if cacheType == .none {
+                            result in
+                            switch result {
+                            case .success(let value):
+                                if value.cacheType == .none {
                                     UIView.transition(with: self.platformImage!,
                                                       duration:0.5,
                                                       options: .transitionCrossDissolve,
-                                                      animations: { self.platformImage?.image = image },
+                                                      animations: { self.platformImage?.image = value.image },
                                                       completion: nil)
                                 } else {
-                                    self.platformImage?.image = image
+                                    self.platformImage?.image = value.image
                                 }
+                            case .failure(let error):
+                                NSLog("Error \(error)")
                             }
                         })
                     } else {
@@ -224,11 +230,11 @@ class GameTableViewController: UIViewController {
         if self.currentScrollPosition < 90.0 {
             let remainingWidth = self.currentScrollPosition
             let newColor = UIColor(white: 1.0, alpha: (25.0 - remainingWidth) / 25.0)
-            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: newColor]
+            self.navigationController?.navigationBar.titleTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.foregroundColor.rawValue: newColor])
         } else if self.currentScrollPosition < 65.0 {
-            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+            self.navigationController?.navigationBar.titleTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.foregroundColor.rawValue: UIColor.white])
         } else {
-            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.clear]
+            self.navigationController?.navigationBar.titleTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.foregroundColor.rawValue: UIColor.clear])
         }
         if self.filteredGames!.count < 1 {
             let _ = self.navigationController?.popViewController(animated: true)
@@ -516,7 +522,7 @@ class GameTableViewController: UIViewController {
                     currentGames.append(contentsOf: games)
                     upNextPlaylist!.update {
                         upNextPlaylist?.games.removeAll()
-                        upNextPlaylist?.games.append(contentsOf: currentGames)
+                        upNextPlaylist?.games.append(objectsIn: currentGames)
                     }
                 }
             }
@@ -530,7 +536,7 @@ class GameTableViewController: UIViewController {
                     currentGames += upNextPlaylist!.games
                     upNextPlaylist!.update {
                         upNextPlaylist?.games.removeAll()
-                        upNextPlaylist?.games.append(contentsOf: currentGames)
+                        upNextPlaylist?.games.append(objectsIn: currentGames)
                     }
                 }
             }
@@ -617,7 +623,7 @@ extension GameTableViewController: UIViewControllerPreviewingDelegate {
     
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
         self.navigationController?.show(viewControllerToCommit, sender: nil)
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        self.navigationController?.navigationBar.titleTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.foregroundColor.rawValue: UIColor.white])
     }
 }
 
@@ -638,7 +644,7 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
             indent = 58.0
         }
         if cell.responds(to: #selector(setter: UITableViewCell.separatorInset)) {
-            cell.separatorInset = UIEdgeInsetsMake(0, indent, 0, 0)
+            cell.separatorInset = UIEdgeInsets.init(top: 0, left: indent, bottom: 0, right: 0)
         }
         if cell.responds(to: #selector(setter: UIView.layoutMargins)) {
             cell.layoutMargins = .zero
@@ -652,8 +658,8 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
         cell.titleLabel?.text = game.gameFields?.name
         if let releaseDate = game.gameFields?.releaseDate,
             releaseDate != "" {
-            let year = releaseDate.substring(to: releaseDate.index(releaseDate.startIndex, offsetBy: 4))
-            cell.descriptionLabel?.text = year
+            let year = releaseDate[..<releaseDate.index(releaseDate.startIndex, offsetBy: 4)]
+            cell.descriptionLabel?.text = String(year)
             cell.showDetails()
         } else if let releaseDate = game.gameFields?.expectedDate, releaseDate > 0 {
             cell.descriptionLabel?.text = "\(releaseDate)"
@@ -673,20 +679,24 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
             cell.artView?.image = #imageLiteral(resourceName: "table_placeholder_light")
         }
         cell.cacheCompletionHandler = {
-            (image, error, cacheType, imageUrl) in
-            if let cellUrl = cell.imageUrl {
-                if imageUrl == cellUrl {
-                    if image != nil {
-                        if cacheType == .none || cacheType == .disk {
+            result in
+            switch result {
+            case .success(let value):
+                if let cellUrl = cell.imageUrl {
+                    if value.source.url == cellUrl {
+                        if value.cacheType == .none || value.cacheType == .disk {
                             UIView.transition(with: cell.artView!, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                                cell.set(image: image!)
+                                cell.set(image: value.image)
                             }, completion: nil)
                         } else {
-                            cell.set(image: image!)
+                            cell.set(image: value.image)
                         }
                     }
                 }
+            case .failure(let error):
+                NSLog("Error: \(error)")
             }
+            
         }
         return cell
     }
@@ -699,8 +709,8 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
         return true
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if (editingStyle == UITableViewCellEditingStyle.delete) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if (editingStyle == UITableViewCell.EditingStyle.delete) {
             let game = self.filteredGames![indexPath.row]
             game.delete()
             autoreleasepool {
@@ -768,14 +778,14 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
             self.tableView?.scrollIndicatorInsets.top =  self.startInset - ((self.navigationController?.navigationBar.bounds.height ?? 0.0) + UIApplication.shared.statusBarFrame.height)
             if offset < ((self.titleLabel?.bounds.height ?? 0) + (self.navigationController?.navigationBar.bounds.height ?? 0) + UIApplication.shared.statusBarFrame.height) {
                 if offset < 0.0 {
-                    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+                    self.navigationController?.navigationBar.titleTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.foregroundColor.rawValue: UIColor.white])
                 } else {
                     let remainingWidth = offset - ((self.navigationController?.navigationBar.bounds.height ?? 0) + UIApplication.shared.statusBarFrame.height)
                     let newColor = UIColor(white: 1.0, alpha: ((self.titleLabel?.bounds.height ?? 0) - remainingWidth) / (self.titleLabel?.bounds.height ?? 1))
-                    self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: newColor]
+                    self.navigationController?.navigationBar.titleTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.foregroundColor.rawValue: newColor])
                 }
             } else {
-                self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.clear]
+                self.navigationController?.navigationBar.titleTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.foregroundColor.rawValue: UIColor.clear])
                 if offset > self.startInset {
                     self.tableView?.scrollIndicatorInsets.top = offset - ((self.navigationController?.navigationBar.bounds.height ?? 0.0) + UIApplication.shared.statusBarFrame.height)
                 }
@@ -788,7 +798,7 @@ extension GameTableViewController: PlaylistViewControllerDelegate {
     func chosePlaylist(vc: PlaylistViewController, playlist: Playlist, games: [Game], isNew: Bool) {
         if !isNew {
             playlist.update {
-                playlist.games.append(contentsOf: games)
+                playlist.games.append(objectsIn: games)
             }
         }
         
@@ -840,4 +850,10 @@ extension GameTableViewController: AddSteamGamesViewControllerDelegate {
     func didDismiss(vc: AddSteamGamesViewController) {
         vc.dismiss(animated: true, completion: nil)
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
 }
