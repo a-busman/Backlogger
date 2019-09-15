@@ -1,5 +1,5 @@
-language: objective-c
-osx_image: xcode9.2
+language: swift
+osx_image: xcode11.0
 xcode_project: Backlogger.xcodeproj
 xcode_sceme: Backlogger
-xcode_sdk: iphonesimulator11.2
+xcode_destination: platform=iOS Simulator,OS=12,name=iPhone X
