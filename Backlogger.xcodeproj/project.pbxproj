@@ -89,6 +89,7 @@
 		FADA809C1E4FB2D20069943D /* TableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FADA809B1E4FB2D20069943D /* TableViewCell.xib */; };
 		FADA809F1E4FB66A0069943D /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA809E1E4FB66A0069943D /* TableViewCell.swift */; };
 		FADA80A21E5252DB0069943D /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA80A11E5252DB0069943D /* Game.swift */; };
+		FAFF70692336FFFE0011C0D3 /* Backlogger.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FAFF70672336FFFE0011C0D3 /* Backlogger.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -205,6 +206,7 @@
 		FADA809B1E4FB2D20069943D /* TableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TableViewCell.xib; path = Views/TableViewCell.xib; sourceTree = "<group>"; };
 		FADA809E1E4FB66A0069943D /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TableViewCell.swift; path = "Table View/TableViewCell.swift"; sourceTree = "<group>"; };
 		FADA80A11E5252DB0069943D /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Game.swift; path = Model/Game.swift; sourceTree = "<group>"; };
+		FAFF70682336FFFE0011C0D3 /* Backlogger.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Backlogger.xcdatamodel; sourceTree = "<group>"; };
 		FCA9F7721B70E29F61F851FA /* Pods-Backlogger.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Backlogger.debug.xcconfig"; path = "Target Support Files/Pods-Backlogger/Pods-Backlogger.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -260,6 +262,7 @@
 		FA0915601E2AA4210052BCEC = {
 			isa = PBXGroup;
 			children = (
+				FAFF70672336FFFE0011C0D3 /* Backlogger.xcdatamodeld */,
 				FA13576C232EED06008A5A3F /* Backlogger.xctestplan */,
 				FA09156B1E2AA4210052BCEC /* Backlogger */,
 				FACCA64F1EF82CD8005F1021 /* BackloggerWidget */,
@@ -727,6 +730,7 @@
 				FADA80981E4FA0EB0069943D /* GameTableViewController.swift in Sources */,
 				FA8E71CD1E80E61800E7400B /* Publisher.swift in Sources */,
 				FA1FFF7F1F0153690048D907 /* CharacterCell.swift in Sources */,
+				FAFF70692336FFFE0011C0D3 /* Backlogger.xcdatamodeld in Sources */,
 				FADA80A21E5252DB0069943D /* Game.swift in Sources */,
 				FA4B44991E5E97C5006A843F /* ImageCell.swift in Sources */,
 				FA358A521EB9AC4C001EE03D /* Playlist.swift in Sources */,
@@ -1084,6 +1088,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		FAFF70672336FFFE0011C0D3 /* Backlogger.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				FAFF70682336FFFE0011C0D3 /* Backlogger.xcdatamodel */,
+			);
+			currentVersion = FAFF70682336FFFE0011C0D3 /* Backlogger.xcdatamodel */;
+			path = Backlogger.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = FA0915611E2AA4210052BCEC /* Project object */;
 }
