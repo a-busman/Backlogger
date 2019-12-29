@@ -43,9 +43,9 @@ class TodayViewController: UIViewController, NCWidgetProviding {
             }
         })
         Realm.Configuration.defaultConfiguration = config
-        self.vibrancyView?.effect = UIVibrancyEffect.widgetPrimary()
-        self.completeVibrancy?.effect = UIVibrancyEffect.widgetSecondary()
-        self.noGamesVibrancy?.effect = UIVibrancyEffect.widgetSecondary()
+        self.vibrancyView?.effect = UIVibrancyEffect.widgetEffect(forVibrancyStyle: .fill)
+        self.completeVibrancy?.effect = UIVibrancyEffect.widgetEffect(forVibrancyStyle: .secondaryFill)
+        self.noGamesVibrancy?.effect = UIVibrancyEffect.widgetEffect(forVibrancyStyle: .secondaryLabel)
         self.loadNowPlaying()
         if self.gameId != nil {
             let mask = UIImageView(image: #imageLiteral(resourceName: "check_mask"))

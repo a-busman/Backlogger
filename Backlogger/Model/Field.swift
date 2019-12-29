@@ -42,6 +42,9 @@ class BLObject: Object {
             }
         }
     }
+    func migrateToCloudKit() -> Bool {
+        fatalError("Must override migrateToCloudKit")
+    }
 }
 
 class Field: BLObject {
@@ -84,5 +87,9 @@ class Field: BLObject {
     
     override func delete() {
         super.delete()
+    }
+    
+    override func migrateToCloudKit() -> Bool {
+        return super.migrateToCloudKit()
     }
 }

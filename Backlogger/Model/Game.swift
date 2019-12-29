@@ -93,6 +93,10 @@ class GameField: Field {
         super.init()
     }
     
+    override func migrateToCloudKit() -> Bool {
+        return false
+    }
+    
     func updateGameDetailsFromJson(json: [String: Any], fromDb: Bool) {
         self.update {
             self.deck         = json[GameFields.Deck.rawValue]                as? String ?? ""

@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14903" systemVersion="18G95" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Company" representedClassName="Company" parentEntity="Field" syncable="YES" codeGenerationType="class">
-        <relationship name="platforms" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Platform" inverseName="companies" inverseEntity="Platform"/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15702" systemVersion="19C57" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="CharacterCD" representedClassName="CharacterCD" parentEntity="FieldCD" syncable="YES" codeGenerationType="class">
+        <attribute name="hasImage" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <relationship name="gameFields" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GameFieldCD" inverseName="characters" inverseEntity="GameFieldCD"/>
+        <relationship name="image" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ImageListCD" inverseName="characters" inverseEntity="ImageListCD"/>
     </entity>
-    <entity name="Developer" representedClassName="Developer" parentEntity="Field" syncable="YES" codeGenerationType="class">
-        <relationship name="gameFields" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GameField" inverseName="developers" inverseEntity="GameField"/>
+    <entity name="CompanyCD" representedClassName="CompanyCD" parentEntity="FieldCD" syncable="YES" codeGenerationType="class">
+        <relationship name="platforms" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PlatformCD" inverseName="company" inverseEntity="PlatformCD"/>
     </entity>
-    <entity name="Field" representedClassName="Field" syncable="YES" codeGenerationType="class">
+    <entity name="DeveloperCD" representedClassName="DeveloperCD" parentEntity="FieldCD" syncable="YES" codeGenerationType="class">
+        <relationship name="gameFields" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GameFieldCD" inverseName="developers" inverseEntity="GameFieldCD"/>
+    </entity>
+    <entity name="FieldCD" representedClassName="FieldCD" syncable="YES" codeGenerationType="class">
         <attribute name="apiDetailUrl" optional="YES" attributeType="URI"/>
-        <attribute name="idNumber" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="idNumber" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="siteDetailUrl" optional="YES" attributeType="URI"/>
     </entity>
-    <entity name="Game" representedClassName="Game" syncable="YES" codeGenerationType="class">
+    <entity name="GameCD" representedClassName="GameCD" syncable="YES" codeGenerationType="class">
         <attribute name="dateAdded" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="favourite" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="finished" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
@@ -20,42 +25,44 @@
         <attribute name="inLibrary" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="inWishlist" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="notes" optional="YES" attributeType="String"/>
-        <attribute name="nowPlaying" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="nowPlaying" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="progress" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="rating" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="gameField" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GameField" inverseName="games" inverseEntity="GameField"/>
-        <relationship name="platform" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Platform" inverseName="ownedGames" inverseEntity="Platform"/>
-        <relationship name="playlists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Playlist" inverseName="games" inverseEntity="Playlist"/>
+        <attribute name="uuid" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="gameField" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GameFieldCD" inverseName="ownedGames" inverseEntity="GameFieldCD"/>
+        <relationship name="platform" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PlatformCD" inverseName="ownedGames" inverseEntity="PlatformCD"/>
+        <relationship name="playlists" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PlaylistCD" inverseName="games" inverseEntity="PlaylistCD"/>
     </entity>
-    <entity name="GameCharacter" representedClassName="GameCharacter" parentEntity="Field" syncable="YES" codeGenerationType="class">
-        <attribute name="hasImage" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
-        <relationship name="gameFields" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GameField" inverseName="characters" inverseEntity="GameField"/>
-        <relationship name="image" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ImageUrls" inverseName="character" inverseEntity="ImageUrls"/>
-    </entity>
-    <entity name="GameField" representedClassName="GameField" parentEntity="Field" syncable="YES" codeGenerationType="class">
+    <entity name="GameFieldCD" representedClassName="GameFieldCD" parentEntity="FieldCD" syncable="YES" codeGenerationType="class">
         <attribute name="deck" optional="YES" attributeType="String"/>
         <attribute name="expectedDate" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="hasDetails" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="imageUrl" optional="YES" attributeType="URI"/>
-        <attribute name="numReviews" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="numReviews" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="onlySteam" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="releaseDate" optional="YES" attributeType="String"/>
         <attribute name="steamAppId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="characters" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GameCharacter" inverseName="gameFields" inverseEntity="GameCharacter"/>
-        <relationship name="developers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Developer" inverseName="gameFields" inverseEntity="Developer"/>
-        <relationship name="games" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Game" inverseName="gameField" inverseEntity="Game"/>
-        <relationship name="genres" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Genre" inverseName="gameFields" inverseEntity="Genre"/>
-        <relationship name="image" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ImageUrls" inverseName="gameField" inverseEntity="ImageUrls"/>
-        <relationship name="images" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ImageUrls" inverseName="gameFields" inverseEntity="ImageUrls"/>
-        <relationship name="platforms" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Platform" inverseName="gameFields" inverseEntity="Platform"/>
-        <relationship name="publishers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Publisher" inverseName="gameFields" inverseEntity="Publisher"/>
+        <relationship name="characters" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CharacterCD" inverseName="gameFields" inverseEntity="CharacterCD"/>
+        <relationship name="developers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="DeveloperCD" inverseName="gameFields" inverseEntity="DeveloperCD"/>
+        <relationship name="genres" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GenreCD" inverseName="gameFields" inverseEntity="GenreCD"/>
+        <relationship name="image" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ImageListCD"/>
+        <relationship name="images" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ImageListCD" inverseName="gameFields" inverseEntity="ImageListCD"/>
+        <relationship name="ownedGames" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GameCD" inverseName="gameField" inverseEntity="GameCD"/>
+        <relationship name="platforms" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PlatformCD" inverseName="gameFields" inverseEntity="PlatformCD"/>
+        <relationship name="publishers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PublisherCD" inverseName="gameFields" inverseEntity="PublisherCD"/>
+        <fetchedProperty name="libraryGames" optional="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="GameCD" predicateString="inLibrary = true"/>
+        </fetchedProperty>
+        <fetchedProperty name="wishlistGames" optional="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="GameCD" predicateString="inWishlist = true"/>
+        </fetchedProperty>
     </entity>
-    <entity name="Genre" representedClassName="Genre" parentEntity="Field" syncable="YES" codeGenerationType="class">
-        <relationship name="gameFields" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GameField" inverseName="genres" inverseEntity="GameField"/>
+    <entity name="GenreCD" representedClassName="GenreCD" parentEntity="FieldCD" syncable="YES" codeGenerationType="class">
+        <relationship name="gameFields" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GameFieldCD" inverseName="genres" inverseEntity="GameFieldCD"/>
     </entity>
-    <entity name="ImageUrls" representedClassName="ImageUrls" syncable="YES" codeGenerationType="class">
+    <entity name="ImageListCD" representedClassName="ImageListCD" syncable="YES" codeGenerationType="class">
         <attribute name="iconUrl" optional="YES" attributeType="URI"/>
-        <attribute name="id" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="mediumUrl" optional="YES" attributeType="URI"/>
         <attribute name="screenUrl" optional="YES" attributeType="URI"/>
         <attribute name="smallUrl" optional="YES" attributeType="URI"/>
@@ -63,49 +70,49 @@
         <attribute name="tags" optional="YES" attributeType="String"/>
         <attribute name="thumbUrl" optional="YES" attributeType="URI"/>
         <attribute name="tinyUrl" optional="YES" attributeType="URI"/>
-        <relationship name="character" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GameCharacter" inverseName="image" inverseEntity="GameCharacter"/>
-        <relationship name="gameField" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GameField" inverseName="image" inverseEntity="GameField"/>
-        <relationship name="gameFields" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GameField" inverseName="images" inverseEntity="GameField"/>
-        <relationship name="platform" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Platform" inverseName="image" inverseEntity="Platform"/>
+        <relationship name="characters" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CharacterCD" inverseName="image" inverseEntity="CharacterCD"/>
+        <relationship name="gameFields" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GameFieldCD" inverseName="images" inverseEntity="GameFieldCD"/>
+        <relationship name="platforms" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PlatformCD" inverseName="image" inverseEntity="PlatformCD"/>
     </entity>
-    <entity name="Platform" representedClassName="Platform" parentEntity="Field" syncable="YES" codeGenerationType="class">
+    <entity name="PlatformCD" representedClassName="PlatformCD" parentEntity="FieldCD" syncable="YES" codeGenerationType="class">
         <attribute name="abbreviation" optional="YES" attributeType="String"/>
-        <attribute name="custom" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
-        <attribute name="finished" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="hasDetails" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
-        <attribute name="progress" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="rating" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="custom" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="finished" transient="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="hasDetails" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="progress" transient="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="rating" transient="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="releaseDate" optional="YES" attributeType="String"/>
-        <relationship name="companies" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Company" inverseName="platforms" inverseEntity="Company"/>
-        <relationship name="gameFields" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GameField" inverseName="platforms" inverseEntity="GameField"/>
-        <relationship name="image" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ImageUrls" inverseName="platform" inverseEntity="ImageUrls"/>
-        <relationship name="ownedGames" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Game" inverseName="platform" inverseEntity="Game"/>
+        <relationship name="company" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CompanyCD" inverseName="platforms" inverseEntity="CompanyCD"/>
+        <relationship name="gameFields" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GameFieldCD" inverseName="platforms" inverseEntity="GameFieldCD"/>
+        <relationship name="image" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ImageListCD" inverseName="platforms" inverseEntity="ImageListCD"/>
+        <relationship name="ownedGames" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GameCD" inverseName="platform" inverseEntity="GameCD"/>
     </entity>
-    <entity name="Playlist" representedClassName="Playlist" syncable="YES" codeGenerationType="class">
+    <entity name="PlaylistCD" representedClassName="PlaylistCD" syncable="YES" codeGenerationType="class">
         <attribute name="dateAdded" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="descriptionText" optional="YES" attributeType="String"/>
-        <attribute name="finished" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="finished" transient="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="imageUrl" optional="YES" attributeType="URI"/>
-        <attribute name="isNowPlaying" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
-        <attribute name="isUpNext" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="isNowPlaying" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isUpNext" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
-        <attribute name="progress" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="games" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Game" inverseName="playlists" inverseEntity="Game"/>
+        <attribute name="progress" transient="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="uuid" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="games" toMany="YES" deletionRule="Nullify" destinationEntity="GameCD" inverseName="playlists" inverseEntity="GameCD"/>
     </entity>
-    <entity name="Publisher" representedClassName="Publisher" parentEntity="Field" syncable="YES" codeGenerationType="class">
-        <relationship name="gameFields" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GameField" inverseName="publishers" inverseEntity="GameField"/>
+    <entity name="PublisherCD" representedClassName="PublisherCD" parentEntity="FieldCD" syncable="YES" codeGenerationType="class">
+        <relationship name="gameFields" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GameFieldCD" inverseName="publishers" inverseEntity="GameFieldCD"/>
     </entity>
     <elements>
-        <element name="Company" positionX="-719.890625" positionY="-41.91796875" width="128" height="58"/>
-        <element name="Developer" positionX="-768.87890625" positionY="-662.578125" width="128" height="58"/>
-        <element name="Field" positionX="-890.4765625" positionY="-451.25390625" width="128" height="103"/>
-        <element name="Game" positionX="-1089.32421875" positionY="-446.9453125" width="128" height="238"/>
-        <element name="GameCharacter" positionX="-692.55078125" positionY="-540.98046875" width="128" height="88"/>
-        <element name="GameField" positionX="-1330.02734375" positionY="-824.4765625" width="128" height="283"/>
-        <element name="Genre" positionX="-913.78125" positionY="-661.87890625" width="128" height="58"/>
-        <element name="ImageUrls" positionX="-1324.6484375" positionY="-140.0078125" width="128" height="238"/>
-        <element name="Platform" positionX="-902.8203125" positionY="-95.17578125" width="128" height="208"/>
-        <element name="Playlist" positionX="-1345.1640625" positionY="-505.1640625" width="128" height="178"/>
-        <element name="Publisher" positionX="-1064.515625" positionY="-664.53125" width="128" height="58"/>
+        <element name="GameFieldCD" positionX="-54" positionY="18" width="128" height="326"/>
+        <element name="ImageListCD" positionX="-36" positionY="27" width="128" height="223"/>
+        <element name="GenreCD" positionX="-18" positionY="162" width="128" height="58"/>
+        <element name="DeveloperCD" positionX="0" positionY="171" width="128" height="58"/>
+        <element name="PublisherCD" positionX="18" positionY="180" width="128" height="58"/>
+        <element name="CharacterCD" positionX="36" positionY="207" width="128" height="88"/>
+        <element name="PlatformCD" positionX="-9" positionY="162" width="128" height="208"/>
+        <element name="CompanyCD" positionX="0" positionY="171" width="128" height="58"/>
+        <element name="GameCD" positionX="9" positionY="189" width="128" height="253"/>
+        <element name="PlaylistCD" positionX="18" positionY="198" width="128" height="193"/>
+        <element name="FieldCD" positionX="27" positionY="207" width="128" height="103"/>
     </elements>
 </model>
