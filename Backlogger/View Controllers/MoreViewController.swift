@@ -158,6 +158,9 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        defer {
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
         if indexPath.section == 0 {
             switch indexPath.row {
             case 0:
@@ -171,7 +174,7 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
                         UserDefaults.standard.removeObject(forKey: "steamId")
                         self.plainActivityIndicator?.startAnimating()
                         self.plainLoadingView?.isHidden = false
-                        UIApplication.shared.beginIgnoringInteractionEvents()
+                        self.view.isUserInteractionEnabled = false
                         autoreleasepool {
                             let realm = try! Realm()
                             if let platform = realm.object(ofType: Platform.self, forPrimaryKey: Steam.steamPlatformIdNumber) {
@@ -181,7 +184,7 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
                                 }
                             }
                         }
-                        UIApplication.shared.endIgnoringInteractionEvents()
+                        self.view.isUserInteractionEnabled = true
                         self.plainLoadingView?.isHidden = true
                         self.plainActivityIndicator?.stopAnimating()
                         self.tableView?.reloadData()
@@ -277,7 +280,6 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
                 break
             }
         }
-        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
 
@@ -326,6 +328,9 @@ extension MoreViewController: UIDocumentPickerDelegate {
 
 extension MoreViewController: SteamLoginViewControllerDelegate {
     func got(steamId: String?, username: String?) {
+        defer {
+            self.view.isUserInteractionEnabled = false
+        }
         if steamId != nil {
             UserDefaults.standard.set(steamId, forKey: "steamId")
             
@@ -353,7 +358,7 @@ extension MoreViewController: SteamLoginViewControllerDelegate {
                                 NSLog("Done")
                                 self.loadingView?.isHidden = true
                                 self.activityIndicator?.stopAnimating()
-                                UIApplication.shared.endIgnoringInteractionEvents()
+                                self.view.isUserInteractionEnabled = true
                                 if matched.value!.count > 0 {
                                     //dedupe
                                     var dedupedList: [GameField] = []
@@ -381,7 +386,7 @@ extension MoreViewController: SteamLoginViewControllerDelegate {
                     } else {
                         self.loadingView?.isHidden = true
                         self.activityIndicator?.stopAnimating()
-                        UIApplication.shared.endIgnoringInteractionEvents()
+                        self.view.isUserInteractionEnabled = true
                     }
                 }
             }
@@ -407,7 +412,7 @@ extension MoreViewController: SteamLoginViewControllerDelegate {
                                     NSLog("Done")
                                     self.loadingView?.isHidden = true
                                     self.activityIndicator?.stopAnimating()
-                                    UIApplication.shared.endIgnoringInteractionEvents()
+                                    self.view.isUserInteractionEnabled = true
                                     if matched.value!.count > 0 {
                                         //dedupe
                                         var dedupedList: [GameField] = []
@@ -443,12 +448,14 @@ extension MoreViewController: SteamLoginViewControllerDelegate {
         self.progressBar?.setProgress(0.0, animated: false)
         self.progressLabel?.text = ""
         self.loadingView?.isHidden = false
-        UIApplication.shared.beginIgnoringInteractionEvents()
     }
 }
 
 extension MoreViewController: AddSteamGamesViewControllerDelegate {
     func didSelectSteamGames(vc: AddSteamGamesViewController, games: [GameField]) {
+        defer {
+            self.view.isUserInteractionEnabled = true
+        }
         vc.dismiss(animated: true, completion: nil)
         if games.count > 0 {
             var steamPlatform: Platform?
@@ -478,7 +485,7 @@ extension MoreViewController: AddSteamGamesViewControllerDelegate {
             }
             self.plainActivityIndicator?.startAnimating()
             self.plainLoadingView?.isHidden = false
-            UIApplication.shared.beginIgnoringInteractionEvents()
+            self.view.isUserInteractionEnabled = false
             for game in games {
                 let newGame = Game()
                 newGame.inLibrary = true
@@ -487,7 +494,6 @@ extension MoreViewController: AddSteamGamesViewControllerDelegate {
             }
             self.plainLoadingView?.isHidden = true
             self.plainActivityIndicator?.stopAnimating()
-            UIApplication.shared.endIgnoringInteractionEvents()
         }
     }
     

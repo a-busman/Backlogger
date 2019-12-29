@@ -9,6 +9,7 @@
 import Foundation
 import RealmSwift
 import Realm
+import IceCream
 
 enum GenericFields: String {
     case ApiDetailUrl  = "api_detail_url"
@@ -59,14 +60,6 @@ class Field: BLObject {
     
     required init() {
         super.init()
-    }
-    
-    required init(realm: RLMRealm, schema: RLMObjectSchema) {
-        super.init(realm: realm, schema: schema)
-    }
-    
-    required init(value: Any, schema: RLMSchema) {
-        super.init(value: value, schema: schema)
     }
     
     override static func primaryKey() -> String? {

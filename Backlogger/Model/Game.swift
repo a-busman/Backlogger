@@ -93,14 +93,6 @@ class GameField: Field {
         super.init()
     }
     
-    required init(realm: RLMRealm, schema: RLMObjectSchema) {
-        super.init(realm: realm, schema: schema)
-    }
-    
-    required init(value: Any, schema: RLMSchema) {
-        super.init(value: value, schema: schema)
-    }
-    
     func updateGameDetailsFromJson(json: [String: Any], fromDb: Bool) {
         self.update {
             self.deck         = json[GameFields.Deck.rawValue]                as? String ?? ""

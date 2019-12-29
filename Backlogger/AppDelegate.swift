@@ -12,6 +12,7 @@ import RealmSwift
 import Fabric
 import Crashlytics
 import Zephyr
+import Firebase
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -21,6 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         Fabric.with([Crashlytics.self])
+        FirebaseApp.configure()
 
         self.createDirectories()
         let dir: URL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.BackloggerSharing")!
@@ -44,6 +46,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             Zephyr.sync()
         }
         
+        if self.migrateToCloudKit() {
+            
+        } else {
+            NSLog("Could not migrate to cloudkit")
+        }
+        
         if let shortcutItem = launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem {
             self.shortcutItem = shortcutItem
             return false
@@ -52,6 +60,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
     
+    func migrateToCloudKit() -> Bool {
+        return false
+    }
 
     func handleShortcut(_ shortcutItem:UIApplicationShortcutItem ) -> Bool {
         var succeeded = false

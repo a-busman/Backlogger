@@ -1,0 +1,6 @@
+framework module IceCream {
+  umbrella header "IceCream-umbrella.h"
+
+  export *
+  module * { export * }
+}

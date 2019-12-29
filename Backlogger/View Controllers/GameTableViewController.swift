@@ -223,7 +223,7 @@ class GameTableViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.startInset = (self.navigationController?.navigationBar.bounds.height ?? 0.0) + self.backgroundTopInitial + UIApplication.shared.statusBarFrame.height
+        self.startInset = (self.navigationController?.navigationBar.bounds.height ?? 0.0) + self.backgroundTopInitial + (self.view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0)
         if !self.didLayout {
             self.shadowGradientLayer.frame = CGRect(x: 0.0, y: 0.0, width: UIScreen.main.bounds.width, height: (self.shadowView?.frame.height)!)
             let darkColor = UIColor(white: 0.0, alpha: 0.3).cgColor
@@ -231,8 +231,8 @@ class GameTableViewController: UIViewController {
             self.shadowGradientLayer.locations = [0.7, 1.0]
             self.tableView?.contentInset.top = self.backgroundTopInitial
             self.tableView?.contentInset.bottom = 0.0
-            self.tableView?.scrollIndicatorInsets.top = self.backgroundTopInitial
-            self.tableView?.scrollIndicatorInsets.bottom = 0.0
+            self.tableView?.verticalScrollIndicatorInsets.top = self.backgroundTopInitial
+            self.tableView?.verticalScrollIndicatorInsets.bottom = 0.0
             self.tableView?.setContentOffset(CGPoint(x: 0.0, y: -self.startInset), animated: false)
             self.shadowView?.layer.addSublayer(self.shadowGradientLayer)
         }
@@ -432,7 +432,7 @@ class GameTableViewController: UIViewController {
                         NSLog("Done")
                         self.loadingView?.isHidden = true
                         self.activityIndicator?.stopAnimating()
-                        UIApplication.shared.endIgnoringInteractionEvents()
+                        self.view.isUserInteractionEnabled = true
                         if matched.value!.count > 0 {
                             //dedupe
                             var dedupedList: [GameField] = []
@@ -475,7 +475,7 @@ class GameTableViewController: UIViewController {
         self.progressBar?.setProgress(0.0, animated: false)
         self.progressLabel?.text = ""
         self.loadingView?.isHidden = false
-        UIApplication.shared.beginIgnoringInteractionEvents()
+        self.view.isUserInteractionEnabled = false
     }
     
     func tappedDone(sender: UIBarButtonItem) {
@@ -754,19 +754,21 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
                 self.imageHeightLayoutConstraint?.constant = self.imageHeightInitial
             }
             self.currentScrollPosition = offset
-            self.tableView?.scrollIndicatorInsets.top =  self.startInset - ((self.navigationController?.navigationBar.bounds.height ?? 0.0) + UIApplication.shared.statusBarFrame.height)
-            if offset < ((self.titleLabel?.bounds.height ?? 0) + (self.navigationController?.navigationBar.bounds.height ?? 0) + UIApplication.shared.statusBarFrame.height) {
+            self.tableView?.verticalScrollIndicatorInsets.top =  self.startInset - ((self.navigationController?.navigationBar.bounds.height ?? 0.0) + (self.view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0))
+            
+            let labelNavHeight = (self.titleLabel?.bounds.height ?? 0) + (self.navigationController?.navigationBar.bounds.height ?? 0)
+            if offset < (labelNavHeight + (self.view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0)) {
                 if offset < 0.0 {
                     self.navigationController?.navigationBar.titleTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.foregroundColor.rawValue: UIColor.white])
                 } else {
-                    let remainingWidth = offset - ((self.navigationController?.navigationBar.bounds.height ?? 0) + UIApplication.shared.statusBarFrame.height)
+                    let remainingWidth = offset - ((self.navigationController?.navigationBar.bounds.height ?? 0) + (self.view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0))
                     let newColor = UIColor(white: 1.0, alpha: ((self.titleLabel?.bounds.height ?? 0) - remainingWidth) / (self.titleLabel?.bounds.height ?? 1))
                     self.navigationController?.navigationBar.titleTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.foregroundColor.rawValue: newColor])
                 }
             } else {
                 self.navigationController?.navigationBar.titleTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.foregroundColor.rawValue: UIColor.clear])
                 if offset > self.startInset {
-                    self.tableView?.scrollIndicatorInsets.top = offset - ((self.navigationController?.navigationBar.bounds.height ?? 0.0) + UIApplication.shared.statusBarFrame.height)
+                    self.tableView?.verticalScrollIndicatorInsets.top = offset - ((self.navigationController?.navigationBar.bounds.height ?? 0.0) + (self.view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0))
                 }
             }
         }

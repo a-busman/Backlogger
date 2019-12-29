@@ -6,20 +6,22 @@ def sharedPods
   pod 'Kingfisher'
   pod 'RealmSwift'
   pod 'MMWormhole'
+  pod 'Firebase/Analytics'
+  pod 'IceCream'
 end
 
 target 'Backlogger' do
-    platform :ios, '12'
+    platform :ios, '13'
     sharedPods
-    pod 'ImageViewer', :git => 'https://github.com/Krisiacik/ImageViewer.git', :commit => '9afa043ffcaf3fd5114a13d5fabcd9bcf5013265'
+    pod 'ImageViewer', :git => 'https://github.com/Krisiacik/ImageViewer.git', :commit => '519fbdb57b4ad83de50ecd09b7182ed9d190f3ee'
     pod 'Fabric'
     pod 'Crashlytics'
     pod 'Zip'
-    pod 'Zephyr', :git => 'https://github.com/ArtSabintsev/Zephyr.git', :branch => 'swift4.2'
+    pod 'Zephyr'
 end
 
 target 'BackloggerWidget' do
-    platform :ios, '12'
+    platform :ios, '13'
     sharedPods
     pod 'Fabric'
     pod 'Crashlytics'
@@ -38,7 +40,7 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
-      config.build_settings['SWIFT_VERSION'] = '4.2'
+      config.build_settings['SWIFT_VERSION'] = '5.1'
     end
   end
 end

@@ -149,7 +149,7 @@ class PlaylistDetailsViewController: UITableViewController {
         self.titleCell.view.translatesAutoresizingMaskIntoConstraints = false
         self.descCell.view.translatesAutoresizingMaskIntoConstraints = false
         self.toastOverlay.view.translatesAutoresizingMaskIntoConstraints = false
-        let window = UIApplication.shared.keyWindow!
+        guard let window = UIApplication.shared.connectedScenes.filter({$0.activationState == .foregroundActive}).map({$0 as? UIWindowScene}).compactMap({$0}).first?.windows.filter({$0.isKeyWindow}).first else { return }
         window.addSubview(toastOverlay.view)
         toastOverlay.view.centerYAnchor.constraint(equalTo: window.centerYAnchor).isActive = true
         toastOverlay.view.centerXAnchor.constraint(equalTo: window.centerXAnchor).isActive = true
