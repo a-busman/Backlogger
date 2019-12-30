@@ -1035,7 +1035,7 @@ class GameDetailsViewController: UIViewController {
                 self.statsButton?.backgroundColor = .white
                 self.statsLabel?.textColor = Util.appColor
                 self.statsScrollView?.alpha = 1.0
-                self.statsEffectView?.effect = UIBlurEffect(style: .extraLight)
+                self.statsEffectView?.effect = UIBlurEffect(style: .systemMaterial)
             })
             self.statsState = .visible
         } else {

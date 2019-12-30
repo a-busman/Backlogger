@@ -37,6 +37,10 @@ class MoreViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.refreshCells()
+    }
+    
+    func refreshCells() {
         if Util.isICloudContainerAvailable {
             Zephyr.sync()
         }
@@ -155,6 +159,7 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
     
     @objc func tappedDone(sender: UIBarButtonItem) {
         self.steamVc?.dismiss(animated: true, completion: nil)
+        self.refreshCells()
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -200,7 +205,6 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
                     self.steamVc?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.tappedDone))
                     self.steamVc?.navigationBar.barTintColor = Util.appColor
                     self.steamVc?.navigationBar.tintColor = .white
-                    self.steamVc?.navigationBar.barStyle = .black
                     self.steamVc?.navigationBar.isTranslucent = true
                     vc.delegate = self
                     self.present(self.steamVc!, animated: true, completion: nil)
@@ -330,6 +334,7 @@ extension MoreViewController: SteamLoginViewControllerDelegate {
     func got(steamId: String?, username: String?) {
         defer {
             self.view.isUserInteractionEnabled = false
+            self.refreshCells()
         }
         if steamId != nil {
             UserDefaults.standard.set(steamId, forKey: "steamId")
@@ -455,6 +460,7 @@ extension MoreViewController: AddSteamGamesViewControllerDelegate {
     func didSelectSteamGames(vc: AddSteamGamesViewController, games: [GameField]) {
         defer {
             self.view.isUserInteractionEnabled = true
+            self.refreshCells()
         }
         vc.dismiss(animated: true, completion: nil)
         if games.count > 0 {
@@ -499,5 +505,6 @@ extension MoreViewController: AddSteamGamesViewControllerDelegate {
     
     func didDismiss(vc: AddSteamGamesViewController) {
         vc.dismiss(animated: true, completion: nil)
+        self.refreshCells()
     }
 }

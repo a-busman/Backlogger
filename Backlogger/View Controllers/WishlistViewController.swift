@@ -32,6 +32,10 @@ class WishlistViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.refreshCells()
+    }
+    
+    func refreshCells() {
         autoreleasepool {
             let realm = try? Realm()
             self.wishlistGames = realm?.objects(Game.self).filter("inWishlist = true").sorted(byKeyPath: "dateAdded", ascending: false)

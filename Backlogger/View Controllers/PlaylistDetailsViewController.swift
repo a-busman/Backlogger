@@ -379,7 +379,10 @@ class PlaylistDetailsViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        self.refreshCells()
+    }
+    
+    func refreshCells() {
         if self.isFavourites {
             autoreleasepool {
                 let realm = try! Realm()
@@ -577,7 +580,7 @@ class PlaylistDetailsViewController: UITableViewController {
             self.playlist?.update {
                 self.playlist?.games.removeAll()
                 self.playlist?.games.append(objectsIn: self.games)
-                if self.titleCell.titleTextView?.textColor != .lightGray {
+                if self.titleCell.titleTextView?.textColor != .placeholderText {
                     self.playlist?.name = self.titleCell.titleTextView?.text
                     self.titleCell.titleLabel?.text = self.titleCell.titleTextView?.text
                 } else {
@@ -587,7 +590,7 @@ class PlaylistDetailsViewController: UITableViewController {
                     self.playlist?.imageUrl = "custom"
                 }
                 if let descCell = self.descCell.descriptionTextView {
-                    if descCell.textColor != .lightGray {
+                    if descCell.textColor != .placeholderText {
                         self.playlist?.descriptionText = descCell.text
                     } else {
                         self.playlist?.descriptionText = nil
@@ -597,7 +600,7 @@ class PlaylistDetailsViewController: UITableViewController {
         } else {
             playlist?.games.removeAll()
             playlist?.games.append(objectsIn: self.games)
-            if self.titleCell.titleTextView?.textColor != .lightGray {
+            if self.titleCell.titleTextView?.textColor != .placeholderText {
                 playlist?.name = self.titleCell.titleTextView?.text
             } else {
                 playlist?.name = "Untitled Playlist"
@@ -606,7 +609,7 @@ class PlaylistDetailsViewController: UITableViewController {
                 self.playlist?.imageUrl = "custom"
             }
             if let descCell = self.descCell.descriptionTextView {
-                if descCell.textColor != .lightGray {
+                if descCell.textColor != .placeholderText {
                     playlist?.descriptionText = descCell.text
                 } else {
                     playlist?.descriptionText = nil
@@ -1015,7 +1018,7 @@ extension PlaylistDetailsViewController: UITextViewDelegate {
     }
     
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
-        if textView.textColor == .lightGray {
+        if textView.textColor == .placeholderText {
             textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
         }
         return true
@@ -1035,7 +1038,7 @@ extension PlaylistDetailsViewController: UITextViewDelegate {
             } else if textView == self.descCell.descriptionTextView {
                 textView.text = "Description"
             }
-            textView.textColor = UIColor.lightGray
+            textView.textColor = .placeholderText
             
             textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
             
@@ -1046,9 +1049,9 @@ extension PlaylistDetailsViewController: UITextViewDelegate {
             // length of the replacement string is greater than 0, clear
             // the text view and set its color to black to prepare for
             // the user's entry
-        else if textView.textColor == UIColor.lightGray && !text.isEmpty {
+        else if textView.textColor == .placeholderText && !text.isEmpty {
             textView.text = nil
-            textView.textColor = UIColor.black
+            textView.textColor = .label
         }
         self.didEditField = true
         _ = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.invalidateEditField), userInfo: nil, repeats: false)
@@ -1057,7 +1060,7 @@ extension PlaylistDetailsViewController: UITextViewDelegate {
     
     func textViewDidChangeSelection(_ textView: UITextView) {
         if self.view.window != nil {
-            if textView.textColor == UIColor.lightGray {
+            if textView.textColor == .placeholderText {
                 textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
             }
         }
@@ -1112,11 +1115,13 @@ extension PlaylistDetailsViewController: AddToPlaylistViewControllerDelegate {
         if self.playlistState == .default {
             self.saveCurrentState(playlist: nil)
         }
+        self.refreshCells()
     }
     
     func dismissView(_ vc: AddToPlaylistViewController) {
         self.isDismissing = true
         vc.dismiss(animated: true, completion: nil)
+        self.refreshCells()
     }
 }
 

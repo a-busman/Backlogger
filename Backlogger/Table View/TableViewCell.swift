@@ -78,10 +78,10 @@ class TableViewCell: UITableViewCell {
             self._isWishlist = newValue
             if newValue {
                 self.percentView.isHidden = true
-                self.titleLabel?.textColor = .lightGray
+                self.titleLabel?.textColor = .tertiaryLabel
             } else {
                 self.percentView.isHidden = false
-                self.titleLabel?.textColor = .black
+                self.titleLabel?.textColor = .label
             }
         }
     }
@@ -148,7 +148,7 @@ class TableViewCell: UITableViewCell {
         self.percentViewController.view.translatesAutoresizingMaskIntoConstraints = false
         self.addButton?.isHidden = self.addButtonHidden
         if self.addButtonHidden {
-            self.rightTrailingLayoutConstraint?.constant = 0.0
+            self.rightTrailingLayoutConstraint?.constant = -5.0
         } else {
             self.rightTrailingLayoutConstraint?.constant = -28.0
         }
@@ -193,8 +193,8 @@ class TableViewCell: UITableViewCell {
         
         if self._isWishlist {
             self.percentView.isHidden = true
-            self.titleLabel?.textColor = .lightGray
-            self.descriptionLabel?.textColor = .lightGray
+            self.titleLabel?.textColor = .tertiaryLabel
+            self.descriptionLabel?.textColor = .tertiaryLabel
         }
         
     }
@@ -223,8 +223,8 @@ class TableViewCell: UITableViewCell {
             subview.removeFromSuperview()
         }
         self.percentView.isHidden = false
-        self.titleLabel?.textColor = .black
-        self.descriptionLabel?.textColor = .darkGray
+        self.titleLabel?.textColor = .label
+        self.descriptionLabel?.textColor = .secondaryLabel
         //self.laidOut = false
     }
 }

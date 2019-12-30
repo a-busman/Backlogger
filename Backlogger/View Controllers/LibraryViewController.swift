@@ -48,6 +48,10 @@ class LibraryViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.refreshCells()
+    }
+    
+    func refreshCells() {
         if Util.isICloudContainerAvailable {
             Zephyr.sync()
         }

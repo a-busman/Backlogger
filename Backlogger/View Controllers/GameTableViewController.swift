@@ -163,6 +163,10 @@ class GameTableViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.refreshCells()
+    }
+    
+    func refreshCells() {
         if Util.isICloudContainerAvailable {
             Zephyr.sync()
         }
@@ -480,6 +484,7 @@ class GameTableViewController: UIViewController {
     
     func tappedDone(sender: UIBarButtonItem) {
         self.steamVc?.dismiss(animated: true, completion: nil)
+        self.refreshCells()
     }
     
     func addGames(sender: UIAlertAction) {
@@ -787,11 +792,15 @@ extension GameTableViewController: PlaylistViewControllerDelegate {
             self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "add_to_playlist_large"), title: "Added to Playlist", description: "Added to \"\(playlist.name!)\".")
         })
         vc.navigationController?.dismiss(animated: true, completion: nil)
+        self.refreshCells()
     }
 }
 
 extension GameTableViewController: AddSteamGamesViewControllerDelegate {
     func didSelectSteamGames(vc: AddSteamGamesViewController, games: [GameField]) {
+        defer {
+            self.refreshCells()
+        }
         if games.count > 0 {
             var steamPlatform: Platform?
             autoreleasepool {
@@ -830,6 +839,7 @@ extension GameTableViewController: AddSteamGamesViewControllerDelegate {
     
     func didDismiss(vc: AddSteamGamesViewController) {
         vc.dismiss(animated: true, completion: nil)
+        self.refreshCells()
     }
 }
 

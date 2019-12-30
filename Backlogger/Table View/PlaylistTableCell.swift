@@ -44,16 +44,16 @@ class PlaylistTableCell: UITableViewCell {
                 self.descLabel?.text = ""
                 self.descLabel?.isHidden = true
             case .title:
-                self.titleLabel?.textColor = .black
+                self.titleLabel?.textColor = .label
                 self.titleCenterLayoutConstraint?.constant = 0.0
                 self.descLabel?.text = ""
                 self.descLabel?.isHidden = true
             case .full:
-                self.titleLabel?.textColor = .black
+                self.titleLabel?.textColor = .label
                 self.titleCenterLayoutConstraint?.constant = -14.0
                 self.descLabel?.isHidden = false
             case .favourite:
-                self.titleLabel?.textColor = .black
+                self.titleLabel?.textColor = .label
                 self.titleLabel?.text = "Favourites"
                 self.titleCenterLayoutConstraint?.constant = 0.0
                 self.descLabel?.text = ""
@@ -67,7 +67,7 @@ class PlaylistTableCell: UITableViewCell {
 
         if let playlist = self.playlist {
             self.titleLabel?.text = playlist.name
-            self.titleLabel?.textColor = .black
+            self.titleLabel?.textColor = .label
             self.showImage()
             if playlist.descriptionText == nil {
                 self.titleCenterLayoutConstraint?.constant = 0.0
@@ -86,7 +86,7 @@ class PlaylistTableCell: UITableViewCell {
                 self.blurImage?.image = #imageLiteral(resourceName: "new_playlist_plus")
             } else {
                 self.titleLabel?.text = "Favourites"
-                self.titleLabel?.textColor = .black
+                self.titleLabel?.textColor = .label
                 self.hideImage()
                 self.blurImage?.image = #imageLiteral(resourceName: "large-heart")
             }

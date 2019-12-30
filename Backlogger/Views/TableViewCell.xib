@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
-        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -18,14 +12,14 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="33h-aR-jd1" id="L7E-mH-Zl0">
-                <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JUf-60-Ilm">
-                        <rect key="frame" x="8" y="5" width="33.5" height="33.5"/>
+                        <rect key="frame" x="8" y="5" width="34" height="34"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="table_placeholder_light" translatesAutoresizingMaskIntoConstraints="NO" id="vra-l8-XHu">
-                                <rect key="frame" x="0.0" y="0.0" width="33.5" height="32.5"/>
+                                <rect key="frame" x="0.5" y="0.5" width="33" height="33"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -49,7 +43,7 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M86-Nr-Z7l" userLabel="Title">
-                        <rect key="frame" x="46.5" y="1.5" width="288.5" height="20.5"/>
+                        <rect key="frame" x="47" y="1.5" width="288" height="20.5"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="20.5" id="tKB-4K-c0m"/>
                         </constraints>
@@ -58,19 +52,19 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Developer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MYG-Sy-BgC" userLabel="Description">
-                        <rect key="frame" x="46.5" y="22" width="288.5" height="17"/>
+                        <rect key="frame" x="47" y="22" width="288" height="17"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="100%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lPU-fk-BXR" userLabel="Right">
-                        <rect key="frame" x="333.5" y="11" width="41.5" height="21"/>
+                        <rect key="frame" x="332.5" y="11.5" width="42.5" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="okp-sa-rRu">
-                        <rect key="frame" x="337.5" y="5" width="32.5" height="33"/>
+                        <rect key="frame" x="337" y="5.5" width="33" height="33"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="33" id="1KC-WD-a2E"/>
                             <constraint firstAttribute="width" secondItem="okp-sa-rRu" secondAttribute="height" id="Q8I-fT-9d1"/>
@@ -82,7 +76,7 @@
                         </connections>
                     </button>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5g9-xI-DaY">
-                        <rect key="frame" x="339" y="7" width="28" height="28"/>
+                        <rect key="frame" x="332" y="8" width="28" height="28"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="28" id="fnq-Xm-e9j"/>
                             <constraint firstAttribute="width" secondItem="5g9-xI-DaY" secondAttribute="height" id="kVs-g3-pgL"/>
@@ -107,6 +101,7 @@
                     <constraint firstItem="MYG-Sy-BgC" firstAttribute="top" secondItem="M86-Nr-Z7l" secondAttribute="bottom" id="zv5-dC-WEZ"/>
                 </constraints>
             </tableViewCellContentView>
+            <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
             <connections>
                 <outlet property="addButton" destination="okp-sa-rRu" id="gky-9B-oiA"/>
                 <outlet property="artView" destination="vra-l8-XHu" id="chh-AC-ZaU"/>
@@ -121,7 +116,7 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="add_symbol_blue" width="22" height="22"/>
+        <image name="add_symbol_blue" width="22.5" height="22.5"/>
         <image name="table_placeholder_light" width="96" height="96"/>
     </resources>
 </document>

@@ -24,7 +24,7 @@ class PlaylistDescriptionCell: UIViewController {
         set(newValue) {
             self._descriptionString = newValue
             self.descriptionTextView?.text = newValue
-            self.descriptionTextView?.textColor = .black
+            self.descriptionTextView?.textColor = .label
         }
     }
     
@@ -44,10 +44,10 @@ class PlaylistDescriptionCell: UIViewController {
         super.viewDidLoad()
         if self._descriptionString == "" {
             self.descriptionTextView?.text = "Description"
-            self.descriptionTextView?.textColor = .lightGray
+            self.descriptionTextView?.textColor = .placeholderText
         } else {
             self.descriptionTextView?.text = self._descriptionString
-            self.descriptionTextView?.textColor = .black
+            self.descriptionTextView?.textColor = .label
         }
         self.descriptionTextView?.delegate = self.descriptionDelegate
         self.descriptionTextView?.isEditable = self._isEditable

@@ -86,8 +86,7 @@ class NowPlayingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.upNextTableView?.register(UINib(nibName: "PlaylistAddTableCell", bundle: nil), forCellReuseIdentifier: self.cellReuseIdentifier)
-        self.upNextTableView?.separatorColor = .lightGray
-        //self.upNextTableView?.separatorInset = UIEdgeInsetsMake(0, 75, 0, 0)
+        self.upNextTableView?.separatorColor = .separator
         self.upNextTableView?.contentInset.bottom = 55.0
         NotificationCenter.default.addObserver(self, selector: #selector(refreshFirstGame), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
@@ -783,7 +782,7 @@ extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate {
         shadowView.layer.shadowOffset = CGSize(width: 0.0, height: 20.0)
         shadowView.layer.shadowColor = UIColor.black.cgColor
         shadowView.layer.shadowOpacity = 0.5
-        shadowView.backgroundColor = .white
+        shadowView.backgroundColor = .systemBackground
         shadowView.center = center
         self.view.addSubview(shadowView)
         

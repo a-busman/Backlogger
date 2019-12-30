@@ -172,6 +172,11 @@ class PlaylistViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.refreshCells()
+    }
+    
+    func refreshCells() {
         autoreleasepool {
             let realm = try! Realm()
             switch self.sortType! {
@@ -338,5 +343,6 @@ extension PlaylistViewController: PlaylistDetailsViewControllerDelegate {
             vc.dismiss(animated: true, completion: nil)
         }
         self.delegate?.chosePlaylist(vc: self, playlist: playlist, games: [], isNew: true)
+        self.refreshCells()
     }
 }

@@ -46,22 +46,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             Zephyr.sync()
         }
         
-        if self.migrateToCloudKit() {
-            
-        } else {
-            NSLog("Could not migrate to cloudkit")
-        }
-        
         if let shortcutItem = launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem {
             self.shortcutItem = shortcutItem
             return false
         }
         
         return true
-    }
-    
-    func migrateToCloudKit() -> Bool {
-        return false
     }
 
     func handleShortcut(_ shortcutItem:UIApplicationShortcutItem ) -> Bool {

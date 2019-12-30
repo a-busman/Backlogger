@@ -93,8 +93,6 @@
 		FADA809C1E4FB2D20069943D /* TableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FADA809B1E4FB2D20069943D /* TableViewCell.xib */; };
 		FADA809F1E4FB66A0069943D /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA809E1E4FB66A0069943D /* TableViewCell.swift */; };
 		FADA80A21E5252DB0069943D /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA80A11E5252DB0069943D /* Game.swift */; };
-		FAF7018523B9205800622719 /* Migrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF7018423B9205800622719 /* Migrator.swift */; };
-		FAF7018823B9239D00622719 /* Backlogger.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FAF7018623B9239D00622719 /* Backlogger.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -213,8 +211,6 @@
 		FADA809B1E4FB2D20069943D /* TableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TableViewCell.xib; path = Views/TableViewCell.xib; sourceTree = "<group>"; };
 		FADA809E1E4FB66A0069943D /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TableViewCell.swift; path = "Table View/TableViewCell.swift"; sourceTree = "<group>"; };
 		FADA80A11E5252DB0069943D /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Game.swift; path = Model/Game.swift; sourceTree = "<group>"; };
-		FAF7018423B9205800622719 /* Migrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Migrator.swift; path = Model/Migrator.swift; sourceTree = "<group>"; };
-		FAF7018723B9239D00622719 /* Backlogger.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Backlogger.xcdatamodel; sourceTree = "<group>"; };
 		FCA9F7721B70E29F61F851FA /* Pods-Backlogger.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Backlogger.debug.xcconfig"; path = "Target Support Files/Pods-Backlogger/Pods-Backlogger.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -272,7 +268,6 @@
 		FA0915601E2AA4210052BCEC = {
 			isa = PBXGroup;
 			children = (
-				FAF7018623B9239D00622719 /* Backlogger.xcdatamodeld */,
 				FA13576C232EED06008A5A3F /* Backlogger.xctestplan */,
 				FA09156B1E2AA4210052BCEC /* Backlogger */,
 				FACCA64F1EF82CD8005F1021 /* BackloggerWidget */,
@@ -431,7 +426,6 @@
 				FA358A511EB9AC4C001EE03D /* Playlist.swift */,
 				FA9CFA351EFCB1B7003E93B8 /* Steam.swift */,
 				FA1FFF801F0153E40048D907 /* GameCharacter.swift */,
-				FAF7018423B9205800622719 /* Migrator.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -727,7 +721,6 @@
 				FA1FFF771EFDFBF50048D907 /* SteamLoginViewController.swift in Sources */,
 				FA4B44871E556AD3006A843F /* LibraryAddSearchViewController.swift in Sources */,
 				FA358A5C1EBC2BD2001EE03D /* PlaylistTitleCell.swift in Sources */,
-				FAF7018523B9205800622719 /* Migrator.swift in Sources */,
 				FA09158C1E2AA9AD0052BCEC /* NowPlayingViewController.swift in Sources */,
 				FA4B44931E5D405E006A843F /* ImageList.swift in Sources */,
 				FA4B44A11E61E3FC006A843F /* ImageViewerController.swift in Sources */,
@@ -739,7 +732,6 @@
 				FA1FFF791EFEB61E0048D907 /* AddSteamGamesViewController.swift in Sources */,
 				FA358A621EBF865B001EE03D /* PlaylistDescriptionCell.swift in Sources */,
 				FA0915861E2AA97B0052BCEC /* LibraryViewController.swift in Sources */,
-				FAF7018823B9239D00622719 /* Backlogger.xcdatamodeld in Sources */,
 				FA4B44891E5625E7006A843F /* SearchResults.swift in Sources */,
 				FADA808E1E4C0D680069943D /* NowPlayingGameViewCell.swift in Sources */,
 				FA0915971E2B367B0052BCEC /* NowPlayingGameViewController.swift in Sources */,
@@ -1116,19 +1108,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		FAF7018623B9239D00622719 /* Backlogger.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				FAF7018723B9239D00622719 /* Backlogger.xcdatamodel */,
-			);
-			currentVersion = FAF7018723B9239D00622719 /* Backlogger.xcdatamodel */;
-			path = Backlogger.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = FA0915611E2AA4210052BCEC /* Project object */;
 }
