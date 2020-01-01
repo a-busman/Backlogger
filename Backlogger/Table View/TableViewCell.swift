@@ -38,9 +38,7 @@ class TableViewCell: UITableViewCell {
     var delegate: TableViewCellDelegate?
     var addButtonHidden = true
     private var _libraryState: LibraryState = .add
-    
-    var laidOut = false
-    
+        
     var row: Int!
     
     var imageUrl: URL?
@@ -92,35 +90,40 @@ class TableViewCell: UITableViewCell {
         }
         set(newState) {
             self._libraryState = newState
-            if newState == .remove {
+            switch newState {
+            case .remove:
                 UIView.animate(withDuration: 0.1, animations: {
                     self.addButton?.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 4)
                 })
                 UIView.transition(with: self.addButton!, duration: 0.1, options: .transitionCrossDissolve, animations: {
                     self.addButton?.setImage(#imageLiteral(resourceName: "add_symbol_red"), for: .normal)
                 }, completion: nil)
-            } else if newState == .addPartial {
+                break
+            case .addPartial:
                 UIView.animate(withDuration: 0.1, animations: {
                     self.addButton?.transform = CGAffineTransform.identity
                 })
                 UIView.transition(with: self.addButton!, duration: 0.1, options: .transitionCrossDissolve, animations: {
                     self.addButton?.setImage(#imageLiteral(resourceName: "add_partial"), for: .normal)
                 }, completion: nil)
-            } else if newState == .addPlaylist {
+                break
+            case .addPlaylist:
                 UIView.animate(withDuration: 0.1, animations: {
                     self.addButton?.transform = CGAffineTransform.identity
                 })
                 UIView.transition(with: self.addButton!, duration: 0.1, options: .transitionCrossDissolve, animations: {
                     self.addButton?.setImage(#imageLiteral(resourceName: "add_playlist"), for: .normal)
                 }, completion: nil)
-            } else if newState == .inPlaylist {
+                break
+            case .inPlaylist:
                 UIView.animate(withDuration: 0.1, animations: {
                     self.addButton?.transform = CGAffineTransform.identity
                 })
                 UIView.transition(with: self.addButton!, duration: 0.1, options: .transitionCrossDissolve, animations: {
                     self.addButton?.setImage(#imageLiteral(resourceName: "check_blue"), for: .normal)
                 }, completion: nil)
-            } else {
+                break
+            default:
                 UIView.animate(withDuration: 0.1, animations: {
                     self.addButton?.transform = CGAffineTransform.identity
                 })
@@ -225,6 +228,5 @@ class TableViewCell: UITableViewCell {
         self.percentView.isHidden = false
         self.titleLabel?.textColor = .label
         self.descriptionLabel?.textColor = .secondaryLabel
-        //self.laidOut = false
     }
 }

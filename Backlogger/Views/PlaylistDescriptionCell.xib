@@ -25,6 +25,7 @@
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no"/>
                 </textView>
             </subviews>
+            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
             <constraints>
                 <constraint firstItem="Gdu-Hh-T2Q" firstAttribute="top" secondItem="tN7-kV-JdK" secondAttribute="top" constant="10" id="3Et-te-ASK"/>
                 <constraint firstItem="Gdu-Hh-T2Q" firstAttribute="trailing" secondItem="tN7-kV-JdK" secondAttribute="trailing" constant="-15" id="Lus-6i-yrT"/>

@@ -9,6 +9,10 @@
 import UIKit
 import RealmSwift
 
+protocol LibraryAddSearchViewControllerDelegate {
+    func didDismiss()
+}
+
 class LibraryAddSearchViewController: UIViewController {
     
     @IBOutlet weak var tableView:          UITableView?
@@ -28,6 +32,8 @@ class LibraryAddSearchViewController: UIViewController {
     var isLoadingGames = false
     var currentPage = 0
     var query: String?
+    
+    var delegate: LibraryAddSearchViewControllerDelegate?
     
     var toastOverlay = ToastOverlayViewController()
     
@@ -52,11 +58,7 @@ class LibraryAddSearchViewController: UIViewController {
         self.searchBar?.tintColor = Util.appColor
 
         self.tableView?.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: self.tableReuseIdentifier)
-        if #available(iOS 9.0, *) {
-            if traitCollection.forceTouchCapability == .available {
-                self.registerForPreviewing(with: self, sourceView: self.tableView!)
-            }
-        }
+        self.tableView?.addInteraction(UIContextMenuInteraction(delegate: self))
         
         self.toastOverlay.view.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(toastOverlay.view)
@@ -81,6 +83,11 @@ class LibraryAddSearchViewController: UIViewController {
             self.searchBar?.becomeFirstResponder()
             self.viewAlreadyLoaded = true
         }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.delegate?.didDismiss()
     }
     
     func loadFirstGame(withQuery query: String) {
@@ -244,10 +251,10 @@ extension LibraryAddSearchViewController: PlaylistViewControllerDelegate {
     }
 }
 
-extension LibraryAddSearchViewController: UIViewControllerPreviewingDelegate {
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
-        guard let indexPath = self.tableView?.indexPathForRow(at: location),
-            let cell = self.tableView?.cellForRow(at: indexPath) else { return nil }
+extension LibraryAddSearchViewController: UIContextMenuInteractionDelegate {
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        
+        guard let indexPath = self.tableView?.indexPathForRow(at: location) else { return nil }
         
         let i = indexPath.row
         let vc: GameDetailsViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "game_details") as! GameDetailsViewController
@@ -272,32 +279,31 @@ extension LibraryAddSearchViewController: UIViewControllerPreviewingDelegate {
 
         vc.delegate = self
         
-        vc.addRemoveClosure = { (action, vc) -> Void in
+        vc.addRemoveClosure = { (action) -> Void in
             self.addTapped(i)
         }
-        vc.addToPlayLaterClosure = { (action, vc) -> Void in
+        vc.addToPlayLaterClosure = { (action) -> Void in
             self.isAddingToPlayLater = true
             self.addTapped(i)
         }
-        vc.addToPlaylistClosure = { (action, vc) -> Void in
+        vc.addToPlaylistClosure = { (action) -> Void in
             self.isAddingToPlaylist = true
             self.addTapped(i)
         }
-        vc.addToPlayNextClosure = { (action, vc) -> Void in
+        vc.addToPlayNextClosure = { (action) -> Void in
             self.isAddingToPlayNext = true
             self.addTapped(i)
         }
-        vc.addToWishlistClosure = { (action, vc) -> Void in
+        vc.addToWishlistClosure = { (action) -> Void in
             self.isAddingToWishlist = true
             self.addTapped(i)
         }
-        previewingContext.sourceRect = cell.frame
         
-        return vc
-    }
-    
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
-        self.navigationController?.show(viewControllerToCommit, sender: nil)
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: {() -> UIViewController? in
+            return vc
+        }, actionProvider: { suggestedActions in
+            return vc.contextMenu
+        })
     }
 }
 

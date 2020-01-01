@@ -93,6 +93,10 @@ class NowPlayingViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.refreshAll()
+    }
+    
+    func refreshAll() {
         self.navigationController?.navigationBar.tintColor = .white
         self.longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(NowPlayingViewController.handleLongGesture))
         self.collectionView?.addGestureRecognizer(longPressGesture!)
@@ -278,11 +282,7 @@ class NowPlayingViewController: UIViewController {
                             cell.contentView.alpha = 0.7
             },
                            completion: nil)
-            if #available(iOS 11.0, *) {
-                if !self.collectionView!.hasActiveDrag {
-                    self.collectionView?.beginInteractiveMovementForItem(at: indexPath)
-                }
-            } else {
+            if !self.collectionView!.hasActiveDrag {
                 self.collectionView?.beginInteractiveMovementForItem(at: indexPath)
             }
         case .changed:
@@ -879,10 +879,12 @@ extension NowPlayingViewController: AddToPlaylistViewControllerDelegate {
         }
         self.games += games.map{$0}
         self.saveNowPlaying()
+        self.refreshAll()
     }
     func dismissView(_ vc: AddToPlaylistViewController) {
         self._isDismissing = true
         vc.dismiss(animated: true, completion: nil)
+        self.refreshAll()
     }
 }
 

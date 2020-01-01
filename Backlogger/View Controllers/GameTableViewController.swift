@@ -149,11 +149,7 @@ class GameTableViewController: UIViewController {
         }
         self.tableView?.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: tableReuseIdentifier)
         
-        if #available(iOS 9.0, *) {
-            if traitCollection.forceTouchCapability == .available {
-                self.registerForPreviewing(with: self, sourceView: self.tableView!)
-            }
-        }
+        self.tableView?.addInteraction(UIContextMenuInteraction(delegate: self))
         self.toastOverlay.view.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(toastOverlay.view)
         toastOverlay.view.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
@@ -493,6 +489,7 @@ class GameTableViewController: UIViewController {
         navVc.navigationBar.barStyle = .black
         navVc.navigationBar.isTranslucent = true
         navVc.navigationBar.barTintColor = Util.appColor
+        vc.delegate = self
         self.present(navVc, animated: true, completion: nil)
     }
     
@@ -529,10 +526,10 @@ class GameTableViewController: UIViewController {
     }
 }
 
-extension GameTableViewController: UIViewControllerPreviewingDelegate {
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+extension GameTableViewController: UIContextMenuInteractionDelegate {
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        
         guard let indexPath = self.tableView?.indexPathForRow(at: location),
-            let cell = self.tableView?.cellForRow(at: indexPath),
             let gameFields = self.filteredGames![indexPath.row].gameFields else { return nil }
         let game = self.filteredGames![indexPath.row]
         let vc: GameDetailsViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "game_details") as! GameDetailsViewController
@@ -550,15 +547,15 @@ extension GameTableViewController: UIViewControllerPreviewingDelegate {
         vc.state = .inLibrary
         vc.gameField = gameField
         
-        previewingContext.sourceRect = cell.frame
-        
-        vc.addRemoveClosure = { (action, vc) -> Void in
+
+        vc.addRemoveClosure = { (action) -> Void in
             let game = self.filteredGames![indexPath.row]
             if game.inLibrary {
+                let platformId = self.platform!.idNumber
                 game.delete()
                 autoreleasepool {
                     let realm = try? Realm()
-                    self.platform = realm?.object(ofType: Platform.self, forPrimaryKey: self.platform!.idNumber)
+                    self.platform = realm?.object(ofType: Platform.self, forPrimaryKey: platformId)
                 }
                 if self.platform != nil {
                     self.games = self.platform?.ownedGames
@@ -574,10 +571,10 @@ extension GameTableViewController: UIViewControllerPreviewingDelegate {
             }
             self.tableView?.reloadData()
         }
-        vc.addToPlayLaterClosure = { (action, vc) -> Void in
+        vc.addToPlayLaterClosure = { (action) -> Void in
             self.addToUpNext(games: [game], later: true)
         }
-        vc.addToPlaylistClosure = { (action, vc) -> Void in
+        vc.addToPlaylistClosure = { (action) -> Void in
             let vc = self.storyboard?.instantiateViewController(withIdentifier: "PlaylistNavigation") as! UINavigationController
             let playlistVc = vc.viewControllers.first as! PlaylistViewController
             playlistVc.addingGames = [game]
@@ -585,10 +582,10 @@ extension GameTableViewController: UIViewControllerPreviewingDelegate {
             playlistVc.delegate = self
             self.present(vc, animated: true, completion: nil)
         }
-        vc.addToPlayNextClosure = { (action, vc) -> Void in
+        vc.addToPlayNextClosure = { (action) -> Void in
             self.addToUpNext(games: [game], later: false)
         }
-        vc.addToWishlistClosure = { (action, vc) -> Void in
+        vc.addToWishlistClosure = { (action) -> Void in
             let game = self.filteredGames![indexPath.row]
             game.delete()
             autoreleasepool {
@@ -602,12 +599,20 @@ extension GameTableViewController: UIViewControllerPreviewingDelegate {
                 let _ = self.navigationController?.popViewController(animated: true)
             }
         }
-        return vc
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: {() -> UIViewController? in
+            return vc
+        }, actionProvider: { suggestedActions in
+            return vc.contextMenu
+        })
     }
-    
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
-        self.navigationController?.show(viewControllerToCommit, sender: nil)
-        self.navigationController?.navigationBar.titleTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.foregroundColor.rawValue: UIColor.white])
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
+        animator.preferredCommitStyle = .pop
+        guard let vc = animator.previewViewController else { return }
+        
+        animator.addCompletion {
+            self.show(vc, sender: self)
+        }
+        
     }
 }
 
@@ -839,6 +844,12 @@ extension GameTableViewController: AddSteamGamesViewControllerDelegate {
     
     func didDismiss(vc: AddSteamGamesViewController) {
         vc.dismiss(animated: true, completion: nil)
+        self.refreshCells()
+    }
+}
+
+extension GameTableViewController: LibraryAddSearchViewControllerDelegate {
+    func didDismiss() {
         self.refreshCells()
     }
 }

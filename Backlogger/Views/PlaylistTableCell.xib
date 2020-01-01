@@ -114,6 +114,7 @@
                     <constraint firstItem="bY4-wj-LhH" firstAttribute="trailing" secondItem="jpe-M1-BQq" secondAttribute="trailing" id="rod-pb-crq"/>
                 </constraints>
             </tableViewCellContentView>
+            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
             <connections>
                 <outlet property="artView" destination="rk6-FU-G7V" id="RNM-Uv-ddq"/>
                 <outlet property="blurImage" destination="0ge-Jw-ey7" id="7zC-2A-z9d"/>

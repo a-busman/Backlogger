@@ -68,7 +68,7 @@
                     </constraints>
                 </view>
             </subviews>
-            <color key="backgroundColor" systemColor="systemFillColor" red="0.47058823529999999" green="0.47058823529999999" blue="0.50196078430000002" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
             <constraints>
                 <constraint firstItem="uxk-1g-A32" firstAttribute="top" secondItem="z7t-x8-bLP" secondAttribute="top" constant="15" id="1sz-Lf-dUd"/>
                 <constraint firstItem="gpw-dk-1eg" firstAttribute="leading" secondItem="z7t-x8-bLP" secondAttribute="leading" id="7pf-Az-kbM"/>

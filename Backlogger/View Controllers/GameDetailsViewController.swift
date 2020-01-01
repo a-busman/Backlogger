@@ -145,11 +145,11 @@ class GameDetailsViewController: UIViewController {
     var isRemovingFromWishlist = false
     var isExiting = false
     
-    var addRemoveClosure:      ((UIPreviewAction, UIViewController) -> Void)?
-    var addToPlaylistClosure:  ((UIPreviewAction, UIViewController) -> Void)?
-    var addToPlayNextClosure:  ((UIPreviewAction, UIViewController) -> Void)?
-    var addToPlayLaterClosure: ((UIPreviewAction, UIViewController) -> Void)?
-    var addToWishlistClosure:  ((UIPreviewAction, UIViewController) -> Void)?
+    var addRemoveClosure:      ((UIAction) -> Void)?
+    var addToPlaylistClosure:  ((UIAction) -> Void)?
+    var addToPlayNextClosure:  ((UIAction) -> Void)?
+    var addToPlayLaterClosure: ((UIAction) -> Void)?
+    var addToWishlistClosure:  ((UIAction) -> Void)?
     
     var canRefresh = true
     
@@ -297,7 +297,7 @@ class GameDetailsViewController: UIViewController {
             }
             self.progressIcon?.alpha = 1.0
             self.addSymbolImage?.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 4.0)
-            self.addBackground?.backgroundColor = .red
+            self.addBackground?.backgroundColor = .systemRed
             self.percentTimer?.invalidate()
             self.percentTimer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(hidePercentage), userInfo: nil, repeats: false)
         }
@@ -526,6 +526,56 @@ class GameDetailsViewController: UIViewController {
             self.platformTopConstraint?.constant = -20.5
         }
     }
+    
+    var contextMenu: UIMenu? {
+        var actions: [UIAction] = []
+        var addString: String
+        guard let state = self._state else { return nil }
+        switch state {
+        case .addToLibrary:
+            addString = "Add"
+            break
+        case .partialAddToLibrary:
+            addString = "Add More..."
+            break
+        case .inLibrary:
+            addString = "Remove from Library"
+            break;
+        }
+        
+        let addRemove = state != .inLibrary ? UIAction(title: addString, image: UIImage(systemName: "plus"), handler: self.addRemoveClosure!) : UIAction(title: addString, image: UIImage(systemName: "trash"), attributes: .destructive, handler: self.addRemoveClosure!)
+        
+        
+        let wishlistString: String = self.inWishlist ? "Remove from Wishlist" : "Add to Wishlist"
+        let wishlistAction = UIAction(title: wishlistString, image: UIImage(systemName: "wand.and.rays"), handler: self.addToWishlistClosure!)
+        let addToPlaylist = UIAction(title: "Add to Playlist...", image: UIImage(systemName: "text.badge.plus"), handler: self.addToPlaylistClosure!)
+        
+        let playNext = UIAction(title: "Play Next", image: UIImage(systemName: "text.insert"), handler: self.addToPlayNextClosure!)
+        
+        let playLater = UIAction(title: "Play Later", image: UIImage(systemName: "text.append"), handler: self.addToPlayLaterClosure!)
+
+        actions.append(addRemove)
+        actions.append(addToPlaylist)
+        
+        if let game = self.game {
+            if let linkedPlaylists = game.linkedPlaylists {
+                for playlist in linkedPlaylists {
+                    if playlist.isUpNext || playlist.isNowPlaying {
+                        return UIMenu(title:"", children: actions)
+                    }
+                }
+            }
+        }
+
+        actions.append(playNext)
+        actions.append(playLater)
+        if state != .inLibrary {
+            actions.append(wishlistAction)
+        }
+        // Create and return a UIMenu with the share action
+        return UIMenu(title: "", children: actions)
+    }
+
     override var previewActionItems: [UIPreviewActionItem] {
         var addString: String
         var style: UIPreviewAction.Style
@@ -543,21 +593,21 @@ class GameDetailsViewController: UIViewController {
             style = .destructive
             break
         }
-        let addRemove = UIPreviewAction(title: addString, style: style, handler: self.addRemoveClosure!)
+        let addRemove = UIPreviewAction()
         
         let wishlistString: String = self.inWishlist ? "Remove from Wishlist" : "Add to Wishlist"
-        let wishlistAction = UIPreviewAction(title: wishlistString, style: .default, handler: self.addToWishlistClosure!)
+        let wishlistAction = UIPreviewAction()
         wishlistAction.setValue(#imageLiteral(resourceName: "wishlist"), forKey: "image")
         if style == .destructive {
             addRemove.setValue(#imageLiteral(resourceName: "trash_red"), forKey: "image")
         } else {
             //addRemove.setValue(#imageLiteral(resourceName: "add_symbol_blue"), forKey: "image")
         }
-        let addToPlaylist = UIPreviewAction(title: "Add to Playlist...", style: .default, handler: self.addToPlaylistClosure!)
+        let addToPlaylist = UIPreviewAction()
         addToPlaylist.setValue(#imageLiteral(resourceName: "add_to_playlist"), forKey: "image")
-        let playNext = UIPreviewAction(title: "Play Next", style: .default, handler: self.addToPlayNextClosure!)
+        let playNext = UIPreviewAction()
         playNext.setValue(#imageLiteral(resourceName: "play_next"), forKey: "image")
-        let playLater = UIPreviewAction(title: "Play Later", style: .default, handler: self.addToPlayLaterClosure!)
+        let playLater = UIPreviewAction()
         playLater.setValue(#imageLiteral(resourceName: "add_to_queue"), forKey: "image")
         if let game = self._game {
             if let linkedPlaylists = game.linkedPlaylists {
@@ -859,7 +909,7 @@ class GameDetailsViewController: UIViewController {
         }
         UIView.animate(withDuration: 0.2, animations: {
             self.addSymbolImage?.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 4.0)
-            self.addBackground?.backgroundColor = .red
+            self.addBackground?.backgroundColor = .systemRed
             if self._gameField?.ownedGames.count == 1 {
                 self.statsButton?.alpha = 1.0
                 self.hideStats = false

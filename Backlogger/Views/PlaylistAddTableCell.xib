@@ -61,7 +61,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ckf-CW-OhT">
-                        <rect key="frame" x="347" y="13.5" width="28" height="28"/>
+                        <rect key="frame" x="342" y="13.5" width="28" height="28"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="ckf-CW-OhT" secondAttribute="height" id="2IK-BU-OHS"/>
                             <constraint firstAttribute="height" constant="28" id="ZxW-Bp-7g4"/>
@@ -80,10 +80,11 @@
                     <constraint firstItem="jug-Fw-H83" firstAttribute="top" secondItem="FJE-jo-daY" secondAttribute="top" constant="5" id="gZG-YA-bY2"/>
                     <constraint firstItem="jug-Fw-H83" firstAttribute="leading" secondItem="FJE-jo-daY" secondAttribute="leading" constant="15" id="jwk-rT-9M9"/>
                     <constraint firstItem="rJ7-gm-RqE" firstAttribute="centerY" secondItem="FJE-jo-daY" secondAttribute="centerY" id="lq9-Kr-HnS"/>
-                    <constraint firstItem="ckf-CW-OhT" firstAttribute="trailing" secondItem="FJE-jo-daY" secondAttribute="trailing" id="tJA-Qe-wrb"/>
+                    <constraint firstItem="ckf-CW-OhT" firstAttribute="trailing" secondItem="FJE-jo-daY" secondAttribute="trailing" constant="-5" id="tJA-Qe-wrb"/>
                     <constraint firstItem="hl3-Wt-gH3" firstAttribute="trailing" secondItem="6fr-ab-qir" secondAttribute="trailing" id="zO1-9i-sK3"/>
                 </constraints>
             </tableViewCellContentView>
+            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
             <connections>
                 <outlet property="artView" destination="5Nz-Mp-Nn9" id="IRw-xf-cMq"/>
                 <outlet property="artViewBorder" destination="jug-Fw-H83" id="CdM-UG-GMh"/>

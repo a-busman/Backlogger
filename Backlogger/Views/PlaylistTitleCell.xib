@@ -185,6 +185,7 @@
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
+            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
             <constraints>
                 <constraint firstItem="9d2-N4-4F0" firstAttribute="bottom" secondItem="Ofh-AL-noF" secondAttribute="bottom" id="3XE-cd-JnF"/>
                 <constraint firstItem="9d2-N4-4F0" firstAttribute="trailing" secondItem="6TG-YZ-Va9" secondAttribute="trailing" constant="-10" id="5CM-LG-K38"/>

@@ -8,6 +8,7 @@
 
 import Foundation
 import Alamofire
+import FirebaseAnalytics
 
 var STEAM_API_KEY: String {
     var keys: NSDictionary!
@@ -215,10 +216,13 @@ class Steam {
                     if gameField != nil {
                         gameFields.append(gameField!)
                         gameField!.steamAppId = currentGame.appId
-                        print("\(currentGame.name) -> \(gameField!.name!)")
+                        NSLog("\(currentGame.name) -> \(gameField!.name!)")
+                        Analytics.logEvent(AnalyticsEventSearch, parameters: [AnalyticsParameterOrigin : currentGame.name, AnalyticsParameterDestination : gameField!.name!])
                     } else {
                         unmatchedSteamGames.append(currentGame)
-                        print("Could not find match for \(currentGame.name)")
+                        NSLog("Could not find match for \(currentGame.name)")
+                        Analytics.logEvent(AnalyticsEventSearch, parameters: [AnalyticsParameterOrigin : currentGame.name, AnalyticsParameterDestination : ""])
+                        
                     }
                     queue.sync {
                         gameCount += 1

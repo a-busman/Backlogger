@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="A0H-K0-OJz">
-    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <device id="retina6_5" orientation="portrait" appearance="dark"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
@@ -12,8 +12,8 @@
             <objects>
                 <navigationController id="7yf-rE-QVc" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Now Playing" image="controller_icon" id="D5U-Kd-KjS"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ra1-6s-DfT">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="ra1-6s-DfT">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" name="App"/>
                         <textAttributes key="titleTextAttributes">
@@ -37,9 +37,9 @@
                         <viewControllerLayoutGuide type="bottom" id="0PE-uG-xEr"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="RcU-D3-jAW">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="systemGray5Color" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                     </view>
                     <navigationItem key="navigationItem" title="Now Playing" id="w3N-zM-9de">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="Zhp-a9-vmS">
@@ -77,8 +77,8 @@
             <objects>
                 <navigationController id="v9C-uI-k6q" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Playlists" image="playlists" id="66W-Sh-Z5u"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="sfj-u1-n2z">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="sfj-u1-n2z">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" name="App"/>
                         <textAttributes key="titleTextAttributes">
@@ -95,8 +95,8 @@
             <objects>
                 <navigationController id="4hx-3w-HPM" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Library" image="library" id="LNa-jl-3oF"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="xlP-m0-VU9">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="xlP-m0-VU9">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" name="App"/>
                         <textAttributes key="titleTextAttributes">
@@ -113,8 +113,8 @@
             <objects>
                 <navigationController id="InQ-GP-85m" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" systemItem="more" id="LCK-aC-ImL"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="E7v-AT-JSm">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="E7v-AT-JSm">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" name="App"/>
                         <textAttributes key="titleTextAttributes">

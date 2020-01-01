@@ -59,7 +59,7 @@ class PercentViewController: UIViewController {
         let backgroundLayer = CAShapeLayer()
         backgroundLayer.path = backgroundCirclePath.cgPath
         backgroundLayer.fillColor = UIColor.clear.cgColor
-        backgroundLayer.strokeColor = UIColor.systemGray6.cgColor
+        backgroundLayer.strokeColor = UIColor.systemGray5.cgColor
         backgroundLayer.lineWidth = 3.0
         
         self.shapeLayer.path = circlePath.cgPath

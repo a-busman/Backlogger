@@ -21,8 +21,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var shortcutItem: UIApplicationShortcutItem?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        Fabric.with([Crashlytics.self])
         FirebaseApp.configure()
+        Fabric.with([Crashlytics.self])
 
         self.createDirectories()
         let dir: URL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.BackloggerSharing")!
@@ -45,6 +45,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             Zephyr.addKeysToBeMonitored(keys: ["librarySortType", "libraryAscending", "steamName", "steamId", "libraryShowWishlist", "playlistSortType", "playlistAscending", "hideComplete"])
             Zephyr.sync()
         }
+        
+        let coloredAppearance = UINavigationBarAppearance()
+        coloredAppearance.configureWithTransparentBackground()
+        coloredAppearance.backgroundColor = UIColor(named: "App")
+        coloredAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        coloredAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+               
+        UINavigationBar.appearance().standardAppearance = coloredAppearance
+        UINavigationBar.appearance().scrollEdgeAppearance = coloredAppearance
         
         if let shortcutItem = launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem {
             self.shortcutItem = shortcutItem

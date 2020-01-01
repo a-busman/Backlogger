@@ -326,17 +326,29 @@ class LibraryViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any!) {
-        if segue.identifier == "table_game_list" {
+        let identifier = segue.identifier
+        if identifier == "table_game_list" {
             if let cell = sender as? UITableViewCell {
                 let i = (self.tableView?.indexPath(for: cell)?.row)!
                 let vc = segue.destination as! GameTableViewController
                 vc.platform = self.platforms[i]
             }
         }
+        else if identifier == "add_game_to_library" {
+            let rootVc = segue.destination as? UINavigationController
+            let vc = rootVc?.viewControllers.first as? LibraryAddSearchViewController
+            vc?.delegate = self
+        }
     }
     
     func addGame() {
         self.performSegue(withIdentifier: "add_show_details", sender: nil)
+    }
+}
+
+extension LibraryViewController: LibraryAddSearchViewControllerDelegate {
+    func didDismiss() {
+        self.refreshCells()
     }
 }
 
