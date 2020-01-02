@@ -7,7 +7,6 @@ def sharedPods
   pod 'RealmSwift'
   pod 'MMWormhole'
   pod 'Firebase/Analytics'
-  pod 'IceCream'
 end
 
 target 'Backlogger' do

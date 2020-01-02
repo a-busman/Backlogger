@@ -63,8 +63,6 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (6.4.0):
     - GoogleUtilities/Logger
-  - IceCream (1.13.0):
-    - RealmSwift
   - ImageViewer (6.0.0)
   - Kingfisher (5.12.0):
     - Kingfisher/Core (= 5.12.0)
@@ -90,7 +88,6 @@ DEPENDENCIES:
   - Crashlytics
   - Fabric
   - Firebase/Analytics
-  - IceCream
   - ImageViewer (from `https://github.com/Krisiacik/ImageViewer.git`, commit `519fbdb57b4ad83de50ecd09b7182ed9d190f3ee`)
   - Kingfisher
   - MMWormhole
@@ -113,7 +110,6 @@ SPEC REPOS:
     - GoogleDataTransport
     - GoogleDataTransportCCTSupport
     - GoogleUtilities
-    - IceCream
     - Kingfisher
     - MMWormhole
     - nanopb
@@ -146,7 +142,6 @@ SPEC CHECKSUMS:
   GoogleDataTransport: 8e9b210c97d55fbff306cc5468ff91b9cb32dcf5
   GoogleDataTransportCCTSupport: 202d7cdf9c4a7d81a2bb7f7e7e1ba6faa421b1f2
   GoogleUtilities: 29bd0d8f850efbd28cff6d99e8b7da1f8d236bcf
-  IceCream: 48d6eda3b989c410583a8469e009f24ae9740d81
   ImageViewer: cb88ef1c0ba19161bc10702adfdcebc116a7a59d
   Kingfisher: dc6e0f53bb5b12c3e75bedb0e01bbd7a640eea69
   MMWormhole: 0cd3fd35a9118b2e2d762b499f54eeaace0be791
@@ -156,6 +151,6 @@ SPEC CHECKSUMS:
   Zephyr: d4cbf727c30a5fc4fa1828f17a09f735948309fb
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 6f8c1b4ed9eeac9eb43e2cfc40192ab34cb9adf8
+PODFILE CHECKSUM: ab0d795e339807ba9d830621edfd39c138f506dc
 
 COCOAPODS: 1.8.4

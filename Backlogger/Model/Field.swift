@@ -9,7 +9,6 @@
 import Foundation
 import RealmSwift
 import Realm
-import IceCream
 
 enum GenericFields: String {
     case ApiDetailUrl  = "api_detail_url"
