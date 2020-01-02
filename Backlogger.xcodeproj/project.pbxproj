@@ -21,7 +21,6 @@
 		FA0915921E2AEF2C0052BCEC /* NowPlayingGameView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA0915911E2AEF2C0052BCEC /* NowPlayingGameView.xib */; };
 		FA0915971E2B367B0052BCEC /* NowPlayingGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0915961E2B367B0052BCEC /* NowPlayingGameViewController.swift */; };
 		FA0C48901EAC532100F82C7D /* keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = FA0C488F1EAC532100F82C7D /* keys.plist */; };
-		FA135774232EEE31008A5A3F /* BackloggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA135773232EEE31008A5A3F /* BackloggerTests.swift */; };
 		FA1854B81ECF22B30031087E /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1854B71ECF22B30031087E /* Util.swift */; };
 		FA1FFF771EFDFBF50048D907 /* SteamLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1FFF761EFDFBF50048D907 /* SteamLoginViewController.swift */; };
 		FA1FFF791EFEB61E0048D907 /* AddSteamGamesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1FFF781EFEB61E0048D907 /* AddSteamGamesViewController.swift */; };
@@ -62,12 +61,9 @@
 		FA68A8F11ECBB18400C9CE2E /* PlaylistFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA68A8F01ECBB18400C9CE2E /* PlaylistFooter.swift */; };
 		FA8E71CD1E80E61800E7400B /* Publisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8E71CC1E80E61800E7400B /* Publisher.swift */; };
 		FA8E71CF1E80E66500E7400B /* Developer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8E71CE1E80E66500E7400B /* Developer.swift */; };
-		FA98BABD23BDAF9A00807E18 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FA98BABC23BDAF9A00807E18 /* GoogleService-Info.plist */; };
-		FA98BABE23BDAF9A00807E18 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FA98BABC23BDAF9A00807E18 /* GoogleService-Info.plist */; };
+		FA98BAC023BDB11300807E18 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FA98BABF23BDB10500807E18 /* GoogleService-Info.plist */; };
+		FA98BAC123BDB11400807E18 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FA98BABF23BDB10500807E18 /* GoogleService-Info.plist */; };
 		FA9CFA361EFCB1B7003E93B8 /* Steam.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9CFA351EFCB1B7003E93B8 /* Steam.swift */; };
-		FAAF9D1E23B5BAEA009E6CAF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FAAF9D1D23B5BAEA009E6CAF /* GoogleService-Info.plist */; };
-		FAAF9D1F23B5BAEA009E6CAF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FAAF9D1D23B5BAEA009E6CAF /* GoogleService-Info.plist */; };
-		FAAF9D2023B5BAEA009E6CAF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FAAF9D1D23B5BAEA009E6CAF /* GoogleService-Info.plist */; };
 		FAAF9D2223B5CE24009E6CAF /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAAF9D2123B5CE24009E6CAF /* CloudKit.framework */; };
 		FAC778B11E3481A200944B6B /* GameDetailOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */; };
 		FAC778B51E3481E200944B6B /* GameDetailOverlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC778B41E3481E200944B6B /* GameDetailOverlayViewController.swift */; };
@@ -98,13 +94,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		FA135776232EEE31008A5A3F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FA0915611E2AA4210052BCEC /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = FA0915681E2AA4210052BCEC;
-			remoteInfo = Backlogger;
-		};
 		FACCA6561EF82CD8005F1021 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FA0915611E2AA4210052BCEC /* Project object */;
@@ -149,7 +138,6 @@
 		FA0915961E2B367B0052BCEC /* NowPlayingGameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NowPlayingGameViewController.swift; path = "View Controllers/NowPlayingGameViewController.swift"; sourceTree = "<group>"; };
 		FA0C488F1EAC532100F82C7D /* keys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = keys.plist; sourceTree = "<group>"; };
 		FA13576C232EED06008A5A3F /* Backlogger.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Backlogger.xctestplan; sourceTree = "<group>"; };
-		FA135771232EEE31008A5A3F /* BackloggerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BackloggerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA135773232EEE31008A5A3F /* BackloggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackloggerTests.swift; sourceTree = "<group>"; };
 		FA135775232EEE31008A5A3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FA1854B71ECF22B30031087E /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
@@ -191,9 +179,8 @@
 		FA68A8F01ECBB18400C9CE2E /* PlaylistFooter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlaylistFooter.swift; path = "Table View/PlaylistFooter.swift"; sourceTree = "<group>"; };
 		FA8E71CC1E80E61800E7400B /* Publisher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Publisher.swift; path = Model/Publisher.swift; sourceTree = "<group>"; };
 		FA8E71CE1E80E66500E7400B /* Developer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Developer.swift; path = Model/Developer.swift; sourceTree = "<group>"; };
-		FA98BABC23BDAF9A00807E18 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		FA98BABF23BDB10500807E18 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FA9CFA351EFCB1B7003E93B8 /* Steam.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Steam.swift; path = Model/Steam.swift; sourceTree = "<group>"; };
-		FAAF9D1D23B5BAEA009E6CAF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FAAF9D2123B5CE24009E6CAF /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GameDetailOverlayView.xib; path = Views/GameDetailOverlayView.xib; sourceTree = "<group>"; };
 		FAC778B41E3481E200944B6B /* GameDetailOverlayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameDetailOverlayViewController.swift; path = "View Controllers/GameDetailOverlayViewController.swift"; sourceTree = "<group>"; };
@@ -224,13 +211,6 @@
 			files = (
 				476F255309A2D4E82704D9C2 /* Pods_Backlogger.framework in Frameworks */,
 				FAAF9D2223B5CE24009E6CAF /* CloudKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		FA13576E232EEE31008A5A3F /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -271,6 +251,7 @@
 		FA0915601E2AA4210052BCEC = {
 			isa = PBXGroup;
 			children = (
+				FA98BABF23BDB10500807E18 /* GoogleService-Info.plist */,
 				FA13576C232EED06008A5A3F /* Backlogger.xctestplan */,
 				FA09156B1E2AA4210052BCEC /* Backlogger */,
 				FACCA64F1EF82CD8005F1021 /* BackloggerWidget */,
@@ -286,7 +267,6 @@
 			children = (
 				FA0915691E2AA4210052BCEC /* Backlogger.app */,
 				FACCA64C1EF82CD8005F1021 /* BackloggerWidget.appex */,
-				FA135771232EEE31008A5A3F /* BackloggerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -294,7 +274,6 @@
 		FA09156B1E2AA4210052BCEC /* Backlogger */ = {
 			isa = PBXGroup;
 			children = (
-				FAAF9D1D23B5BAEA009E6CAF /* GoogleService-Info.plist */,
 				FACCA65D1EF8303B005F1021 /* Backlogger.entitlements */,
 				FADA80A01E5252C20069943D /* Model */,
 				FADA809D1E4FB64E0069943D /* Table View */,
@@ -372,7 +351,6 @@
 		FACCA64F1EF82CD8005F1021 /* BackloggerWidget */ = {
 			isa = PBXGroup;
 			children = (
-				FA98BABC23BDAF9A00807E18 /* GoogleService-Info.plist */,
 				FACCA6681EF8BAD7005F1021 /* BackloggerWidget.entitlements */,
 				FACCA6501EF82CD8005F1021 /* TodayViewController.swift */,
 				FACCA6521EF82CD8005F1021 /* MainInterface.storyboard */,
@@ -459,24 +437,6 @@
 			productReference = FA0915691E2AA4210052BCEC /* Backlogger.app */;
 			productType = "com.apple.product-type.application";
 		};
-		FA135770232EEE31008A5A3F /* BackloggerTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = FA135778232EEE31008A5A3F /* Build configuration list for PBXNativeTarget "BackloggerTests" */;
-			buildPhases = (
-				FA13576D232EEE31008A5A3F /* Sources */,
-				FA13576E232EEE31008A5A3F /* Frameworks */,
-				FA13576F232EEE31008A5A3F /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				FA135777232EEE31008A5A3F /* PBXTargetDependency */,
-			);
-			name = BackloggerTests;
-			productName = BackloggerTests;
-			productReference = FA135771232EEE31008A5A3F /* BackloggerTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		FACCA64B1EF82CD8005F1021 /* BackloggerWidget */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = FACCA65B1EF82CD8005F1021 /* Build configuration list for PBXNativeTarget "BackloggerWidget" */;
@@ -519,12 +479,6 @@
 							};
 						};
 					};
-					FA135770232EEE31008A5A3F = {
-						CreatedOnToolsVersion = 11.0;
-						DevelopmentTeam = D9J98STRHA;
-						ProvisioningStyle = Automatic;
-						TestTargetID = FA0915681E2AA4210052BCEC;
-					};
 					FACCA64B1EF82CD8005F1021 = {
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = D9J98STRHA;
@@ -553,7 +507,6 @@
 			targets = (
 				FA0915681E2AA4210052BCEC /* Backlogger */,
 				FACCA64B1EF82CD8005F1021 /* BackloggerWidget */,
-				FA135770232EEE31008A5A3F /* BackloggerTests */,
 			);
 		};
 /* End PBXProject section */
@@ -574,8 +527,7 @@
 				FACD42761F3262B500F6DA0C /* ProgressCell.xib in Resources */,
 				FA68A8EF1ECBB06900C9CE2E /* PlaylistFooter.xib in Resources */,
 				FA358A541EBADF23001EE03D /* PlaylistTableCell.xib in Resources */,
-				FA98BABD23BDAF9A00807E18 /* GoogleService-Info.plist in Resources */,
-				FAAF9D1E23B5BAEA009E6CAF /* GoogleService-Info.plist in Resources */,
+				FA98BAC023BDB11300807E18 /* GoogleService-Info.plist in Resources */,
 				FA358A641EBFC001001EE03D /* PlaylistAddTableCell.xib in Resources */,
 				FA4B449F1E61DF94006A843F /* ImageViewer.xib in Resources */,
 				FA0915761E2AA4210052BCEC /* Assets.xcassets in Resources */,
@@ -585,22 +537,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FA13576F232EEE31008A5A3F /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				FAAF9D2023B5BAEA009E6CAF /* GoogleService-Info.plist in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		FACCA64A1EF82CD8005F1021 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				FACCA66B1EF8E837005F1021 /* Assets.xcassets in Resources */,
-				FA98BABE23BDAF9A00807E18 /* GoogleService-Info.plist in Resources */,
 				FACCA6541EF82CD8005F1021 /* MainInterface.storyboard in Resources */,
-				FAAF9D1F23B5BAEA009E6CAF /* GoogleService-Info.plist in Resources */,
+				FA98BAC123BDB11400807E18 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -756,14 +699,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FA13576D232EEE31008A5A3F /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				FA135774232EEE31008A5A3F /* BackloggerTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		FACCA6481EF82CD8005F1021 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -786,11 +721,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		FA135777232EEE31008A5A3F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = FA0915681E2AA4210052BCEC /* Backlogger */;
-			targetProxy = FA135776232EEE31008A5A3F /* PBXContainerItemProxy */;
-		};
 		FACCA6571EF82CD8005F1021 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = FACCA64B1EF82CD8005F1021 /* BackloggerWidget */;
@@ -984,54 +914,6 @@
 			};
 			name = Release;
 		};
-		FA135779232EEE31008A5A3F /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = D9J98STRHA;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BackloggerTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.alexbusman.BackloggerTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Backlogger.app/Backlogger";
-			};
-			name = Debug;
-		};
-		FA13577A232EEE31008A5A3F /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = D9J98STRHA;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BackloggerTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.alexbusman.BackloggerTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Backlogger.app/Backlogger";
-			};
-			name = Release;
-		};
 		FACCA6591EF82CD8005F1021 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 46B7EA5C8179482E14EC84BE /* Pods-BackloggerWidget.debug.xcconfig */;
@@ -1091,15 +973,6 @@
 			buildConfigurations = (
 				FA09157E1E2AA4210052BCEC /* Debug */,
 				FA09157F1E2AA4210052BCEC /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		FA135778232EEE31008A5A3F /* Build configuration list for PBXNativeTarget "BackloggerTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				FA135779232EEE31008A5A3F /* Debug */,
-				FA13577A232EEE31008A5A3F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
