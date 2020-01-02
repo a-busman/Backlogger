@@ -62,6 +62,8 @@
 		FA68A8F11ECBB18400C9CE2E /* PlaylistFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA68A8F01ECBB18400C9CE2E /* PlaylistFooter.swift */; };
 		FA8E71CD1E80E61800E7400B /* Publisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8E71CC1E80E61800E7400B /* Publisher.swift */; };
 		FA8E71CF1E80E66500E7400B /* Developer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8E71CE1E80E66500E7400B /* Developer.swift */; };
+		FA98BABD23BDAF9A00807E18 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FA98BABC23BDAF9A00807E18 /* GoogleService-Info.plist */; };
+		FA98BABE23BDAF9A00807E18 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FA98BABC23BDAF9A00807E18 /* GoogleService-Info.plist */; };
 		FA9CFA361EFCB1B7003E93B8 /* Steam.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9CFA351EFCB1B7003E93B8 /* Steam.swift */; };
 		FAAF9D1E23B5BAEA009E6CAF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FAAF9D1D23B5BAEA009E6CAF /* GoogleService-Info.plist */; };
 		FAAF9D1F23B5BAEA009E6CAF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FAAF9D1D23B5BAEA009E6CAF /* GoogleService-Info.plist */; };
@@ -189,6 +191,7 @@
 		FA68A8F01ECBB18400C9CE2E /* PlaylistFooter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlaylistFooter.swift; path = "Table View/PlaylistFooter.swift"; sourceTree = "<group>"; };
 		FA8E71CC1E80E61800E7400B /* Publisher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Publisher.swift; path = Model/Publisher.swift; sourceTree = "<group>"; };
 		FA8E71CE1E80E66500E7400B /* Developer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Developer.swift; path = Model/Developer.swift; sourceTree = "<group>"; };
+		FA98BABC23BDAF9A00807E18 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FA9CFA351EFCB1B7003E93B8 /* Steam.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Steam.swift; path = Model/Steam.swift; sourceTree = "<group>"; };
 		FAAF9D1D23B5BAEA009E6CAF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FAAF9D2123B5CE24009E6CAF /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -369,6 +372,7 @@
 		FACCA64F1EF82CD8005F1021 /* BackloggerWidget */ = {
 			isa = PBXGroup;
 			children = (
+				FA98BABC23BDAF9A00807E18 /* GoogleService-Info.plist */,
 				FACCA6681EF8BAD7005F1021 /* BackloggerWidget.entitlements */,
 				FACCA6501EF82CD8005F1021 /* TodayViewController.swift */,
 				FACCA6521EF82CD8005F1021 /* MainInterface.storyboard */,
@@ -570,6 +574,7 @@
 				FACD42761F3262B500F6DA0C /* ProgressCell.xib in Resources */,
 				FA68A8EF1ECBB06900C9CE2E /* PlaylistFooter.xib in Resources */,
 				FA358A541EBADF23001EE03D /* PlaylistTableCell.xib in Resources */,
+				FA98BABD23BDAF9A00807E18 /* GoogleService-Info.plist in Resources */,
 				FAAF9D1E23B5BAEA009E6CAF /* GoogleService-Info.plist in Resources */,
 				FA358A641EBFC001001EE03D /* PlaylistAddTableCell.xib in Resources */,
 				FA4B449F1E61DF94006A843F /* ImageViewer.xib in Resources */,
@@ -593,6 +598,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FACCA66B1EF8E837005F1021 /* Assets.xcassets in Resources */,
+				FA98BABE23BDAF9A00807E18 /* GoogleService-Info.plist in Resources */,
 				FACCA6541EF82CD8005F1021 /* MainInterface.storyboard in Resources */,
 				FAAF9D1F23B5BAEA009E6CAF /* GoogleService-Info.plist in Resources */,
 			);
