@@ -575,55 +575,6 @@ class GameDetailsViewController: UIViewController {
         // Create and return a UIMenu with the share action
         return UIMenu(title: "", children: actions)
     }
-
-    override var previewActionItems: [UIPreviewActionItem] {
-        var addString: String
-        var style: UIPreviewAction.Style
-        switch self._state! {
-        case .addToLibrary:
-            addString = "Add"
-            style = .default
-            break
-        case .partialAddToLibrary:
-            addString = "Add More..."
-            style = .default
-            break
-        case .inLibrary:
-            addString = "Remove From Library"
-            style = .destructive
-            break
-        }
-        let addRemove = UIPreviewAction()
-        
-        let wishlistString: String = self.inWishlist ? "Remove from Wishlist" : "Add to Wishlist"
-        let wishlistAction = UIPreviewAction()
-        wishlistAction.setValue(#imageLiteral(resourceName: "wishlist"), forKey: "image")
-        if style == .destructive {
-            addRemove.setValue(#imageLiteral(resourceName: "trash_red"), forKey: "image")
-        } else {
-            //addRemove.setValue(#imageLiteral(resourceName: "add_symbol_blue"), forKey: "image")
-        }
-        let addToPlaylist = UIPreviewAction()
-        addToPlaylist.setValue(#imageLiteral(resourceName: "add_to_playlist"), forKey: "image")
-        let playNext = UIPreviewAction()
-        playNext.setValue(#imageLiteral(resourceName: "play_next"), forKey: "image")
-        let playLater = UIPreviewAction()
-        playLater.setValue(#imageLiteral(resourceName: "add_to_queue"), forKey: "image")
-        if let game = self._game {
-            if let linkedPlaylists = game.linkedPlaylists {
-                for playlist in linkedPlaylists {
-                    if playlist.isUpNext || playlist.isNowPlaying {
-                        return [addRemove, addToPlaylist]
-                    }
-                }
-            }
-        }
-        if self._state == .inLibrary {
-            return [addRemove, addToPlaylist, playNext, playLater]
-        } else {
-            return [addRemove, addToPlaylist, playNext, playLater, wishlistAction]
-        }
-    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
