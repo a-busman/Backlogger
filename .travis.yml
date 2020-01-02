@@ -3,6 +3,4 @@ osx_image: xcode11.3
 xcode_workspace: Backlogger.xcworkspace
 xcode_scheme: Backlogger
 xcode_destination: platform=iOS Simulator,OS=11.4,name=iPhone X
-script: # Skip tests
-- set -o pipefail
-- xcodebuild -workspace YourWorkspace.xcworkspace -scheme YourScheme -destination platform\=yourDestinationPlatform build | xcpretty
+script: set -o pipefail && xcodebuild -workspace Backlogger.xcworkspace -scheme Backlogger -destination platform\=iOS\ Simulator,OS\=11.4,name\=iPhone\ X build | xcpretty
