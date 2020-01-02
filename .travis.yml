@@ -2,5 +2,5 @@ language: swift
 osx_image: xcode11.3
 xcode_workspace: Backlogger.xcworkspace
 xcode_scheme: Backlogger
-xcode_destination: platform=iOS Simulator,OS=11.4,name=iPhone X
-script: set -o pipefail && xcodebuild -workspace Backlogger.xcworkspace -scheme Backlogger -destination platform\=iOS\ Simulator,OS\=11.4,name\=iPhone\ X build | xcpretty
+xcode_destination: platform=iOS Simulator,OS=13.3,name=iPhone 11 Pro
+script: set -o pipefail && xcodebuild -workspace Backlogger.xcworkspace -scheme Backlogger -destination platform\=iOS\ Simulator,OS\=13.3,name\=iPhone\ 11\ Pro build | xcpretty
