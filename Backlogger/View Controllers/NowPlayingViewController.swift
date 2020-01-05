@@ -13,6 +13,7 @@ class NowPlayingViewController: UIViewController {
     
     @IBOutlet weak var editBarButtonItem: UIBarButtonItem?
     @IBOutlet weak var addBarButtonItem:  UIBarButtonItem?
+    @IBOutlet weak var rollBarButtonItem: UIBarButtonItem?
     @IBOutlet weak var pageControl:       UIPageControl?
     @IBOutlet weak var collectionView:    UICollectionView?
     @IBOutlet weak var addBackgroundView: UIView?
@@ -105,6 +106,13 @@ class NowPlayingViewController: UIViewController {
         self.loadPlaylists()
         
         self.navigationController?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.addTapped))
+        autoreleasepool {
+            if let realm = try? Realm(), realm.objects(Game.self).count > 0 {
+                self.rollBarButtonItem?.isEnabled = true
+            } else {
+                self.rollBarButtonItem?.isEnabled = false
+            }
+        }
 
         if self.games.count > 0 {
             let newButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(handleTapEdit))
@@ -220,7 +228,7 @@ class NowPlayingViewController: UIViewController {
                 vc.game = game
             
                 self.orderedViewControllers.append(vc)
-                vc.addDetails()
+                vc.addDetails(withRefresh: false)
             }
             self.gameIds = newGameIds
             self.collectionView?.reloadData()
@@ -267,10 +275,12 @@ class NowPlayingViewController: UIViewController {
         let cell = self.collectionView?.cellForItem(at: indexPath) else {
             return
         }
+        
 
         switch(gesture.state) {
-            
         case .began:
+            let generator = UIImpactFeedbackGenerator(style: .rigid)
+            generator.impactOccurred()
             self.setEditing(true, animated: true)
             self.removeWiggleAnimation(from: cell)
             UIView.animate(withDuration: 0.25,
@@ -964,5 +974,7 @@ extension NowPlayingViewController: UICollectionViewDataSource, UICollectionView
         
         self.orderedViewControllers.insert(gameVc, at: destination.item)
         self.pageControl?.currentPage = destination.item
+        let generator = UISelectionFeedbackGenerator()
+        generator.selectionChanged()
     }
 }

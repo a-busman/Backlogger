@@ -65,6 +65,8 @@
 		FA98BAC123BDB11400807E18 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FA98BABF23BDB10500807E18 /* GoogleService-Info.plist */; };
 		FA9CFA361EFCB1B7003E93B8 /* Steam.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9CFA351EFCB1B7003E93B8 /* Steam.swift */; };
 		FAAF9D2223B5CE24009E6CAF /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAAF9D2123B5CE24009E6CAF /* CloudKit.framework */; };
+		FABFF2C123BE973600E09095 /* RandomGameBackgroundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FABFF2C023BE973600E09095 /* RandomGameBackgroundViewController.swift */; };
+		FABFF2C323BEB44400E09095 /* RandomGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FABFF2C223BEB44400E09095 /* RandomGameViewController.swift */; };
 		FAC778B11E3481A200944B6B /* GameDetailOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */; };
 		FAC778B51E3481E200944B6B /* GameDetailOverlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC778B41E3481E200944B6B /* GameDetailOverlayViewController.swift */; };
 		FACCA64E1EF82CD8005F1021 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FACCA64D1EF82CD8005F1021 /* NotificationCenter.framework */; };
@@ -182,6 +184,8 @@
 		FA98BABF23BDB10500807E18 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FA9CFA351EFCB1B7003E93B8 /* Steam.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Steam.swift; path = Model/Steam.swift; sourceTree = "<group>"; };
 		FAAF9D2123B5CE24009E6CAF /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		FABFF2C023BE973600E09095 /* RandomGameBackgroundViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RandomGameBackgroundViewController.swift; path = "View Controllers/RandomGameBackgroundViewController.swift"; sourceTree = "<group>"; };
+		FABFF2C223BEB44400E09095 /* RandomGameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RandomGameViewController.swift; path = "View Controllers/RandomGameViewController.swift"; sourceTree = "<group>"; };
 		FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GameDetailOverlayView.xib; path = Views/GameDetailOverlayView.xib; sourceTree = "<group>"; };
 		FAC778B41E3481E200944B6B /* GameDetailOverlayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameDetailOverlayViewController.swift; path = "View Controllers/GameDetailOverlayViewController.swift"; sourceTree = "<group>"; };
 		FACCA64C1EF82CD8005F1021 /* BackloggerWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = BackloggerWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -315,6 +319,8 @@
 				FA1FFF781EFEB61E0048D907 /* AddSteamGamesViewController.swift */,
 				FA1FFF7A1F001F220048D907 /* AboutViewController.swift */,
 				FA544F701F5C675500379505 /* WishlistViewController.swift */,
+				FABFF2C023BE973600E09095 /* RandomGameBackgroundViewController.swift */,
+				FABFF2C223BEB44400E09095 /* RandomGameViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -669,6 +675,7 @@
 				FACD42781F32641C00F6DA0C /* ProgressCell.swift in Sources */,
 				FA1FFF771EFDFBF50048D907 /* SteamLoginViewController.swift in Sources */,
 				FA4B44871E556AD3006A843F /* LibraryAddSearchViewController.swift in Sources */,
+				FABFF2C323BEB44400E09095 /* RandomGameViewController.swift in Sources */,
 				FA358A5C1EBC2BD2001EE03D /* PlaylistTitleCell.swift in Sources */,
 				FA09158C1E2AA9AD0052BCEC /* NowPlayingViewController.swift in Sources */,
 				FA4B44931E5D405E006A843F /* ImageList.swift in Sources */,
@@ -679,6 +686,7 @@
 				FA4B448B1E5D3DC2006A843F /* Field.swift in Sources */,
 				FA0915831E2AA9480052BCEC /* PlaylistViewController.swift in Sources */,
 				FA1FFF791EFEB61E0048D907 /* AddSteamGamesViewController.swift in Sources */,
+				FABFF2C123BE973600E09095 /* RandomGameBackgroundViewController.swift in Sources */,
 				FA358A621EBF865B001EE03D /* PlaylistDescriptionCell.swift in Sources */,
 				FA0915861E2AA97B0052BCEC /* LibraryViewController.swift in Sources */,
 				FA4B44891E5625E7006A843F /* SearchResults.swift in Sources */,

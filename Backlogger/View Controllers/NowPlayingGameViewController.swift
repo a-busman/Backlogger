@@ -51,7 +51,7 @@ class NowPlayingGameViewController: UIViewController {
                             NSLog("\((result.error?.localizedDescription)!)")
                             return
                         }
-                        self.addDetails()
+                        self.addDetails(withRefresh: false)
                     }
                 }
             }
@@ -88,7 +88,7 @@ class NowPlayingGameViewController: UIViewController {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
     }
     
     // MARK: viewDidLoad
@@ -117,11 +117,11 @@ class NowPlayingGameViewController: UIViewController {
                     if let error = result.error {
                         NSLog("error loading details: \(error.localizedDescription)")
                     }
-                    self.addDetails()
+                    self.addDetails(withRefresh: false)
                 })
             }
         } else {
-            self.addDetails()
+            self.addDetails(withRefresh: false)
         }
         self.gameDetailOverlayController.detailsGestureView?.addGestureRecognizer(self.detailsPanRecognizer!)
     }
@@ -186,12 +186,12 @@ class NowPlayingGameViewController: UIViewController {
         })
     }
     
-    func addDetails() {
+    func addDetails(withRefresh refresh: Bool) {
         guard let currentGame = self.game else {
             NSLog("no game to get details from")
             return
         }
-        if let image = self.mainImage {
+        if let image = self.mainImage, !refresh {
             self.coverImageView?.image = image
         } else {
             if let superUrl = currentGame.gameFields?.image?.superUrl {
@@ -357,10 +357,8 @@ class NowPlayingGameViewController: UIViewController {
                     self.gravity.gravityDirection = CGVector(dx: 0.0, dy: max(min(velocity / 300, -1.0), -10.0))
                     if self.animator.behaviors.count == 0 {
                         self.collision.addBoundary(withIdentifier: NSString(string: "top"),
-                                                   from: CGPoint(x: self.view.frame.origin.x,
-                                                                 y: self.view.frame.origin.y + 8),
-                                                   to: CGPoint(x: self.view.frame.origin.x + self.view.frame.width,
-                                                               y: self.view.frame.origin.y + 8))
+                                                   from: CGPoint(x: self.view.frame.minX, y: 8),
+                                                   to: CGPoint(x: self.view.frame.maxX, y: 8))
                         self.animator.addBehavior(self.collision)
                         self.animator.addBehavior(self.gravity)
                     }

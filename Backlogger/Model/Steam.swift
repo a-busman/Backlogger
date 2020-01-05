@@ -217,11 +217,11 @@ class Steam {
                         gameFields.append(gameField!)
                         gameField!.steamAppId = currentGame.appId
                         NSLog("\(currentGame.name) -> \(gameField!.name!)")
-                        Analytics.logEvent(AnalyticsEventSearch, parameters: [AnalyticsParameterOrigin : currentGame.name, AnalyticsParameterDestination : gameField!.name!])
+                        Analytics.logEvent(AnalyticsEventSearch, parameters: [ "translation" : "\(currentGame.name) -> \(gameField!.name!)"])
                     } else {
                         unmatchedSteamGames.append(currentGame)
                         NSLog("Could not find match for \(currentGame.name)")
-                        Analytics.logEvent(AnalyticsEventSearch, parameters: [AnalyticsParameterOrigin : currentGame.name, AnalyticsParameterDestination : ""])
+                        Analytics.logEvent(AnalyticsEventSearch, parameters: ["no_match" : currentGame.name])
                         
                     }
                     queue.sync {
