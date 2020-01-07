@@ -51,7 +51,8 @@ class RandomGameViewController: UIViewController {
         self.rootGameView.bottomAnchor.constraint(equalTo: self.rerollBlurView!.topAnchor, constant: -10).isActive = true
         self.rootGameView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 0).isActive = true
         self.rootGameView.heightAnchor.constraint(equalTo: self.rootGameView.widthAnchor, multiplier: 14/9).isActive = true
-        self.rootGameView.widthAnchor.constraint(equalTo: self.rerollBlurView!.widthAnchor, constant: 20).isActive = true
+        self.rootGameView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30).isActive = true
+        self.rootGameView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -30).isActive = true
         self.gameView.view.bottomAnchor.constraint(equalTo: self.rootGameView.bottomAnchor).isActive = true
         self.gameView.view.topAnchor.constraint(equalTo: self.rootGameView.topAnchor).isActive = true
         self.gameView.view.leadingAnchor.constraint(equalTo: self.rootGameView.leadingAnchor).isActive = true

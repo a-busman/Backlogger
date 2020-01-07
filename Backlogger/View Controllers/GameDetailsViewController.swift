@@ -1180,6 +1180,7 @@ class GameDetailsViewController: UIViewController {
     
     @IBAction func handleSlider(sender: UISlider) {
         let remainder = Int(sender.value) % 5
+        let generator = UISelectionFeedbackGenerator()
         var newValue: Int = 0
         if remainder < 2 {
             newValue = Int(sender.value) - remainder
@@ -1187,7 +1188,13 @@ class GameDetailsViewController: UIViewController {
             newValue = Int(sender.value) + 5 - remainder
         }
         sender.value = Float(newValue)
-        self.percentageLabel?.text = "\(newValue)%"
+        if let game = self._game, game.progress != newValue {
+            generator.selectionChanged()
+            self.percentageLabel?.text = "\(newValue)%"
+            game.update {
+                game.progress = newValue
+            }
+        }
         if self.artViewProgressState == .hidden {
             self.showPercentage()
             self.percentTimer?.invalidate()
@@ -1196,9 +1203,7 @@ class GameDetailsViewController: UIViewController {
             self.percentTimer?.invalidate()
             self.percentTimer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(hidePercentage), userInfo: nil, repeats: false)
         }
-        self._game?.update {
-            self._game?.progress = newValue
-        }
+
         self.notesTextView?.resignFirstResponder()
     }
     

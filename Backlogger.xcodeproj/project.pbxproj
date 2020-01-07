@@ -67,6 +67,7 @@
 		FAAF9D2223B5CE24009E6CAF /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAAF9D2123B5CE24009E6CAF /* CloudKit.framework */; };
 		FABFF2C123BE973600E09095 /* RandomGameBackgroundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FABFF2C023BE973600E09095 /* RandomGameBackgroundViewController.swift */; };
 		FABFF2C323BEB44400E09095 /* RandomGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FABFF2C223BEB44400E09095 /* RandomGameViewController.swift */; };
+		FABFF2C723C2D1B500E09095 /* FiltersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FABFF2C623C2D1B500E09095 /* FiltersTableViewController.swift */; };
 		FAC778B11E3481A200944B6B /* GameDetailOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */; };
 		FAC778B51E3481E200944B6B /* GameDetailOverlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC778B41E3481E200944B6B /* GameDetailOverlayViewController.swift */; };
 		FACCA64E1EF82CD8005F1021 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FACCA64D1EF82CD8005F1021 /* NotificationCenter.framework */; };
@@ -186,6 +187,7 @@
 		FAAF9D2123B5CE24009E6CAF /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		FABFF2C023BE973600E09095 /* RandomGameBackgroundViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RandomGameBackgroundViewController.swift; path = "View Controllers/RandomGameBackgroundViewController.swift"; sourceTree = "<group>"; };
 		FABFF2C223BEB44400E09095 /* RandomGameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RandomGameViewController.swift; path = "View Controllers/RandomGameViewController.swift"; sourceTree = "<group>"; };
+		FABFF2C623C2D1B500E09095 /* FiltersTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FiltersTableViewController.swift; path = "View Controllers/FiltersTableViewController.swift"; sourceTree = "<group>"; };
 		FAC778B01E3481A200944B6B /* GameDetailOverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GameDetailOverlayView.xib; path = Views/GameDetailOverlayView.xib; sourceTree = "<group>"; };
 		FAC778B41E3481E200944B6B /* GameDetailOverlayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameDetailOverlayViewController.swift; path = "View Controllers/GameDetailOverlayViewController.swift"; sourceTree = "<group>"; };
 		FACCA64C1EF82CD8005F1021 /* BackloggerWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = BackloggerWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -321,6 +323,7 @@
 				FA544F701F5C675500379505 /* WishlistViewController.swift */,
 				FABFF2C023BE973600E09095 /* RandomGameBackgroundViewController.swift */,
 				FABFF2C223BEB44400E09095 /* RandomGameViewController.swift */,
+				FABFF2C623C2D1B500E09095 /* FiltersTableViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -658,6 +661,7 @@
 			files = (
 				FADA809F1E4FB66A0069943D /* TableViewCell.swift in Sources */,
 				FA358A661EBFC015001EE03D /* PlaylistAddTableCell.swift in Sources */,
+				FABFF2C723C2D1B500E09095 /* FiltersTableViewController.swift in Sources */,
 				FA4B449D1E6124CC006A843F /* GameDetailsViewController.swift in Sources */,
 				FA8E71CF1E80E66500E7400B /* Developer.swift in Sources */,
 				FA9CFA361EFCB1B7003E93B8 /* Steam.swift in Sources */,

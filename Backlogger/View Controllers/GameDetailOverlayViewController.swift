@@ -176,6 +176,7 @@ class GameDetailOverlayViewController: UIViewController {
     
     @IBAction func handleSlider(sender: UISlider) {
         let remainder = Int(sender.value) % 5
+        let generator = UISelectionFeedbackGenerator()
         var newValue: Int = 0
         if remainder < 2 {
             newValue = Int(sender.value) - remainder
@@ -183,10 +184,12 @@ class GameDetailOverlayViewController: UIViewController {
             newValue = Int(sender.value) + 5 - remainder
         }
         sender.value = Float(newValue)
-
-        completionPercentage?.text = "\(newValue)%"
-        self._game?.update {
-            self._game?.progress = newValue
+        if let game = self._game, game.progress != newValue {
+            generator.selectionChanged()
+            self.completionPercentage?.text = "\(newValue)%"
+            game.update {
+                game.progress = newValue
+            }
         }
     }
     
