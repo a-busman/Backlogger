@@ -8,23 +8,46 @@
 
 import UIKit
 import RealmSwift
+import Zephyr
 
 class FiltersTableViewController: UITableViewController {
-    @IBOutlet weak var completeSwitch: UISwitch?
-    @IBOutlet weak var favoriteSwitch: UISwitch?
-    @IBOutlet weak var progressLabel:  UILabel?
-    @IBOutlet weak var starStackView: UIStackView?
+    @IBOutlet weak var completeSwitch:   UISwitch?
+    @IBOutlet weak var favoriteSwitch:   UISwitch?
+    @IBOutlet weak var progressSlider:   UISlider?
+    @IBOutlet weak var progressLabel:    UILabel?
+    @IBOutlet weak var ratingLabel:      UILabel?
+    @IBOutlet weak var progressSegments: UISegmentedControl?
+    @IBOutlet weak var ratingSegments:   UISegmentedControl?
+    @IBOutlet weak var starStackView:    UIStackView?
     
-    private var complete: Bool?
-    private var favorite: Bool?
-    private var progress: Int?
-    private var rating: Int?
-    private var platforms: [Platform]?
-    private var genres: [Genre]?
+    enum FilterCriteria: Int {
+        case less    = 0
+        case equal   = 1
+        case greater = 2
+    }
+    
+    private var complete:         Bool?
+    private var favorite:         Bool?
+    private var progress:         Int?
+    private var rating:           Int?
+    private var platforms:        [Platform]?
+    private var genres:           [Genre]?
+    private var progressCriteria: FilterCriteria?
+    private var ratingCriteria:   FilterCriteria?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        if Util.isICloudContainerAvailable {
+            Zephyr.sync()
+        }
+        self.complete = UserDefaults.standard.value(forKey: "filterComplete") as? Bool
+        self.favorite = UserDefaults.standard.value(forKey: "filterFavorite") as? Bool
+        self.progress = UserDefaults.standard.value(forKey: "filterProgress") as? Int
+        self.rating = UserDefaults.standard.value(forKey: "filterRating") as? Int
+        self.progressCriteria = UserDefaults.standard.value(forKey: "filterProgressCriteria") as? FilterCriteria
+        self.ratingCriteria = UserDefaults.standard.value(forKey: "filterRatingCriteria") as? FilterCriteria
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -34,7 +57,58 @@ class FiltersTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.updateFields()
         self.navigationController?.navigationBar.setNeedsLayout()
+    }
+    
+    func updateFields() {
+        if let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 1)) {
+            if let complete = self.complete {
+                self.updateCellCheck(cell, checked: true)
+                self.completeSwitch?.setOn(complete, animated: false)
+            } else {
+                self.updateCellCheck(cell, checked: false)
+                self.completeSwitch?.setOn(false, animated: false)
+            }
+        }
+        if let cell = self.tableView.cellForRow(at: IndexPath(row: 1, section: 1)) {
+            if let favorite = self.favorite {
+                self.updateCellCheck(cell, checked: true)
+                self.favoriteSwitch?.setOn(favorite, animated: false)
+            } else {
+                self.updateCellCheck(cell, checked: false)
+                self.favoriteSwitch?.setOn(false, animated: false)
+            }
+        }
+        if let cell = self.tableView.cellForRow(at: IndexPath(row: 2, section: 1)) {
+            if let progress = self.progress {
+                self.updateCellCheck(cell, checked: true)
+                self.progressLabel?.text = "\(progress)%"
+                self.progressSlider?.setValue(Float(progress), animated: false)
+                if let progressCriteria = self.progressCriteria {
+                    self.progressSegments?.selectedSegmentIndex = progressCriteria.rawValue
+                }
+            } else {
+                self.updateCellCheck(cell, checked: false)
+                self.progressLabel?.text = "50%"
+                self.progressSlider?.setValue(50, animated: false)
+                self.progressSegments?.selectedSegmentIndex = 0
+            }
+        }
+        if let cell = self.tableView.cellForRow(at: IndexPath(row: 3, section: 1)) {
+            if let rating = self.rating {
+                self.updateCellCheck(cell, checked: true)
+                self.rating! -= 1
+                self.updateStars(rating - 1)
+                if let ratingCriteria = self.ratingCriteria {
+                    self.ratingSegments?.selectedSegmentIndex = ratingCriteria.rawValue
+                }
+            } else {
+                self.updateCellCheck(cell, checked: false)
+                self.updateStars(-1)
+                self.ratingSegments?.selectedSegmentIndex = 0
+            }
+        }
     }
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -45,8 +119,10 @@ class FiltersTableViewController: UITableViewController {
                 switch indexPath.row {
                 case 0:
                     self.platforms = nil
+                    UserDefaults.standard.removeObject(forKey: "filterPlatforms")
                 case 1:
                     self.genres = nil
+                    UserDefaults.standard.removeObject(forKey: "filterGenres")
                 default:
                     break
                 }
@@ -55,13 +131,23 @@ class FiltersTableViewController: UITableViewController {
                 case 0:
                     self.complete = nil
                     self.completeSwitch?.setOn(false, animated: true)
+                    UserDefaults.standard.removeObject(forKey: "filterComplete")
                 case 1:
                     self.favorite = nil
                     self.favoriteSwitch?.setOn(false, animated: true)
+                    UserDefaults.standard.removeObject(forKey: "filterFavorite")
                 case 2:
                     self.progress = nil
+                    self.progressSlider?.setValue(50, animated: true)
+                    self.progressSegments?.selectedSegmentIndex = 0
+                    self.progressLabel?.text = "50%"
+                    UserDefaults.standard.removeObject(forKey: "filterProgress")
                 case 3:
                     self.rating = nil
+                    self.updateStars(-1)
+                    self.ratingSegments?.selectedSegmentIndex = 0
+                    self.ratingLabel?.text = "0"
+                    UserDefaults.standard.removeObject(forKey: "filterRating")
                 default:
                     break
                 }
@@ -101,6 +187,7 @@ class FiltersTableViewController: UITableViewController {
         self.complete = sender.isOn
         if let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 1)) {
             self.updateCellCheck(cell, checked: true)
+            UserDefaults.standard.set(self.complete, forKey: "filterComplete")
         }
     }
     
@@ -108,6 +195,7 @@ class FiltersTableViewController: UITableViewController {
         self.favorite = sender.isOn
         if let cell = self.tableView.cellForRow(at: IndexPath(row: 1, section: 1)) {
             self.updateCellCheck(cell, checked: true)
+            UserDefaults.standard.set(self.favorite, forKey: "filterFavorite")
         }
     }
     
@@ -123,6 +211,7 @@ class FiltersTableViewController: UITableViewController {
         if let label = self.progressLabel, label.text != "\(newValue)%" {
             label.text = "\(newValue)%"
             UISelectionFeedbackGenerator().selectionChanged()
+            UserDefaults.standard.set(newValue, forKey: "filterProgress")
         }
         self.progress = newValue
         
@@ -135,6 +224,7 @@ class FiltersTableViewController: UITableViewController {
         let location = sender.location(in: self.starStackView!)
         let starIndex = Int(location.x / ((self.starStackView?.bounds.width)! / 5.0))
         self.updateStars(starIndex)
+        UserDefaults.standard.set(starIndex + 1, forKey: "filterRating")
         if let cell = self.tableView.cellForRow(at: IndexPath(row: 3, section: 1)) {
             self.updateCellCheck(cell, checked: true)
         }
@@ -143,6 +233,7 @@ class FiltersTableViewController: UITableViewController {
     private func updateStars(_ index: Int) {
         if (self.rating != index + 1) && (index + 1 <= 5 && index + 1 >= 0)  {
             UISelectionFeedbackGenerator().selectionChanged()
+            self.ratingLabel?.text = "\(index + 1)"
             self.rating = index + 1
             for (i, star) in self.starStackView!.arrangedSubviews.enumerated() {
                 if let starImage = star as? UIImageView {

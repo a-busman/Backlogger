@@ -2918,7 +2918,7 @@
         <scene sceneID="4Cy-bR-pnJ">
             <objects>
                 <tableViewController id="SYd-nZ-oV4" customClass="FiltersTableViewController" customModule="Backlogger" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="2aQ-H4-vs2">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="2aQ-H4-vs2">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
@@ -2938,7 +2938,7 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="YFV-bQ-0XO">
+                                                <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="YFV-bQ-0XO">
                                                     <rect key="frame" x="312" y="12" width="26" height="20"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
@@ -2965,7 +2965,7 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="t5p-GL-PSf">
+                                                <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="t5p-GL-PSf">
                                                     <rect key="frame" x="312" y="12" width="26" height="20"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
@@ -2983,7 +2983,7 @@
                             </tableViewSection>
                             <tableViewSection headerTitle="Status" id="EtK-oV-Eli">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="top" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="tGm-yR-pFo">
+                                    <tableViewCell clipsSubviews="YES" contentMode="top" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="tGm-yR-pFo">
                                         <rect key="frame" x="0.0" y="198.5" width="375" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="tGm-yR-pFo" id="FTI-Sw-rou">
@@ -2998,11 +2998,13 @@
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="hM9-OG-qjc">
                                                     <rect key="frame" x="291" y="6.5" width="51" height="31"/>
+                                                    <color key="tintColor" name="App-table"/>
+                                                    <color key="onTintColor" name="App"/>
                                                     <connections>
                                                         <action selector="completeToggled:" destination="SYd-nZ-oV4" eventType="valueChanged" id="QKW-Rv-bCm"/>
                                                     </connections>
                                                 </switch>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="Uiy-wY-ORj">
+                                                <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="Uiy-wY-ORj">
                                                     <rect key="frame" x="350" y="12" width="15" height="20"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
@@ -3019,7 +3021,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="top" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="3rF-GA-OMy">
+                                    <tableViewCell clipsSubviews="YES" contentMode="top" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="3rF-GA-OMy">
                                         <rect key="frame" x="0.0" y="242" width="375" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3rF-GA-OMy" id="e2I-Oy-aOe">
@@ -3034,11 +3036,13 @@
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="rzN-hI-7MU">
                                                     <rect key="frame" x="291" y="6.5" width="51" height="31"/>
+                                                    <color key="tintColor" name="App-table"/>
+                                                    <color key="onTintColor" name="App"/>
                                                     <connections>
                                                         <action selector="favoriteToggled:" destination="SYd-nZ-oV4" eventType="valueChanged" id="Wlo-jG-99I"/>
                                                     </connections>
                                                 </switch>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="MQh-sa-Ga6">
+                                                <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="MQh-sa-Ga6">
                                                     <rect key="frame" x="350" y="12" width="15" height="20"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
@@ -3055,7 +3059,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="top" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="DW4-zE-k5U">
+                                    <tableViewCell clipsSubviews="YES" contentMode="top" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="DW4-zE-k5U">
                                         <rect key="frame" x="0.0" y="285.5" width="375" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="DW4-zE-k5U" id="y0Y-sD-Rbh">
@@ -3092,7 +3096,7 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="FNv-Vo-WO2">
+                                                <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="FNv-Vo-WO2">
                                                     <rect key="frame" x="350" y="12" width="15" height="20"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
@@ -3113,7 +3117,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="top" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="g5Y-v7-4Ec">
+                                    <tableViewCell clipsSubviews="YES" contentMode="top" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="g5Y-v7-4Ec">
                                         <rect key="frame" x="0.0" y="329" width="375" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="g5Y-v7-4Ec" id="DOK-d8-hkr">
@@ -3191,7 +3195,7 @@
                                                         <outletCollection property="gestureRecognizers" destination="ATc-qq-5eS" appends="YES" id="6ZC-bY-IaD"/>
                                                     </connections>
                                                 </stackView>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="EOF-ya-eZ1">
+                                                <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="EOF-ya-eZ1">
                                                     <rect key="frame" x="350" y="12" width="15" height="20"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
@@ -3232,6 +3236,10 @@
                         <outlet property="completeSwitch" destination="hM9-OG-qjc" id="iZ1-hZ-OvJ"/>
                         <outlet property="favoriteSwitch" destination="rzN-hI-7MU" id="pGO-yO-z5p"/>
                         <outlet property="progressLabel" destination="UQt-me-fui" id="faz-k7-smL"/>
+                        <outlet property="progressSegments" destination="LRs-Vp-mRl" id="ujC-qG-omF"/>
+                        <outlet property="progressSlider" destination="6DT-wF-Ota" id="TwF-6h-wxX"/>
+                        <outlet property="ratingLabel" destination="tji-10-bwL" id="6VQ-2E-HpG"/>
+                        <outlet property="ratingSegments" destination="co0-AU-ncN" id="AT9-eD-WYO"/>
                         <outlet property="starStackView" destination="Ifk-65-EY7" id="oLG-He-aAN"/>
                     </connections>
                 </tableViewController>
@@ -3253,6 +3261,10 @@
         <scene sceneID="WiJ-sp-hWk">
             <objects>
                 <viewController id="GU1-LB-9j7" customClass="RandomGameBackgroundViewController" customModule="Backlogger" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="yiN-CW-AGY"/>
+                        <viewControllerLayoutGuide type="bottom" id="i9j-Kz-8sB"/>
+                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Fq1-uJ-mWU">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="591"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -3291,7 +3303,7 @@
             <color red="0.0" green="0.72549019607843135" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="App-table">
-            <color red="0.0" green="0.72549019607843135" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.72500002384185791" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
     <inferredMetricsTieBreakers>
