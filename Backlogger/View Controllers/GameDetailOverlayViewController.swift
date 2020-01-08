@@ -30,12 +30,7 @@ class GameDetailOverlayViewController: UIViewController {
     @IBOutlet weak var finishedButton:       UIButton?
     @IBOutlet weak var ratingContainerView:  UIView?
     @IBOutlet weak var notesTextView:        UITextView?
-    
-    @IBOutlet weak var firstStar:  UIImageView?
-    @IBOutlet weak var secondStar: UIImageView?
-    @IBOutlet weak var thirdStar:  UIImageView?
-    @IBOutlet weak var fourthStar: UIImageView?
-    @IBOutlet weak var fifthStar:  UIImageView?
+    @IBOutlet weak var starStackView:        UIStackView?
     
     var delegate: GameDetailOverlayViewControllerDelegate?
     
@@ -119,46 +114,14 @@ class GameDetailOverlayViewController: UIViewController {
                 self.finishedButton?.setImage(#imageLiteral(resourceName: "check-green"), for: .normal)
                 self.finishedButtonState = .selected
             }
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-white")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-white")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
-            switch (game.rating) {
-            case 0:
-                self.firstStar?.image  = #imageLiteral(resourceName: "star-white")
-                self.secondStar?.image = #imageLiteral(resourceName: "star-white")
-                self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
-                self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
-                self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
-                break
-            case 1:
-                self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                break
-            case 2:
-                self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-                break
-            case 3:
-                self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-                self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                break
-            case 4:
-                self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-                self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
-                break
-            case 5:
-                self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-                self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
-                self.fifthStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                break
-            default:
-                break
+            for (i, star) in self.starStackView!.arrangedSubviews.enumerated() {
+                if let starImage = star as? UIImageView {
+                    if game.rating > i {
+                        starImage.image = #imageLiteral(resourceName: "star-yellow")
+                    } else {
+                        starImage.image = #imageLiteral(resourceName: "star-white")
+                    }
+                }
             }
             self.notesTextView?.text = self._game?.notes
         }
@@ -197,100 +160,28 @@ class GameDetailOverlayViewController: UIViewController {
         delegate?.didTapDetails()
     }
     
-    @IBAction func ratingPanHandler(sender: UIPanGestureRecognizer) {
+    @IBAction func ratingHandler(sender: UIGestureRecognizer) {
         let location = sender.location(in: self.ratingContainerView!)
         let starIndex = Int(location.x / ((self.ratingContainerView?.bounds.width)! / 5.0))
-        var rating = 0
-        if starIndex < 0 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-white")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-white")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
-        } else if starIndex == 0 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-white")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
-            rating = 1
-        } else if starIndex == 1 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
-            rating = 2
-        } else if starIndex == 2 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
-            rating = 3
-        } else if starIndex == 3 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
-            rating = 4
-        } else {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            rating = 5
-        }
-        self._game?.update {
-            self._game?.rating = rating
-        }
-        self.notesTextView?.resignFirstResponder()
+        updateStars(starIndex)
     }
     
-    @IBAction func ratingTapHandler(sender: UITapGestureRecognizer) {
-        let location = sender.location(in: self.ratingContainerView!)
-        let starIndex = Int(location.x / ((self.ratingContainerView?.bounds.width)! / 5.0))
-        var rating = 0
-        if starIndex <= 0 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-white")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
-            rating = 1
-        } else if starIndex == 1 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-white")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
-            rating = 2
-        } else if starIndex == 2 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-white")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
-            rating = 3
-        } else if starIndex == 3 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-white")
-            rating = 4
-        } else {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            rating = 5
+    private func updateStars(_ index: Int) {
+        for (i, star) in self.starStackView!.arrangedSubviews.enumerated() {
+            if let starImage = star as? UIImageView {
+                if index >= i {
+                    starImage.image = #imageLiteral(resourceName: "star-yellow")
+                } else {
+                    starImage.image = #imageLiteral(resourceName: "star-white")
+                }
+            }
         }
-        self._game?.update {
-            self._game?.rating = rating
+
+        if let game = self._game, game.rating != index + 1 {
+            UISelectionFeedbackGenerator().selectionChanged()
+            game.update {
+                game.rating = index + 1
+            }
         }
         self.notesTextView?.resignFirstResponder()
     }
