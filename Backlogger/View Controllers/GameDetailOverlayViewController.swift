@@ -114,12 +114,14 @@ class GameDetailOverlayViewController: UIViewController {
                 self.finishedButton?.setImage(#imageLiteral(resourceName: "check-green"), for: .normal)
                 self.finishedButtonState = .selected
             }
-            for (i, star) in self.starStackView!.arrangedSubviews.enumerated() {
-                if let starImage = star as? UIImageView {
-                    if game.rating > i {
-                        starImage.image = #imageLiteral(resourceName: "star-yellow")
-                    } else {
-                        starImage.image = #imageLiteral(resourceName: "star-white")
+            if let stackView = self.starStackView {
+                for (i, star) in stackView.arrangedSubviews.enumerated() {
+                    if let starImage = star as? UIImageView {
+                        if game.rating > i {
+                            starImage.image = #imageLiteral(resourceName: "star-yellow")
+                        } else {
+                            starImage.image = #imageLiteral(resourceName: "star-white")
+                        }
                     }
                 }
             }
@@ -139,7 +141,6 @@ class GameDetailOverlayViewController: UIViewController {
     
     @IBAction func handleSlider(sender: UISlider) {
         let remainder = Int(sender.value) % 5
-        let generator = UISelectionFeedbackGenerator()
         var newValue: Int = 0
         if remainder < 2 {
             newValue = Int(sender.value) - remainder
@@ -148,7 +149,7 @@ class GameDetailOverlayViewController: UIViewController {
         }
         sender.value = Float(newValue)
         if let game = self._game, game.progress != newValue {
-            generator.selectionChanged()
+            UISelectionFeedbackGenerator().selectionChanged()
             self.completionPercentage?.text = "\(newValue)%"
             game.update {
                 game.progress = newValue
@@ -177,7 +178,7 @@ class GameDetailOverlayViewController: UIViewController {
             }
         }
 
-        if let game = self._game, game.rating != index + 1 {
+        if let game = self._game, (game.rating != index + 1) && (index + 1 <= 5 && index + 1 >= 0) {
             UISelectionFeedbackGenerator().selectionChanged()
             game.update {
                 game.rating = index + 1

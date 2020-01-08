@@ -14,19 +14,14 @@
                 <outlet property="completionView" destination="3TZ-CP-MFR" id="eef-wh-Q9u"/>
                 <outlet property="detailsGestureView" destination="E80-4d-4gx" id="J4I-Zp-QkJ"/>
                 <outlet property="favouriteButton" destination="UOY-Gk-eaF" id="ptr-OP-KaO"/>
-                <outlet property="fifthStar" destination="y9i-rq-ml3" id="cog-Ew-osK"/>
                 <outlet property="finishedButton" destination="gkS-pG-4hV" id="5kS-Vg-y7Y"/>
-                <outlet property="firstStar" destination="CxA-tM-oJH" id="xg2-Ko-Qvr"/>
-                <outlet property="fourthStar" destination="Oek-l8-iaa" id="lE1-le-tIM"/>
                 <outlet property="notesTextView" destination="W6r-Gw-umG" id="Db6-Wr-lby"/>
                 <outlet property="platformLabel" destination="AAw-mt-efn" id="IFE-7W-RsU"/>
                 <outlet property="playPauseButton" destination="iRM-dG-gbm" id="abP-8i-IuZ"/>
                 <outlet property="progressSliderView" destination="Ix9-3j-a1e" id="Os6-RR-kYf"/>
                 <outlet property="pullTabView" destination="52E-xR-IXb" id="ycq-U8-hZy"/>
                 <outlet property="ratingContainerView" destination="wIK-yH-Oqj" id="6rn-z4-H7n"/>
-                <outlet property="secondStar" destination="OHT-bk-lFw" id="XLN-Dh-dd8"/>
                 <outlet property="starStackView" destination="0Z5-xb-8sB" id="2d1-O1-TCW"/>
-                <outlet property="thirdStar" destination="Nk6-fg-vfe" id="fHs-zS-lnx"/>
                 <outlet property="titleLabel" destination="Fb5-H8-6ns" id="TCn-aJ-2ly"/>
                 <outlet property="view" destination="iN0-l3-epB" id="wt1-Aj-rbd"/>
             </connections>

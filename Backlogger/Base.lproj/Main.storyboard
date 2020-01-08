@@ -1828,7 +1828,7 @@
                             <constraint firstItem="esg-nU-ufh" firstAttribute="centerX" secondItem="HOp-Pa-rLP" secondAttribute="centerX" id="vTX-Ec-mp9"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Details" id="MTX-6M-HlP">
+                    <navigationItem key="navigationItem" title="Details" largeTitleDisplayMode="never" id="MTX-6M-HlP">
                         <barButtonItem key="rightBarButtonItem" enabled="NO" title=" " style="done" id="qNy-N7-IzK">
                             <connections>
                                 <action selector="handleTapDone" destination="Yjd-tz-avt" id="gJh-bv-74C"/>
@@ -1852,10 +1852,7 @@
                         <outlet property="developerLabel" destination="MSo-mQ-Fhi" id="7rU-sD-oP8"/>
                         <outlet property="doneButton" destination="qNy-N7-IzK" id="nsO-tN-szv"/>
                         <outlet property="favouriteButton" destination="5as-7t-9Mj" id="lZQ-gj-aKh"/>
-                        <outlet property="fifthStar" destination="hEn-Zq-WrY" id="B8t-in-xQy"/>
                         <outlet property="finishedButton" destination="yjk-C6-lRb" id="g0s-E7-6eM"/>
-                        <outlet property="firstStar" destination="Qrl-hq-5G1" id="eHt-gc-rNQ"/>
-                        <outlet property="fourthStar" destination="ruC-Mn-gJx" id="TKU-rL-Kqh"/>
                         <outlet property="genresLabel" destination="D9f-LF-gZq" id="zZa-F5-IDR"/>
                         <outlet property="headerContent" destination="WPU-V0-T7e" id="jNS-JF-hHh"/>
                         <outlet property="headerHeightConstraint" destination="eul-lZ-OV2" id="OHw-F7-3UM"/>
@@ -1880,11 +1877,11 @@
                         <outlet property="progressSlider" destination="svR-H5-UZm" id="j1H-X6-xcv"/>
                         <outlet property="publisherLabel" destination="paE-Ps-Sik" id="4SF-IC-LdI"/>
                         <outlet property="ratingContainerView" destination="AKm-ni-gKx" id="Hqg-Cn-F4e"/>
-                        <outlet property="secondStar" destination="3TJ-8w-tGg" id="OHK-o8-tzH"/>
                         <outlet property="shadowBottomConstraint" destination="uYz-77-x0W" id="MfI-a3-HOH"/>
                         <outlet property="shadowLeadingConstraint" destination="6T2-vC-H4s" id="oEs-e8-stP"/>
                         <outlet property="shadowTopConstraint" destination="T4v-wn-L58" id="pHM-4x-0Ms"/>
                         <outlet property="shadowView" destination="srX-AB-VRu" id="dHb-5O-tBg"/>
+                        <outlet property="starStackView" destination="JAi-Yj-wEx" id="d72-Vm-j51"/>
                         <outlet property="statsButton" destination="w8J-Fc-HQw" id="btg-Ci-hwf"/>
                         <outlet property="statsEffectView" destination="thQ-co-ZR8" id="UCI-Wy-E1s"/>
                         <outlet property="statsLabel" destination="xtG-M1-Yqi" id="swP-wQ-3K8"/>
@@ -1893,7 +1890,6 @@
                         <outlet property="statsScrollView" destination="djC-wv-i8j" id="EeG-TN-mpR"/>
                         <outlet property="steamLogo" destination="WiZ-zI-24F" id="lRp-i0-LsJ"/>
                         <outlet property="steamUserLabel" destination="Fhq-Eb-ul8" id="7Cq-ar-cxo"/>
-                        <outlet property="thirdStar" destination="AmH-P8-65M" id="xpQ-DK-xYQ"/>
                         <outlet property="titleLabel" destination="YfW-ZH-mUf" id="VnZ-0V-xlf"/>
                         <outlet property="view" destination="HOp-Pa-rLP" id="M8Z-qn-uIn"/>
                         <outlet property="yearLabel" destination="I6P-eN-qcQ" id="V3H-jS-90N"/>
@@ -1922,12 +1918,12 @@
                 </tapGestureRecognizer>
                 <tapGestureRecognizer id="7A3-g6-R0d">
                     <connections>
-                        <action selector="ratingTapHandlerWithSender:" destination="Yjd-tz-avt" id="Xez-hZ-MGk"/>
+                        <action selector="ratingHandlerWithSender:" destination="Yjd-tz-avt" id="6TG-Xd-glZ"/>
                     </connections>
                 </tapGestureRecognizer>
                 <panGestureRecognizer minimumNumberOfTouches="1" id="ISY-rP-fk5">
                     <connections>
-                        <action selector="ratingPanHandlerWithSender:" destination="Yjd-tz-avt" id="iDc-vR-e64"/>
+                        <action selector="ratingHandlerWithSender:" destination="Yjd-tz-avt" id="HHT-hf-AsX"/>
                     </connections>
                 </panGestureRecognizer>
             </objects>

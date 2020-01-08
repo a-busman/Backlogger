@@ -113,7 +113,6 @@ class FiltersTableViewController: UITableViewController {
     
     @IBAction func handleSlider(_ sender: UISlider) {
         let remainder = Int(sender.value) % 5
-        let generator = UISelectionFeedbackGenerator()
         var newValue: Int = 0
         if remainder < 2 {
             newValue = Int(sender.value) - remainder
@@ -123,7 +122,7 @@ class FiltersTableViewController: UITableViewController {
         sender.value = Float(newValue)
         if let label = self.progressLabel, label.text != "\(newValue)%" {
             label.text = "\(newValue)%"
-            generator.selectionChanged()
+            UISelectionFeedbackGenerator().selectionChanged()
         }
         self.progress = newValue
         
@@ -142,9 +141,9 @@ class FiltersTableViewController: UITableViewController {
     }
     
     private func updateStars(_ index: Int) {
-        if self.rating != index {
+        if (self.rating != index + 1) && (index + 1 <= 5 && index + 1 >= 0)  {
             UISelectionFeedbackGenerator().selectionChanged()
-            self.rating = index
+            self.rating = index + 1
             for (i, star) in self.starStackView!.arrangedSubviews.enumerated() {
                 if let starImage = star as? UIImageView {
                     if index >= i {
