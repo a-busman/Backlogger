@@ -2951,6 +2951,9 @@
                                                 <constraint firstItem="fpr-co-QJT" firstAttribute="centerY" secondItem="15w-xu-EhN" secondAttribute="centerY" id="vAx-2H-NTY"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="P1o-1H-V0M" kind="show" identifier="platform_filter" id="NuS-4E-oyP"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="JKF-Kh-rha">
                                         <rect key="frame" x="0.0" y="99" width="375" height="43.5"/>
@@ -2978,6 +2981,9 @@
                                                 <constraint firstItem="t5p-GL-PSf" firstAttribute="centerY" secondItem="oAq-0f-Jr9" secondAttribute="centerY" id="m7G-uM-nif"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="P1o-1H-V0M" kind="show" identifier="genre_filter" id="ksP-CV-MaM"/>
+                                        </connections>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -3257,6 +3263,35 @@
             </objects>
             <point key="canvasLocation" x="3780" y="-1326"/>
         </scene>
+        <!--Table View Controller-->
+        <scene sceneID="gfz-Uh-NKh">
+            <objects>
+                <tableViewController id="P1o-1H-V0M" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="zFT-Yl-XEg">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="D0u-aV-a6L">
+                                <rect key="frame" x="0.0" y="28" width="375" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="D0u-aV-a6L" id="S2B-UR-YE6">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="P1o-1H-V0M" id="GNF-QN-ZkY"/>
+                            <outlet property="delegate" destination="P1o-1H-V0M" id="Q2f-Wy-nyz"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" largeTitleDisplayMode="never" id="cNV-ju-NED"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8mx-dp-ezA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4746" y="-1325"/>
+        </scene>
         <!--Random Game Background View Controller-->
         <scene sceneID="WiJ-sp-hWk">
             <objects>
@@ -3307,8 +3342,9 @@
         </namedColor>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="ksP-CV-MaM"/>
         <segue reference="4UJ-d8-tRw"/>
         <segue reference="wid-M9-uTf"/>
-        <segue reference="GgV-LA-jd5"/>
+        <segue reference="DQM-hH-dEv"/>
     </inferredMetricsTieBreakers>
 </document>
