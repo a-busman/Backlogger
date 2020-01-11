@@ -79,58 +79,58 @@ class GameDetailOverlayViewController: UIViewController {
     }
     
     func updateStats() {
-        self.titleLabel?.text = self._game?.gameFields?.name
+        guard let game = self._game else { return }
+        self.titleLabel?.text = game.gameFields?.name
         
-        completionPercentage?.text = "\(self._game!.progress)%"
-        progressSliderView?.value = Float(self._game!.progress)
-        self.platformLabel?.text = (self._game?.platform?.name)!
+        completionPercentage?.text = "\(game.progress)%"
+        progressSliderView?.value = Float(game.progress)
+        self.platformLabel?.text = game.platform?.name
 
-        if self._game!.finished == true {
+        if game.finished == true {
             self.completionCheckImage?.image = #imageLiteral(resourceName: "check_light")
             self.completionLabel?.text = "Finished"
         } else {
             self.completionCheckImage?.image = #imageLiteral(resourceName: "check_light_filled")
             self.completionLabel?.text = "In Progress"
         }
-        if let game = self._game {
-            if !game.favourite {
-                self.favouriteButton?.setImage(#imageLiteral(resourceName: "heart-empty-white"), for: .normal)
-                self.favouriteButtonState = .normal
-            } else {
-                self.favouriteButton?.setImage(#imageLiteral(resourceName: "heart"), for: .normal)
-                self.favouriteButtonState = .selected
-            }
-            if !game.nowPlaying {
-                self.playPauseButton?.setImage(#imageLiteral(resourceName: "play-white"), for: .normal)
-                self.playButtonState = .normal
-            } else {
-                self.playPauseButton?.setImage(#imageLiteral(resourceName: "pause-white"), for: .normal)
-                self.playButtonState = .selected
-            }
-            if !game.finished {
-                self.finishedButton?.setImage(#imageLiteral(resourceName: "check-empty-white"), for: .normal)
-                self.finishedButtonState = .normal
-            } else {
-                self.finishedButton?.setImage(#imageLiteral(resourceName: "check-green"), for: .normal)
-                self.finishedButtonState = .selected
-            }
-            if let stackView = self.starStackView {
-                for (i, star) in stackView.arrangedSubviews.enumerated() {
-                    if let starImage = star as? UIImageView {
-                        if game.rating > i {
-                            starImage.image = #imageLiteral(resourceName: "star-yellow")
-                        } else {
-                            starImage.image = #imageLiteral(resourceName: "star-white")
-                        }
+        if !game.favourite {
+            self.favouriteButton?.setImage(#imageLiteral(resourceName: "heart-empty-white"), for: .normal)
+            self.favouriteButtonState = .normal
+        } else {
+            self.favouriteButton?.setImage(#imageLiteral(resourceName: "heart"), for: .normal)
+            self.favouriteButtonState = .selected
+        }
+        if !game.nowPlaying {
+            self.playPauseButton?.setImage(#imageLiteral(resourceName: "play-white"), for: .normal)
+            self.playButtonState = .normal
+        } else {
+            self.playPauseButton?.setImage(#imageLiteral(resourceName: "pause-white"), for: .normal)
+            self.playButtonState = .selected
+        }
+        if !game.finished {
+            self.finishedButton?.setImage(#imageLiteral(resourceName: "check-empty-white"), for: .normal)
+            self.finishedButtonState = .normal
+        } else {
+            self.finishedButton?.setImage(#imageLiteral(resourceName: "check-green"), for: .normal)
+            self.finishedButtonState = .selected
+        }
+        if let stackView = self.starStackView {
+            for (i, star) in stackView.arrangedSubviews.enumerated() {
+                if let starImage = star as? UIImageView {
+                    if game.rating > i {
+                        starImage.image = #imageLiteral(resourceName: "star-yellow")
+                    } else {
+                        starImage.image = #imageLiteral(resourceName: "star-white")
                     }
                 }
             }
-            self.notesTextView?.text = self._game?.notes
         }
+        self.notesTextView?.text = game.notes
     }
     
     func updateFinished() {
-        if (self._game?.finished)! == true {
+        guard let game = self._game else { return }
+        if game.finished {
             self.completionCheckImage?.image = #imageLiteral(resourceName: "check_light")
             self.completionLabel?.text = "In Progress"
         } else {
@@ -158,13 +158,13 @@ class GameDetailOverlayViewController: UIViewController {
     }
     
     @IBAction func tappedDetails(sender: UITapGestureRecognizer) {
-        delegate?.didTapDetails()
+        self.delegate?.didTapDetails()
     }
     
     @IBAction func ratingHandler(sender: UIGestureRecognizer) {
         let location = sender.location(in: self.ratingContainerView!)
         let starIndex = Int(location.x / ((self.ratingContainerView?.bounds.width)! / 5.0))
-        updateStars(starIndex)
+        self.updateStars(starIndex)
     }
     
     private func updateStars(_ index: Int) {

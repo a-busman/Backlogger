@@ -2668,17 +2668,17 @@
                                     <segue destination="b0q-wU-2uX" kind="presentation" identifier="addToNowPlaying" id="wid-M9-uTf"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Shuffle" image="die" style="plain" id="UPd-Mn-BUW">
+                            <barButtonItem title="Shuffle" image="die" id="UPd-Mn-BUW">
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
-                                    <segue destination="KMb-lD-Xau" kind="presentation" id="gep-KC-J0h"/>
+                                    <segue destination="KMb-lD-Xau" kind="presentation" identifier="pick_random" id="gep-KC-J0h"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="addBackgroundView" destination="MQB-Bd-1ZK" id="kay-2u-z5J"/>
-                        <outlet property="addBarButtonItem" destination="xgf-6X-uQN" id="XQF-s8-MQE"/>
+                        <outlet property="addBarButtonItem" destination="xgf-6X-uQN" id="hAh-pL-GSy"/>
                         <outlet property="blurTopLayoutConstraint" destination="UNU-uP-LZL" id="vDN-YG-sBd"/>
                         <outlet property="blurView" destination="C32-Oq-DRJ" id="BY2-n8-PUg"/>
                         <outlet property="collectionView" destination="utv-38-NNd" id="prV-vK-AYZ"/>
@@ -2745,7 +2745,7 @@
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gWL-FX-juz">
                                 <rect key="frame" x="0.0" y="56" width="375" height="591"/>
                                 <connections>
-                                    <segue destination="GU1-LB-9j7" kind="embed" id="el4-0J-WvN"/>
+                                    <segue destination="GU1-LB-9j7" kind="embed" identifier="embed_background" id="el4-0J-WvN"/>
                                 </connections>
                             </containerView>
                             <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3WI-mk-KLU">
@@ -2888,7 +2888,7 @@
                 </tapGestureRecognizer>
                 <tapGestureRecognizer id="lCs-yf-yUM">
                     <connections>
-                        <segue destination="uXv-IP-fjx" kind="presentation" id="myR-ae-Rin"/>
+                        <segue destination="uXv-IP-fjx" kind="presentation" identifier="random_filters" id="myR-ae-Rin"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
@@ -3005,7 +3005,7 @@
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="hM9-OG-qjc">
                                                     <rect key="frame" x="291" y="6.5" width="51" height="31"/>
                                                     <color key="tintColor" name="App-table"/>
-                                                    <color key="onTintColor" name="App"/>
+                                                    <color key="onTintColor" name="App-blue"/>
                                                     <connections>
                                                         <action selector="completeToggled:" destination="SYd-nZ-oV4" eventType="valueChanged" id="QKW-Rv-bCm"/>
                                                     </connections>
@@ -3043,7 +3043,7 @@
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="rzN-hI-7MU">
                                                     <rect key="frame" x="291" y="6.5" width="51" height="31"/>
                                                     <color key="tintColor" name="App-table"/>
-                                                    <color key="onTintColor" name="App"/>
+                                                    <color key="onTintColor" name="App-blue"/>
                                                     <connections>
                                                         <action selector="favoriteToggled:" destination="SYd-nZ-oV4" eventType="valueChanged" id="Wlo-jG-99I"/>
                                                     </connections>
@@ -3085,6 +3085,9 @@
                                                         <segment title="="/>
                                                         <segment title="&gt;"/>
                                                     </segments>
+                                                    <connections>
+                                                        <action selector="segmentHandlerWithSender:" destination="SYd-nZ-oV4" eventType="valueChanged" id="93d-sF-57T"/>
+                                                    </connections>
                                                 </segmentedControl>
                                                 <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="50" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="6DT-wF-Ota">
                                                     <rect key="frame" x="185" y="7" width="104" height="31"/>
@@ -3146,6 +3149,9 @@
                                                         <segment title="="/>
                                                         <segment title="&gt;"/>
                                                     </segments>
+                                                    <connections>
+                                                        <action selector="segmentHandlerWithSender:" destination="SYd-nZ-oV4" eventType="valueChanged" id="JIZ-OB-pdq"/>
+                                                    </connections>
                                                 </segmentedControl>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tji-10-bwL">
                                                     <rect key="frame" x="297" y="11.5" width="43" height="20.5"/>
@@ -3233,9 +3239,15 @@
                     <navigationItem key="navigationItem" title="Filters" id="rPV-v7-W4f">
                         <barButtonItem key="leftBarButtonItem" title="Clear" id="Nfc-IP-gKw">
                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="tappedClearWithSender:" destination="SYd-nZ-oV4" id="nV3-6d-uvO"/>
+                            </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="unZ-7S-0Os">
                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="tappedDoneWithSender:" destination="SYd-nZ-oV4" id="AwE-3k-C4X"/>
+                            </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
@@ -3263,21 +3275,30 @@
             </objects>
             <point key="canvasLocation" x="3780" y="-1326"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Filter Category Table View Controller-->
         <scene sceneID="gfz-Uh-NKh">
             <objects>
-                <tableViewController id="P1o-1H-V0M" sceneMemberID="viewController">
+                <tableViewController id="P1o-1H-V0M" customClass="FilterCategoryTableViewController" customModule="Backlogger" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="zFT-Yl-XEg">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="D0u-aV-a6L">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="filter_category_cell" textLabel="cNZ-Kx-jOw" style="IBUITableViewCellStyleDefault" id="D0u-aV-a6L">
                                 <rect key="frame" x="0.0" y="28" width="375" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="D0u-aV-a6L" id="S2B-UR-YE6">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="cNZ-Kx-jOw">
+                                            <rect key="frame" x="16" y="0.0" width="343" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
                         </prototypes>
@@ -3337,6 +3358,9 @@
         <namedColor name="App">
             <color red="0.0" green="0.72549019607843135" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <namedColor name="App-blue">
+            <color red="0.0" green="0.72500002384185791" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="App-table">
             <color red="0.0" green="0.72500002384185791" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -3347,4 +3371,5 @@
         <segue reference="wid-M9-uTf"/>
         <segue reference="DQM-hH-dEv"/>
     </inferredMetricsTieBreakers>
+    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
 </document>

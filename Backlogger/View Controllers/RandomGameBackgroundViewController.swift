@@ -14,15 +14,27 @@ class RandomGameBackgroundViewController: UIViewController {
 
     let screenWidth: CGFloat = UIScreen.main.bounds.width
     let ratio = 15.0 / 9.0
-    var games: Results<GameField>!
+    private var _games: Results<GameField>!
+    var games: Results<GameField>! {
+        get {
+            return self._games
+        }
+        set(newValue) {
+            self._games = newValue
+            self._maxOnScreen = newValue.count
+        }
+    }
+    private var _maxOnScreen = 0
+    private var _onScreen = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.layer.opacity = 0.3
         autoreleasepool {
             guard let realm = try? Realm() else { return }
-            self.games = realm.objects(GameField.self)
+            self._games = realm.objects(GameField.self)
         }
+        self._maxOnScreen = self._games.count
         self.beginAnimation()
     }
     
@@ -37,6 +49,9 @@ class RandomGameBackgroundViewController: UIViewController {
                 guard let localSelf = self else {
                     return
                 }
+                if localSelf._onScreen >= localSelf._maxOnScreen {
+                    continue
+                }
                 DispatchQueue.main.async {
                     localSelf.showGameArt(localSelf.ratio)
                 }
@@ -46,7 +61,7 @@ class RandomGameBackgroundViewController: UIViewController {
     }
     
     func showGameArt(_ ratio: Double) {
-        guard let gameField = randomGame(), let imageUrl = gameField.image?.smallUrl else { return }
+        guard let gameField = self.randomGame(), let imageUrl = gameField.image?.smallUrl else { return }
         let height = Double.random(in: 50...400)
         let rootViewFrame = self.view.frame
         let randomFrame = CGRect(x: Double(rootViewFrame.width), y: Double.random(in: -50.0..<(Double(rootViewFrame.height) - 50.0)), width: height / ratio, height: height)
@@ -82,16 +97,18 @@ class RandomGameBackgroundViewController: UIViewController {
     
     func animate(_ imageView: UIView) {
         let randomTime = Double.random(in: 2.0...8.0)
+        self._onScreen += 1
         UIView.animate(withDuration: randomTime, delay: 0.0, options: .curveLinear, animations: {
             imageView.transform = CGAffineTransform(translationX: -self.screenWidth - imageView.frame.width, y: 0)
         }, completion: { _ in
             imageView.removeFromSuperview()
+            self._onScreen -= 1
         })
     }
     
     func randomGame() -> GameField? {
-        let index = Int.random(in: 0..<self.games.count)
+        let index = Int.random(in: 0..<self._games.count)
         
-        return self.games[index]
+        return self._games[index]
     }
 }

@@ -70,10 +70,12 @@ class NowPlayingViewController: UIViewController {
             switch (newValue) {
             case .minimal:
                 self.navigationController?.navigationBar.topItem?.rightBarButtonItem?.isEnabled = true
+                self.rollBarButtonItem?.isEnabled = true
                 self.dimView?.isUserInteractionEnabled = false
                 break
             case .full:
                 self.navigationController?.navigationBar.topItem?.rightBarButtonItem?.isEnabled = false
+                self.rollBarButtonItem?.isEnabled = false
                 self.dimView?.isUserInteractionEnabled = true
                 break
             }
@@ -332,6 +334,11 @@ class NowPlayingViewController: UIViewController {
             let addToPlaylistViewController = newNavController.topViewController as! AddToPlaylistViewController
             addToPlaylistViewController.delegate = self
             addToPlaylistViewController.title = "Add to Now Playing"
+        } else if segue.identifier == "pick_random" {
+            if let navVc = segue.destination as? UINavigationController,
+                let vc = navVc.topViewController as? RandomGameViewController {
+                vc.delegate = self
+            }
         }
     }
     
@@ -353,7 +360,8 @@ class NowPlayingViewController: UIViewController {
                 } else {
                     self.navigationController?.navigationBar.topItem?.leftBarButtonItem = nil
                 }
-                self.addBarButtonItem?.isEnabled = true
+                self.navigationController?.navigationBar.topItem?.rightBarButtonItem?.isEnabled = true
+                self.rollBarButtonItem?.isEnabled = true
             } else {
                 let newButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(handleTapEdit))
                 newButton.tintColor = .white
@@ -364,7 +372,8 @@ class NowPlayingViewController: UIViewController {
 
                 self.navigationController?.navigationBar.topItem?.leftBarButtonItem = newButton
 
-                self.addBarButtonItem?.isEnabled = false
+                self.navigationController?.navigationBar.topItem?.rightBarButtonItem?.isEnabled = false
+                self.rollBarButtonItem?.isEnabled = false
             }
             for vc in orderedViewControllers {
                 vc.setEditMode(editMode: self.inEditMode, animated: true)
@@ -976,5 +985,16 @@ extension NowPlayingViewController: UICollectionViewDataSource, UICollectionView
         self.pageControl?.currentPage = destination.item
         let generator = UISelectionFeedbackGenerator()
         generator.selectionChanged()
+    }
+}
+
+extension NowPlayingViewController: RandomGameViewControllerDelegate {
+    func selectedGame(_ game: Game?, vc: RandomGameViewController) {
+        if game != nil {
+            self.games.insert(game!, at: 0)
+            self.updatePlaylist()
+            self.refreshAll()
+        }
+        vc.dismiss(animated: true, completion: nil)
     }
 }

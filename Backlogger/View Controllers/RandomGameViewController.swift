@@ -9,30 +9,42 @@
 import UIKit
 import RealmSwift
 
+protocol RandomGameViewControllerDelegate {
+    func selectedGame(_ game: Game?, vc: RandomGameViewController)
+}
+
 class RandomGameViewController: UIViewController {
     
     @IBOutlet weak var rerollBlurView: UIVisualEffectView?
     @IBOutlet weak var filterBlurView: UIVisualEffectView?
-    @IBOutlet weak var bottomBlurViewConstraint: NSLayoutConstraint?
-    @IBOutlet weak var filterLabelConstraint: NSLayoutConstraint?
+
     let rootGameView = UIView()
     let gameView = NowPlayingGameViewController()
     let gameBlurView = UIVisualEffectView()
+    var backgroundView: RandomGameBackgroundViewController?
+    
+    var filters: FiltersTableViewController.FiltersCriteria?
     var games: Results<Game>!
     
-    let MINIMIZED_FILTER_VIEW_SIZE: CGFloat = 64
-    let DEFAULT_FILTER_LABEL_OFFSET: CGFloat = 10
-    var maxFilterViewSize: CGFloat = 0
+    var delegate: RandomGameViewControllerDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        autoreleasepool {
-            guard let realm = try? Realm() else { return }
-            self.games = realm.objects(Game.self)
+        self.filters = FiltersTableViewController.getFilters()
+        self.updateFilters()
+        if self.games.count > 0 {
+            self.gameView.game = self.getRandomGame()
+            self.gameView.addDetails(withRefresh: false)
+            self.gameBlurView.isHidden = true
+        } else if self.filters!.isEmpty {
+            self.showNoGamesAlert()
+            self.gameBlurView.isHidden = false
+        } else {
+            self.showFilterAlert()
+            self.gameBlurView.isHidden = false
+            NSLog("Filters don't match any games")
         }
-        
-        self.gameView.game = getRandomGame()
-        self.gameView.addDetails(withRefresh: false)
+        self.updateBackgroundGames()
         self.gameView.view.translatesAutoresizingMaskIntoConstraints = false
         self.rootGameView.translatesAutoresizingMaskIntoConstraints = false
         self.gameBlurView.translatesAutoresizingMaskIntoConstraints = false
@@ -42,7 +54,7 @@ class RandomGameViewController: UIViewController {
         self.gameBlurView.effect = UIBlurEffect(style: .light)
         self.gameBlurView.layer.cornerRadius = 10.0
         self.gameBlurView.clipsToBounds = true
-        self.gameBlurView.isHidden = true
+
         // Do any additional setup after loading the view.
     }
     
@@ -67,7 +79,23 @@ class RandomGameViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.maxFilterViewSize = self.view.bounds.height - 100.0
+        if let game = self.gameView.game {
+            if game.progress == 0 && game.finished == false {
+                self.gameView.gameDetailOverlayController.completionLabel?.text = "Not Started"
+                self.gameView.gameDetailOverlayController.completionCheckImage?.image = UIImage(named: "check-empty")
+            }
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "random_filters" {
+            if let navVc = segue.destination as? UINavigationController,
+                let vc = navVc.topViewController as? FiltersTableViewController {
+                vc.delegate = self
+            }
+        } else if segue.identifier == "embed_background" {
+            self.backgroundView = segue.destination as? RandomGameBackgroundViewController
+        }
     }
 
     @IBAction func cancelTapped(_ sender: UIBarButtonItem) {
@@ -75,7 +103,7 @@ class RandomGameViewController: UIViewController {
     }
     
     @IBAction func doneTapped(_ sender: UIBarButtonItem) {
-        self.dismiss(animated: true, completion: nil)
+        self.delegate?.selectedGame(self.gameView.game, vc: self)
     }
     
     @IBAction func rerollTapped(_ sender: UIGestureRecognizer) {
@@ -90,8 +118,10 @@ class RandomGameViewController: UIViewController {
         }, completion: { _ in
             generator = UINotificationFeedbackGenerator()
             (generator as! UINotificationFeedbackGenerator).notificationOccurred(.success)
-            self.gameView.game = self.getRandomGame()
-            self.gameView.addDetails(withRefresh: true)
+            if self.games.count > 0 {
+                self.gameView.game = self.getRandomGame()
+                self.gameView.addDetails(withRefresh: true)
+            }
             UIView.animate(withDuration: 0.25, animations: {
                 self.gameBlurView.alpha = 0.0
                 self.rootGameView.alpha = 1.0
@@ -101,60 +131,141 @@ class RandomGameViewController: UIViewController {
     }
 
     func getRandomGame() -> Game? {
-        return self.games[Int.random(in: 0..<self.games.count)]
+        if self.games.count > 0 {
+            return self.games[Int.random(in: 0..<self.games.count)]
+        }
+        return nil
     }
     
-    @IBAction func didDragFilters(_ sender: UIPanGestureRecognizer)
-    {
+    func updateFilters() {
+        guard let filters = self.filters else { return }
+        var predicates: [NSPredicate] = []
         
-        if sender.state == .began || sender.state == .changed {
-            let translation = sender.translation(in: self.view)
-            var newY: CGFloat = 0.0
-            var labelY: CGFloat = self.DEFAULT_FILTER_LABEL_OFFSET
-            
-            if self.bottomBlurViewConstraint!.constant + translation.y > self.maxFilterViewSize {
-                newY = self.bottomBlurViewConstraint!.constant + (translation.y / 2.0)
+        if filters.complete != nil {
+            if filters.complete! {
+                predicates.append(NSPredicate(format: "finished = true"))
             } else {
-                if self.bottomBlurViewConstraint!.constant + translation.y < self.MINIMIZED_FILTER_VIEW_SIZE {
-                labelY = self.filterLabelConstraint!.constant + translation.y
-                }
-                newY = self.bottomBlurViewConstraint!.constant + translation.y
-            }
-            self.filterLabelConstraint?.constant = labelY
-            self.bottomBlurViewConstraint?.constant = newY
-            sender.setTranslation(CGPoint.zero, in: self.view)
-            self.view.layoutIfNeeded()
-        } else if sender.state == .ended {
-            let velocity = sender.velocity(in: self.view).y
-            NSLog("velocity \(velocity)")
-            if self.bottomBlurViewConstraint!.constant > self.maxFilterViewSize {
-                self.bottomBlurViewConstraint?.constant = self.maxFilterViewSize
-                UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 1.0, options: .curveEaseOut, animations: {
-                    self.view.layoutIfNeeded()
-                }, completion: nil)
-            } else if (self.bottomBlurViewConstraint!.constant > (self.maxFilterViewSize / 2.0) && velocity > -300) || velocity > 300 {
-                self.bottomBlurViewConstraint?.constant = self.maxFilterViewSize
-                let minVelocity = min(Double(velocity), 1000.0)
-                
-                let animationTime: TimeInterval = (-0.6 * ((minVelocity - 300)/700) + 1.0)
-                
-                UIView.animate(withDuration: animationTime, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 1.0, options: .curveEaseOut, animations: {
-                    self.view.layoutIfNeeded()
-                }, completion: nil)
-            } else if (self.bottomBlurViewConstraint!.constant < (self.maxFilterViewSize / 2.0) && velocity < 300) || velocity < -300 {
-                let minVelocity = min(Double(velocity * -1.0), 1000.0)
-                let animationTime: TimeInterval = (-0.6 * ((minVelocity - 300)/700) + 1.0)
-                self.bottomBlurViewConstraint?.constant = self.MINIMIZED_FILTER_VIEW_SIZE
-                    self.filterLabelConstraint?.constant = self.DEFAULT_FILTER_LABEL_OFFSET
-                UIView.animate(withDuration: animationTime,
-                               delay: 0.0,
-                               usingSpringWithDamping: 1.0,
-                               initialSpringVelocity: 1.0,
-                               options: .curveEaseOut,
-                               animations: { self.view.layoutIfNeeded()
-                },
-                               completion: nil)
+                predicates.append(NSPredicate(format: "finished != true"))
             }
         }
+        
+        if filters.favorite != nil {
+            if filters.favorite! {
+                predicates.append(NSPredicate(format: "favourite = true"))
+            } else {
+                predicates.append(NSPredicate(format: "favourite != true"))
+            }
+        }
+        
+        if filters.progress != nil && filters.progressCriteria != nil {
+            var compStr = ""
+            if filters.progressCriteria == .less {
+                compStr = "<"
+            } else if filters.progressCriteria == .equal {
+                compStr = "="
+            } else if filters.progressCriteria == .greater {
+                compStr = ">"
+            }
+            predicates.append(NSPredicate(format: "progress \(compStr) %i", filters.progress!))
+        }
+        
+        if filters.rating != nil && filters.ratingCriteria != nil {
+            var compStr = ""
+            if filters.ratingCriteria == .less {
+                compStr = "<"
+            } else if filters.ratingCriteria == .equal {
+                compStr = "="
+            } else if filters.ratingCriteria == .greater {
+                compStr = ">"
+            }
+            predicates.append(NSPredicate(format: "rating \(compStr) %i", filters.rating!))
+        }
+        
+        if filters.platforms != nil {
+            predicates.append(NSPredicate(format: "platform.idNumber IN %@", filters.platforms!))
+        }
+        
+        if filters.genres != nil {
+            predicates.append(NSPredicate(format: "ANY gameFields.genres.idNumber IN %@", filters.genres!))
+        }
+        
+        let compoundPredicate: NSCompoundPredicate = NSCompoundPredicate(type: .and, subpredicates: predicates)
+        autoreleasepool {
+            if let realm = try? Realm() {
+                if compoundPredicate.subpredicates.count > 0 {
+                    self.games = realm.objects(Game.self).filter(compoundPredicate)
+                } else {
+                    self.games = realm.objects(Game.self)
+                }
+            }
+        }
+    }
+    func showFilterAlert() {
+        let alert = UIAlertController(title: "Uh oh!", message: "You have no games that match your filters!", preferredStyle: .alert)
+        let repick = UIAlertAction(title: "Repick", style: .default, handler: { action in
+            self.performSegue(withIdentifier: "random_filters", sender: self)
+        })
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
+            self.dismiss(animated: true, completion: nil)
+        })
+        
+        alert.addAction(repick)
+        alert.addAction(cancel)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func showNoGamesAlert() {
+        let alert = UIAlertController(title: "Uh oh!", message: "You have no games in your library!", preferredStyle: .alert)
+        let okay = UIAlertAction(title: "Okay", style: .cancel, handler: { action in
+            self.dismiss(animated: true, completion: nil)
+        })
+        alert.addAction(okay)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func updateBackgroundGames() {
+        autoreleasepool {
+            if let realm = try? Realm() {
+                if self.games != nil && self.games.count > 0 {
+                    self.backgroundView?.games = realm.objects(GameField.self).filter("idNumber IN %@", Array(self.games).map{$0.gameFields?.idNumber})
+                }
+            }
+        }
+    }
+}
+
+extension RandomGameViewController: FiltersTableViewControllerDelegate {
+    func didSelectFilters(_ criteria: FiltersTableViewController.FiltersCriteria?, vc: FiltersTableViewController) {
+        vc.dismiss(animated: true, completion: nil)
+        self.filters = criteria
+        self.updateFilters()
+        if self.games.count > 0 {
+            self.gameView.game = self.getRandomGame()
+            self.gameView.addDetails(withRefresh: true)
+            if let game = self.gameView.game {
+                if game.progress == 0 && game.finished == false {
+                    self.gameView.gameDetailOverlayController.completionLabel?.text = "Not Started"
+                    self.gameView.gameDetailOverlayController.completionCheckImage?.image = UIImage(named: "check-empty")
+                }
+            }
+            UIView.animate(withDuration: 0.25, animations: {
+                self.gameBlurView.alpha = 0.0
+            }, completion: { _ in
+                self.gameBlurView.isHidden = true
+            })
+        } else {
+            self.gameBlurView.alpha = 0.0
+            self.gameBlurView.isHidden = false
+            UIView.animate(withDuration: 0.25, animations: {
+                self.gameBlurView.alpha = 1.0
+            })
+            self.showFilterAlert()
+            NSLog("Filters don't match any games")
+        }
+        self.updateBackgroundGames()
+    }
+    
+    func didDismiss() {
+        NSLog("dismiss")
     }
 }

@@ -405,8 +405,8 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "-FIRAnalyticsDebugEnabled"
-            isEnabled = "NO">
+            argument = "-FIRDebugDisabled"
+            isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>
