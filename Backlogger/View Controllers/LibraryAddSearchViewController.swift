@@ -26,6 +26,8 @@ class LibraryAddSearchViewController: UIViewController {
     @IBOutlet weak var bottomActivity: UIActivityIndicatorView?
     @IBOutlet weak var gameCountLabel: UILabel?
     
+    @IBOutlet weak var searchTintTopConstraint: NSLayoutConstraint?
+    
     var gameFields: [GameField] = []
     var gameFieldIds: [Int] = []
     var searchResults: SearchResults?
@@ -88,6 +90,13 @@ class LibraryAddSearchViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.delegate?.didDismiss()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if let searchBar = self.searchBar {
+            self.searchTintTopConstraint?.constant = searchBar.frame.maxY
+        }
     }
     
     func loadFirstGame(withQuery query: String) {

@@ -1074,6 +1074,7 @@
                         <outlet property="searchBackground" destination="2xv-6C-h9b" id="BTF-eg-NbF"/>
                         <outlet property="searchBar" destination="uGi-FX-aXT" id="gYz-Mo-y0P"/>
                         <outlet property="searchLabel" destination="U5P-sU-0Ti" id="58H-Ub-y2P"/>
+                        <outlet property="searchTintTopConstraint" destination="vGg-BN-MWe" id="jIr-XT-9hq"/>
                         <outlet property="searchTintView" destination="o4H-gq-BV1" id="yZl-JT-rPo"/>
                         <outlet property="tableView" destination="aKP-zs-Psj" id="Iri-MC-uIN"/>
                         <outlet property="view" destination="Ewg-oW-Pog" id="QmN-Bo-syS"/>
@@ -1092,11 +1093,11 @@
                         <viewControllerLayoutGuide type="bottom" id="bbH-kg-UuN"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="HOp-Pa-rLP">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" directionalLockEnabled="YES" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Yh-gY-jcp">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H7B-Hs-sae" userLabel="Content View">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="542"/>
@@ -1315,13 +1316,13 @@
                                 </connections>
                             </scrollView>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Network Connection" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3r3-Lq-OYo">
-                                <rect key="frame" x="96" y="323.5" width="183" height="20.5"/>
+                                <rect key="frame" x="96" y="313.5" width="183" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="esg-nU-ufh">
-                                <rect key="frame" x="0.0" y="44" width="375" height="175"/>
+                                <rect key="frame" x="0.0" y="56" width="375" height="175"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="WPU-V0-T7e">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="175"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1614,13 +1615,13 @@
                                 <blurEffect style="systemMaterial"/>
                             </visualEffectView>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="thQ-co-ZR8">
-                                <rect key="frame" x="0.0" y="219" width="375" height="448"/>
+                                <rect key="frame" x="0.0" y="231" width="375" height="416"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="ydf-rd-4fg">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="448"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="416"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="djC-wv-i8j">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="448"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="416"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zpl-ms-vop">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="371.5"/>
@@ -1790,7 +1791,7 @@
                                 <blurEffect style="systemMaterial"/>
                             </visualEffectView>
                             <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UB4-1H-riR">
-                                <rect key="frame" x="137.5" y="283.5" width="100" height="100"/>
+                                <rect key="frame" x="137.5" y="273.5" width="100" height="100"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="UB4-1H-riR" secondAttribute="height" id="2Sn-FP-OlB"/>
@@ -1803,7 +1804,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="BlG-vb-kFs">
-                                <rect key="frame" x="169" y="315" width="37" height="37"/>
+                                <rect key="frame" x="169" y="305" width="37" height="37"/>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
@@ -2447,7 +2448,7 @@
                                         </constraints>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add games from your Library" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Blg-hp-3ac">
-                                        <rect key="frame" x="76.5" y="362" width="222" height="21"/>
+                                        <rect key="frame" x="76.5" y="362" width="222.5" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.7725490196" green="0.77647058820000003" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
@@ -2939,7 +2940,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="YFV-bQ-0XO">
-                                                    <rect key="frame" x="312" y="12" width="26" height="20"/>
+                                                    <rect key="frame" x="325" y="17" width="13" height="10"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -2969,7 +2970,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="t5p-GL-PSf">
-                                                    <rect key="frame" x="312" y="12" width="26" height="20"/>
+                                                    <rect key="frame" x="325" y="17" width="13" height="10"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -3011,7 +3012,7 @@
                                                     </connections>
                                                 </switch>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="Uiy-wY-ORj">
-                                                    <rect key="frame" x="350" y="12" width="15" height="20"/>
+                                                    <rect key="frame" x="350" y="17" width="15" height="10"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -3049,7 +3050,7 @@
                                                     </connections>
                                                 </switch>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="MQh-sa-Ga6">
-                                                    <rect key="frame" x="350" y="12" width="15" height="20"/>
+                                                    <rect key="frame" x="350" y="17" width="15" height="10"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -3106,7 +3107,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="FNv-Vo-WO2">
-                                                    <rect key="frame" x="350" y="12" width="15" height="20"/>
+                                                    <rect key="frame" x="350" y="17" width="15" height="10"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -3208,7 +3209,7 @@
                                                     </connections>
                                                 </stackView>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="EOF-ya-eZ1">
-                                                    <rect key="frame" x="350" y="12" width="15" height="20"/>
+                                                    <rect key="frame" x="350" y="17" width="15" height="10"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -3369,7 +3370,7 @@
         <segue reference="ksP-CV-MaM"/>
         <segue reference="4UJ-d8-tRw"/>
         <segue reference="wid-M9-uTf"/>
-        <segue reference="DQM-hH-dEv"/>
+        <segue reference="A8X-gZ-lr5"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
 </document>

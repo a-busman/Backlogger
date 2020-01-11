@@ -84,6 +84,7 @@ class RandomGameViewController: UIViewController {
                 self.gameView.gameDetailOverlayController.completionLabel?.text = "Not Started"
                 self.gameView.gameDetailOverlayController.completionCheckImage?.image = UIImage(named: "check-empty")
             }
+            self.gameView.gameDetailOverlayController.pullTabView?.isHidden = true
         }
     }
     
@@ -95,6 +96,12 @@ class RandomGameViewController: UIViewController {
             }
         } else if segue.identifier == "embed_background" {
             self.backgroundView = segue.destination as? RandomGameBackgroundViewController
+        }
+    }
+    
+    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        if motion == .motionShake {
+            self.rerollTapped(UIGestureRecognizer())
         }
     }
 

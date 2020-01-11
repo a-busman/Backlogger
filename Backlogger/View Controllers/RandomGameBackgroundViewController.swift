@@ -99,7 +99,7 @@ class RandomGameBackgroundViewController: UIViewController {
         let randomTime = Double.random(in: 2.0...8.0)
         self._onScreen += 1
         UIView.animate(withDuration: randomTime, delay: 0.0, options: .curveLinear, animations: {
-            imageView.transform = CGAffineTransform(translationX: -self.screenWidth - imageView.frame.width, y: 0)
+            imageView.transform = CGAffineTransform(translationX: -self.screenWidth - imageView.frame.width - 20, y: 0)
         }, completion: { _ in
             imageView.removeFromSuperview()
             self._onScreen -= 1
