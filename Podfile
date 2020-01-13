@@ -6,6 +6,7 @@ def sharedPods
   pod 'Kingfisher'
   pod 'RealmSwift'
   pod 'MMWormhole'
+  pod 'IGDB-SWIFT-API', git: "https://github.com/husnjak/IGDB-API-SWIFT.git"
   pod 'Firebase/Analytics'
 end
 

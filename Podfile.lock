@@ -63,7 +63,11 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (6.4.0):
     - GoogleUtilities/Logger
+  - IGDB-SWIFT-API (0.2.1):
+    - Just
+    - SwiftProtobuf (~> 1.0)
   - ImageViewer (6.0.0)
+  - Just (0.8.0)
   - Kingfisher (5.12.0):
     - Kingfisher/Core (= 5.12.0)
   - Kingfisher/Core (5.12.0)
@@ -80,6 +84,7 @@ PODS:
   - Realm/Headers (4.3.0)
   - RealmSwift (4.3.0):
     - Realm (= 4.3.0)
+  - SwiftProtobuf (1.7.0)
   - Zephyr (3.5.0)
   - Zip (1.1.0)
 
@@ -88,6 +93,7 @@ DEPENDENCIES:
   - Crashlytics
   - Fabric
   - Firebase/Analytics
+  - IGDB-SWIFT-API (from `https://github.com/husnjak/IGDB-API-SWIFT.git`)
   - ImageViewer (from `https://github.com/Krisiacik/ImageViewer.git`, commit `519fbdb57b4ad83de50ecd09b7182ed9d190f3ee`)
   - Kingfisher
   - MMWormhole
@@ -110,20 +116,27 @@ SPEC REPOS:
     - GoogleDataTransport
     - GoogleDataTransportCCTSupport
     - GoogleUtilities
+    - Just
     - Kingfisher
     - MMWormhole
     - nanopb
     - Realm
     - RealmSwift
+    - SwiftProtobuf
     - Zephyr
     - Zip
 
 EXTERNAL SOURCES:
+  IGDB-SWIFT-API:
+    :git: https://github.com/husnjak/IGDB-API-SWIFT.git
   ImageViewer:
     :commit: 519fbdb57b4ad83de50ecd09b7182ed9d190f3ee
     :git: https://github.com/Krisiacik/ImageViewer.git
 
 CHECKOUT OPTIONS:
+  IGDB-SWIFT-API:
+    :commit: 7a64a4a25c357709337de1af94d05eaccc100199
+    :git: https://github.com/husnjak/IGDB-API-SWIFT.git
   ImageViewer:
     :commit: 519fbdb57b4ad83de50ecd09b7182ed9d190f3ee
     :git: https://github.com/Krisiacik/ImageViewer.git
@@ -142,15 +155,18 @@ SPEC CHECKSUMS:
   GoogleDataTransport: 8e9b210c97d55fbff306cc5468ff91b9cb32dcf5
   GoogleDataTransportCCTSupport: 202d7cdf9c4a7d81a2bb7f7e7e1ba6faa421b1f2
   GoogleUtilities: 29bd0d8f850efbd28cff6d99e8b7da1f8d236bcf
+  IGDB-SWIFT-API: 8171c8cff2a6cdfe51b8593a9ec1a0a557afb692
   ImageViewer: cb88ef1c0ba19161bc10702adfdcebc116a7a59d
+  Just: aef5105fb2c7069b65aa6f21aec8f429057f9c19
   Kingfisher: dc6e0f53bb5b12c3e75bedb0e01bbd7a640eea69
   MMWormhole: 0cd3fd35a9118b2e2d762b499f54eeaace0be791
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   Realm: 9357c3589555793e1860a7104a7412bca4a48d99
   RealmSwift: 402f1e379a8ef82c635313037b043f0f06de880c
+  SwiftProtobuf: 4fd9645e69b72cbae6ec8da5be0cdd20ca6565dd
   Zephyr: d4cbf727c30a5fc4fa1828f17a09f735948309fb
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: ab0d795e339807ba9d830621edfd39c138f506dc
+PODFILE CHECKSUM: 71625453962882f387fae82a55159221abdd8af4
 
 COCOAPODS: 1.8.4
