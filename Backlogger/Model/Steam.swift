@@ -70,6 +70,28 @@ class SteamGameResults {
     var gameCount: Int = 0
 }
 
+// Steam : GB
+fileprivate let gameMappings: [Int: Int] = [
+    3300:22608,     // Bejeweled 2 Deluxe
+    228200:18930,   // Company of heroes
+    4560:18930,     // Company of heroes - Legacy Edition
+    21090:4800,     // F.E.A.R.
+    423230:52304,   // Furi
+    797410:68769,   // Headsnatchers
+    207080:-1,      // Indie Game: The Movie
+    3320:19696,     // Insaniquarium! Deluxe
+    205950:20096,   // Jet Set/Grind Radio
+    912290:44021,   // Miscreated: Experimental Server
+    491950:56603,   // Orwell
+    3480:21963,     // Peggle Deluxe
+    104600:-1,      // Portal 2 - The Final Hours
+    204340:5036,    // Serious Sam 2
+    564310:-1,      // Serious Sam: Fusion 2017
+    314790:44717,   // Silence
+    13250:17646,    // Unreal Gold
+    3330:17012      // Zuma Deluxe
+]
+
 class Steam {
     
     static let steamPlatformIdNumber = Platform.customIdBase() - 1
@@ -89,6 +111,22 @@ class Steam {
         return URL(string: "https://media.steampowered.com/steamcommunity/public/images/apps/\(appId)/" + image + ".jpg")
     }
     
+    class func matchGameFromList(_ steamGame: SteamGame, _ completionHandler: @escaping (GameField?) -> Void) {
+        guard let mappedId = gameMappings[steamGame.appId] else { completionHandler(nil); return }
+        if mappedId == -1 {
+            let gameField = GameField()
+            gameField.idNumber = -1
+            completionHandler(gameField)
+        } else {
+            GameField.getGameDetail(withId: mappedId) { result in
+                if let error = result.error {
+                    NSLog(error.localizedDescription)
+                }
+                completionHandler(result.value)
+            }
+        }
+    }
+    
     class func matchGiantBombGames(with gameList: [SteamGame], progressHandler: @escaping (Int, Int) -> Void, _ completionHandler: @escaping (_ matched: Result<[GameField]>, _ unmatched: Result<[SteamGame]>) -> Void) {
         var gameFields: [GameField] = []
         var unmatchedSteamGames: [SteamGame] = []
@@ -98,6 +136,7 @@ class Steam {
         let queue = DispatchQueue(label: "game.count.queue")
         Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { timer in
             let currentGame = gameList[i]
+            
             var gameName = currentGame.name.trimmingCharacters(in: .whitespacesAndNewlines).removeSpecialEdition()
             
             // for some reason, resident evil games have biohazard written after them (the japanese name)
@@ -107,7 +146,8 @@ class Steam {
                 gameName = String(gameName[gameName.startIndex..<index])
             }
             gameName = gameName.trimmingCharacters(in: .whitespacesAndNewlines)
-            GameField.getGames(from: gameName) { results in
+
+            let resultsHandler = { (results: Result<SearchResults>) -> Void in
                 if let error = results.error {
                     NSLog("Error searching for \(gameName)")
                     unmatchedSteamGames.append(currentGame)
@@ -217,10 +257,10 @@ class Steam {
                         gameFields.append(gameField!)
                         gameField!.steamAppId = currentGame.appId
                         NSLog("\(currentGame.name) -> \(gameField!.name!)")
-                        Analytics.logEvent(AnalyticsEventSearch, parameters: [ "translation" : "\(currentGame.name) -> \(gameField!.name!)"])
+                        Analytics.logEvent(AnalyticsEventSearch, parameters: [ "translation" : "\(currentGame.name):\(currentGame.appId) -> \(gameField!.name!):\(gameField!.idNumber)"])
                     } else {
                         unmatchedSteamGames.append(currentGame)
-                        NSLog("Could not find match for \(currentGame.name)")
+                        NSLog("Could not find match for \(currentGame.name):\(currentGame.appId)")
                         Analytics.logEvent(AnalyticsEventSearch, parameters: ["no_match" : currentGame.name])
                         
                     }
@@ -230,6 +270,22 @@ class Steam {
                         if gameCount == totalGames {
                             completionHandler(.success(gameFields), .success(unmatchedSteamGames))
                         }
+                    }
+                }
+            }
+            matchGameFromList(currentGame) { gameResult in
+                guard let game = gameResult else { GameField.getGames(from: gameName, resultsHandler); return }
+                if game.idNumber != -1 {
+                    game.steamAppId = currentGame.appId
+                    gameFields.append(game)
+                } else {
+                    unmatchedSteamGames.append(currentGame)
+                }
+                queue.sync {
+                    gameCount += 1
+                    progressHandler(gameCount, totalGames)
+                    if gameCount == totalGames {
+                        completionHandler(.success(gameFields), .success(unmatchedSteamGames))
                     }
                 }
             }
