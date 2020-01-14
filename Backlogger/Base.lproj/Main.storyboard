@@ -266,13 +266,14 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <color key="separatorColor" systemColor="separatorColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="table_cell" id="bJp-1K-t4H" customClass="TableViewCell" customModule="Backlogger" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" shouldIndentWhileEditing="NO" reuseIdentifier="table_cell" id="bJp-1K-t4H" customClass="TableViewCell" customModule="Backlogger" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bJp-1K-t4H" id="2Q9-uk-5QC">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
+                                        <color key="tintColor" name="App-blue"/>
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>
@@ -1093,11 +1094,11 @@
                         <viewControllerLayoutGuide type="bottom" id="bbH-kg-UuN"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="HOp-Pa-rLP">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" directionalLockEnabled="YES" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Yh-gY-jcp">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H7B-Hs-sae" userLabel="Content View">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="542"/>
@@ -1316,13 +1317,13 @@
                                 </connections>
                             </scrollView>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Network Connection" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3r3-Lq-OYo">
-                                <rect key="frame" x="96" y="313.5" width="183" height="20.5"/>
+                                <rect key="frame" x="96" y="323.5" width="183" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="esg-nU-ufh">
-                                <rect key="frame" x="0.0" y="56" width="375" height="175"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="175"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="WPU-V0-T7e">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="175"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1615,13 +1616,13 @@
                                 <blurEffect style="systemMaterial"/>
                             </visualEffectView>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="thQ-co-ZR8">
-                                <rect key="frame" x="0.0" y="231" width="375" height="416"/>
+                                <rect key="frame" x="0.0" y="219" width="375" height="448"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="ydf-rd-4fg">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="416"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="448"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="djC-wv-i8j">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="416"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="448"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zpl-ms-vop">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="371.5"/>
@@ -1791,7 +1792,7 @@
                                 <blurEffect style="systemMaterial"/>
                             </visualEffectView>
                             <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UB4-1H-riR">
-                                <rect key="frame" x="137.5" y="273.5" width="100" height="100"/>
+                                <rect key="frame" x="137.5" y="283.5" width="100" height="100"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="UB4-1H-riR" secondAttribute="height" id="2Sn-FP-OlB"/>
@@ -1804,7 +1805,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="BlG-vb-kFs">
-                                <rect key="frame" x="169" y="305" width="37" height="37"/>
+                                <rect key="frame" x="169" y="315" width="37" height="37"/>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
@@ -2643,7 +2644,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" name="Menu BG"/>
                         <constraints>
                             <constraint firstItem="bMs-wG-lFu" firstAttribute="bottom" secondItem="tG9-su-aib" secondAttribute="top" id="IMt-uY-Jas"/>
                             <constraint firstItem="MQB-Bd-1ZK" firstAttribute="bottom" secondItem="bMs-wG-lFu" secondAttribute="bottom" id="KRr-eL-puG"/>
@@ -2940,7 +2941,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="YFV-bQ-0XO">
-                                                    <rect key="frame" x="325" y="17" width="13" height="10"/>
+                                                    <rect key="frame" x="312" y="12" width="26" height="20"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -2970,7 +2971,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="t5p-GL-PSf">
-                                                    <rect key="frame" x="325" y="17" width="13" height="10"/>
+                                                    <rect key="frame" x="312" y="12" width="26" height="20"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -3012,7 +3013,7 @@
                                                     </connections>
                                                 </switch>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="Uiy-wY-ORj">
-                                                    <rect key="frame" x="350" y="17" width="15" height="10"/>
+                                                    <rect key="frame" x="350" y="12" width="15" height="20"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -3050,7 +3051,7 @@
                                                     </connections>
                                                 </switch>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="MQh-sa-Ga6">
-                                                    <rect key="frame" x="350" y="17" width="15" height="10"/>
+                                                    <rect key="frame" x="350" y="12" width="15" height="20"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -3107,7 +3108,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="FNv-Vo-WO2">
-                                                    <rect key="frame" x="350" y="17" width="15" height="10"/>
+                                                    <rect key="frame" x="350" y="12" width="15" height="20"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -3209,7 +3210,7 @@
                                                     </connections>
                                                 </stackView>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="EOF-ya-eZ1">
-                                                    <rect key="frame" x="350" y="17" width="15" height="10"/>
+                                                    <rect key="frame" x="350" y="12" width="15" height="20"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -3365,12 +3366,15 @@
         <namedColor name="App-table">
             <color red="0.0" green="0.72500002384185791" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <namedColor name="Menu BG">
+            <color white="0.89942744006849318" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </namedColor>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="ksP-CV-MaM"/>
-        <segue reference="4UJ-d8-tRw"/>
+        <segue reference="cSK-p2-89Z"/>
         <segue reference="wid-M9-uTf"/>
-        <segue reference="A8X-gZ-lr5"/>
+        <segue reference="DQM-hH-dEv"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
 </document>

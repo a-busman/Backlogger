@@ -154,6 +154,7 @@ extension WishlistViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: self.reuseString) as! TableViewCell
+        cell.tintColor = UIColor(named: "App-blue")
         if let game = self.wishlistGames?[indexPath.row] {
             var indent: CGFloat = 0.0
             
