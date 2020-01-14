@@ -662,7 +662,7 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
         cell.progress = game.progress
         cell.complete = game.finished
         cell.isWishlist = game.inWishlist
-        if let image = game.gameFields?.image, !image.iconUrl!.hasSuffix("gblogo.png") {
+        if let image = game.gameFields?.image, !image.isDefaultPlaceholder(field: .IconUrl) {
             cell.imageUrl = URL(string: image.iconUrl!)
         } else {
             cell.artView?.image = #imageLiteral(resourceName: "table_placeholder_light")

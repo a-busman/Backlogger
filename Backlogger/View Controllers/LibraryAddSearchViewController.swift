@@ -413,7 +413,7 @@ extension LibraryAddSearchViewController: UITableViewDelegate, UITableViewDataSo
                 }
             }
 
-            if let image = gameToShow.image, !image.iconUrl!.hasSuffix("gblogo.png") {
+            if let image = gameToShow.image, !image.isDefaultPlaceholder(field: .IconUrl) {
                 cell.imageUrl = URL(string: image.iconUrl!)
             } else {
                 cell.imageUrl = nil

@@ -169,7 +169,7 @@ class TableViewCell: UITableViewCell {
             self.addButton?.setImage(#imageLiteral(resourceName: "add_symbol_blue"), for: .normal)
         }
 
-        if self.imageUrl != nil, !self.imageUrl!.absoluteString.hasSuffix("gblogo.png") {
+        if self.imageUrl != nil, !ImageList.isDefaultPlaceholder(url: self.imageUrl!) {
             self.artView?.kf.cancelDownloadTask()
             self.artView?.kf.setImage(with: self.imageUrl, placeholder: #imageLiteral(resourceName: "table_placeholder_light"), completionHandler: self.cacheCompletionHandler)
         }

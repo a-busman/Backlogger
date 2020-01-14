@@ -396,7 +396,7 @@ class GameDetailsViewController: UIViewController {
         UIView.setAnimationsEnabled(false)
         self.platformButton?.setTitle(platformString, for: .normal)
         UIView.setAnimationsEnabled(true)
-        if let mediumUrl = self._gameField?.image?.mediumUrl {
+        if let mediumUrl = self._gameField?.image?.mediumUrl, !ImageList.isDefaultPlaceholder(url: URL(string: mediumUrl)!){
             self.mainImageView?.kf.setImage(with: URL(string: mediumUrl), placeholder: #imageLiteral(resourceName: "info_image_placeholder"), completionHandler: {
                 result in
                 switch result {
@@ -1627,7 +1627,7 @@ extension GameDetailsViewController: UICollectionViewDelegate, UICollectionViewD
             characterImageView.trailingAnchor.constraint(equalTo: cell.characterBorder!.trailingAnchor, constant: -0.5).isActive = true
 
             if let urlString = character.image?.mediumUrl {
-                if urlString.hasSuffix("question_mark.jpg") || urlString.hasSuffix("gblogo.png") {
+                if ImageList.isDefaultPlaceholder(url: URL(string: urlString)!) {
                     characterImageView.image = #imageLiteral(resourceName: "new_playlist")
                     cell.hideImage()
                 } else {

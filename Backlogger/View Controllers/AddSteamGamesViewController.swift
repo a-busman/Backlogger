@@ -112,7 +112,7 @@ extension AddSteamGamesViewController: UITableViewDelegate, UITableViewDataSourc
             }
             cell.descriptionLabel?.text = platformString
             
-            if let image = gameToShow.image, !image.iconUrl!.hasSuffix("gblogo.png") {
+            if let image = gameToShow.image, !image.isDefaultPlaceholder(field: .IconUrl) {
                 cell.imageUrl = URL(string: image.iconUrl!)
             }
             cell.cacheCompletionHandler = {
