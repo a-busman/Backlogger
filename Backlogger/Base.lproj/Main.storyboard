@@ -2941,7 +2941,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="YFV-bQ-0XO">
-                                                    <rect key="frame" x="312" y="12" width="26" height="20"/>
+                                                    <rect key="frame" x="325" y="17" width="13" height="10"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -2971,7 +2971,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="t5p-GL-PSf">
-                                                    <rect key="frame" x="312" y="12" width="26" height="20"/>
+                                                    <rect key="frame" x="325" y="17" width="13" height="10"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -3013,7 +3013,7 @@
                                                     </connections>
                                                 </switch>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="Uiy-wY-ORj">
-                                                    <rect key="frame" x="350" y="12" width="15" height="20"/>
+                                                    <rect key="frame" x="350" y="17" width="15" height="10"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -3051,7 +3051,7 @@
                                                     </connections>
                                                 </switch>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="MQh-sa-Ga6">
-                                                    <rect key="frame" x="350" y="12" width="15" height="20"/>
+                                                    <rect key="frame" x="350" y="17" width="15" height="10"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -3108,7 +3108,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="FNv-Vo-WO2">
-                                                    <rect key="frame" x="350" y="12" width="15" height="20"/>
+                                                    <rect key="frame" x="350" y="17" width="15" height="10"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -3210,7 +3210,7 @@
                                                     </connections>
                                                 </stackView>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="EOF-ya-eZ1">
-                                                    <rect key="frame" x="350" y="12" width="15" height="20"/>
+                                                    <rect key="frame" x="350" y="17" width="15" height="10"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -3302,6 +3302,7 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <color key="tintColor" name="App-table"/>
                             </tableViewCell>
                         </prototypes>
                         <connections>

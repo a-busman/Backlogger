@@ -94,6 +94,8 @@ fileprivate let gameMappings: [Int: Int] = [
 
 class Steam {
     
+    static var backgroundTask: UIBackgroundTaskIdentifier = .invalid
+    
     static let steamPlatformIdNumber = Platform.customIdBase() - 1
     class func generateUserSummaryUrl(with steamId: String) -> URL? {
         return URL(string: "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + STEAM_API_KEY + "&steamids=" + steamId)
@@ -134,9 +136,10 @@ class Steam {
         var i = 0
         let totalGames = gameList.count
         let queue = DispatchQueue(label: "game.count.queue")
-        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { timer in
+        
+        let timerBlock: (Timer) -> Void = { timer in
             let currentGame = gameList[i]
-            
+                
             var gameName = currentGame.name.trimmingCharacters(in: .whitespacesAndNewlines).removeSpecialEdition()
             
             // for some reason, resident evil games have biohazard written after them (the japanese name)
@@ -257,10 +260,10 @@ class Steam {
                         gameFields.append(gameField!)
                         gameField!.steamAppId = currentGame.appId
                         NSLog("\(currentGame.name) -> \(gameField!.name!)")
-                        Analytics.logEvent(AnalyticsEventSearch, parameters: [ "translation" : "\(currentGame.name):\(currentGame.appId) -> \(gameField!.name!):\(gameField!.idNumber)"])
+                        Analytics.logEvent(AnalyticsEventSearch, parameters: [ "translation" : "\(currentGame.name.prefix(40)):\(currentGame.appId) -> \(gameField!.name!.prefix(40)):\(gameField!.idNumber)"])
                     } else {
                         unmatchedSteamGames.append(currentGame)
-                        NSLog("Could not find match for \(currentGame.name):\(currentGame.appId)")
+                        NSLog("Could not find match for \(currentGame.name.prefix(60)):\(currentGame.appId)")
                         Analytics.logEvent(AnalyticsEventSearch, parameters: ["no_match" : currentGame.name])
                         
                     }
@@ -292,8 +295,22 @@ class Steam {
             i += 1
             if i >= totalGames {
                 timer.invalidate()
+                endBackgroundTask()
             }
-        })
+        }
+        registerBackgroundTask()
+        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: timerBlock)
+    }
+    
+    class func registerBackgroundTask() {
+        backgroundTask = UIApplication.shared.beginBackgroundTask {
+            endBackgroundTask()
+        }
+    }
+    
+    class func endBackgroundTask() {
+        UIApplication.shared.endBackgroundTask(backgroundTask)
+        backgroundTask = .invalid
     }
     
     class func username(from response: DataResponse<Any>) -> Result<String> {

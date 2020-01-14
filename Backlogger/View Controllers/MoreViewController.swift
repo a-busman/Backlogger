@@ -379,12 +379,20 @@ extension MoreViewController: SteamLoginViewControllerDelegate {
                                             dedupedList.append(game)
                                         }
                                     }
-                                    let vc = self.storyboard!.instantiateViewController(withIdentifier: "add_from_steam") as! UINavigationController
-                                    let rootView = vc.viewControllers.first! as! AddSteamGamesViewController
-                                    vc.navigationBar.tintColor = .white
-                                    rootView.delegate = self
-                                    rootView.gameFields = dedupedList
-                                    self.present(vc, animated: true, completion: nil)
+                                    if dedupedList.count > 0 {
+                                        let vc = self.storyboard!.instantiateViewController(withIdentifier: "add_from_steam") as! UINavigationController
+                                        let rootView = vc.viewControllers.first! as! AddSteamGamesViewController
+                                        vc.navigationBar.tintColor = .white
+                                        rootView.delegate = self
+                                        rootView.gameFields = dedupedList
+                                        self.present(vc, animated: true, completion: nil)
+                                    } else {
+                                        let alert = UIAlertController(title: "No Steam games to add", message: nil, preferredStyle: .alert)
+                                        let ok = UIAlertAction(title: "Okay", style: .default, handler: nil)
+                                        
+                                        alert.addAction(ok)
+                                        self.present(alert, animated: true, completion: nil)
+                                    }
                                 }
                             }
                         }
@@ -433,12 +441,20 @@ extension MoreViewController: SteamLoginViewControllerDelegate {
                                                 dedupedList.append(game)
                                             }
                                         }
-                                        let vc = self.storyboard!.instantiateViewController(withIdentifier: "add_from_steam") as! UINavigationController
-                                        let rootView = vc.viewControllers.first! as! AddSteamGamesViewController
-                                        vc.navigationBar.tintColor = .white
-                                        rootView.delegate = self
-                                        rootView.gameFields = dedupedList
-                                        self.present(vc, animated: true, completion: nil)
+                                        if dedupedList.count > 0 {
+                                            let vc = self.storyboard!.instantiateViewController(withIdentifier: "add_from_steam") as! UINavigationController
+                                            let rootView = vc.viewControllers.first! as! AddSteamGamesViewController
+                                            vc.navigationBar.tintColor = .white
+                                            rootView.delegate = self
+                                            rootView.gameFields = dedupedList
+                                            self.present(vc, animated: true, completion: nil)
+                                        } else {
+                                            let alert = UIAlertController(title: "No Steam games to add", message: nil, preferredStyle: .alert)
+                                            let ok = UIAlertAction(title: "Okay", style: .default, handler: nil)
+                                            
+                                            alert.addAction(ok)
+                                            self.present(alert, animated: true, completion: nil)
+                                        }
                                     }
                                 }
                             }
