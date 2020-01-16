@@ -15,10 +15,6 @@ import Zephyr
 
 class MoreViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView?
-    @IBOutlet weak var loadingView: UIView?
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView?
-    @IBOutlet weak var progressLabel: UILabel?
-    @IBOutlet weak var progressBar: UIProgressView?
     @IBOutlet weak var plainLoadingView: UIView?
     @IBOutlet weak var plainActivityIndicator: UIActivityIndicatorView?
     @IBOutlet weak var progressCollectionView: UICollectionView?
@@ -353,10 +349,18 @@ extension MoreViewController: SteamLoginViewControllerDelegate {
                     NSLog(listError.localizedDescription)
                 } else {
                     if results.value!.count > 0 {
+                        let tabBar = self.tabBarController as? RootViewController
+                        if tabBar != nil {
+                            tabBar!.steamLoaderVisibility(true)
+                        }
                         Steam.matchGiantBombGames(with: results.value!, progressHandler: { progress, total in
-                            self.progressBar?.setProgress(Float(progress) / Float(total), animated: true)
-                            self.progressLabel?.text = "\(progress) / \(total)"
+                            if tabBar != nil {
+                                tabBar!.steamLoaderViewController.progress = (progress * 100) / total
+                            }
                         }) { matched, unmatched in
+                            if tabBar != nil {
+                                tabBar!.steamLoaderVisibility(false)
+                            }
                             if let gamesError = matched.error {
                                 NSLog(gamesError.localizedDescription)
                             } else {
@@ -397,8 +401,6 @@ extension MoreViewController: SteamLoginViewControllerDelegate {
                             }
                         }
                     } else {
-                        self.loadingView?.isHidden = true
-                        self.activityIndicator?.stopAnimating()
                         self.view.isUserInteractionEnabled = true
                     }
                 }
@@ -415,10 +417,18 @@ extension MoreViewController: SteamLoginViewControllerDelegate {
                         if let listError = gameResults.error {
                             NSLog(listError.localizedDescription)
                         } else {
+                            let tabBar = self.tabBarController as? RootViewController
+                            if tabBar != nil {
+                                tabBar!.steamLoaderVisibility(true)
+                            }
                             Steam.matchGiantBombGames(with: gameResults.value!, progressHandler: { progress, total in
-                                self.progressBar?.setProgress(Float(progress) / Float(total), animated: true)
-                                self.progressLabel?.text = "\(progress) / \(total)"
+                                if tabBar != nil {
+                                    tabBar!.steamLoaderViewController.progress = (progress * 100) / total
+                                }
                             }) { matched, unmatched in
+                                if tabBar != nil {
+                                    tabBar!.steamLoaderVisibility(false)
+                                }
                                 if let gamesError = matched.error {
                                     NSLog(gamesError.localizedDescription)
                                 } else {
@@ -465,10 +475,6 @@ extension MoreViewController: SteamLoginViewControllerDelegate {
         }
         self.tableView?.reloadData()
         self.steamVc?.dismiss(animated: true, completion: nil)
-        self.activityIndicator?.startAnimating()
-        self.progressBar?.setProgress(0.0, animated: false)
-        self.progressLabel?.text = ""
-        self.loadingView?.isHidden = false
     }
 }
 

@@ -422,10 +422,18 @@ class GameTableViewController: UIViewController {
                         }
                     }
                 }
+                let tabBar = self.tabBarController as? RootViewController
+                if tabBar != nil {
+                    tabBar!.steamLoaderVisibility(true)
+                }
                 Steam.matchGiantBombGames(with: newGames, progressHandler: { progress, total in
-                    self.progressBar?.setProgress(Float(progress) / Float(total), animated: true)
-                    self.progressLabel?.text = "\(progress) / \(total)"
+                    if tabBar != nil {
+                        tabBar!.steamLoaderViewController.progress = (progress * 100) / total
+                    }
                 }) { matched, unmatched in
+                    if tabBar != nil {
+                        tabBar!.steamLoaderVisibility(false)
+                    }
                     if let gamesError = matched.error {
                         NSLog(gamesError.localizedDescription)
                     } else {

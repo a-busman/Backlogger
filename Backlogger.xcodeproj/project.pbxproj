@@ -88,6 +88,8 @@
 		FACD42761F3262B500F6DA0C /* ProgressCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FACD42751F3262B500F6DA0C /* ProgressCell.xib */; };
 		FACD42781F32641C00F6DA0C /* ProgressCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACD42771F32641C00F6DA0C /* ProgressCell.swift */; };
 		FAD3AE0D23C7D9A50031B562 /* FilterCategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD3AE0C23C7D9A50031B562 /* FilterCategoryTableViewController.swift */; };
+		FAD4CF2A23CE982B0091B88F /* SteamLoaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FAD4CF2923CE982B0091B88F /* SteamLoaderView.xib */; };
+		FAD4CF2C23CE9D2E0091B88F /* SteamLoaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD4CF2B23CE9D2E0091B88F /* SteamLoaderViewController.swift */; };
 		FADA808B1E4C07570069943D /* PanDirectionGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808A1E4C07570069943D /* PanDirectionGestureRecognizer.swift */; };
 		FADA808E1E4C0D680069943D /* NowPlayingGameViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808D1E4C0D680069943D /* NowPlayingGameViewCell.swift */; };
 		FADA80901E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808F1E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift */; };
@@ -202,6 +204,8 @@
 		FACD42751F3262B500F6DA0C /* ProgressCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ProgressCell.xib; path = Views/ProgressCell.xib; sourceTree = "<group>"; };
 		FACD42771F32641C00F6DA0C /* ProgressCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProgressCell.swift; path = "Collection View/ProgressCell.swift"; sourceTree = "<group>"; };
 		FAD3AE0C23C7D9A50031B562 /* FilterCategoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterCategoryTableViewController.swift; sourceTree = "<group>"; };
+		FAD4CF2923CE982B0091B88F /* SteamLoaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = SteamLoaderView.xib; path = Views/SteamLoaderView.xib; sourceTree = "<group>"; };
+		FAD4CF2B23CE9D2E0091B88F /* SteamLoaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SteamLoaderViewController.swift; path = "View Controllers/SteamLoaderViewController.swift"; sourceTree = "<group>"; };
 		FADA808A1E4C07570069943D /* PanDirectionGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PanDirectionGestureRecognizer.swift; path = "Gesture Recognizers/PanDirectionGestureRecognizer.swift"; sourceTree = "<group>"; };
 		FADA808D1E4C0D680069943D /* NowPlayingGameViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NowPlayingGameViewCell.swift; path = "Collection View/NowPlayingGameViewCell.swift"; sourceTree = "<group>"; };
 		FADA808F1E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TopAlignedCollectionViewFlowLayout.swift; path = "Collection View/TopAlignedCollectionViewFlowLayout.swift"; sourceTree = "<group>"; };
@@ -327,6 +331,7 @@
 				FABFF2C223BEB44400E09095 /* RandomGameViewController.swift */,
 				FABFF2C623C2D1B500E09095 /* FiltersTableViewController.swift */,
 				FAD3AE0C23C7D9A50031B562 /* FilterCategoryTableViewController.swift */,
+				FAD4CF2B23CE9D2E0091B88F /* SteamLoaderViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -347,6 +352,7 @@
 				FA358A631EBFC001001EE03D /* PlaylistAddTableCell.xib */,
 				FA1FFF7C1F0152450048D907 /* CharacterCell.xib */,
 				FACD42751F3262B500F6DA0C /* ProgressCell.xib */,
+				FAD4CF2923CE982B0091B88F /* SteamLoaderView.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -533,6 +539,7 @@
 				FA4B44971E5E9743006A843F /* ImageCell.xib in Resources */,
 				FA0915921E2AEF2C0052BCEC /* NowPlayingGameView.xib in Resources */,
 				FA358A601EBF7484001EE03D /* PlaylistDescriptionCell.xib in Resources */,
+				FAD4CF2A23CE982B0091B88F /* SteamLoaderView.xib in Resources */,
 				FADA809C1E4FB2D20069943D /* TableViewCell.xib in Resources */,
 				FA0915791E2AA4210052BCEC /* LaunchScreen.storyboard in Resources */,
 				FA358A5A1EBC22F6001EE03D /* PlaylistTitleCell.xib in Resources */,
@@ -686,6 +693,7 @@
 				FA358A5C1EBC2BD2001EE03D /* PlaylistTitleCell.swift in Sources */,
 				FA09158C1E2AA9AD0052BCEC /* NowPlayingViewController.swift in Sources */,
 				FA4B44931E5D405E006A843F /* ImageList.swift in Sources */,
+				FAD4CF2C23CE9D2E0091B88F /* SteamLoaderViewController.swift in Sources */,
 				FA4B44A11E61E3FC006A843F /* ImageViewerController.swift in Sources */,
 				FA4B44911E5D3F5A006A843F /* Platform.swift in Sources */,
 				FA358A6A1EC2777E001EE03D /* PlaylistDetailsViewController.swift in Sources */,

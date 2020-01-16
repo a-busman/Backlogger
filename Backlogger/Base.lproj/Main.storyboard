@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -144,41 +144,6 @@
                                     <outlet property="delegate" destination="tdg-a6-umm" id="glf-Zt-yx1"/>
                                 </connections>
                             </tableView>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KYZ-JB-faU">
-                                <rect key="frame" x="87.5" y="283.5" width="200" height="100"/>
-                                <subviews>
-                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="06h-sB-33C">
-                                        <rect key="frame" x="81.5" y="10" width="37" height="37"/>
-                                    </activityIndicatorView>
-                                    <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8XC-Vs-PWo">
-                                        <rect key="frame" x="10" y="88" width="180" height="2"/>
-                                        <color key="progressTintColor" red="0.0" green="0.72525911350000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    </progressView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="La0-5o-s73">
-                                        <rect key="frame" x="79" y="57" width="42" height="21"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstItem="La0-5o-s73" firstAttribute="bottom" secondItem="8XC-Vs-PWo" secondAttribute="top" constant="-10" id="0Qc-8L-SSN"/>
-                                    <constraint firstItem="8XC-Vs-PWo" firstAttribute="width" secondItem="KYZ-JB-faU" secondAttribute="width" constant="-20" id="2RK-cd-mBA"/>
-                                    <constraint firstItem="8XC-Vs-PWo" firstAttribute="centerX" secondItem="KYZ-JB-faU" secondAttribute="centerX" id="7UQ-ij-2CX"/>
-                                    <constraint firstItem="06h-sB-33C" firstAttribute="centerX" secondItem="KYZ-JB-faU" secondAttribute="centerX" id="UWY-sV-lgZ"/>
-                                    <constraint firstAttribute="height" constant="100" id="V7V-lL-YlX"/>
-                                    <constraint firstItem="La0-5o-s73" firstAttribute="centerX" secondItem="KYZ-JB-faU" secondAttribute="centerX" id="hic-RL-qj8"/>
-                                    <constraint firstItem="8XC-Vs-PWo" firstAttribute="bottom" secondItem="KYZ-JB-faU" secondAttribute="bottom" constant="-10" id="iuV-EF-hwB"/>
-                                    <constraint firstItem="06h-sB-33C" firstAttribute="top" secondItem="KYZ-JB-faU" secondAttribute="top" constant="10" id="lL5-jP-Peo"/>
-                                    <constraint firstAttribute="width" constant="200" id="r37-GV-Ll9"/>
-                                </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="10"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SJd-Hk-JUB">
                                 <rect key="frame" x="137.5" y="283.5" width="100" height="100"/>
                                 <subviews>
@@ -202,10 +167,8 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="KYZ-JB-faU" firstAttribute="centerX" secondItem="SQN-Kv-7HW" secondAttribute="centerX" id="8LV-5S-Vh2"/>
                             <constraint firstItem="SJd-Hk-JUB" firstAttribute="centerY" secondItem="SQN-Kv-7HW" secondAttribute="centerY" id="Mfx-rG-Xr7"/>
                             <constraint firstItem="tyl-SM-4ai" firstAttribute="leading" secondItem="SQN-Kv-7HW" secondAttribute="leading" id="Xlv-6H-i2A"/>
-                            <constraint firstItem="KYZ-JB-faU" firstAttribute="centerY" secondItem="SQN-Kv-7HW" secondAttribute="centerY" id="b6X-Nx-Is7"/>
                             <constraint firstItem="tyl-SM-4ai" firstAttribute="height" secondItem="SQN-Kv-7HW" secondAttribute="height" id="cKG-fT-slI"/>
                             <constraint firstItem="SJd-Hk-JUB" firstAttribute="centerX" secondItem="SQN-Kv-7HW" secondAttribute="centerX" id="eT5-9L-jK2"/>
                             <constraint firstItem="tyl-SM-4ai" firstAttribute="trailing" secondItem="SQN-Kv-7HW" secondAttribute="trailing" id="w30-zb-dfn"/>
@@ -214,13 +177,9 @@
                     </view>
                     <navigationItem key="navigationItem" title="More" id="txy-Ij-ajd"/>
                     <connections>
-                        <outlet property="activityIndicator" destination="06h-sB-33C" id="Tlo-0c-tAM"/>
-                        <outlet property="loadingView" destination="KYZ-JB-faU" id="c7P-FZ-g2e"/>
                         <outlet property="plainActivityIndicator" destination="Gp6-Uj-Rgd" id="HaP-4j-FjH"/>
                         <outlet property="plainLoadingView" destination="SJd-Hk-JUB" id="efj-lw-b2g"/>
-                        <outlet property="progressBar" destination="8XC-Vs-PWo" id="Tj2-VH-HNb"/>
                         <outlet property="progressCollectionView" destination="OS8-lr-iZ7" id="HNP-PZ-2yE"/>
-                        <outlet property="progressLabel" destination="La0-5o-s73" id="rDm-fb-0p8"/>
                         <outlet property="tableView" destination="tyl-SM-4ai" id="iFU-i1-Ate"/>
                         <outlet property="view" destination="SQN-Kv-7HW" id="MFr-JN-mSM"/>
                     </connections>
@@ -2941,7 +2900,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="YFV-bQ-0XO">
-                                                    <rect key="frame" x="325" y="17" width="13" height="10"/>
+                                                    <rect key="frame" x="312" y="12" width="26" height="20"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -2971,7 +2930,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="t5p-GL-PSf">
-                                                    <rect key="frame" x="325" y="17" width="13" height="10"/>
+                                                    <rect key="frame" x="312" y="12" width="26" height="20"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -3013,7 +2972,7 @@
                                                     </connections>
                                                 </switch>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="Uiy-wY-ORj">
-                                                    <rect key="frame" x="350" y="17" width="15" height="10"/>
+                                                    <rect key="frame" x="350" y="12" width="15" height="20"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -3051,7 +3010,7 @@
                                                     </connections>
                                                 </switch>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="MQh-sa-Ga6">
-                                                    <rect key="frame" x="350" y="17" width="15" height="10"/>
+                                                    <rect key="frame" x="350" y="12" width="15" height="20"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -3108,7 +3067,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="FNv-Vo-WO2">
-                                                    <rect key="frame" x="350" y="17" width="15" height="10"/>
+                                                    <rect key="frame" x="350" y="12" width="15" height="20"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -3210,7 +3169,7 @@
                                                     </connections>
                                                 </stackView>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="EOF-ya-eZ1">
-                                                    <rect key="frame" x="350" y="17" width="15" height="10"/>
+                                                    <rect key="frame" x="350" y="12" width="15" height="20"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -3368,7 +3327,7 @@
             <color red="0.0" green="0.72500002384185791" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Menu BG">
-            <color white="0.89942744006849318" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color white="0.89899998903274536" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </namedColor>
     </resources>
     <inferredMetricsTieBreakers>
