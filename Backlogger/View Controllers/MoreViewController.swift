@@ -29,6 +29,7 @@ class MoreViewController: UIViewController {
         self.tableView?.tableFooterView = self.progressCollectionView
         self.progressCollectionView?.register(UINib(nibName: "ProgressCell", bundle: nil), forCellWithReuseIdentifier: self.progressReuseId)
         self.progressCollectionView?.backgroundColor = .clear
+        self.got(steamId: nil, username: "aryko1872")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -365,6 +366,8 @@ extension MoreViewController: SteamLoginViewControllerDelegate {
                                 NSLog(gamesError.localizedDescription)
                             } else {
                                 NSLog("Done")
+                                let vc = UIActivityViewController(activityItems: [Steam.csvFileUrl], applicationActivities: [])
+                                self.present(vc, animated: true, completion: nil)
                                 self.view.isUserInteractionEnabled = true
                                 if matched.value!.count > 0 {
                                     //dedupe
@@ -431,6 +434,8 @@ extension MoreViewController: SteamLoginViewControllerDelegate {
                                     NSLog(gamesError.localizedDescription)
                                 } else {
                                     NSLog("Done")
+                                    let vc = UIActivityViewController(activityItems: [Steam.csvFileUrl], applicationActivities: [])
+                                    self.present(vc, animated: true, completion: nil)
                                     self.view.isUserInteractionEnabled = true
                                     if matched.value!.count > 0 {
                                         //dedupe

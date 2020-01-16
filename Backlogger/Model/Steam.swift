@@ -129,6 +129,8 @@ class Steam {
         }
     }
     
+    static let csvFileUrl = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("matching_results.csv")
+    
     class func matchGiantBombGames(with gameList: [SteamGame], progressHandler: @escaping (Int, Int) -> Void, _ completionHandler: @escaping (_ matched: Result<[GameField]>, _ unmatched: Result<[SteamGame]>) -> Void) {
         var gameFields: [GameField] = []
         var unmatchedSteamGames: [SteamGame] = []
@@ -137,6 +139,8 @@ class Steam {
         let totalGames = gameList.count
         let queue = DispatchQueue(label: "game.count.queue")
         
+        var csvText = "Steam Name,Steam ID,GB Name,GB ID\n"
+
         let timerBlock: (Timer) -> Void = { timer in
             let currentGame = gameList[i]
                 
@@ -256,21 +260,31 @@ class Steam {
                             }
                         }
                     }
+                    var csvLine = ""
                     if gameField != nil {
                         gameFields.append(gameField!)
                         gameField!.steamAppId = currentGame.appId
                         NSLog("\(currentGame.name) -> \(gameField!.name!)")
+                        csvLine = "\(currentGame.name),\(currentGame.appId),\(gameField!.name!),\(gameField!.idNumber)\n"
                         Analytics.logEvent(AnalyticsEventSearch, parameters: [ "translation" : "\(currentGame.name.prefix(40)):\(currentGame.appId) -> \(gameField!.name!.prefix(40)):\(gameField!.idNumber)"])
                     } else {
                         unmatchedSteamGames.append(currentGame)
                         NSLog("Could not find match for \(currentGame.name.prefix(60)):\(currentGame.appId)")
                         Analytics.logEvent(AnalyticsEventSearch, parameters: ["no_match" : currentGame.name])
+                        csvLine = "\(currentGame.name),\(currentGame.appId),None,0\n"
                         
                     }
+                    csvText.append(contentsOf: csvLine)
+
                     queue.sync {
                         gameCount += 1
                         progressHandler(gameCount, totalGames)
                         if gameCount == totalGames {
+                            do {
+                                try csvText.write(to: csvFileUrl, atomically: true, encoding: .utf8)
+                            } catch {
+                                NSLog("Failed to create csv file: \(csvFileUrl.absoluteString)")
+                            }
                             completionHandler(.success(gameFields), .success(unmatchedSteamGames))
                         }
                     }

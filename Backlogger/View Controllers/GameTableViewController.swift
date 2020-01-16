@@ -438,6 +438,8 @@ class GameTableViewController: UIViewController {
                         NSLog(gamesError.localizedDescription)
                     } else {
                         NSLog("Done")
+                        let vc = UIActivityViewController(activityItems: [Steam.csvFileUrl], applicationActivities: [])
+                        self.present(vc, animated: true, completion: nil)
                         self.loadingView?.isHidden = true
                         self.activityIndicator?.stopAnimating()
                         self.view.isUserInteractionEnabled = true
