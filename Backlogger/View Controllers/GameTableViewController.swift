@@ -428,7 +428,7 @@ class GameTableViewController: UIViewController {
                 }
                 Steam.matchGiantBombGames(with: newGames, progressHandler: { progress, total in
                     if tabBar != nil {
-                        tabBar!.steamLoaderViewController.progress = (progress * 100) / total
+                        tabBar!.progress = (progress * 100) / total
                     }
                 }) { matched, unmatched in
                     if tabBar != nil {

@@ -355,7 +355,7 @@ extension MoreViewController: SteamLoginViewControllerDelegate {
                         }
                         Steam.matchGiantBombGames(with: results.value!, progressHandler: { progress, total in
                             if tabBar != nil {
-                                tabBar!.steamLoaderViewController.progress = (progress * 100) / total
+                                tabBar!.progress = (progress * 100) / total
                             }
                         }) { matched, unmatched in
                             if tabBar != nil {
@@ -365,8 +365,6 @@ extension MoreViewController: SteamLoginViewControllerDelegate {
                                 NSLog(gamesError.localizedDescription)
                             } else {
                                 NSLog("Done")
-                                self.loadingView?.isHidden = true
-                                self.activityIndicator?.stopAnimating()
                                 self.view.isUserInteractionEnabled = true
                                 if matched.value!.count > 0 {
                                     //dedupe
@@ -423,7 +421,7 @@ extension MoreViewController: SteamLoginViewControllerDelegate {
                             }
                             Steam.matchGiantBombGames(with: gameResults.value!, progressHandler: { progress, total in
                                 if tabBar != nil {
-                                    tabBar!.steamLoaderViewController.progress = (progress * 100) / total
+                                    tabBar!.progress = (progress * 100) / total
                                 }
                             }) { matched, unmatched in
                                 if tabBar != nil {
@@ -433,8 +431,6 @@ extension MoreViewController: SteamLoginViewControllerDelegate {
                                     NSLog(gamesError.localizedDescription)
                                 } else {
                                     NSLog("Done")
-                                    self.loadingView?.isHidden = true
-                                    self.activityIndicator?.stopAnimating()
                                     self.view.isUserInteractionEnabled = true
                                     if matched.value!.count > 0 {
                                         //dedupe
