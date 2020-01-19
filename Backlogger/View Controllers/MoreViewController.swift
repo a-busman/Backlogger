@@ -327,150 +327,103 @@ extension MoreViewController: UIDocumentPickerDelegate {
 }
 
 extension MoreViewController: SteamLoginViewControllerDelegate {
-    func got(steamId: String?, username: String?) {
+    func getGames(with steamId: String) {
+        Steam.getUserGameList(with: steamId) { results in
+            if let listError = results.error {
+                NSLog(listError.localizedDescription)
+            } else {
+                if results.value!.count > 0 {
+                    let tabBar = self.tabBarController as? RootViewController
+                    if tabBar != nil {
+                        tabBar!.steamLoaderVisibility(true)
+                    }
+                    Steam.matchGiantBombGames(with: results.value!, progressHandler: { progress, total in
+                        if tabBar != nil {
+                            tabBar!.progress = (progress * 100) / total
+                        }
+                    }) { matched, unmatched in
+                        if tabBar != nil {
+                            tabBar!.steamLoaderVisibility(false)
+                        }
+                        if let gamesError = matched.error {
+                            NSLog(gamesError.localizedDescription)
+                        } else {
+                            NSLog("Done")
+                            self.view.isUserInteractionEnabled = true
+                            if matched.value!.count > 0 {
+                                //dedupe
+                                var dedupedList: [GameField] = []
+                                for game in matched.value! {
+                                    var inNewList = false
+                                    for newGame in dedupedList {
+                                        if game.idNumber == newGame.idNumber {
+                                            inNewList = true
+                                            break
+                                        }
+                                    }
+                                    if !inNewList {
+                                        dedupedList.append(game)
+                                    }
+                                }
+                                if dedupedList.count > 0 {
+                                    let vc = self.storyboard!.instantiateViewController(withIdentifier: "add_from_steam") as! UINavigationController
+                                    let rootView = vc.viewControllers.first! as! AddSteamGamesViewController
+                                    vc.navigationBar.tintColor = .white
+                                    rootView.delegate = self
+                                    rootView.gameFields = dedupedList
+                                    self.present(vc, animated: true, completion: nil)
+                                } else {
+                                    let alert = UIAlertController(title: "No Steam games to add", message: nil, preferredStyle: .alert)
+                                    let ok = UIAlertAction(title: "Okay", style: .default, handler: nil)
+                                    
+                                    alert.addAction(ok)
+                                    self.present(alert, animated: true, completion: nil)
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    self.view.isUserInteractionEnabled = true
+                }
+            }
+        }
+    }
+    func got(steamId: String) {
         defer {
-            self.view.isUserInteractionEnabled = false
+            self.tableView?.reloadData()
+            self.steamVc?.dismiss(animated: true, completion: nil)
             self.refreshCells()
         }
-        if steamId != nil {
-            UserDefaults.standard.set(steamId, forKey: "steamId")
-            
-            Steam.getUserName(with: steamId!) { results in
-                if let error = results.error {
-                    NSLog(error.localizedDescription)
-                    // Could not get steamID
-                } else {
-                    UserDefaults.standard.set(results.value!, forKey: "steamName")
-                    self.tableView?.reloadData()
-                }
-            }
-            Steam.getUserGameList(with: steamId!) { results in
-                if let listError = results.error {
-                    NSLog(listError.localizedDescription)
-                } else {
-                    if results.value!.count > 0 {
-                        let tabBar = self.tabBarController as? RootViewController
-                        if tabBar != nil {
-                            tabBar!.steamLoaderVisibility(true)
-                        }
-                        Steam.matchGiantBombGames(with: results.value!, progressHandler: { progress, total in
-                            if tabBar != nil {
-                                tabBar!.progress = (progress * 100) / total
-                            }
-                        }) { matched, unmatched in
-                            if tabBar != nil {
-                                tabBar!.steamLoaderVisibility(false)
-                            }
-                            if let gamesError = matched.error {
-                                NSLog(gamesError.localizedDescription)
-                            } else {
-                                NSLog("Done")
-                                self.view.isUserInteractionEnabled = true
-                                if matched.value!.count > 0 {
-                                    //dedupe
-                                    var dedupedList: [GameField] = []
-                                    for game in matched.value! {
-                                        var inNewList = false
-                                        for newGame in dedupedList {
-                                            if game.idNumber == newGame.idNumber {
-                                                inNewList = true
-                                                break
-                                            }
-                                        }
-                                        if !inNewList {
-                                            dedupedList.append(game)
-                                        }
-                                    }
-                                    if dedupedList.count > 0 {
-                                        let vc = self.storyboard!.instantiateViewController(withIdentifier: "add_from_steam") as! UINavigationController
-                                        let rootView = vc.viewControllers.first! as! AddSteamGamesViewController
-                                        vc.navigationBar.tintColor = .white
-                                        rootView.delegate = self
-                                        rootView.gameFields = dedupedList
-                                        self.present(vc, animated: true, completion: nil)
-                                    } else {
-                                        let alert = UIAlertController(title: "No Steam games to add", message: nil, preferredStyle: .alert)
-                                        let ok = UIAlertAction(title: "Okay", style: .default, handler: nil)
-                                        
-                                        alert.addAction(ok)
-                                        self.present(alert, animated: true, completion: nil)
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        self.view.isUserInteractionEnabled = true
-                    }
-                }
-            }
-        } else if username != nil {
-            UserDefaults.standard.set(username!, forKey: "steamName")
-            Steam.getUserId(with: username!) { results in
-                if let error = results.error {
-                    NSLog(error.localizedDescription)
-                    // Could not get steamID
-                } else {
-                    UserDefaults.standard.set(results.value!, forKey: "steamId")
-                    Steam.getUserGameList(with: results.value!) { gameResults in
-                        if let listError = gameResults.error {
-                            NSLog(listError.localizedDescription)
-                        } else {
-                            let tabBar = self.tabBarController as? RootViewController
-                            if tabBar != nil {
-                                tabBar!.steamLoaderVisibility(true)
-                            }
-                            Steam.matchGiantBombGames(with: gameResults.value!, progressHandler: { progress, total in
-                                if tabBar != nil {
-                                    tabBar!.progress = (progress * 100) / total
-                                }
-                            }) { matched, unmatched in
-                                if tabBar != nil {
-                                    tabBar!.steamLoaderVisibility(false)
-                                }
-                                if let gamesError = matched.error {
-                                    NSLog(gamesError.localizedDescription)
-                                } else {
-                                    NSLog("Done")
-                                    self.view.isUserInteractionEnabled = true
-                                    if matched.value!.count > 0 {
-                                        //dedupe
-                                        var dedupedList: [GameField] = []
-                                        for game in matched.value! {
-                                            var inNewList = false
-                                            for newGame in dedupedList {
-                                                if game.idNumber == newGame.idNumber {
-                                                    inNewList = true
-                                                    break
-                                                }
-                                            }
-                                            if !inNewList {
-                                                dedupedList.append(game)
-                                            }
-                                        }
-                                        if dedupedList.count > 0 {
-                                            let vc = self.storyboard!.instantiateViewController(withIdentifier: "add_from_steam") as! UINavigationController
-                                            let rootView = vc.viewControllers.first! as! AddSteamGamesViewController
-                                            vc.navigationBar.tintColor = .white
-                                            rootView.delegate = self
-                                            rootView.gameFields = dedupedList
-                                            self.present(vc, animated: true, completion: nil)
-                                        } else {
-                                            let alert = UIAlertController(title: "No Steam games to add", message: nil, preferredStyle: .alert)
-                                            let ok = UIAlertAction(title: "Okay", style: .default, handler: nil)
-                                            
-                                            alert.addAction(ok)
-                                            self.present(alert, animated: true, completion: nil)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+        UserDefaults.standard.set(steamId, forKey: "steamId")
+        
+        Steam.getUserName(with: steamId) { results in
+            if let error = results.error {
+                NSLog(error.localizedDescription)
+                // Could not get steamID
+            } else {
+                UserDefaults.standard.set(results.value!, forKey: "steamName")
+                self.tableView?.reloadData()
             }
         }
-        self.tableView?.reloadData()
-        self.steamVc?.dismiss(animated: true, completion: nil)
+        self.getGames(with: steamId)
+    }
+
+    func got(username: String) {
+        defer {
+            self.tableView?.reloadData()
+            self.steamVc?.dismiss(animated: true, completion: nil)
+            self.refreshCells()
+        }
+        UserDefaults.standard.set(username, forKey: "steamName")
+        Steam.getUserId(with: username) { results in
+            if let error = results.error {
+                NSLog(error.localizedDescription)
+                // Could not get steamID
+            } else {
+                UserDefaults.standard.set(results.value!, forKey: "steamId")
+                self.getGames(with: results.value!)
+            }
+        }
     }
 }
 

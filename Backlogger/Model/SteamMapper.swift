@@ -132,8 +132,8 @@ class SteamMapper {
           44660:-1   ,  // The Retro Expansion
           44670:-1   ,  // The WTCC 2010 Pack
           44680:36977,  // Race Injection
-         107300:31023,  // Breath of Death VII
-         107310:33626,  // Cthulhu Saves the World
+         107300:31023,  // Breath of Death VII 
+         107310:33626,  // Cthulhu Saves the World 
           55150:23708,  // Warhammer 40 000: Space Marine
           96100:35987,  // Defy Gravity
           61100:35934,  // Lucid
@@ -311,7 +311,7 @@ class SteamMapper {
           57690:32326,  // Tropico 4
          207040:32370,  // Sine Mora
          606730:32370,  // Sine Mora EX
-         218740:36999,  // Pid
+         218740:36999,  // Pid 
           23300:25947,  // Yosumin!
            4500:11725,  // S.T.A.L.K.E.R.: Shadow of Chernobyl
          220780:38825,  // Thomas Was Alone
@@ -433,7 +433,7 @@ class SteamMapper {
          200940:14433,  // Sonic CD
          203650:37124,  // SONIC THE HEDGEHOG 4 Episode II
          212480:38173,  // Sonic  All-Stars Racing Transformed Collection
-         213610:19060,  // Sonic Adventure 2
+         213610:19060,  // Sonic Adventure 2 
          229660:-1   ,  // Sonic and All-Stars Racing Transformed Metal Sonic DLC Pack
          240200:7042 ,  // Duke Nukem: Manhattan Project
          241320:43184,  // Ittle Dew
@@ -983,7 +983,7 @@ class SteamMapper {
          297120:46390,  // Heavy Bullets
          324400:51395,  // Pocket God vs Desert Ashes
          324420:47649,  // Desert Ashes
-         258970:45705,  // Gauntlet
+         258970:45705,  // Gauntlet 
          307690:29441,  // Sleeping Dogs: Definitive Edition
          324680:17778,  // Impossible Creatures
          324750:-1   ,  // StuntMANIA Reloaded
@@ -1224,7 +1224,7 @@ class SteamMapper {
          354960:48574,  // An Imp A Fiend!
          354970:-1   ,  // Shin Samurai Jazz
          355150:-1   ,  // gravilon
-         350080:49073,  // Wolfenstein: The Old Blood
+         350080:49073,  // Wolfenstein: The Old Blood 
          355240:50484,  // NEO AQUARIUM - The King of Crustaceans -
          355270:49480,  // 199X
          355530:49759,  // Last Word
@@ -1836,23 +1836,1082 @@ class SteamMapper {
          690790:70381,  // DiRT Rally 2.0
          780800:-1   ,  // Ball laB
         1048540:11188,  // Kao the Kangaroo: Round 2
-           3300:22608,  // Bejeweled 2 Deluxe
-         228200:18930,  // Company of heroes
-           4560:18930,  // Company of heroes - Legacy Edition
-          21090:4800 ,  // F.E.A.R.
-         423230:52304,  // Furi
-         797410:68769,  // Headsnatchers
+            240:11339,  // Counter-Strike: Source
+           3920:1415 ,  // Sid Meiers Pirates!
+           4000:20617,  // Garrys Mod
+           3510:24014,  // Amazing Adventures: The Lost Tomb
+          13200:17350,  // Unreal II: The Awakening
+          13210:10955,  // Unreal Tournament 3: Black Edition
+          13230:13286,  // Unreal Tournament 2004
+          13240:46266,  // Unreal Tournament: Game of the Year Edition
+           3540:23747,  // Peggle Nights
+          10500:20509,  // Total War: EMPIRE - Definitive Edition
+          17470:20800,  // Dead Space
+          24740:5648 ,  // Burnout Paradise: The Ultimate Box
+           3530:43357,  // Amazing Adventures Around the World
+          24800:25034,  // Command and Conquer: Red Alert 3 - Uprising
+          10180:24713,  // Call of Duty: Modern Warfare 2
+          10190:-1   ,  // Call of Duty: Modern Warfare 2 - Multiplayer
+            550:26782,  // Left 4 Dead 2
+          41000:27152,  // Serious Sam HD: The First Encounter
+          41010:29323,  // Serious Sam HD: The Second Encounter
+          17410:21213,  // Mirrors Edge
+           9500:17602,  // Gish
+          22180:5651 ,  // Penumbra: Overture
+          25010:27072,  // Lugaru HD 
+          40720:20343,  // Samorost 2
+          72200:34987,  // Universe Sandbox Legacy
+          29180:25700,  // Osmos
+          40700:23648,  // Machinarium
+           4540:8638 ,  // Titan Quest
+         475150:63075,  // Titan Quest Anniversary Edition
+           7600:18275,  // Sid Meiers Railroads!
+          97000:35697,  // Solar 2
+          24670:34721,  // Trainz Simulator 12
+          19680:25371,  // Alice: Madness Returns
+         111600:34400,  // Serious Sam Double D XXL
+         201480:34402,  // Serious Sam: The Random Encounter
+          99700:25478,  // NightSky
+         202730:38300,  // Dynamite Jack
+          13560:5961 ,  // Tom Clancys Splinter Cell
+          13600:5235 ,  // Prince of Persia: The Sands of Time
+          15120:1986 ,  // Tom Clancys Rainbow Six: Vegas 2
+          15130:15835,  // Beyond Good  Evil
+          15320:1179 ,  // IL-2 Sturmovik: 1946
+          19900:20665,  // Far Cry 2
+          21760:6164 ,  // World in Conflict
+          21910:20952,  // World in Conflict: Soviet Assault
+          21970:25651,  // R.U.S.E
+          21980:25066,  // Call of Juarez: Bound in Blood
+          33230:22928,  // Assassins Creed II
+          33440:31634,  // Driver San Francisco
+          33460:31722,  // From Dust
+          61700:26436,  // Might  Magic: Clash of Heroes
+         204880:34294,  // Sins of a Solar Empire: Rebellion
+          34330:31531,  // Total War: SHOGUN 2
+         207170:36231,  // Legend of Grimrock
+         108710:20982,  // Alan Wake
+         205350:32744,  // Mortal Kombat Kollection
+           3900:16457,  // Sid Meiers Civilization IV
+           3990:8382 ,  // Sid Meiers Civilization IV: Warlords
+           8800:19287,  // Sid Meiers Civilization IV: Beyond the Sword
+          16810:20779,  // Sid Meiers Civilization IV: Colonization
+          34440:16457,  // Sid Meiers Civilization IV
+          34450:8382 ,  // Sid Meiers Civilization IV: Warlords
+          34460:19287,  // Sid Meiers Civilization IV: Beyond the Sword
+         212680:37770,  // FTL: Faster Than Light
+         202750:35157,  // Alan Wakes American Nightmare
+         108800:26754,  // Crysis 2 Maximum Edition
+         209830:37794,  // Lone Survivor: The Directors Cut
+         204220:26914,  // Snapshot
+            730:36113,  // Counter-Strike: Global Offensive
+         214790:39604,  // The Basement Collection
+          72000:36243,  // Closure
+          20820:26465,  // Shatter
+          41500:25983,  // Torchlight
+         107200:35942,  // Space Pirates and Zombies
+         107800:34034,  // Rochard
+         108500:32070,  // Vessel
+          41800:27076,  // Gratuitous Space Battles
+          63710:29550,  // BIT.TRIP RUNNER
+          94200:76385,  // Jamestown
+         209670:23230,  // Cortex Command
+          26900:983  ,  // Crayon Physics Deluxe
+         222140:32560,  // Puddle
+          55110:25726,  // Red Faction: Armageddon
+         232950:41558,  // Bridge Project
+         233450:36763,  // Prison Architect
+           3910:3242 ,  // Sid Meiers Civilization III: Complete
+         224760:24768,  // FEZ
+         242760:7675 ,  // The Forest
+         236790:44647,  // Agricultural Simulator 2013 Steam Edition
+          45740:25187,  // Dead Rising 2
+         244070:42550,  // Sid Meiers Ace Patrol
+         239070:42235,  // Hammerwatch
+          47790:29336,  // Medal of Honor(TM) Single Player
+          47830:-1   ,  // Medal of Honor(TM) Multiplayer
+         214550:40160,  // Eets Munchies
+         251060:44337,  // Wargame: Red Dragon
+         251230:52512,  // Livelock
+         252290:45868,  // Elegy For A Dead World
+         255370:38893,  // KickBeat Steam Edition
+         251170:43221,  // Damned
+         259830:43457,  // Wooden SenSeY
+         259890:45449,  // Agricultural Simulator: Historical Farming
+         232010:22024,  // Euro Truck Simulator
+         244090:44285,  // Sid Meiers Ace Patrol: Pacific Skies
+         221380:58311,  // Age of Empires II (2013)
+         263760:45596,  // Turbo Dismount
+         263840:42087,  // Out of the Park Baseball 14
+         108600:34902,  // Project Zomboid
+         239090:43543,  // Samurai Gunn
+         272990:45351,  // GAUGE
+          44320:30383,  // DiRT 3
+         274310:43532,  // Always Sometimes Monsters
+         284260:42105,  // PANORAMICAL
+         285310:2236 ,  // RollerCoaster Tycoon: Deluxe
+         285330:11178,  // RollerCoaster Tycoon 2: Triple Thrill Pack
+         286930:47027,  // Crouching Pony Hidden Dragon
+         287200:46468,  // Wildlife Park 3
+         261510:38597,  // Tesla Effect
+         299740:44021,  // Miscreated
+          13520:14782,  // Far Cry
+         220240:32933,  // Far Cry 3
+         233270:42241,  // Far Cry 3 Blood Dragon
+         274940:37216,  // Depth
+         232890:45881,  // Stronghold Crusader 2
+         273350:41357,  // Evolve Stage 2
+         339400:55617,  // Runestone Keeper
+         292030:41484,  // The Witcher 3: Wild Hunt
+         374900:52609,  // Agatha Christie - The ABC Murders
+         418240:53650,  // Shadow Tactics: Blades of the Shogun
+         422970:51092,  // Devil Daggers
+         425410:53114,  // Road to Ballhalla
+         290790:45727,  // Grey Goo
+         501320:58244,  // The Shrouded Isle
+         523780:58538,  // Emily is Away Too
+         530020:54948,  // World to the West
+         221680:42913,  // Rocksmith 2014 Edition - Remastered
+         306130:38206,  // The Elder Scrolls Online
+         749800:67539,  // PixelJunk Monsters 2
+             10:11663,  // Counter-Strike
+             20:4561 ,  // Team Fortress Classic
+             30:6074 ,  // Day of Defeat
+             40:22669,  // Deathmatch Classic
+             50:16508,  // Half-Life: Opposing Force
+             60:8093 ,  // Ricochet
+             70:2980 ,  // Half-Life
+            130:7814 ,  // Half-Life: Blue Shift
+             80:5722 ,  // Counter-Strike: Condition Zero
+            100:-1   ,  // Counter-Strike: Condition Zero Deleted Scenes
+           1300:4282 ,  // SiN Episodes: Emergence
+           1309:-1   ,  // SiN Multiplayer
+           1313:16233,  // SiN
+           4550:13762,  // Titan Quest: Immortal Throne
+           2600:16426,  // Vampire: The Masquerade - Bloodlines
+            500:20690,  // Left 4 Dead
+          17460:16909,  // Mass Effect
+           3590:25709,  // Plants vs. Zombies: Game of the Year
+          17020:24414,  // Global Agenda
+          33900:21528,  // Arma 2
+          22350:26694,  // BRINK
+          47900:30995,  // Dragon Age II
+          55100:26633,  // Homefront
+          63200:29806,  // Monday Night Combat
+          99890:32130,  // Darkspore
+         105600:34940,  // Terraria
+          28050:21358,  // Deus Ex: Human Revolution
+          91600:34811,  // Sanctum
+         200550:36056,  // DUNGEONS - The Dark Lord (Steam Special Edition)
+          24240:35520,  // PAYDAY: The Heist
+         201870:34975,  // Assassins Creed Revelations
+         201290:9115 ,  // Sins of a Solar Empire: Trinity
+          48240:34703,  // Anno 2070
+         205790:-1   ,  // Dota 2 Test
+         105450:11786,  // Age of Empires III: Complete Collection
+          97330:37907,  // Magic: The Gathering - Duels of the Planeswalkers 2013
+         212630:26095,  // Tom Clancys Ghost Recon Future Soldier
+         221020:37574,  // Towns
+         219740:39664,  // Dont Starve
+         322330:53415,  // Dont Starve Together
+          49540:20921,  // Aliens: Colonial Marines
+         230410:38788,  // Warframe
+         238960:32562,  // Path of Exile
+           1500:9376 ,  // Darwinia
+           1520:6676 ,  // DEFCON
+           1530:21649,  // Multiwinia
+         224600:35523,  // Defiance
+         210770:37420,  // Sanctum 2
+         215530:38294,  // The Incredible Adventures of Van Helsing
+         242920:42041,  // Banished
+         238240:38759,  // Edge of Space
+         239820:41146,  // Game Dev Tycoon
+         233840:43422,  // Worms Clan Wars
+         239200:37565,  // Amnesia: A Machine for Pigs
+         252610:43559,  // Death Road to Canada
+         253250:44922,  // Stonehearth
+         219990:29823,  // Grim Dawn
+         262060:44203,  // Darkest Dungeon
+         211820:37839,  // Starbound
+         367540:-1   ,  // Starbound - Unstable
+         230230:38446,  // Divinity: Original Sin (Classic)
+         373420:38446,  // Divinity: Original Sin Enhanced Edition
+         249050:43670,  // Dungeon of the Endless
+         271590:36765,  // Grand Theft Auto V
+         274520:43225,  // Darkwood
+         244850:44124,  // Space Engineers
+         251570:43583,  // 7 Days to Die
+         268750:46859,  // Magicite
+         236430:40798,  // DARK SOULS II
+         291860:45982,  // Pit People
+         238460:27817,  // BattleBlock Theater
+         280520:43283,  // Crea
+         304390:49967,  // For Honor
+         654310:-1   ,  // For Honor - Public Test
+         307110:56764,  // We Need To Go Deeper
+         323190:55760,  // Frostpunk
+         323220:46893,  // Vagante
+         330020:48006,  // Children of Morta
+         334230:45732,  // Town of Salem
+         341800:47445,  // Keep Talking and Nobody Explodes
+         346110:49642,  // ARK: Survival Evolved
+         407530:59395,  // ARK: Survival Of The Fittest
+         329430:34088,  // State of Decay: Year-One
+         361420:53060,  // ASTRONEER
+         374040:52974,  // Portal Knights
+         377160:49833,  // Fallout 4
+         381120:51090,  // Shoppe Keep
+         381210:52693,  // Dead by Daylight
+         371970:48929,  // Barony
+         393380:48072,  // Squad
+         774941:-1   ,  // Squad - Public Testing
+         235540:48755,  // Warhammer: End Times - Vermintide
+         413410:33341,  // Danganronpa: Trigger Happy Havoc
+         413420:40699,  // Danganronpa 2: Goodbye Despair
+         420930:53977,  // CHKN
+          13540:3550 ,  // Tom Clancys Rainbow Six: Vegas
+         359550:46562,  // Tom Clancys Rainbow Six Siege
+         623990:-1   ,  // Tom Clancys Rainbow Six Siege - Test Server
+         427290:48617,  // Vampyr
+         427520:41860,  // Factorio
+         239140:42712,  // Dying Light
+         431960:-1   ,  // Wallpaper Engine
+         433850:52692,  // Z1 Battle Royale
+         439700:-1   ,  // H1Z1: Test Server
+         435530:53905,  // The Final Station
+         266840:13076,  // Age of Mythology: Extended Edition
+         443810:53376,  // This Is the Police
+         365590:42918,  // Tom Clancys The Division
+         524440:-1   ,  // Tom Clancys The Division PTS
+         431180:39340,  // WolfQuest
+         926990:39340,  // WolfQuest: Anniversary Edition
+         457140:54216,  // Oxygen Not Included
+         477160:53648,  // Human: Fall Flat
+         480430:-1   ,  // Hide and Shriek
+         485460:63846,  // The Banner Saga 3
+         487000:61200,  // Quest Hunter
+         442080:54082,  // Riders of Icarus
+         427460:-1   ,  // Battlerite Public Test
+         504370:53519,  // Battlerite
+         512900:51774,  // Streets of Rogue
+         289070:53696,  // Sid Meiers Civilization VI
+         526160:52875,  // The Wild Eight
+         527230:55109,  // For The King
+         535930:65427,  // Two Point Hospital
+         548430:57465,  // Deep Rock Galactic
+         552500:61138,  // Warhammer: Vermintide 2
+         737010:-1   ,  // Warhammer: Vermintide 2 Closed Test
+         559650:57437,  // Witch It
+         569480:57530,  // Kingdoms and Castles
+         578080:54979,  // PLAYERUNKNOWNS BATTLEGROUNDS
+         582500:58309,  // We Were Here
+         593280:58516,  // Cat Quest
+         599080:68773,  // The Blackout Club
+         599140:60063,  // Graveyard Keeper
+         606150:61478,  // Moonlighter
+         613100:60476,  // House Flipper
+         617290:69755,  // Remnant: From the Ashes
+         632360:69787,  // Risk of Rain 2
+         641990:58597,  // The Escapists 2
+         644930:61614,  // They Are Billions
+         582660:44025,  // Black Desert Online
+         648800:57574,  // Raft
+         666140:60363,  // My Time At Portia
+         677160:65264,  // We Were Here Too
+         701160:71050,  // Kingdom Two Crowns
+         704270:68862,  // Generation Zero
+         706020:63118,  // Fade to Silence
+         710920:73725,  // Darksiders Genesis
+         567640:49101,  // Danganronpa V3: Killing Harmony
+         435150:50803,  // Divinity: Original Sin 2
+         720250:61971,  // Welcome to the Game II
+         594570:59912,  // Total War: WARHAMMER II
+         743450:60794,  // Monster Prom
+         751780:62313,  // Forager
+         298900:43811,  // Space Hulk: Deathwing
+         816090:43811,  // Space Hulk: Deathwing - Enhanced Edition
+         835860:46585,  // Dreadnought
+         858810:71418,  // Dawn of Man
+         865360:70529,  // We Were Here Together
+         678960:59194,  // CODE VEIN
+         914710:72963,  // Cat Quest II
+         555440:67721,  // Deathgarden: BLOODHARVEST
+        1046930:73489,  // Dota Underlords
+        1049320:74167,  // River City Girls
+         794260:49508,  // Outward
+         585710:62709,  // Blazing Beaks
+         703080:73127,  // Planet Zoo
+        1085660:52647,  // Destiny 2
+        1108370:75043,  // Ratropolis
+         226840:41503,  // Age of Wonders III
+           7110:8580 ,  // Jade Empire: Special Edition
+           9450:10883,  // Warhammer 40 000: Dawn of War - Soulstorm
+          15100:2950 ,  // Assassins Creed
+          18000:20696,  // On the Rain-Slick Precipice of Darkness  Episode One
+           7650:3251 ,  // X-COM: Terror from the Deep
+           7660:4777 ,  // X-COM: Apocalypse
+           7730:13301,  // X-COM: Interceptor
+           7760:196  ,  // X-COM: UFO Defense
+           7770:6083 ,  // X-COM: Enforcer
+          22300:20504,  // Fallout 3
+          22120:3346 ,  // Penumbra: Black Plague
+          22140:23596,  // Penumbra: Requiem
+           4560:18930,  // Company of Heroes - Legacy Edition
+         228200:18930,  // Company of Heroes 
+          22330:20238,  // The Elder Scrolls IV: Oblivion 
+           3720:15960,  // Evil Genius
+          21660:20456,  // Street Fighter IV
+          29640:49696,  // Aion
+           9880:21508,  // Champions Online
+          25980:21454,  // Majesty 2
+          23490:24458,  // Tropico 3 - Steam Special Edition
+          11170:25200,  // Blood Bowl: Dark Elves Edition
+          24400:29283,  // King Arthur - The Role-playing Wargame
+          27220:23139,  // Divinity II - Ego Draconis
+         219780:50803,  // Divinity II: Developers Cut
+          10680:26532,  // Aliens vs. Predator
+          24960:25246,  // Battlefield: Bad Company 2
+          48700:25622,  // Mount  Blade: Warband
+          40930:21868,  // The Misadventures of P.B. Winterbottom
+          33220:20464,  // Tom Clancys Splinter Cell: Conviction
+           4920:24324,  // Natural Selection 2
+          34030:27879,  // Total War: NAPOLEON - Definitive Edition
+          46450:32907,  // Grotesque Tactics: Evil Heroes
+           2760:9061 ,  // Neverwinter Nights 2: Platinum
+          48190:31001,  // Assassins Creed Brotherhood
+          39160:20718,  // Dungeon Siege III
+          65790:-1   ,  // Arma: Cold War Assault
+         107430:-1   ,  // Arma X: Anniversary Edition
+          57400:29443,  // Batman: Arkham City
+         564310:-1   ,  // Serious Sam Fusion 2017 (beta)
+         204030:2092 ,  // Fable - The Lost Chapters
+         104700:36233,  // Super Monday Night Combat
+          96800:30389,  // Nexuiz
+         216370:-1   ,  // Nexuiz Beta
+         225760:-1   ,  // Nexuiz STUPID Mode
          207080:-1   ,  // Indie Game: The Movie
+         200010:36234,  // Quantum Conundrum
+          98800:35423,  // Dungeons of Dredmor
+         205190:34464,  // Rocksmith
+          39000:32025,  // Moonbase Alpha
+         224260:40666,  // No More Room in Hell
+         233860:37924,  // Kenshi
+         220200:36494,  // Kerbal Space Program
+         222730:42645,  // Reus
+         248630:43767,  // Kingdoms Rise
+         236850:39301,  // Europa Universalis IV
+         232810:40919,  // Godus
+         422420:-1   ,  // Godus Wars
+         252630:43866,  // Eldritch
+         214950:38867,  // Total War: ROME II - Emperor Edition
+         242050:41518,  // Assassins Creed IV Black Flag
+         261470:51553,  // Distant Worlds: Universe
+         265300:42672,  // Lords Of The Fallen
+         269770:38891,  // Secrets of Grindea
+         272270:41792,  // Torment: Tides of Numenera
+         237870:38871,  // Planet Explorers
+         281990:50618,  // Stellaris
+         282140:44072,  // SOMA
+         236150:43852,  // Starpoint Gemini 2
+         290930:-1   ,  // Half-Life 2: Update
+         294100:44272,  // RimWorld
+         226860:45986,  // Galactic Civilizations III
+         311290:71409,  // SpellForce 3
+         322770:55561,  // Vanishing Realms
+         348250:-1   ,  // Google Earth VR
+         228880:49088,  // Ashes of the Singularity: Classic
+         507490:49088,  // Ashes of the Singularity: Escalation
+         365670:-1   ,  // Blender
+         379430:44790,  // Kingdom Come: Deliverance
+         381940:-1   ,  // Trials on Tatooine
+         382110:-1   ,  // Virtual Desktop
+         386070:63743,  // Planetary Annihilation: TITANS
+         325600:48823,  // Sword Coast Legends
+         412740:53340,  // Audioshield
+         416590:51972,  // Emily Wants To Play
+         419480:53417,  // Starpoint Gemini Warlords
+         427760:52891,  // A Chair in a Room: Greenwater
+         367500:41344,  // Dragons Dogma: Dark Arisen
+         436320:54614,  // Raw Data
+         436820:63017,  // Waltz of the Wizard
+         384490:48760,  // Necropolis
+         440630:54758,  // The Brookhaven Experiment
+         402260:53057,  // Dead Secret
+         445220:53420,  // Avorion
+         446750:60711,  // Portal Stories: VR
+         327140:55240,  // Tilt Brush
+         386690:52712,  // Fantastic Contraption
+         448280:51766,  // Job Simulator
+         450390:53080,  // The Lab
+         275850:44656,  // No Mans Sky
+         457420:41419,  // Surgeon Simulator VR: Meet The Medic
+         271240:48825,  // Offworld Trading Company
+         465240:54228,  // Serious Sam VR: The Last Hope
+         458890:-1   ,  // Within VR - Cinematic Virtual Reality
+         359320:40419,  // Elite Dangerous
+         485510:27578,  // Nioh: Complete Edition
+         486780:57428,  // Fruit Ninja VR
+         488310:60701,  // Eleven: Table Tennis VR
+         494150:62250,  // The Thrill of the Fight
+         504210:55743,  // SHENZHEN IO
+         518580:55475,  // Accounting
+         418370:54231,  // RESIDENT EVIL 7 biohazard  BIOHAZARD 7 resident evil
+         362960:53069,  // Tyranny
+         573100:71114,  // Battlefleet Gothic: Armada 2
+         590380:58234,  // Into the Breach
+         611670:33394,  // The Elder Scrolls V: Skyrim VR
+         646570:59383,  // Slay the Spire
+         649950:49964,  // Ashen
+         595520:54121,  // FINAL FANTASY XII THE ZODIAC AGE
+         637090:50915,  // BATTLETECH
+         814380:68907,  // Sekiro: Shadows Die Twice
+         560130:57918,  // Pillars of Eternity II: Deadfire
+         742120:47818,  // DRAGON QUEST XI: Echoes of an Elusive Age
+         881100:68227,  // Noita
+         582010:59924,  // MONSTER HUNTER: WORLD
+         790820:62693,  // Valkyria Chronicles 4 Complete Edition
+         900010:69871,  // Meeple Station
+         356650:49953,  // Deaths Gambit
+         640820:60263,  // Pathfinder: Kingmaker
+         779340:64883,  // Total War: THREE KINGDOMS
+         502500:51743,  // ACE COMBAT 7: SKIES UNKNOWN
+         546560:76068,  // Half-Life: Alyx
+          13250:17646,  // Unreal Gold
+           3300:22608,  // Bejeweled 2 Deluxe
            3320:19696,  // Insaniquarium! Deluxe
-         205950:20096,  // Jet Set/Grind Radio
-         912290:44021,  // Miscreated: Experimental Server
-         491950:56603,  // Orwell
+           3330:17012,  // Zuma Deluxe
            3480:21963,  // Peggle Deluxe
          104600:-1   ,  // Portal 2 - The Final Hours
+          21090:4800 ,  // F.E.A.R.
          204340:5036 ,  // Serious Sam 2
-         564310:-1   ,  // Serious Sam: Fusion 2017
+         205950:20096,  // Jet Set Radio
+         912290:44021,  // Miscreated: Experimental Server
          314790:44717,  // Silence
-          13250:17646,  // Unreal Gold
-           3330:17012   // Zuma Deluxe
+         423230:52304,  // Furi
+         491950:56603,  // Orwell
+         797410:68769,  // Headsnatchers
+            300:16121,  // Day of Defeat: Source
+            280:2980 ,  // Half-Life: Source
+          24870:25225,  // Need for Speed: SHIFT
+          47920:32253,  // Shift 2 Unleashed
+         212500:72650,  // The Lord of the Rings Online
+         225840:43273,  // Sven Co-op
+         303210:51033,  // The Beginners Guide
+         244160:48984,  // Homeworld Remastered Collection
+         291480:33306,  // Warface
+         314160:4634 ,  // Microsoft Flight Simulator X: Steam Edition
+         331670:48241,  // The Jackbox Party Pack
+         354160:50441,  // WRC 5
+         397460:51103,  // The Jackbox Party Pack 2
+         355060:48421,  // Sebastien Loeb Rally EVO
+         409160:51746,  // Dr. Langeskov The Tiger and The Terribly Cursed Emerald: A Whirlwind Heist
+         421020:57911,  // DiRT 4
+         443580:53387,  // Antenna
+         458770:54149,  // WRC 6
+         621830:61398,  // WRC 7
+         813780:73767,  // Age of Empires II: Definitive Edition
+          17480:20660,  // Command and Conquer: Red Alert 3
+          47810:20738,  // Dragon Age: Origins - Ultimate Edition
+          99810:30088,  // Bulletstorm
+         105400:27878,  // Fable III
+          92600:36441,  // Xotic
+         102600:34265,  // Orcs Must Die!
+         201280:42021,  // Deus Ex: Human Revolution - The Missing Link
+         105800:21181,  // PixelJunk Eden
+         203810:33629,  // Dear Esther
+          49470:34411,  // Magic: The Gathering  Duels of the Planeswalkers 2012
+          17300:11757,  // Crysis
+          17330:21230,  // Crysis Warhead
+          17340:55563,  // Crysis Wars
+         223730:40464,  // FLYN
+         250180:1063 ,  // METAL SLUG 3
+         252670:38899,  // Nihilumbra
+         252950:34407,  // Rocket League
+          39210:26847,  // FINAL FANTASY XIV Online
+          43160:35485,  // Metro: Last Light
+         308600:57791,  // Geneshift: Battle Royale Turbo
+         462770:53436,  // Pyre
+         506540:57399,  // Last Man Standing
+           9870:20688,  // Ghostbusters: The Video Game
+          35450:-1   ,  // Rising StormRed Orchestra 2 Multiplayer
+         236830:26181,  // Red Orchestra 2: Heroes of Stalingrad - Single Player
+           9200:20672,  // RAGE
+         202170:29441,  // Sleeping Dogs
+         223750:43421,  // DCS World Steam Edition
+         306760:44273,  // Obduction
+         241260:46253,  // Sherlock Holmes: Crimes and Punishments
+         257400:35545,  // Fuse
+         236870:45150,  // HITMAN
+         390670:51485,  // Steel Ocean
+         469820:53072,  // Genital Jousting
+         493340:50018,  // Planet Coaster
+         581320:52764,  // Insurgency: Sandstorm
+         598810:44643,  // Carcassonne: The Official Board Game
+         629760:54810,  // MORDHAU
+         418460:50024,  // Rising Storm 2: Vietnam
+         737230:-1   ,  // Rising Storm 2: Vietnam CTB Beta
+         863550:68822,  // HITMAN 2
+           2700:5625 ,  // RollerCoaster Tycoon 3: Platinum!
+          29720:17494,  // Guild Wars
+          39120:26770,  // RIFT
+         205650:34182,  // The Testament of Sherlock Holmes
+         239030:41931,  // Papers Please
+         276340:70813,  // My Riding Stables: Life with Horses
+         509420:59719,  // Riding Club Championships
+         641320:70898,  // Cooking Simulator
+          99900:34489,  // Spiral Knights
+         212200:22602,  // Mabinogi
+         215120:23583,  // ROSE Online
+         233680:-1   ,  // Black Ink
+         280220:37973,  // Creeper World 3: Arc Eternal
+         290730:-1   ,  // My Lands
+         215080:23303,  // WAKFU
+         268420:44290,  // Aura Kingdom
+         335820:29110,  // Dream Of Mirror Online
+         346900:49312,  // AdVenture Capitalist
+         364110:46888,  // Swordsman
+         214170:7386 ,  // Divine Divinity
+         219760:9789 ,  // Beyond Divinity
+         433340:52163,  // Slime Rancher
+         506140:52565,  // Shop Heroes
+         547680:57997,  // Guild Quest
+         588430:49956,  // Fallout Shelter
+         610080:59985,  // Realm Grinder
+        1127400:64587,  // Mindustry
+           1200:4389 ,  // Red Orchestra: Ostfront 41-45
+           1230:33358,  // Mare Nostrum
+           1280:33357,  // Darkest Hour: Europe 44-45
+           2100:15065,  // Dark Messiah of Might  Magic Single Player
+           2130:-1   ,  // Dark Messiah of Might  Magic Multi-Player
+           6100:20298,  // Eets
+           7620:10886,  // Railroad Tycoon 2: Platinum
+           8400:11099,  // Geometry Wars: Retro Evolved
+           2310:8015 ,  // Quake
+           2200:3874 ,  // Quake III Arena
+           2320:3207 ,  // Quake II
+           2330:12430,  // Quake II: The Reckoning
+           2340:9020 ,  // Quake II: Ground Zero
+           2350:19358,  // Quake III: Team Arena
+           9030:19885,  // Quake Mission Pack 2: Dissolution of Eternity
+           9040:7264 ,  // Quake Mission Pack 1: Scourge of Armagon
+           6270:44910,  // Ducati World Championship
+          11900:5057 ,  // Lumines
+          11920:33447,  // Lumines: Advanced Pack
+          13500:17357,  // Prince of Persia: Warrior Within
+          13530:21380,  // Prince of Persia: The Two Thrones
+          19980:20961,  // Prince of Persia
+          18500:23311,  // Defense Grid: The Awakening
+          25800:16084,  // Europa Universalis III
+          13580:457  ,  // Tom Clancys Splinter Cell: Double Agent
+          22200:22011,  // Zeno Clash
+          25900:22154,  // Kings Bounty: The Legend
+          22340:18678,  // Call of Cthulhu: Dark Corners of the Earth
+          22320:17367,  // The Elder Scrolls III: Morrowind
+          31100:21670,  // Wallace  Gromit Ep 1: Fright of the Bumblebees
+          31170:26776,  // Tales of Monkey Island: Chapter 1 - Launch of the Screaming Narwhal
+          31180:26777,  // Tales of Monkey Island: Chapter 2 - The Siege of Spinner Cay 
+          31190:26778,  // Tales of Monkey Island: Chapter 3 - Lair of the Leviathan 
+          31200:26779,  // Tales of Monkey Island: Chapter 4 - The Trial and Execution of Guybrush Threepwood 
+          31210:26780,  // Tales of Monkey Island: Chapter 5 - Rise of the Pirate God
+           6010:3633 ,  // Indiana Jones and the Fate of Atlantis
+          32310:5045 ,  // Indiana Jones and the Last Crusade
+          32360:3019 ,  // The Secret of Monkey Island: Special Edition
+          10100:47353,  // Kings Quest Collection
+          15520:25229,  // AaAaAA!!! - A Reckless Disregard for Gravity
+           2810:2572 ,  // X3: Reunion
+           2820:22771,  // X3: Terran Conflict
+          24840:6026 ,  // Medal of Honor: Airborne
+          27050:27998,  // FATALE
+          24790:17551,  // Command and Conquer 3: Tiberium Wars
+          46000:29426,  // Bob Came in Pieces
+          47730:29675,  // Dragon Age: Origins - Awakening
+          55000:29932,  // Flotilla
+          42890:13152,  // Sword of the Stars Complete Collection
+          33320:29321,  // Prince of Persia: The Forgotten Sands
+          49400:23609,  // Magic: The Gathering - Duels of the Planeswalkers
+          63600:10721,  // realMyst
+          62100:29186,  // Chime
+          70110:32681,  // Hacker Evolution - Untold
+          57600:30573,  // Tropico 3: Absolute Power
+          45750:25413,  // Lost Planet 2
+          50000:33011,  // Nimbus
+          35460:30785,  // The Ball
+          58520:30635,  // Blood Bowl: Legendary Edition
+          90500:31385,  // Guardians of Graxia
+          57000:25157,  // NyxQuest
+          41210:25339,  // Eufloria
+          57800:29569,  // Doc Clock: The Toasted Sandwich of Time
+          38900:32141,  // Rhythm Zone
+          67000:27103,  // The Polynomial
+          18700:25716,  // And Yet It Moves
+          58200:31657,  // Jolly Rover
+          23120:25843,  // Droplitz
+          26500:25869,  // Cogs
+          48950:27816,  // Greed Corp
+          47870:31698,  // Need for Speed: Hot Pursuit
+          50820:26489,  // Max and the Magic Marker
+          63800:32738,  // Delve Deeper
+          35600:29176,  // Big Brain Wolf
+          37600:29133,  // Windosill
+          61600:30924,  // Zen Bound 2
+          70500:32863,  // Diamond Dan
+          80300:32489,  // Puzzle Bots
+          22610:31479,  // Alien Breed: Impact
+          22650:32071,  // Alien Breed 2: Assault
+          22670:33182,  // Alien Breed 3: Descent
+          80200:33464,  // Fate of the World
+          91900:34275,  // Post Apocalyptic Mayhem
+          15540:33373,  // 1... 2... 3... KICK IT! (Drop That Beat Like an Ugly Baby)
+          70000:29886,  // Dino D-Day
+          91200:33329,  // Anomaly Warzone Earth
+          95500:33268,  // Your Doodles Are Bugged!
+          91700:29717,  // E.Y.E: Divine Cybermancy
+          55040:34104,  // Atom Zombie Smasher 
+          63500:23377,  // Swords and Soldiers HD
+          95300:29022,  // Capsized
+          22230:31679,  // Rock of Ages
+         112100:35047,  // Avadon: The Black Fortress
+          98400:35888,  // Hard Reset
+         111800:35429,  // Blocks That Matter
+          15560:36987,  // AaaaaAAaaaAAAaaAAAAaAAAAA!!! for the Awesome
+         201570:36967,  // Really Big Sky
+          33130:3819 ,  // Zombie Shooter
+          48900:29168,  // Saira
+          80330:19852,  // The Blackwell Legacy
+          80340:8175 ,  // Blackwell Unbound
+          80350:24807,  // Blackwell Convergence
+           6120:25637,  // Shank
+          15750:21431,  // Oddworld: Strangers Wrath HD
+          73190:35605,  // Pride of Nations
+         207320:839  ,  // Ys: The Oath in Felghana
+         207490:31721,  // Rayman Origins
+          63380:34715,  // Sniper Elite V2
+         207430:37313,  // Hack Slash Loot
+         208400:37505,  // Avernum: Escape From the Pit
+         209370:37377,  // Analogue: A Hate Story
+          94300:35029,  // The Dream Machine
+         206020:16432,  // Avernum 4
+         206040:9744 ,  // Avernum 5
+         206060:30344,  // Avernum 6
+         205910:38461,  // Tiny and Big: Grandpas Leftovers
+         217200:17255,  // Worms Armageddon
+         207570:37695,  // English Country Tune
+         218090:37045,  // Unity of Command
+         228020:41803,  // Spacebase DF-9 Prototype
+         223510:40440,  // Miasmata
+           2280:19429,  // The Ultimate DOOM
+           2290:750  ,  // Final DOOM
+           2300:621  ,  // DOOM II: Hell on Earth
+           9160:35975,  // Master Levels for DOOM II
+         219680:37608,  // Proteus
+         209540:36090,  // Strike Suit Zero
+          17080:34424,  // Tribes: Ascend
+         206480:16511,  // Dungeons  Dragons Online
+         233230:37862,  // Kairo
+         228760:28194,  // TrackMania Canyon
+         233390:36155,  // Cart Life
+         230150:36439,  // Incredipede
+         224500:38861,  // Gnomoria
+         234900:41495,  // Anodyne
+         223450:35713,  // Dyad
+         230980:42073,  // Starseed Pilgrim
+         242880:38028,  // Sir You Are Being Hunted
+         233610:40779,  // Distance
+         244710:42713,  // Shelter 1
+         244810:39282,  // Foul Play
+         245150:42677,  // The Novelist
+         246980:41783,  // InFlux
+         230170:-1   ,  // Divinity: Dragon Commander Beta
+         243950:36185,  // Divinity: Dragon Commander
+         235600:31463,  // Tom Clancys Splinter Cell Blacklist
+         251850:44271,  // Master Reboot
+         251990:40310,  // Long Live The Queen
+         234000:41547,  // Superfrog HD
+         204560:30718,  // Confrontation
+         208730:36886,  // Game of Thrones 
+         209730:37209,  // RAW - Realms of Ancient War
+          58610:35658,  // Wargame: European Escalation
+         220260:38938,  // Farming Simulator 2013
+         225200:-1   ,  // Farming Simulator 2013 - Modding Tutorials
+         245390:2695 ,  // I Have No Mouth and I Must Scream
+         247140:44062,  // Soundodger+
+         259680:35930,  // Tales of MajEyal
+          18490:22111,  // The Whispered World
+         233700:41913,  // Sword of the Stars: The Pit
+         265470:43539,  // Even the Ocean
+         265690:45377,  // NaissanceE
+         265950:41604,  // Ether One
+         391920:41604,  // Ether One Redux
+         277470:45654,  // The Book of Legends
+         277850:43545,  // Sportsfriends
+         257770:39592,  // Signal Ops
+         285290:49306,  // Little Pink Best Buds Prototype
+         285230:49307,  // Mnemonic Prototype
+         285250:67552,  // Dear Leader Prototype
+         285270:49310,  // Steed Prototype
+         292400:43005,  // Unrest
+         201810:42581,  // Wolfenstein: The New Order
+         295750:45265,  // The Floor is Jelly
+         289130:43720,  // Endless Legend
+         298600:47153,  // Lovely Planet
+         300540:46340,  // Sweet Lily Dreams
+         303430:44258,  // Roundabout
+         238090:41928,  // Sniper Elite 3
+         307290:47135,  // Velvet Sundown
+         308560:50386,  // City Quest
+         240760:37721,  // Wasteland 2
+         259130:12134,  // Wasteland 1 - The Original Classic
+         404730:37721,  // Wasteland 2: Directors Cut
+         313080:47658,  // The Masterplan
+         247080:43536,  // Crypt of the NecroDancer
+         316010:49052,  // Magic Duels
+         296470:43242,  // Mount Your Friends
+         319740:41650,  // There Came an Echo
+         229810:41104,  // A Fistful of Gun
+         242640:45430,  // Styx: Master of Shadows
+         275670:46254,  // Space Run
+         331190:45282,  // Master Spy
+         335240:40827,  // Transformice
+         223630:40877,  // AirBuccaneers
+         298630:46491,  // The Escapists
+         345350:39185,  // LIGHTNING RETURNS: FINAL FANTASY XIII
+         362490:50355,  // Exanima
+         363600:50348,  // Holy Potatoes! A Weapon Shop!
+         293740:43784,  // Road Not Taken
+         393360:16140,  // Metal Gear Solid Legacy
+         296550:50457,  // Niko: Through The Dream
+         403970:50417,  // The Dwarves
+         407810:54007,  // Hard Reset Redux
+         408120:50722,  // Cibele
+         342490:66919,  // Shipwreck
+         236110:42113,  // Dungeon Defenders II
+         427270:46005,  // Orcs Must Die! Unchained
+         437630:54771,  // State of Mind
+         371660:51102,  // Far Cry Primal
+         455820:64852,  // Omensight
+         240440:39475,  // Quadrilateral Cowboy
+         466560:58396,  // Northgard
+         471010:73551,  // Seven: Enhanced Edition
+         473690:54110,  // Absolver
+         520010:57311,  // Climbey
+         529660:53630,  // Mages of Mystralia
+         531640:52602,  // Eternal Card Game
+         403640:49954,  // Dishonored 2
+         533200:55642,  // Deformers Open Beta
+         544750:63117,  // SOULCALIBUR VI
+         544330:57504,  // Snake Pass
+         402560:51198,  // Tabletopia
+         567810:52304,  // Furi - One More Fight
+         574050:49322,  // DRAGON QUEST HEROES II
+         584980:58185,  // Late Shift
+         612390:58595,  // Dandara
+         614570:59908,  // Dishonored: Death of the Outsider 
+         617830:54217,  // SUPERHOT VR
+         631570:71887,  // Whispers of a Machine
+         633600:48341,  // Creatures Such as We
+         658850:70292,  // Do Not Feed the Monkeys
+         673950:66582,  // Farm Together
+         414340:47363,  // Hellblade: Senuas Sacrifice
+         747350:47363,  // Hellblade: Senuas Sacrifice VR Edition
+         688420:64822,  // Bad North
+         696480:61410,  // The Norwood Suite
+         717610:60802,  // A Case of Distrust
+         731490:57213,  // Crash Bandicoot N. Sane Trilogy
+         732810:65808,  // Slipstream
+         476600:59203,  // Call of Duty: WWII
+         476620:-1   ,  // Call of Duty: WWII - Multiplayer
+         771310:-1   ,  // Welcome to Light Fields
+         804010:71848,  // SteamWorld Quest: Hand of Gilgamech
+         570940:32697,  // DARK SOULS: REMASTERED
+         845270:68662,  // Mirror Drop
+         718670:67907,  // Cultist Simulator
+         728880:68948,  // Overcooked! 2
+         834530:50873,  // Yakuza Kiwami
+         638970:47551,  // Yakuza 0
+         673880:70370,  // Warhammer 40 000: Mechanicus
+         932850:71274,  // Simmiland
+         583950:60758,  // Artifact
+         996580:67871,  // Spyro Reignited Trilogy
+         601150:68910,  // Devil May Cry 5
+        1070710:74179,  // Kind Words
+          27000:23677,  // The Path
+          80310:33797,  // Gemini Rue
+          42170:36857,  // Krater
+         221260:38828,  // Little Inferno
+         212110:40503,  // Sugar Cube: Bittersweet Factory
+         209270:37291,  // Hero Academy
+          11020:21436,  // TrackMania Nations Forever
+         220900:37861,  // Jack Lumber
+         225640:20901,  // Sacred 2 Gold
+         207930:39269,  // Sacred Citadel
+         246580:44358,  // The Typing of The Dead: Overkill
+         367450:50031,  // Poly Bridge
+         396750:52950,  // EVERSPACE
+         208650:45577,  // Batman: Arkham Knight
+         421120:35010,  // Samorost 3
+         245620:43535,  // Tropico 5
+         282210:48608,  // Sid Meiers Starships
+          65980:45979,  // Sid Meiers Civilization: Beyond Earth
+         435400:53269,  // Hidden Folks
+         438100:61444,  // VRChat
+         223100:36683,  // Homefront: The Revolution
+         499440:54636,  // klocki
+         533970:48453,  // Blocks
+         557340:68923,  // My Friend Pedro
+         589360:51744,  // Ni no Kuni II: Revenant Kingdom
+         683320:69911,  // GRIS
+         721430:-1   ,  // My Coloring Book: Animals
+         582160:59450,  // Assassins Creed Origins
+         880940:70267,  // Pummel Party
+         524220:49998,  // NieR:Automata
+           4580:5681 ,  // Warhammer 40 000: Dawn of War - Dark Crusade
+           9310:19335,  // Warhammer 40 000: Dawn of War - Winter Assault
+          21900:20671,  // Tom Clancys H.A.W.X.
+          38410:5559 ,  // Fallout 2
+          38420:6346 ,  // Fallout Tactics
+          25990:11751,  // Majesty: Gold Edition
+          73230:11751,  // Majesty Gold HD
+          12100:3724 ,  // Grand Theft Auto III
+          12170:13567,  // Grand Theft Auto
+          12180:10593,  // Grand Theft Auto 2
+          12230:3724 ,  // Grand Theft Auto III
+          48160:31188,  // Tom Clancys H.A.W.X. 2
+          98100:36086,  // TRAUMA
+          12360:6836 ,  // FlatOut: Ultimate Carnage
+         201510:37004,  // Flatout 3
+         215670:38860,  // Home
+         228280:52   ,  // Baldurs Gate: Enhanced Edition
+         223810:70734,  // Ys I
+         223870:70735,  // Ys II
+         109600:32417,  // Neverwinter
+         218230:29025,  // PlanetSide 2
+        1083500:-1   ,  // PlanetSide 2 - Test
+         231060:32050,  // Ragnarok Online 2
+         215100:16614,  // Ragnarok
+         213850:42624,  // Magic 2014 
+         255010:-1   ,  // MAGIX Music Maker 2014 Premium
+         241540:34088,  // State of Decay
+         257350:6795 ,  // Baldurs Gate II: Enhanced Edition
+         221100:39256,  // DayZ
+         310080:37243,  // Hatoful Boyfriend
+         312750:31146,  // FINAL FANTASY IV
+         321800:5242 ,  // Icewind Dale: Enhanced Edition
+         359870:42013,  // FINAL FANTASY XX-2 HD Remaster
+         365720:-1   ,  // Skyrim Script Extender (SKSE)
+         371200:53267,  // Halcyon 6: Starbase Commander (CLASSIC)
+         651660:53267,  // Halcyon 6: Lightspeed Edition
+         382890:4793 ,  // FINAL FANTASY V
+         382900:6336 ,  // FINAL FANTASY VI
+         518030:59749,  // Aim Hero
+         798460:33382,  // Ni no Kuni Wrath of the White Witch Remastered
+         637650:21006,  // FINAL FANTASY XV WINDOWS EDITION
+          38440:6735 ,  // Sacrifice
+          41900:8102 ,  // The Bards Tale
+          31110:25467,  // Wallace  Gromit Ep 2: The Last Resort
+          31120:25468,  // Wallace  Gromit Ep 3: Muzzled!
+          31130:25469,  // Wallace  Gromit Ep 4: The Bogey Man
+         229580:43514,  // Dream
+           3370:20250,  // BookWorm Deluxe
+           3390:2334 ,  // Feeding Frenzy 2: Shipwreck Showdown Deluxe
+           3600:31250,  // Escape Rosecliff Island
+           3620:27874,  // Zumas Revenge
+         231720:39377,  // Bad Hotel
+         207750:39121,  // Symphony
+         434170:54322,  // The Jackbox Party Pack 3
+         610180:60771,  // The Jackbox Party Pack 4
+         698780:60005,  // Doki Doki Literature Club
+         774461:69447,  // The Jackbox Party Pack 5
+        1005300:72712,  // The Jackbox Party Pack 6
+           8660:23517,  // GTR Evolution
+          22370:20504,  // Fallout 3 - Game of the Year Edition
+          13570:12354,  // Tom Clancys Splinter Cell: Chaos Theory
+         215790:20875,  // Dream Pinball 3D
+          29900:20497,  // Dark Sector
+         311560:47291,  // Assassins Creed Rogue
+         423580:52731,  // Project Highrise
+         391720:50698,  // Layers of Fear
+         553960:58093,  // Husk
+          73020:21454,  // Majesty 2 Collection
+         105100:35156,  // Lume
+         202200:22216,  // Galactic Civilizations II: Ultimate Edition
+          35000:25065,  // Mini Ninjas
+         207250:37725,  // Cubemen
+         200390:37334,  // Oil Rush
+         214150:9398 ,  // Galactic Civilizations I: Ultimate Edition
+          65740:23315,  // Carrier Command: Gaea Mission
+         218410:37359,  // Defenders Quest: Valley of the Forgotten
+         209190:40672,  // Stealth Bastard Deluxe
+         206210:35307,  // Gotham City Impostors: Free To Play
+         105420:33330,  // Ms. Splosion Man
+         228440:42827,  // Cubemen 2
+         235820:42716,  // Element4l
+         234160:42528,  // Strike Suit Infinity
+         242110:36129,  // Joe Danger 2: The Movie
+         204530:48293,  // Infested Planet
+         239450:42595,  // Gun Monkeys
+         246700:45277,  // Strike Vector
+         246900:45462,  // Viscera Cleanup Detail
+         242940:3428 ,  // Anachronox
+         238280:41886,  // Legend of Dungeon
+         253110:41176,  // The Cat Lady
+         242980:7747 ,  // Daikatana
+          39650:17645,  // The Guild II
+         214870:38535,  // Painkiller Hell  Damnation
+         259530:43923,  // Savant - Ascent
+         235620:44774,  // Small World 2
+         212010:33507,  // Galaxy on Fire 2 Full HD
+         214910:38143,  // Air Conflicts: Pacific Carriers
+         232970:39683,  // Thunder Wolves
+         268870:43201,  // Satellite Reign
+         270050:45792,  // Quest of Dungeons
+         274920:52018,  // FaceRig
+         279990:44457,  // Bridge Constructor Playground
+         283230:47064,  // Spoiler Alert
+         285820:46942,  // Action Henk
+         292910:52682,  // Deponia: The Complete Journey
+         297110:46068,  // Cosmic DJ
+         297290:65062,  // Detective Case and Clown Bot in: Murder in the Hotel Lisbon
+         301640:48522,  // Zombie Army Trilogy
+         305740:38753,  // Pitiri 1977
+         305920:44811,  // Another Perspective
+         211500:41652,  // RaceRoom Racing Experience 
+         307880:49104,  // Savage Lands
+         308060:46930,  // Black The Fall
+         310790:47352,  // Geometry Wars 3: Dimensions Evolved
+         315260:9666 ,  // Space Hack
+         317400:60711,  // Portal Stories: Mel
+         318230:49522,  // Convoy
+         323060:47449,  // Tharsis
+         335670:48386,  // LISA
+         338760:39777,  // Death Ray Manta
+         340490:50866,  // Subterrain
+         350780:40903,  // MANOS
+         351510:50183,  // Quiplash
+         275100:45856,  // Shelter 2
+         351640:50045,  // Eternal Senia
+         356570:50660,  // Party Hard
+         369990:51300,  // Gremlins Inc.
+         373930:56587,  // Sudden Strike 4
+         384110:7276 ,  // Pathologic Classic HD
+         345180:48921,  // Victor Vran
+         386620:50254,  // Cook Serve Delicious! 2!!
+         390710:37241,  // Acceleration of SUGURI 2
+         396710:60865,  // The Adventure Pals
+         400450:53244,  // NeuroVoider
+         404410:50669,  // Endless Sky
+         416680:53597,  // Zombie Night Terror
+         420530:53659,  // OneShot
+         270880:48805,  // American Truck Simulator
+         429570:50180,  // The Walking Dead: Michonne
+         377840:8825 ,  // FINAL FANTASY IX
+         433910:53715,  // Neon Drive
+         442210:52861,  // Switchcars
+         452570:46378,  // Battle Chef Brigade
+         459350:53296,  // BATTLESLOTHS 2025: The Great Pizza Wars
+         464920:64460,  // Surviving Mars
+         465930:56732,  // OddPlanet
+         383150:53779,  // Dead Island Definitive Edition
+         481510:44986,  // Night in the Woods
+         489140:54270,  // Mr Shifty
+         505730:55641,  // Holy Potatoes! Were in Space!
+         520600:60412,  // Purrfect Date
+         528230:66063,  // SYNTHETIK
+         532110:56786,  // Rusty Lake: Roots
+         535230:56992,  // Domina
+         550210:-1   ,  // Layers of Fear - Soundtrack
+         559210:59495,  // Rakuen
+         560380:48529,  // MapleStory 2
+         570460:59869,  // Laser League
+         571310:58593,  // SteamWorld Dig 2
+         576500:69825,  // Evergarden
+         579760:58600,  // The Journey Down: Chapter Three
+         595140:57796,  // Immortal Redneck
+         378540:50421,  // The Surge
+         383980:48000,  // Rivals of Aether
+         623940:57646,  // HIVESWAP: ACT 1
+         234270:60874,  // Ken Folletts The Pillars of the Earth
+         653530:46427,  // Return of the Obra Dinn
+         654050:60957,  // JYDGE
+         493900:61324,  // Dungeons 3
+         676820:60916,  // Subsurface Circular
+         686260:62533,  // Forged Battalion
+         712730:62399,  // SIMULACRA
+         735580:68318,  // 11-11 Memories Retold
+         765590:68052,  // Co-op SNEK Online
+         783050:54995,  // Bear With Me - Collectors Edition
+         826600:70111,  // Im not a Monster
+         840610:67735,  // Fortune-499
+         758330:68002,  // Shenmue I  II
+         951940:72208,  // Almost There: The Platformer
+         703880:45534,  // Swords and Soldiers 2 Shawarmageddon
+         252130:52121,  // Divide by Sheep
+         108200:9423 ,  // Ticket to Ride
+         245550:-1   ,  // Free to Play
+         343450:-1   ,  // Free To Play (Streaming)
+         252110:41122,  // Lovers in a Dangerous Spacetime
+         282440:21388,  // Quake Live
+         304930:46963,  // Unturned
+         342300:52471,  // Zombie Kill of the Week - Reborn
+         355180:50404,  // Codename CURE
+         417860:51113,  // Emily is Away
+         444090:51613,  // Paladins
+         596350:-1   ,  // Paladins - Public Test
+         490220:47993,  // Prismata
+           3200:6730 ,  // Painkiller: Gold Edition
+           7200:10362,  // TrackMania United Forever
+           9180:16504,  // Commander Keen Complete Pack
+          16600:21451,  // Trials 2: Second Edition
+          17390:14139,  // Spore
+          17440:24298,  // Spore: Creepy  Cute Parts Pack
+          35010:23245,  // Batman: Arkham Asylum
+          24810:20494,  // Command and Conquer 3: Kanes Wrath
+          31410:29265,  // Zombie Driver
+          44200:30020,  // Galcon Fusion
+          99830:26754,  // Crysis 2
+          25700:26663,  // Madballs in...Babo: Invasion
+           3170:25912,  // Kings Bounty: Armored Princess
+           3130:27937,  // Men of War: Red Tide
+           2620:59203,  // Call of Duty
+           2630:2347 ,  // Call of Duty 2
+           2640:12633,  // Call of Duty: United Offensive
+           7940:2133 ,  // Call of Duty 4: Modern Warfare
+          10090:20777,  // Call of Duty: World at War
+          32460:73338,  // Monkey Island 2: Special Edition
+          36700:29338,  // The Scourge Project: Episode 1 and 2
+          37000:25101,  // The Void
+          50510:24253,  // Burn Zombie Burn
+         227560:40144,  // Scourge: Outbreak
+          16300:9960 ,  // Everyday Shooter
+          42500:31457,  // DogFighter
+          49800:31273,  // Flight of the Icarus
+          58400:30472,  // Turba
+          42140:33846,  // Hamiltons Great Adventure
+         111400:33023,  // Bunch Of Heroes
+          15500:18032,  // The Wonderful End of the World
+          41100:29240,  // Hammerfight
+         203630:37248,  // Warlock - Master of the Arcane
+         211440:33157,  // Adventures of Shuggy
+           7830:22156,  // Men of War
+         223830:30865,  // Xenonauts
+         224540:34804,  // Ace of Spades
+         218130:37680,  // Dungeonland
+         242720:44012,  // GunZ 2: The Second Duel
+         234370:42026,  // Shattered Haven
+         202270:42494,  // Leviathan: Warships
+         238890:42330,  // Skyward Collapse
+         246280:37989,  // Happy Wars
+          63910:32640,  // Kings Bounty: Crossworlds
+         252330:39825,  // Slender: The Arrival
+         237760:44308,  // Intake
+         260750:17919,  // Neighbours from Hell
+         260770:5994 ,  // Neighbours from Hell 2
+         235900:12935,  // RPG Maker XP
+         271670:43912,  // 10 Second Ninja
+         285420:46532,  // Deadly Sin 2
+         290460:46341,  // Legionwood 2: Rise of the Eternals Realm
+         302310:44009,  // Dungeon of Elements
+          41300:29374,  // Altitude
+         339610:46477,  // FreeStyle 2: Street Basketball
+         363970:49670,  // Clicker Heroes
     ]
 }
