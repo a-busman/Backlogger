@@ -2246,54 +2246,11 @@
                                     <outlet property="delegate" destination="wfS-Ip-fau" id="9dp-1H-b8o"/>
                                 </connections>
                             </tableView>
-                            <visualEffectView hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8cB-Pc-qDz">
-                                <rect key="frame" x="87.5" y="283.5" width="200" height="100"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="vfZ-8D-xB0">
-                                    <rect key="frame" x="0.0" y="0.0" width="200" height="100"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <subviews>
-                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="ZFO-NQ-ULH">
-                                            <rect key="frame" x="81.5" y="10" width="37" height="37"/>
-                                        </activityIndicatorView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9mg-7k-U7B">
-                                            <rect key="frame" x="79" y="57" width="42" height="21"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Eaa-5W-yvP">
-                                            <rect key="frame" x="10" y="88" width="180" height="2"/>
-                                            <color key="progressTintColor" red="0.0" green="0.72525911350000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        </progressView>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstItem="Eaa-5W-yvP" firstAttribute="centerX" secondItem="vfZ-8D-xB0" secondAttribute="centerX" id="JwN-Ck-Npq"/>
-                                        <constraint firstItem="ZFO-NQ-ULH" firstAttribute="centerX" secondItem="vfZ-8D-xB0" secondAttribute="centerX" id="Pen-CA-ABh"/>
-                                        <constraint firstItem="9mg-7k-U7B" firstAttribute="centerX" secondItem="vfZ-8D-xB0" secondAttribute="centerX" id="QZs-32-ryX"/>
-                                        <constraint firstItem="ZFO-NQ-ULH" firstAttribute="top" secondItem="vfZ-8D-xB0" secondAttribute="top" constant="10" id="bh2-DX-exV"/>
-                                        <constraint firstItem="9mg-7k-U7B" firstAttribute="bottom" secondItem="Eaa-5W-yvP" secondAttribute="top" constant="-10" id="dcA-cZ-j7V"/>
-                                        <constraint firstItem="Eaa-5W-yvP" firstAttribute="width" secondItem="vfZ-8D-xB0" secondAttribute="width" constant="-20" id="l7y-7h-ocn"/>
-                                        <constraint firstItem="Eaa-5W-yvP" firstAttribute="bottom" secondItem="vfZ-8D-xB0" secondAttribute="bottom" constant="-10" id="zXP-5f-LmW"/>
-                                    </constraints>
-                                </view>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="200" id="2rA-Fy-6ZX"/>
-                                    <constraint firstAttribute="height" constant="100" id="fJy-z7-piz"/>
-                                </constraints>
-                                <blurEffect style="dark"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="10"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </visualEffectView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="rbc-zl-XaZ" firstAttribute="leading" secondItem="TeE-yH-QFM" secondAttribute="leading" id="4BG-kk-c8j"/>
                             <constraint firstItem="rbc-zl-XaZ" firstAttribute="bottom" secondItem="tVV-HX-Lxr" secondAttribute="top" id="4RG-7o-dAd"/>
-                            <constraint firstItem="8cB-Pc-qDz" firstAttribute="centerX" secondItem="TeE-yH-QFM" secondAttribute="centerX" id="Fjr-ug-nPc"/>
-                            <constraint firstItem="8cB-Pc-qDz" firstAttribute="centerY" secondItem="TeE-yH-QFM" secondAttribute="centerY" id="Ixy-Fe-arw"/>
                             <constraint firstItem="pFu-eN-03J" firstAttribute="top" secondItem="QyH-hG-WwG" secondAttribute="bottom" id="J6q-Ck-fhk"/>
                             <constraint firstItem="pFu-eN-03J" firstAttribute="centerX" secondItem="TeE-yH-QFM" secondAttribute="centerX" id="S3T-lG-acC"/>
                             <constraint firstItem="y7t-In-c23" firstAttribute="centerX" secondItem="TeE-yH-QFM" secondAttribute="centerX" id="h26-g2-yU8"/>
@@ -2314,15 +2271,11 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="activityIndicator" destination="ZFO-NQ-ULH" id="sbk-nP-0Ko"/>
                         <outlet property="backgroundTopLayoutConstraint" destination="s8T-aW-RyJ" id="FDt-qF-JC4"/>
                         <outlet property="headerView" destination="pFu-eN-03J" id="SQT-J8-cUk"/>
                         <outlet property="imageHeightLayoutConstraint" destination="yem-GX-ILA" id="FLT-Nc-hAk"/>
                         <outlet property="imageTopLayoutConstraint" destination="2b2-C4-W6B" id="pE8-cl-mpg"/>
-                        <outlet property="loadingView" destination="8cB-Pc-qDz" id="qqf-ew-f48"/>
                         <outlet property="platformImage" destination="1tT-UA-BhB" id="nDc-N9-WHs"/>
-                        <outlet property="progressBar" destination="Eaa-5W-yvP" id="LwO-Ro-0He"/>
-                        <outlet property="progressLabel" destination="9mg-7k-U7B" id="hZr-19-NeI"/>
                         <outlet property="shadowBottomLayoutConstraint" destination="Nay-5p-Y1x" id="LvD-Mg-mvx"/>
                         <outlet property="shadowView" destination="zI5-hc-onU" id="4lY-6L-2lU"/>
                         <outlet property="tableView" destination="y7t-In-c23" id="nbb-Ox-Gt5"/>
@@ -2900,7 +2853,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="YFV-bQ-0XO">
-                                                    <rect key="frame" x="312" y="12" width="26" height="20"/>
+                                                    <rect key="frame" x="325" y="17" width="13" height="10"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -2930,7 +2883,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="t5p-GL-PSf">
-                                                    <rect key="frame" x="312" y="12" width="26" height="20"/>
+                                                    <rect key="frame" x="325" y="17" width="13" height="10"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -2972,7 +2925,7 @@
                                                     </connections>
                                                 </switch>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="Uiy-wY-ORj">
-                                                    <rect key="frame" x="350" y="12" width="15" height="20"/>
+                                                    <rect key="frame" x="350" y="17" width="15" height="10"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -3010,7 +2963,7 @@
                                                     </connections>
                                                 </switch>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="MQh-sa-Ga6">
-                                                    <rect key="frame" x="350" y="12" width="15" height="20"/>
+                                                    <rect key="frame" x="350" y="17" width="15" height="10"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -3067,7 +3020,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="FNv-Vo-WO2">
-                                                    <rect key="frame" x="350" y="12" width="15" height="20"/>
+                                                    <rect key="frame" x="350" y="17" width="15" height="10"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>
@@ -3169,7 +3122,7 @@
                                                     </connections>
                                                 </stackView>
                                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_blue" translatesAutoresizingMaskIntoConstraints="NO" id="EOF-ya-eZ1">
-                                                    <rect key="frame" x="350" y="12" width="15" height="20"/>
+                                                    <rect key="frame" x="350" y="17" width="15" height="10"/>
                                                     <color key="tintColor" name="App-table"/>
                                                 </imageView>
                                             </subviews>

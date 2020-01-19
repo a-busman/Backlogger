@@ -30,6 +30,7 @@ class RootViewController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.progressBar.progressTintColor = UIColor(named: "App-blue")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -40,6 +41,7 @@ class RootViewController: UITabBarController {
         self.bottomAnchor.isActive = true
         self.progressBar.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
         self.progressBar.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        self.progressBar.heightAnchor.constraint(equalToConstant: 4.0).isActive = true
         self.bottomAnchor.constant = self.MINIMIZED_SIZE
     }
     
@@ -49,8 +51,12 @@ class RootViewController: UITabBarController {
         } else {
             self.bottomAnchor.constant = self.MINIMIZED_SIZE
         }
-        UIView.animate(withDuration: 1.0) {
+        UIView.animate(withDuration: 1.0, animations: {
             self.view.layoutSubviews()
-        }
+        }, completion: { _ in
+            if !visibile {
+                self.progress = 0
+            }
+        })
     }
 }

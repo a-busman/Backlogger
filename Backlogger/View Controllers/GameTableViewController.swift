@@ -17,10 +17,6 @@ class GameTableViewController: UIViewController {
     @IBOutlet weak var platformImage:     UIImageView?
     @IBOutlet weak var titleLabel:        UILabel?
     @IBOutlet weak var shadowView:        UIView?
-    @IBOutlet weak var loadingView:       UIView?
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView?
-    @IBOutlet weak var progressLabel:     UILabel?
-    @IBOutlet weak var progressBar:       UIProgressView?
     
     @IBOutlet weak var shadowBottomLayoutConstraint:  NSLayoutConstraint?
     @IBOutlet weak var titleBottomLayoutConstraint:   NSLayoutConstraint?
@@ -438,9 +434,6 @@ class GameTableViewController: UIViewController {
                         NSLog(gamesError.localizedDescription)
                     } else {
                         NSLog("Done")
-                        self.loadingView?.isHidden = true
-                        self.activityIndicator?.stopAnimating()
-                        self.view.isUserInteractionEnabled = true
                         if matched.value!.count > 0 {
                             //dedupe
                             var dedupedList: [GameField] = []
@@ -487,11 +480,6 @@ class GameTableViewController: UIViewController {
         }
         self.tableView?.reloadData()
         self.steamVc?.dismiss(animated: true, completion: nil)
-        self.activityIndicator?.startAnimating()
-        self.progressBar?.setProgress(0.0, animated: false)
-        self.progressLabel?.text = ""
-        self.loadingView?.isHidden = false
-        self.view.isUserInteractionEnabled = false
     }
     
     func tappedDone(sender: UIBarButtonItem) {
