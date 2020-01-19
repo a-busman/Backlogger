@@ -23,7 +23,7 @@ class RootViewController: UITabBarController {
         set(newValue) {
             if newValue >= 0 && newValue <= 100 {
                 self._progress = newValue
-                self.progressBar.progress = Float(newValue) / 100.0
+                self.progressBar.setProgress(Float(newValue) / 100.0, animated: true)
             }
         }
     }

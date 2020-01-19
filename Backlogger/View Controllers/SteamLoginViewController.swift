@@ -10,7 +10,8 @@ import UIKit
 import WebKit
 
 protocol SteamLoginViewControllerDelegate {
-    func got(steamId: String?, username: String?)
+    func got(steamId: String)
+    func got(username: String)
 }
 
 class SteamLoginViewController: UIViewController {
@@ -58,12 +59,12 @@ extension SteamLoginViewController: WKNavigationDelegate {
             } else if url.absoluteString.hasPrefix("https://steamcommunity.com/id/") {
                 let urlComponents = url.absoluteString.components(separatedBy: "/")
                 let username = urlComponents[4]
-                self.delegate?.got(steamId: nil, username: username)
+                self.delegate?.got(username: username)
                 decisionHandler(.cancel)
             } else if url.absoluteString.hasPrefix("https://steamcommunity.com/profiles/") {
                 let urlComponents = url.absoluteString.components(separatedBy: "/")
                 let steamId = urlComponents[4]
-                self.delegate?.got(steamId: steamId, username: nil)
+                self.delegate?.got(steamId: steamId)
                 decisionHandler(.cancel)
             } else {
                 decisionHandler(.allow)

@@ -70,28 +70,6 @@ class SteamGameResults {
     var gameCount: Int = 0
 }
 
-// Steam : GB
-fileprivate let gameMappings: [Int: Int] = [
-    3300:22608,     // Bejeweled 2 Deluxe
-    228200:18930,   // Company of heroes
-    4560:18930,     // Company of heroes - Legacy Edition
-    21090:4800,     // F.E.A.R.
-    423230:52304,   // Furi
-    797410:68769,   // Headsnatchers
-    207080:-1,      // Indie Game: The Movie
-    3320:19696,     // Insaniquarium! Deluxe
-    205950:20096,   // Jet Set/Grind Radio
-    912290:44021,   // Miscreated: Experimental Server
-    491950:56603,   // Orwell
-    3480:21963,     // Peggle Deluxe
-    104600:-1,      // Portal 2 - The Final Hours
-    204340:5036,    // Serious Sam 2
-    564310:-1,      // Serious Sam: Fusion 2017
-    314790:44717,   // Silence
-    13250:17646,    // Unreal Gold
-    3330:17012      // Zuma Deluxe
-]
-
 class Steam {
     
     static var backgroundTask: UIBackgroundTaskIdentifier = .invalid
@@ -114,7 +92,7 @@ class Steam {
     }
     
     class func matchGameFromList(_ steamGame: SteamGame, _ completionHandler: @escaping (GameField?) -> Void) {
-        guard let mappedId = gameMappings[steamGame.appId] else { completionHandler(nil); return }
+        guard let mappedId = SteamMapper.gameMappings[steamGame.appId] else { completionHandler(nil); return }
         if mappedId == -1 {
             let gameField = GameField()
             gameField.idNumber = -1
@@ -140,6 +118,8 @@ class Steam {
         let queue = DispatchQueue(label: "game.count.queue")
         
         var csvText = "Steam Name,Steam ID,GB Name,GB ID\n"
+
+        try? FileManager.default.removeItem(at: csvFileUrl)
 
         let timerBlock: (Timer) -> Void = { timer in
             let currentGame = gameList[i]
@@ -266,11 +246,11 @@ class Steam {
                         gameField!.steamAppId = currentGame.appId
                         NSLog("\(currentGame.name) -> \(gameField!.name!)")
                         csvLine = "\(currentGame.name),\(currentGame.appId),\(gameField!.name!),\(gameField!.idNumber)\n"
-                        Analytics.logEvent(AnalyticsEventSearch, parameters: [ "translation" : "\(currentGame.name.prefix(40)):\(currentGame.appId) -> \(gameField!.name!.prefix(40)):\(gameField!.idNumber)"])
+                        Analytics.logEvent(AnalyticsEventSearch, parameters: [ "translation" : "\(currentGame.name.prefix(40)),\(currentGame.appId),\(gameField!.name!.prefix(40)),\(gameField!.idNumber)"])
                     } else {
                         unmatchedSteamGames.append(currentGame)
                         NSLog("Could not find match for \(currentGame.name.prefix(60)):\(currentGame.appId)")
-                        Analytics.logEvent(AnalyticsEventSearch, parameters: ["no_match" : currentGame.name])
+                        Analytics.logEvent(AnalyticsEventSearch, parameters: ["no_match" : "\(currentGame.name),\(currentGame.appId),None,0"])
                         csvLine = "\(currentGame.name),\(currentGame.appId),None,0\n"
                         
                     }
@@ -302,6 +282,11 @@ class Steam {
                     gameCount += 1
                     progressHandler(gameCount, totalGames)
                     if gameCount == totalGames {
+                        do {
+                            try csvText.write(to: csvFileUrl, atomically: true, encoding: .utf8)
+                        } catch {
+                            NSLog("Failed to create csv file: \(csvFileUrl.absoluteString)")
+                        }
                         completionHandler(.success(gameFields), .success(unmatchedSteamGames))
                     }
                 }
@@ -472,6 +457,7 @@ class Steam {
     }
     
     class func getUserGameList(with steamId: String, _ completionHandler: @escaping(Result<[SteamGame]>) -> Void) {
+        Analytics.logEvent(AnalyticsEventLogin, parameters: ["steam_id" : steamId])
         guard let url = generateUserGameListUrl(with: steamId) else {
             completionHandler(.failure(BackendError.urlError(reason: "Could not convert username to url")))
             return
