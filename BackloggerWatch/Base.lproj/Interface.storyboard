@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="15705" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
+    <device id="watch38"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="15501"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+    </dependencies>
+    <scenes>
+        <!--Interface Controller-->
+        <scene sceneID="aou-V4-d1y">
+            <objects>
+                <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="BackloggerWatch" customModuleProvider="target">
+                    <items>
+                        <group width="1" alignment="left" layout="overlap" id="2gs-5X-IgX">
+                            <items>
+                                <group width="1" alignment="left" id="KWx-7E-g0f">
+                                    <items>
+                                        <label width="1" height="1" alignment="left" text="Please open Backlogger on your iPhone." textAlignment="center" numberOfLines="4" id="lxW-tN-Th4">
+                                            <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
+                                        </label>
+                                    </items>
+                                </group>
+                                <group width="1" alignment="left" layout="vertical" id="52c-bB-RR9">
+                                    <items>
+                                        <picker height="110" alignment="left" style="stack" indicatorMode="shownWhileFocused" id="IV8-df-G54">
+                                            <gestureRecognizers>
+                                                <tapGestureRecognizer id="VDq-12-N2z">
+                                                    <connections>
+                                                        <action selector="gameTapped" destination="AgC-eL-Hgc" id="bcZ-Hf-t8p"/>
+                                                    </connections>
+                                                </tapGestureRecognizer>
+                                            </gestureRecognizers>
+                                            <connections>
+                                                <action selector="pickerDidChangeWithValue:" destination="AgC-eL-Hgc" id="8KZ-DK-Wr8"/>
+                                            </connections>
+                                        </picker>
+                                        <label width="1" alignment="left" text="Label" textAlignment="center" numberOfLines="3" id="h2F-B6-aho"/>
+                                    </items>
+                                </group>
+                            </items>
+                        </group>
+                    </items>
+                    <menu key="menu" id="bnq-aL-WXX">
+                        <items>
+                            <menuItem title="Feeling Lucky?" icon="shuffle" id="3sC-fk-vGu"/>
+                        </items>
+                    </menu>
+                    <connections>
+                        <outlet property="backgroundGroup" destination="KWx-7E-g0f" id="6BB-va-2uW"/>
+                        <outlet property="backgroundLabel" destination="lxW-tN-Th4" id="jhn-io-Pcl"/>
+                        <outlet property="gameLabel" destination="h2F-B6-aho" id="3Po-E3-xMl"/>
+                        <outlet property="gamesGroup" destination="52c-bB-RR9" id="rFv-XT-VsL"/>
+                        <outlet property="picker" destination="IV8-df-G54" id="e9L-o4-uRE"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="220" y="345"/>
+        </scene>
+        <!--Static Notification Interface Controller-->
+        <scene sceneID="AEw-b0-oYE">
+            <objects>
+                <notificationController id="YCC-NB-fut">
+                    <items>
+                        <label alignment="left" text="Alert Label" numberOfLines="0" id="IdU-wH-bcW"/>
+                    </items>
+                    <notificationCategory key="notificationCategory" identifier="myCategory" id="JfB-70-Muf"/>
+                    <connections>
+                        <outlet property="notificationAlertLabel" destination="IdU-wH-bcW" id="JKC-fr-R95"/>
+                        <segue destination="4sK-HA-Art" kind="relationship" relationship="dynamicNotificationInterface" id="kXh-Jw-8B1"/>
+                        <segue destination="eXb-UN-Cd0" kind="relationship" relationship="dynamicInteractiveNotificationInterface" id="mpB-YA-K8N"/>
+                    </connections>
+                </notificationController>
+            </objects>
+            <point key="canvasLocation" x="220" y="643"/>
+        </scene>
+        <!--Notification Controller-->
+        <scene sceneID="ZPc-GJ-vnh">
+            <objects>
+                <controller id="4sK-HA-Art" customClass="NotificationController" customModule="BackloggerWatch" customModuleProvider="target"/>
+            </objects>
+            <point key="canvasLocation" x="468" y="643"/>
+        </scene>
+        <!--game_interface-->
+        <scene sceneID="GEe-J8-t82">
+            <objects>
+                <controller identifier="game_interface" id="c8j-R6-V5r" customClass="GameInterfaceController" customModule="BackloggerWatch_Extension">
+                    <items>
+                        <group width="1" alignment="left" layout="vertical" id="uOP-E2-sB0">
+                            <items>
+                                <switch width="1" alignment="left" value="YES" title="Finished" id="PfO-vt-AhB">
+                                    <color key="tintColor" name="App-blue"/>
+                                    <connections>
+                                        <action selector="finishedChangedWithValue:" destination="c8j-R6-V5r" id="GRK-5X-s8n"/>
+                                    </connections>
+                                </switch>
+                                <switch width="1" alignment="left" value="YES" title="Favorite" id="hnv-1Y-mmc">
+                                    <color key="tintColor" name="App-blue"/>
+                                    <connections>
+                                        <action selector="favoriteChangedWithValue:" destination="c8j-R6-V5r" id="zIL-mg-RV5"/>
+                                    </connections>
+                                </switch>
+                                <group width="1" alignment="left" layout="vertical" id="vNj-ld-2m1">
+                                    <items>
+                                        <group width="1" alignment="left" id="fuu-T0-9rU">
+                                            <items>
+                                                <label alignment="left" text="Progress" id="Jfn-vf-4eN"/>
+                                                <label alignment="right" text="100%" id="h2P-PD-RjX"/>
+                                            </items>
+                                        </group>
+                                        <slider width="1" alignment="left" continuous="YES" value="1" maximum="100" steps="10" id="tZp-DO-ysZ">
+                                            <color key="color" name="App-blue"/>
+                                            <connections>
+                                                <action selector="progressBarChangedWithValue:" destination="c8j-R6-V5r" id="TrK-Vj-tk5"/>
+                                            </connections>
+                                        </slider>
+                                    </items>
+                                </group>
+                                <group width="1" alignment="left" layout="vertical" id="xwn-Yl-ohw">
+                                    <items>
+                                        <label alignment="left" text="Rating" id="BvP-La-xqw"/>
+                                        <group alignment="center" contentMode="right" id="etD-ke-rgs">
+                                            <items>
+                                                <imageView alignment="left" image="star.fill" catalog="system" id="F10-uk-CHh">
+                                                    <color key="tintColor" name="App-blue"/>
+                                                </imageView>
+                                                <imageView alignment="left" image="star.fill" catalog="system" id="CsN-Vl-A6o">
+                                                    <color key="tintColor" name="App-blue"/>
+                                                </imageView>
+                                                <imageView alignment="left" image="star.fill" catalog="system" id="bAM-Oj-OJd">
+                                                    <color key="tintColor" name="App-blue"/>
+                                                </imageView>
+                                                <imageView alignment="left" image="star.fill" catalog="system" id="dMu-3I-j9e">
+                                                    <color key="tintColor" name="App-blue"/>
+                                                </imageView>
+                                                <imageView alignment="left" image="star.fill" catalog="system" id="78U-ae-I1n">
+                                                    <color key="tintColor" name="App-blue"/>
+                                                </imageView>
+                                            </items>
+                                        </group>
+                                    </items>
+                                </group>
+                            </items>
+                        </group>
+                    </items>
+                    <connections>
+                        <outlet property="favoriteSwitch" destination="hnv-1Y-mmc" id="Srs-Qv-HTF"/>
+                        <outlet property="finishedSwitch" destination="PfO-vt-AhB" id="MeR-rJ-YXu"/>
+                        <outlet property="progressBar" destination="tZp-DO-ysZ" id="4oD-53-jCq"/>
+                        <outlet property="progressLabel" destination="h2P-PD-RjX" id="tjm-TN-wK7"/>
+                        <outlet property="ratingGroup" destination="etD-ke-rgs" id="5FC-g0-K0j"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="220" y="33"/>
+        </scene>
+        <!--Notification Controller-->
+        <scene sceneID="Niz-AI-uX2">
+            <objects>
+                <controller id="eXb-UN-Cd0" customClass="NotificationController" customModule="BackloggerWatch" customModuleProvider="target"/>
+            </objects>
+            <point key="canvasLocation" x="468" y="345"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="star.fill" catalog="system" width="64" height="56"/>
+        <namedColor name="App-blue">
+            <color red="0.0" green="0.72500002384185791" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>
