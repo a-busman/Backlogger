@@ -6,7 +6,6 @@ def sharedPods
   pod 'Kingfisher'
   pod 'RealmSwift'
   pod 'MMWormhole'
-  pod 'Firebase/Analytics'
 end
 
 target 'Backlogger' do
@@ -17,6 +16,7 @@ target 'Backlogger' do
     pod 'Crashlytics'
     pod 'Zip'
     pod 'Zephyr'
+    pod 'Firebase/Analytics'
 end
 
 target 'BackloggerWidget' do
@@ -24,18 +24,19 @@ target 'BackloggerWidget' do
     sharedPods
     pod 'Fabric'
     pod 'Crashlytics'
+    pod 'Firebase/Analytics'
 end
-=begin
+
 target 'BackloggerWatch' do
-    platform :watchos, '3.2'
+    platform :watchos, '6.1'
     sharedPods
 end
 
 target 'BackloggerWatch Extension' do
-    platform :watchos, '3.2'
+    platform :watchos, '6.1'
     sharedPods
 end
-=end
+
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|

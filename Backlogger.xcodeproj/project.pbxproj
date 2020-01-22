@@ -7,8 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		476F255309A2D4E82704D9C2 /* Pods_Backlogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3F978E8CAEB86649F3B7627 /* Pods_Backlogger.framework */; };
-		64C8AA31992BA148660D0F1E /* Pods_BackloggerWidget.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9891D78015A4CFCBBF294CD /* Pods_BackloggerWidget.framework */; };
+		1D96A2E989A9E649738F46ED /* Pods_Backlogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0FA06C3C1B952C0A7A52F83 /* Pods_Backlogger.framework */; };
+		1DBAD820C7EECD0051BEFEDC /* Pods_BackloggerWatch_Extension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3F39663DAFC83DD3688731B /* Pods_BackloggerWatch_Extension.framework */; };
+		A6617785D8DDF227890268CA /* Pods_BackloggerWidget.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F2EA829EDB00364780463E6 /* Pods_BackloggerWidget.framework */; };
+		DA1772CA78C0562F69F41E5A /* Pods_BackloggerWatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66CA69CFBF66B7323138A693 /* Pods_BackloggerWatch.framework */; };
 		FA09156D1E2AA4210052BCEC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA09156C1E2AA4210052BCEC /* AppDelegate.swift */; };
 		FA0915741E2AA4210052BCEC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA0915721E2AA4210052BCEC /* Main.storyboard */; };
 		FA0915761E2AA4210052BCEC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA0915751E2AA4210052BCEC /* Assets.xcassets */; };
@@ -91,6 +93,30 @@
 		FAD3AE1323D26D1E0031B562 /* SteamMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD3AE1223D26D1E0031B562 /* SteamMapper.swift */; };
 		FAD4CF2A23CE982B0091B88F /* SteamLoaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FAD4CF2923CE982B0091B88F /* SteamLoaderView.xib */; };
 		FAD4CF2C23CE9D2E0091B88F /* SteamLoaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD4CF2B23CE9D2E0091B88F /* SteamLoaderViewController.swift */; };
+		FAD4CF7723D52FCE0091B88F /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAD4CF7523D52FCE0091B88F /* Interface.storyboard */; };
+		FAD4CF7923D52FCF0091B88F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAD4CF7823D52FCF0091B88F /* Assets.xcassets */; };
+		FAD4CF8023D52FCF0091B88F /* BackloggerWatch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = FAD4CF7F23D52FCF0091B88F /* BackloggerWatch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FAD4CF8523D52FCF0091B88F /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD4CF8423D52FCF0091B88F /* InterfaceController.swift */; };
+		FAD4CF8723D52FCF0091B88F /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD4CF8623D52FCF0091B88F /* ExtensionDelegate.swift */; };
+		FAD4CF8923D52FCF0091B88F /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD4CF8823D52FCF0091B88F /* NotificationController.swift */; };
+		FAD4CF8B23D52FCF0091B88F /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD4CF8A23D52FCF0091B88F /* ComplicationController.swift */; };
+		FAD4CF8D23D52FCF0091B88F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAD4CF8C23D52FCF0091B88F /* Assets.xcassets */; };
+		FAD4CF9223D52FCF0091B88F /* BackloggerWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = FAD4CF7323D52FCD0091B88F /* BackloggerWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FAD4CF9B23D530240091B88F /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA80A11E5252DB0069943D /* Game.swift */; };
+		FAD4CF9C23D530270091B88F /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B448A1E5D3DC2006A843F /* Field.swift */; };
+		FAD4CF9D23D5302C0091B88F /* SearchResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B44881E5625E7006A843F /* SearchResults.swift */; };
+		FAD4CF9E23D5302E0091B88F /* Company.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B448C1E5D3F04006A843F /* Company.swift */; };
+		FAD4CF9F23D530300091B88F /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B448E1E5D3F2D006A843F /* Genre.swift */; };
+		FAD4CFA023D530330091B88F /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B44901E5D3F5A006A843F /* Platform.swift */; };
+		FAD4CFA123D530350091B88F /* ImageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4B44921E5D405E006A843F /* ImageList.swift */; };
+		FAD4CFA223D530390091B88F /* Publisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8E71CC1E80E61800E7400B /* Publisher.swift */; };
+		FAD4CFA323D5303B0091B88F /* Developer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8E71CE1E80E66500E7400B /* Developer.swift */; };
+		FAD4CFA523D530440091B88F /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA358A511EB9AC4C001EE03D /* Playlist.swift */; };
+		FAD4CFA623D530470091B88F /* GameCharacter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1FFF801F0153E40048D907 /* GameCharacter.swift */; };
+		FAD4CFA723D5331B0091B88F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA0915751E2AA4210052BCEC /* Assets.xcassets */; };
+		FAD4CFAD23D577AE0091B88F /* WatchGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD4CFAB23D577AE0091B88F /* WatchGame.swift */; };
+		FAD4CFAF23D578B60091B88F /* WatchGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD4CFAB23D577AE0091B88F /* WatchGame.swift */; };
+		FAD4CFB223D666640091B88F /* GameInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD4CFB023D666640091B88F /* GameInterfaceController.swift */; };
 		FADA808B1E4C07570069943D /* PanDirectionGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808A1E4C07570069943D /* PanDirectionGestureRecognizer.swift */; };
 		FADA808E1E4C0D680069943D /* NowPlayingGameViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808D1E4C0D680069943D /* NowPlayingGameViewCell.swift */; };
 		FADA80901E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808F1E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift */; };
@@ -108,6 +134,20 @@
 			remoteGlobalIDString = FACCA64B1EF82CD8005F1021;
 			remoteInfo = BackloggerWidget;
 		};
+		FAD4CF8123D52FCF0091B88F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FA0915611E2AA4210052BCEC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FAD4CF7E23D52FCF0091B88F;
+			remoteInfo = "BackloggerWatch Extension";
+		};
+		FAD4CF9023D52FCF0091B88F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FA0915611E2AA4210052BCEC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FAD4CF7223D52FCD0091B88F;
+			remoteInfo = BackloggerWatch;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -122,14 +162,43 @@
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FAD4CF9323D52FCF0091B88F /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				FAD4CF9223D52FCF0091B88F /* BackloggerWatch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAD4CF9623D52FCF0091B88F /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				FAD4CF8023D52FCF0091B88F /* BackloggerWatch Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		46B7EA5C8179482E14EC84BE /* Pods-BackloggerWidget.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BackloggerWidget.debug.xcconfig"; path = "Target Support Files/Pods-BackloggerWidget/Pods-BackloggerWidget.debug.xcconfig"; sourceTree = "<group>"; };
-		71CC2D9AB3D47C390F0399A2 /* Pods-BackloggerWidget.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BackloggerWidget.release.xcconfig"; path = "Target Support Files/Pods-BackloggerWidget/Pods-BackloggerWidget.release.xcconfig"; sourceTree = "<group>"; };
-		C0900556C940BC43622E640A /* Pods-Backlogger.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Backlogger.release.xcconfig"; path = "Target Support Files/Pods-Backlogger/Pods-Backlogger.release.xcconfig"; sourceTree = "<group>"; };
-		C3F978E8CAEB86649F3B7627 /* Pods_Backlogger.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Backlogger.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F9891D78015A4CFCBBF294CD /* Pods_BackloggerWidget.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BackloggerWidget.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0F2EA829EDB00364780463E6 /* Pods_BackloggerWidget.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BackloggerWidget.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		206FC74B9F8003C7B4E5B4B4 /* Pods-BackloggerWatch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BackloggerWatch.release.xcconfig"; path = "Target Support Files/Pods-BackloggerWatch/Pods-BackloggerWatch.release.xcconfig"; sourceTree = "<group>"; };
+		4237CE2672FF219EECA5EB6A /* Pods-Backlogger.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Backlogger.release.xcconfig"; path = "Target Support Files/Pods-Backlogger/Pods-Backlogger.release.xcconfig"; sourceTree = "<group>"; };
+		66CA69CFBF66B7323138A693 /* Pods_BackloggerWatch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BackloggerWatch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A5D20C08A3FBB230CBCBA14 /* Pods-BackloggerWatch Extension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BackloggerWatch Extension.release.xcconfig"; path = "Target Support Files/Pods-BackloggerWatch Extension/Pods-BackloggerWatch Extension.release.xcconfig"; sourceTree = "<group>"; };
+		A9C927A68CA26903000BDFE6 /* Pods-BackloggerWidget.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BackloggerWidget.debug.xcconfig"; path = "Target Support Files/Pods-BackloggerWidget/Pods-BackloggerWidget.debug.xcconfig"; sourceTree = "<group>"; };
+		B0FA06C3C1B952C0A7A52F83 /* Pods_Backlogger.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Backlogger.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C438B5665B5460D531461F66 /* Pods-BackloggerWidget.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BackloggerWidget.release.xcconfig"; path = "Target Support Files/Pods-BackloggerWidget/Pods-BackloggerWidget.release.xcconfig"; sourceTree = "<group>"; };
+		CE7EDC956D612408AB77AC04 /* Pods-BackloggerWatch.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BackloggerWatch.debug.xcconfig"; path = "Target Support Files/Pods-BackloggerWatch/Pods-BackloggerWatch.debug.xcconfig"; sourceTree = "<group>"; };
+		D3F39663DAFC83DD3688731B /* Pods_BackloggerWatch_Extension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BackloggerWatch_Extension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F5E04905ECC441A266AA0DC8 /* Pods-Backlogger.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Backlogger.debug.xcconfig"; path = "Target Support Files/Pods-Backlogger/Pods-Backlogger.debug.xcconfig"; sourceTree = "<group>"; };
+		F7B587DBD3449213F2EDF483 /* Pods-BackloggerWatch Extension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BackloggerWatch Extension.debug.xcconfig"; path = "Target Support Files/Pods-BackloggerWatch Extension/Pods-BackloggerWatch Extension.debug.xcconfig"; sourceTree = "<group>"; };
 		FA0915691E2AA4210052BCEC /* Backlogger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Backlogger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA09156C1E2AA4210052BCEC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FA0915731E2AA4210052BCEC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -208,6 +277,22 @@
 		FAD3AE1223D26D1E0031B562 /* SteamMapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SteamMapper.swift; path = Model/SteamMapper.swift; sourceTree = "<group>"; };
 		FAD4CF2923CE982B0091B88F /* SteamLoaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = SteamLoaderView.xib; path = Views/SteamLoaderView.xib; sourceTree = "<group>"; };
 		FAD4CF2B23CE9D2E0091B88F /* SteamLoaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SteamLoaderViewController.swift; path = "View Controllers/SteamLoaderViewController.swift"; sourceTree = "<group>"; };
+		FAD4CF7323D52FCD0091B88F /* BackloggerWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BackloggerWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FAD4CF7623D52FCE0091B88F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
+		FAD4CF7823D52FCF0091B88F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FAD4CF7A23D52FCF0091B88F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FAD4CF7F23D52FCF0091B88F /* BackloggerWatch Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "BackloggerWatch Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FAD4CF8423D52FCF0091B88F /* InterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceController.swift; sourceTree = "<group>"; };
+		FAD4CF8623D52FCF0091B88F /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
+		FAD4CF8823D52FCF0091B88F /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
+		FAD4CF8A23D52FCF0091B88F /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
+		FAD4CF8C23D52FCF0091B88F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FAD4CF8E23D52FCF0091B88F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FAD4CF8F23D52FCF0091B88F /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
+		FAD4CFA923D570C40091B88F /* BackloggerWatch Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "BackloggerWatch Extension.entitlements"; sourceTree = "<group>"; };
+		FAD4CFAA23D570CD0091B88F /* BackloggerWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BackloggerWatch.entitlements; sourceTree = "<group>"; };
+		FAD4CFAB23D577AE0091B88F /* WatchGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WatchGame.swift; path = Model/WatchGame.swift; sourceTree = "<group>"; };
+		FAD4CFB023D666640091B88F /* GameInterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameInterfaceController.swift; sourceTree = "<group>"; };
 		FADA808A1E4C07570069943D /* PanDirectionGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PanDirectionGestureRecognizer.swift; path = "Gesture Recognizers/PanDirectionGestureRecognizer.swift"; sourceTree = "<group>"; };
 		FADA808D1E4C0D680069943D /* NowPlayingGameViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NowPlayingGameViewCell.swift; path = "Collection View/NowPlayingGameViewCell.swift"; sourceTree = "<group>"; };
 		FADA808F1E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TopAlignedCollectionViewFlowLayout.swift; path = "Collection View/TopAlignedCollectionViewFlowLayout.swift"; sourceTree = "<group>"; };
@@ -215,16 +300,23 @@
 		FADA809B1E4FB2D20069943D /* TableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TableViewCell.xib; path = Views/TableViewCell.xib; sourceTree = "<group>"; };
 		FADA809E1E4FB66A0069943D /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TableViewCell.swift; path = "Table View/TableViewCell.swift"; sourceTree = "<group>"; };
 		FADA80A11E5252DB0069943D /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Game.swift; path = Model/Game.swift; sourceTree = "<group>"; };
-		FCA9F7721B70E29F61F851FA /* Pods-Backlogger.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Backlogger.debug.xcconfig"; path = "Target Support Files/Pods-Backlogger/Pods-Backlogger.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		464161A2AC51702BF19DC4E2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DA1772CA78C0562F69F41E5A /* Pods_BackloggerWatch.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FA0915661E2AA4210052BCEC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				476F255309A2D4E82704D9C2 /* Pods_Backlogger.framework in Frameworks */,
 				FAAF9D2223B5CE24009E6CAF /* CloudKit.framework in Frameworks */,
+				1D96A2E989A9E649738F46ED /* Pods_Backlogger.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,7 +325,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				FACCA64E1EF82CD8005F1021 /* NotificationCenter.framework in Frameworks */,
-				64C8AA31992BA148660D0F1E /* Pods_BackloggerWidget.framework in Frameworks */,
+				A6617785D8DDF227890268CA /* Pods_BackloggerWidget.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAD4CF7C23D52FCF0091B88F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1DBAD820C7EECD0051BEFEDC /* Pods_BackloggerWatch_Extension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -243,10 +343,14 @@
 		ACA58DBE1EF45F71C192800C /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				FCA9F7721B70E29F61F851FA /* Pods-Backlogger.debug.xcconfig */,
-				C0900556C940BC43622E640A /* Pods-Backlogger.release.xcconfig */,
-				46B7EA5C8179482E14EC84BE /* Pods-BackloggerWidget.debug.xcconfig */,
-				71CC2D9AB3D47C390F0399A2 /* Pods-BackloggerWidget.release.xcconfig */,
+				F5E04905ECC441A266AA0DC8 /* Pods-Backlogger.debug.xcconfig */,
+				4237CE2672FF219EECA5EB6A /* Pods-Backlogger.release.xcconfig */,
+				CE7EDC956D612408AB77AC04 /* Pods-BackloggerWatch.debug.xcconfig */,
+				206FC74B9F8003C7B4E5B4B4 /* Pods-BackloggerWatch.release.xcconfig */,
+				F7B587DBD3449213F2EDF483 /* Pods-BackloggerWatch Extension.debug.xcconfig */,
+				9A5D20C08A3FBB230CBCBA14 /* Pods-BackloggerWatch Extension.release.xcconfig */,
+				A9C927A68CA26903000BDFE6 /* Pods-BackloggerWidget.debug.xcconfig */,
+				C438B5665B5460D531461F66 /* Pods-BackloggerWidget.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -256,8 +360,10 @@
 			children = (
 				FAAF9D2123B5CE24009E6CAF /* CloudKit.framework */,
 				FACCA64D1EF82CD8005F1021 /* NotificationCenter.framework */,
-				C3F978E8CAEB86649F3B7627 /* Pods_Backlogger.framework */,
-				F9891D78015A4CFCBBF294CD /* Pods_BackloggerWidget.framework */,
+				B0FA06C3C1B952C0A7A52F83 /* Pods_Backlogger.framework */,
+				66CA69CFBF66B7323138A693 /* Pods_BackloggerWatch.framework */,
+				D3F39663DAFC83DD3688731B /* Pods_BackloggerWatch_Extension.framework */,
+				0F2EA829EDB00364780463E6 /* Pods_BackloggerWidget.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -270,6 +376,8 @@
 				FA09156B1E2AA4210052BCEC /* Backlogger */,
 				FACCA64F1EF82CD8005F1021 /* BackloggerWidget */,
 				FA135772232EEE31008A5A3F /* BackloggerTests */,
+				FAD4CF7423D52FCE0091B88F /* BackloggerWatch */,
+				FAD4CF8323D52FCF0091B88F /* BackloggerWatch Extension */,
 				FA09156A1E2AA4210052BCEC /* Products */,
 				D89C49BAE2CAA1BC26041695 /* Frameworks */,
 				ACA58DBE1EF45F71C192800C /* Pods */,
@@ -281,6 +389,8 @@
 			children = (
 				FA0915691E2AA4210052BCEC /* Backlogger.app */,
 				FACCA64C1EF82CD8005F1021 /* BackloggerWidget.appex */,
+				FAD4CF7323D52FCD0091B88F /* BackloggerWatch.app */,
+				FAD4CF7F23D52FCF0091B88F /* BackloggerWatch Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -380,6 +490,33 @@
 			path = BackloggerWidget;
 			sourceTree = "<group>";
 		};
+		FAD4CF7423D52FCE0091B88F /* BackloggerWatch */ = {
+			isa = PBXGroup;
+			children = (
+				FAD4CFAA23D570CD0091B88F /* BackloggerWatch.entitlements */,
+				FAD4CF7523D52FCE0091B88F /* Interface.storyboard */,
+				FAD4CF7823D52FCF0091B88F /* Assets.xcassets */,
+				FAD4CF7A23D52FCF0091B88F /* Info.plist */,
+			);
+			path = BackloggerWatch;
+			sourceTree = "<group>";
+		};
+		FAD4CF8323D52FCF0091B88F /* BackloggerWatch Extension */ = {
+			isa = PBXGroup;
+			children = (
+				FAD4CFA923D570C40091B88F /* BackloggerWatch Extension.entitlements */,
+				FAD4CF8423D52FCF0091B88F /* InterfaceController.swift */,
+				FAD4CFB023D666640091B88F /* GameInterfaceController.swift */,
+				FAD4CF8623D52FCF0091B88F /* ExtensionDelegate.swift */,
+				FAD4CF8823D52FCF0091B88F /* NotificationController.swift */,
+				FAD4CF8A23D52FCF0091B88F /* ComplicationController.swift */,
+				FAD4CF8C23D52FCF0091B88F /* Assets.xcassets */,
+				FAD4CF8E23D52FCF0091B88F /* Info.plist */,
+				FAD4CF8F23D52FCF0091B88F /* PushNotificationPayload.apns */,
+			);
+			path = "BackloggerWatch Extension";
+			sourceTree = "<group>";
+		};
 		FADA80891E4C072E0069943D /* Gesture Recognizers */ = {
 			isa = PBXGroup;
 			children = (
@@ -429,6 +566,7 @@
 				FA358A511EB9AC4C001EE03D /* Playlist.swift */,
 				FA9CFA351EFCB1B7003E93B8 /* Steam.swift */,
 				FA1FFF801F0153E40048D907 /* GameCharacter.swift */,
+				FAD4CFAB23D577AE0091B88F /* WatchGame.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -440,18 +578,20 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = FA09157D1E2AA4210052BCEC /* Build configuration list for PBXNativeTarget "Backlogger" */;
 			buildPhases = (
-				D9919BC348EDA942AFC05AFC /* [CP] Check Pods Manifest.lock */,
+				C83BEEC3CEE3DEFF1E13A656 /* [CP] Check Pods Manifest.lock */,
 				FA0915651E2AA4210052BCEC /* Sources */,
 				FA0915661E2AA4210052BCEC /* Frameworks */,
 				FA0915671E2AA4210052BCEC /* Resources */,
 				FACCA65C1EF82CD8005F1021 /* Embed App Extensions */,
 				FA545BE01F06EE6C00D2F185 /* ShellScript */,
-				49EE7DB81FDC6FF92422FE0E /* [CP] Embed Pods Frameworks */,
+				FAD4CF9323D52FCF0091B88F /* Embed Watch Content */,
+				9AEFC7438D37A4B13D6BF15C /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				FACCA6571EF82CD8005F1021 /* PBXTargetDependency */,
+				FAD4CF9123D52FCF0091B88F /* PBXTargetDependency */,
 			);
 			name = Backlogger;
 			productName = Backlogger;
@@ -462,7 +602,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = FACCA65B1EF82CD8005F1021 /* Build configuration list for PBXNativeTarget "BackloggerWidget" */;
 			buildPhases = (
-				C1331A8E1B3D322AF4ED6FC8 /* [CP] Check Pods Manifest.lock */,
+				8B73370C2034601C07FB1D7C /* [CP] Check Pods Manifest.lock */,
 				FACCA6481EF82CD8005F1021 /* Sources */,
 				FACCA6491EF82CD8005F1021 /* Frameworks */,
 				FACCA64A1EF82CD8005F1021 /* Resources */,
@@ -476,13 +616,51 @@
 			productReference = FACCA64C1EF82CD8005F1021 /* BackloggerWidget.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		FAD4CF7223D52FCD0091B88F /* BackloggerWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FAD4CF9A23D52FCF0091B88F /* Build configuration list for PBXNativeTarget "BackloggerWatch" */;
+			buildPhases = (
+				D4B4B7265AB87CB25851D244 /* [CP] Check Pods Manifest.lock */,
+				FAD4CF7123D52FCD0091B88F /* Resources */,
+				FAD4CF9623D52FCF0091B88F /* Embed App Extensions */,
+				464161A2AC51702BF19DC4E2 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FAD4CF8223D52FCF0091B88F /* PBXTargetDependency */,
+			);
+			name = BackloggerWatch;
+			productName = BackloggerWatch;
+			productReference = FAD4CF7323D52FCD0091B88F /* BackloggerWatch.app */;
+			productType = "com.apple.product-type.application.watchapp2";
+		};
+		FAD4CF7E23D52FCF0091B88F /* BackloggerWatch Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FAD4CF9923D52FCF0091B88F /* Build configuration list for PBXNativeTarget "BackloggerWatch Extension" */;
+			buildPhases = (
+				E5439EDF4C0AC19616F8F0C4 /* [CP] Check Pods Manifest.lock */,
+				FAD4CF7B23D52FCF0091B88F /* Sources */,
+				FAD4CF7C23D52FCF0091B88F /* Frameworks */,
+				FAD4CF7D23D52FCF0091B88F /* Resources */,
+				FCED26239D3FCFEEE205C2E2 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "BackloggerWatch Extension";
+			productName = "BackloggerWatch Extension";
+			productReference = FAD4CF7F23D52FCF0091B88F /* BackloggerWatch Extension.appex */;
+			productType = "com.apple.product-type.watchkit2-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		FA0915611E2AA4210052BCEC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1100;
+				LastSwiftUpdateCheck = 1130;
 				LastUpgradeCheck = 1000;
 				ORGANIZATIONNAME = "Alex Busman";
 				TargetAttributes = {
@@ -511,6 +689,17 @@
 							};
 						};
 					};
+					FAD4CF7223D52FCD0091B88F = {
+						CreatedOnToolsVersion = 11.3.1;
+						DevelopmentTeam = D9J98STRHA;
+						LastSwiftMigration = 1130;
+						ProvisioningStyle = Automatic;
+					};
+					FAD4CF7E23D52FCF0091B88F = {
+						CreatedOnToolsVersion = 11.3.1;
+						DevelopmentTeam = D9J98STRHA;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = FA0915641E2AA4210052BCEC /* Build configuration list for PBXProject "Backlogger" */;
@@ -528,6 +717,8 @@
 			targets = (
 				FA0915681E2AA4210052BCEC /* Backlogger */,
 				FACCA64B1EF82CD8005F1021 /* BackloggerWidget */,
+				FAD4CF7223D52FCD0091B88F /* BackloggerWatch */,
+				FAD4CF7E23D52FCF0091B88F /* BackloggerWatch Extension */,
 			);
 		};
 /* End PBXProject section */
@@ -569,23 +760,63 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FAD4CF7123D52FCD0091B88F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAD4CF7923D52FCF0091B88F /* Assets.xcassets in Resources */,
+				FAD4CF7723D52FCE0091B88F /* Interface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAD4CF7D23D52FCF0091B88F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAD4CFA723D5331B0091B88F /* Assets.xcassets in Resources */,
+				FAD4CF8D23D52FCF0091B88F /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		49EE7DB81FDC6FF92422FE0E /* [CP] Embed Pods Frameworks */ = {
+		8B73370C2034601C07FB1D7C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BackloggerWidget-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9AEFC7438D37A4B13D6BF15C /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Backlogger/Pods-Backlogger-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/Alamofire-iOS/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/ImageViewer/ImageViewer.framework",
-				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
-				"${BUILT_PRODUCTS_DIR}/MMWormhole/MMWormhole.framework",
-				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
-				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/Kingfisher-iOS/Kingfisher.framework",
+				"${BUILT_PRODUCTS_DIR}/MMWormhole-iOS/MMWormhole.framework",
+				"${BUILT_PRODUCTS_DIR}/Realm-iOS/Realm.framework",
+				"${BUILT_PRODUCTS_DIR}/RealmSwift-iOS/RealmSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/Zephyr/Zephyr.framework",
 				"${BUILT_PRODUCTS_DIR}/Zip/Zip.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
@@ -608,29 +839,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Backlogger/Pods-Backlogger-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C1331A8E1B3D322AF4ED6FC8 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-BackloggerWidget-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		D9919BC348EDA942AFC05AFC /* [CP] Check Pods Manifest.lock */ = {
+		C83BEEC3CEE3DEFF1E13A656 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -652,6 +861,50 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		D4B4B7265AB87CB25851D244 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BackloggerWatch-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E5439EDF4C0AC19616F8F0C4 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BackloggerWatch Extension-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		FA545BE01F06EE6C00D2F185 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -664,6 +917,32 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Fabric/run\" d6ea496ed95a9f128495250bae1780e3eba1e7ae 864f2b8b775cb2f1a273a7791115a60e1070d062c9aa166df58e296238718ebd";
+		};
+		FCED26239D3FCFEEE205C2E2 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BackloggerWatch Extension/Pods-BackloggerWatch Extension-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire-watchOS/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/Kingfisher-watchOS/Kingfisher.framework",
+				"${BUILT_PRODUCTS_DIR}/MMWormhole-watchOS/MMWormhole.framework",
+				"${BUILT_PRODUCTS_DIR}/Realm-watchOS/Realm.framework",
+				"${BUILT_PRODUCTS_DIR}/RealmSwift-watchOS/RealmSwift.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MMWormhole.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BackloggerWatch Extension/Pods-BackloggerWatch Extension-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -717,6 +996,7 @@
 				FA09156D1E2AA4210052BCEC /* AppDelegate.swift in Sources */,
 				FA1FFF7B1F001F220048D907 /* AboutViewController.swift in Sources */,
 				FA1854B81ECF22B30031087E /* Util.swift in Sources */,
+				FAD4CFAF23D578B60091B88F /* WatchGame.swift in Sources */,
 				FADA80981E4FA0EB0069943D /* GameTableViewController.swift in Sources */,
 				FA8E71CD1E80E61800E7400B /* Publisher.swift in Sources */,
 				FA1FFF7F1F0153690048D907 /* CharacterCell.swift in Sources */,
@@ -746,6 +1026,30 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FAD4CF7B23D52FCF0091B88F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAD4CFA623D530470091B88F /* GameCharacter.swift in Sources */,
+				FAD4CFA223D530390091B88F /* Publisher.swift in Sources */,
+				FAD4CFA023D530330091B88F /* Platform.swift in Sources */,
+				FAD4CF9F23D530300091B88F /* Genre.swift in Sources */,
+				FAD4CFB223D666640091B88F /* GameInterfaceController.swift in Sources */,
+				FAD4CFA523D530440091B88F /* Playlist.swift in Sources */,
+				FAD4CF8923D52FCF0091B88F /* NotificationController.swift in Sources */,
+				FAD4CF9B23D530240091B88F /* Game.swift in Sources */,
+				FAD4CFA323D5303B0091B88F /* Developer.swift in Sources */,
+				FAD4CFA123D530350091B88F /* ImageList.swift in Sources */,
+				FAD4CF9C23D530270091B88F /* Field.swift in Sources */,
+				FAD4CF8B23D52FCF0091B88F /* ComplicationController.swift in Sources */,
+				FAD4CFAD23D577AE0091B88F /* WatchGame.swift in Sources */,
+				FAD4CF9D23D5302C0091B88F /* SearchResults.swift in Sources */,
+				FAD4CF8723D52FCF0091B88F /* ExtensionDelegate.swift in Sources */,
+				FAD4CF8523D52FCF0091B88F /* InterfaceController.swift in Sources */,
+				FAD4CF9E23D5302E0091B88F /* Company.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -753,6 +1057,16 @@
 			isa = PBXTargetDependency;
 			target = FACCA64B1EF82CD8005F1021 /* BackloggerWidget */;
 			targetProxy = FACCA6561EF82CD8005F1021 /* PBXContainerItemProxy */;
+		};
+		FAD4CF8223D52FCF0091B88F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FAD4CF7E23D52FCF0091B88F /* BackloggerWatch Extension */;
+			targetProxy = FAD4CF8123D52FCF0091B88F /* PBXContainerItemProxy */;
+		};
+		FAD4CF9123D52FCF0091B88F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FAD4CF7223D52FCD0091B88F /* BackloggerWatch */;
+			targetProxy = FAD4CF9023D52FCF0091B88F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -779,6 +1093,14 @@
 				FACCA6531EF82CD8005F1021 /* Base */,
 			);
 			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
+		FAD4CF7523D52FCE0091B88F /* Interface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FAD4CF7623D52FCE0091B88F /* Base */,
+			);
+			name = Interface.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -901,7 +1223,7 @@
 		};
 		FA09157E1E2AA4210052BCEC /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FCA9F7721B70E29F61F851FA /* Pods-Backlogger.debug.xcconfig */;
+			baseConfigurationReference = F5E04905ECC441A266AA0DC8 /* Pods-Backlogger.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Backlogger/Backlogger.entitlements;
@@ -923,7 +1245,7 @@
 		};
 		FA09157F1E2AA4210052BCEC /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C0900556C940BC43622E640A /* Pods-Backlogger.release.xcconfig */;
+			baseConfigurationReference = 4237CE2672FF219EECA5EB6A /* Pods-Backlogger.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Backlogger/Backlogger.entitlements;
@@ -944,7 +1266,7 @@
 		};
 		FACCA6591EF82CD8005F1021 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 46B7EA5C8179482E14EC84BE /* Pods-BackloggerWidget.debug.xcconfig */;
+			baseConfigurationReference = A9C927A68CA26903000BDFE6 /* Pods-BackloggerWidget.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = BackloggerWidget/BackloggerWidget.entitlements;
@@ -965,7 +1287,7 @@
 		};
 		FACCA65A1EF82CD8005F1021 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 71CC2D9AB3D47C390F0399A2 /* Pods-BackloggerWidget.release.xcconfig */;
+			baseConfigurationReference = C438B5665B5460D531461F66 /* Pods-BackloggerWidget.release.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = BackloggerWidget/BackloggerWidget.entitlements;
@@ -981,6 +1303,123 @@
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		FAD4CF9423D52FCF0091B88F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE7EDC956D612408AB77AC04 /* Pods-BackloggerWatch.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = BackloggerWatch/BackloggerWatch.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = D9J98STRHA;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				IBSC_MODULE = BackloggerWatch_Extension;
+				INFOPLIST_FILE = BackloggerWatch/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alexbusman.Backlogger.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 6.1;
+			};
+			name = Debug;
+		};
+		FAD4CF9523D52FCF0091B88F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 206FC74B9F8003C7B4E5B4B4 /* Pods-BackloggerWatch.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = BackloggerWatch/BackloggerWatch.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = D9J98STRHA;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				IBSC_MODULE = BackloggerWatch_Extension;
+				INFOPLIST_FILE = BackloggerWatch/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alexbusman.Backlogger.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 6.1;
+			};
+			name = Release;
+		};
+		FAD4CF9723D52FCF0091B88F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F7B587DBD3449213F2EDF483 /* Pods-BackloggerWatch Extension.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = "BackloggerWatch Extension/BackloggerWatch Extension.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = D9J98STRHA;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "BackloggerWatch Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alexbusman.Backlogger.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 6.1;
+			};
+			name = Debug;
+		};
+		FAD4CF9823D52FCF0091B88F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9A5D20C08A3FBB230CBCBA14 /* Pods-BackloggerWatch Extension.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = "BackloggerWatch Extension/BackloggerWatch Extension.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = D9J98STRHA;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "BackloggerWatch Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alexbusman.Backlogger.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 6.1;
 			};
 			name = Release;
 		};
@@ -1010,6 +1449,24 @@
 			buildConfigurations = (
 				FACCA6591EF82CD8005F1021 /* Debug */,
 				FACCA65A1EF82CD8005F1021 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FAD4CF9923D52FCF0091B88F /* Build configuration list for PBXNativeTarget "BackloggerWatch Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FAD4CF9723D52FCF0091B88F /* Debug */,
+				FAD4CF9823D52FCF0091B88F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FAD4CF9A23D52FCF0091B88F /* Build configuration list for PBXNativeTarget "BackloggerWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FAD4CF9423D52FCF0091B88F /* Debug */,
+				FAD4CF9523D52FCF0091B88F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

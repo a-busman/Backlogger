@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import WatchConnectivity
 
 class NowPlayingViewController: UIViewController {
     
@@ -233,10 +234,10 @@ class NowPlayingViewController: UIViewController {
                 vc.addDetails(withRefresh: false)
             }
             self.gameIds = newGameIds
-            self.collectionView?.reloadData()
         } else {
             for (i, game) in self.games.enumerated() {
                 self.orderedViewControllers[i].game = game
+                self.orderedViewControllers[i].addDetails(withRefresh: true)
             }
         }
         self.collectionView?.reloadData()
@@ -474,10 +475,27 @@ class NowPlayingViewController: UIViewController {
     }
     
     func updatePlaylist() {
-        self.nowPlayingPlaylist.update {
-            self.nowPlayingPlaylist.games.removeAll()
-            self.nowPlayingPlaylist.games.append(objectsIn: self.games)
+        self.saveNowPlaying()
+        if WCSession.default.isReachable {
+            self.updateWatchList()
         }
+    }
+    
+    func updateWatchList() {
+        var gamesToSend: [[String: Any]] = []
+        
+        for game in self.games {
+            var gameToSend: [String: Any] = [:]
+            gameToSend["name"] = game.gameFields?.name
+            gameToSend["progress"] = game.progress
+            gameToSend["rating"] = game.rating
+            gameToSend["complete"] = game.finished
+            gameToSend["image"] = game.gameFields?.image?.iconUrl
+            gameToSend["favorite"] = game.favourite
+            gameToSend["id"] = game.uuid
+            gamesToSend.append(gameToSend)
+        }
+        WCSession.default.sendMessage(["gameList" : gamesToSend], replyHandler: nil, errorHandler: nil)
     }
     
     // MARK: handleTapDetails
@@ -897,7 +915,7 @@ extension NowPlayingViewController: AddToPlaylistViewControllerDelegate {
             }
         }
         self.games += games.map{$0}
-        self.saveNowPlaying()
+        self.updatePlaylist()
         self.refreshAll()
     }
     func dismissView(_ vc: AddToPlaylistViewController) {
