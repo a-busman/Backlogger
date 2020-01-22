@@ -41,11 +41,6 @@
                             </items>
                         </group>
                     </items>
-                    <menu key="menu" id="bnq-aL-WXX">
-                        <items>
-                            <menuItem title="Feeling Lucky?" icon="shuffle" id="3sC-fk-vGu"/>
-                        </items>
-                    </menu>
                     <connections>
                         <outlet property="backgroundGroup" destination="KWx-7E-g0f" id="6BB-va-2uW"/>
                         <outlet property="backgroundLabel" destination="lxW-tN-Th4" id="jhn-io-Pcl"/>
