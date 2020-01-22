@@ -490,7 +490,7 @@ class NowPlayingViewController: UIViewController {
             gameToSend["progress"] = game.progress
             gameToSend["rating"] = game.rating
             gameToSend["complete"] = game.finished
-            gameToSend["image"] = game.gameFields?.image?.iconUrl
+            gameToSend["image"] = game.gameFields?.image?.smallUrl
             gameToSend["favorite"] = game.favourite
             gameToSend["id"] = game.uuid
             gamesToSend.append(gameToSend)

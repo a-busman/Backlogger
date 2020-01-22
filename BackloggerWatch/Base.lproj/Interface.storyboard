@@ -23,7 +23,7 @@
                                 </group>
                                 <group width="1" alignment="left" layout="vertical" id="52c-bB-RR9">
                                     <items>
-                                        <picker height="110" alignment="left" style="stack" indicatorMode="shownWhileFocused" id="IV8-df-G54">
+                                        <picker height="120" alignment="left" style="stack" indicatorMode="shownWhileFocused" id="IV8-df-G54">
                                             <gestureRecognizers>
                                                 <tapGestureRecognizer id="VDq-12-N2z">
                                                     <connections>
@@ -103,7 +103,7 @@
                                                 <label alignment="right" text="100%" id="h2P-PD-RjX"/>
                                             </items>
                                         </group>
-                                        <slider width="1" alignment="left" continuous="YES" value="1" maximum="100" steps="10" id="tZp-DO-ysZ">
+                                        <slider width="1" alignment="left" continuous="YES" value="1" maximum="100" steps="20" id="tZp-DO-ysZ">
                                             <color key="color" name="App-blue"/>
                                             <connections>
                                                 <action selector="progressBarChangedWithValue:" destination="c8j-R6-V5r" id="TrK-Vj-tk5"/>

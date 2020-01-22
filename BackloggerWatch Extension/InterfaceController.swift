@@ -95,7 +95,7 @@ class InterfaceController: WKInterfaceController {
     
     @IBAction func pickerDidChange(value: Int) {
         self.currentItem = value
-        self.gameLabel?.setText(self.games[value].name ?? "")
+        self.gameLabel?.setText(self.games[value].name)
     }
     
     func updatePicker() {
@@ -106,9 +106,9 @@ class InterfaceController: WKInterfaceController {
             pickerItem.contentImage = WKImage(imageName: "info_image_placeholder")
             pickerItem.title = game.name
             self.pickerItems.append(pickerItem)
-            if let url = URL(string: game.image ?? "") {
-                let processor = RoundCornerImageProcessor(cornerRadius: 10)
-                KingfisherManager.shared.retrieveImage(with: url, options: [.processor(processor)], progressBlock: nil, downloadTaskUpdated: nil) { result in
+            if let url = URL(string: game.image) {
+                let processor = (DownsamplingImageProcessor(size: CGSize(width: 240, height: 240)) >> CroppingImageProcessor(size: CGSize(width: 120, height: 120), anchor: CGPoint(x: 0.5, y: 0.5))) >> RoundCornerImageProcessor(cornerRadius: 10)
+                KingfisherManager.shared.retrieveImage(with: url, options: [.processor(processor), .cacheSerializer(FormatIndicatedCacheSerializer.png)], progressBlock: nil, downloadTaskUpdated: nil) { result in
                     switch result {
                     case .success(let value):
                         pickerItem.contentImage = WKImage(image: value.image)
@@ -132,9 +132,7 @@ class InterfaceController: WKInterfaceController {
             watchGameList.append(watchGame)
         }
         self.games = watchGameList
-        for game in watchGameList {
-            NSLog("Watch got game: \(game.name)")
-        }
+
         if gameList.count == 0 {
             self.gamesGroup?.setHidden(true)
             self.backgroundGroup?.setHidden(false)
