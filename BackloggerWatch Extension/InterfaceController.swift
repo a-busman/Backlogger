@@ -107,7 +107,7 @@ class InterfaceController: WKInterfaceController {
             pickerItem.title = game.name
             self.pickerItems.append(pickerItem)
             if let url = URL(string: game.image) {
-                let processor = (DownsamplingImageProcessor(size: CGSize(width: 240, height: 240)) |> CroppingImageProcessor(size: CGSize(width: 120, height: 120), anchor: CGPoint(x: 0.5, y: 0.5))) |> RoundCornerImageProcessor(cornerRadius: 10)
+                let processor = DownsamplingImageProcessor(size: CGSize(width: 240, height: 240)) |> CroppingImageProcessor(size: CGSize(width: 240, height: 240), anchor: CGPoint(x: 0.5, y: 0.5)) |> RoundCornerImageProcessor(cornerRadius: 10)
                 KingfisherManager.shared.retrieveImage(with: url, options: [.processor(processor), .cacheSerializer(FormatIndicatedCacheSerializer.png)], progressBlock: nil, downloadTaskUpdated: nil) { result in
                     switch result {
                     case .success(let value):

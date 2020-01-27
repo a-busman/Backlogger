@@ -17,6 +17,7 @@ target 'Backlogger' do
     pod 'Zip'
     pod 'Zephyr'
     pod 'Firebase/Analytics'
+    pod 'Google-Mobile-Ads-SDK'
 end
 
 target 'BackloggerWidget' do

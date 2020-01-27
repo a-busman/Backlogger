@@ -35,6 +35,8 @@ PODS:
     - FirebaseCore (~> 6.5)
     - GoogleUtilities/Environment (~> 6.4)
     - GoogleUtilities/UserDefaults (~> 6.4)
+  - Google-Mobile-Ads-SDK (7.53.1):
+    - GoogleAppMeasurement (~> 6.0)
   - GoogleAppMeasurement (6.1.7):
     - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
     - GoogleUtilities/MethodSwizzler (~> 6.0)
@@ -88,6 +90,7 @@ DEPENDENCIES:
   - Crashlytics
   - Fabric
   - Firebase/Analytics
+  - Google-Mobile-Ads-SDK
   - ImageViewer (from `https://github.com/Krisiacik/ImageViewer.git`, commit `519fbdb57b4ad83de50ecd09b7182ed9d190f3ee`)
   - Kingfisher
   - MMWormhole
@@ -106,6 +109,7 @@ SPEC REPOS:
     - FirebaseCoreDiagnostics
     - FirebaseCoreDiagnosticsInterop
     - FirebaseInstanceID
+    - Google-Mobile-Ads-SDK
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleDataTransportCCTSupport
@@ -138,6 +142,7 @@ SPEC CHECKSUMS:
   FirebaseCoreDiagnostics: 511f4f3ed7d440bb69127e8b97c2bc8befae639e
   FirebaseCoreDiagnosticsInterop: e9b1b023157e3a2fc6418b5cb601e79b9af7b3a0
   FirebaseInstanceID: ce993a3c3670a8f5d47ce371ac5d143c560608c5
+  Google-Mobile-Ads-SDK: fac081606dbd438d8db57198b83ba8b5f875a601
   GoogleAppMeasurement: db118eb61a97dd8c4f7014e368d3c335cbbcf80a
   GoogleDataTransport: 8e9b210c97d55fbff306cc5468ff91b9cb32dcf5
   GoogleDataTransportCCTSupport: 202d7cdf9c4a7d81a2bb7f7e7e1ba6faa421b1f2
@@ -151,6 +156,6 @@ SPEC CHECKSUMS:
   Zephyr: d4cbf727c30a5fc4fa1828f17a09f735948309fb
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 00bf372e1b462e74d9e25a81dbb220e68d7b820d
+PODFILE CHECKSUM: eef79c19a0f8752e4ae013b71b2bfe55c178ca2e
 
 COCOAPODS: 1.8.4

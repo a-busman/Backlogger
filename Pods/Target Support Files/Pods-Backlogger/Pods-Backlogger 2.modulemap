@@ -1,0 +1,6 @@
+framework module Pods_Backlogger {
+  umbrella header "Pods-Backlogger-umbrella.h"
+
+  export *
+  module * { export * }
+}
