@@ -9,8 +9,33 @@
 import Foundation
 import UIKit
 import SystemConfiguration
+import GoogleMobileAds
 
 class Util {
+#if DEBUG
+    private static let AD_UNIT_ID = "ca-app-pub-3940256099942544/6300978111"
+#else
+    private static let AD_UNIT_ID = "ca-app-pub-1890106170781921/7267833277"
+#endif
+    
+    class func getNewBannerAd<T: UIViewController & GADBannerViewDelegate>(for vc: T) -> GADBannerView {
+        let bannerView = GADBannerView(adSize: kGADAdSizeBanner)
+        bannerView.rootViewController = vc
+        bannerView.adUnitID = AD_UNIT_ID
+        bannerView.delegate = vc
+        bannerView.load(GADRequest())
+        
+        return bannerView
+    }
+    
+    class func showBannerAd(in view: UIView, banner: GADBannerView) {
+        if banner.superview == nil {
+            banner.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(banner)
+            banner.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+            banner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        }
+    }
     
     class var appColor: UIColor {
         return UIColor(red: 0.0, green: 0.725, blue: 1.0, alpha: 1.0)

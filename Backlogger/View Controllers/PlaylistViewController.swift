@@ -9,6 +9,7 @@
 import UIKit
 import RealmSwift
 import Zephyr
+import GoogleMobileAds
 
 protocol PlaylistViewControllerDelegate {
     func chosePlaylist(vc: PlaylistViewController, playlist: Playlist, games: [Game], isNew: Bool)
@@ -40,6 +41,9 @@ class PlaylistViewController: UIViewController {
     var ascending: Bool?
     
     var selectedRow = -1
+    
+    var adBannerView: GADBannerView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         if Util.isICloudContainerAvailable {
@@ -68,6 +72,7 @@ class PlaylistViewController: UIViewController {
         if self.isAddingGames {
             self.navigationController?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
         }
+        self.adBannerView = Util.getNewBannerAd(for: self)
     }
     
     @IBAction func sortTapped(sender: UIBarButtonItem) {
@@ -225,6 +230,14 @@ class PlaylistViewController: UIViewController {
             }
         }
         self.tableView?.reloadData()
+    }
+}
+
+extension PlaylistViewController: GADBannerViewDelegate {
+    func adViewDidReceiveAd(_ bannerView: GADBannerView) {
+        if let navView = self.navigationController?.view {
+            Util.showBannerAd(in: navView, banner: self.adBannerView)
+        }
     }
 }
 

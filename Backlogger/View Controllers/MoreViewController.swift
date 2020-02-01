@@ -12,6 +12,7 @@ import Kingfisher
 import Zip
 import MobileCoreServices
 import Zephyr
+import GoogleMobileAds
 
 class MoreViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView?
@@ -22,13 +23,16 @@ class MoreViewController: UIViewController {
     let progressReuseId = "progress_cell"
     
     var steamVc: UINavigationController?
+    var adBannerView: GADBannerView!
     let generalStrings: [String] = ["Link Steam Account", "Wishlist", "About"]
     let dataStrings: [String] = ["Import", "Export", "Reset Data"]
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView?.tableFooterView = self.progressCollectionView
         self.progressCollectionView?.register(UINib(nibName: "ProgressCell", bundle: nil), forCellWithReuseIdentifier: self.progressReuseId)
         self.progressCollectionView?.backgroundColor = .clear
+        self.adBannerView = Util.getNewBannerAd(for: self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -55,6 +59,12 @@ class MoreViewController: UIViewController {
         if self.tableView!.contentSize.height > (self.tableView!.frame.height - self.navigationController!.navigationBar.frame.height - self.tabBarController!.tabBar.frame.height - 20.0) {
             self.tableView?.bounces = true
         }
+    }
+}
+
+extension MoreViewController: GADBannerViewDelegate {
+    func adViewDidReceiveAd(_ bannerView: GADBannerView) {
+        Util.showBannerAd(in: self.view, banner: self.adBannerView)
     }
 }
 

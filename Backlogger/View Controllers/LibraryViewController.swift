@@ -9,6 +9,7 @@
 import UIKit
 import RealmSwift
 import Zephyr
+import GoogleMobileAds
 
 class LibraryViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView?
@@ -38,12 +39,15 @@ class LibraryViewController: UIViewController {
     
     var ascending: Bool?
     
+    var adBannerView: GADBannerView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.searchBar?.tintColor = Util.appColor
         self.tableView?.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: tableReuseIdentifier)
         self.tableView?.tableFooterView = UIView(frame: .zero)
         self.navigationController?.navigationBar.tintColor = .white
+        self.adBannerView = Util.getNewBannerAd(for: self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -343,6 +347,24 @@ class LibraryViewController: UIViewController {
     
     func addGame() {
         self.performSegue(withIdentifier: "add_show_details", sender: nil)
+    }
+    
+    func addAdView(_ banner: GADBannerView) {
+        if banner.superview == nil {
+            banner.translatesAutoresizingMaskIntoConstraints = false
+            self.view.addSubview(banner)
+            
+            banner.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+            banner.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        }
+    }
+}
+
+extension LibraryViewController: GADBannerViewDelegate {
+    func adViewDidReceiveAd(_ bannerView: GADBannerView) {
+        if let navView = self.navigationController?.view {
+            Util.showBannerAd(in: navView, banner: self.adBannerView)
+        }
     }
 }
 
