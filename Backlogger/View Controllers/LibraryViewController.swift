@@ -17,6 +17,22 @@ class LibraryViewController: UIViewController {
     @IBOutlet weak var addBackgroundView: UIView?
     
     var isSearching = false
+    private var _isAdVisible = false
+    var isAdVisible: Bool {
+        get {
+            return self._isAdVisible
+        }
+        set(newValue) {
+            self._isAdVisible = newValue
+            if newValue {
+                self.tableView?.contentInset.bottom = self.tableDefaultInset + Util.adContentInset
+            } else {
+                self.tableView?.contentInset.bottom = self.tableDefaultInset
+                self.adBannerView.removeFromSuperview()
+            }
+        }
+    }
+    private var tableDefaultInset: CGFloat = 0.0
     
     let tableReuseIdentifier = "table_cell"
     
@@ -47,11 +63,23 @@ class LibraryViewController: UIViewController {
         self.tableView?.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: tableReuseIdentifier)
         self.tableView?.tableFooterView = UIView(frame: .zero)
         self.navigationController?.navigationBar.tintColor = .white
-        self.adBannerView = Util.getNewBannerAd(for: self)
+        if Util.shouldShowAds() {
+            self.adBannerView = Util.getNewBannerAd(for: self)
+            self.isAdVisible = true
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if Util.shouldShowAds() {
+            if !self.isAdVisible {
+                self.isAdVisible = true
+            }
+        } else {
+            if self.isAdVisible {
+                self.isAdVisible = false
+            }
+        }
         self.refreshCells()
     }
     

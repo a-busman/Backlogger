@@ -117,6 +117,8 @@
 		FAD4CFAD23D577AE0091B88F /* WatchGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD4CFAB23D577AE0091B88F /* WatchGame.swift */; };
 		FAD4CFAF23D578B60091B88F /* WatchGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD4CFAB23D577AE0091B88F /* WatchGame.swift */; };
 		FAD4CFB223D666640091B88F /* GameInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD4CFB023D666640091B88F /* GameInterfaceController.swift */; };
+		FAD5AF6823E8DA38001A793A /* IAPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD5AF6723E8DA38001A793A /* IAPManager.swift */; };
+		FAD5AF6A23E8DBB6001A793A /* IAP_ProductIDs.plist in Resources */ = {isa = PBXBuildFile; fileRef = FAD5AF6923E8DBB6001A793A /* IAP_ProductIDs.plist */; };
 		FADA808B1E4C07570069943D /* PanDirectionGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808A1E4C07570069943D /* PanDirectionGestureRecognizer.swift */; };
 		FADA808E1E4C0D680069943D /* NowPlayingGameViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808D1E4C0D680069943D /* NowPlayingGameViewCell.swift */; };
 		FADA80901E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADA808F1E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift */; };
@@ -293,6 +295,8 @@
 		FAD4CFAA23D570CD0091B88F /* BackloggerWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BackloggerWatch.entitlements; sourceTree = "<group>"; };
 		FAD4CFAB23D577AE0091B88F /* WatchGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WatchGame.swift; path = Model/WatchGame.swift; sourceTree = "<group>"; };
 		FAD4CFB023D666640091B88F /* GameInterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameInterfaceController.swift; sourceTree = "<group>"; };
+		FAD5AF6723E8DA38001A793A /* IAPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPManager.swift; sourceTree = "<group>"; };
+		FAD5AF6923E8DBB6001A793A /* IAP_ProductIDs.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = IAP_ProductIDs.plist; sourceTree = "<group>"; };
 		FADA808A1E4C07570069943D /* PanDirectionGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PanDirectionGestureRecognizer.swift; path = "Gesture Recognizers/PanDirectionGestureRecognizer.swift"; sourceTree = "<group>"; };
 		FADA808D1E4C0D680069943D /* NowPlayingGameViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NowPlayingGameViewCell.swift; path = "Collection View/NowPlayingGameViewCell.swift"; sourceTree = "<group>"; };
 		FADA808F1E4C12A50069943D /* TopAlignedCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TopAlignedCollectionViewFlowLayout.swift; path = "Collection View/TopAlignedCollectionViewFlowLayout.swift"; sourceTree = "<group>"; };
@@ -412,6 +416,8 @@
 				FA0915771E2AA4210052BCEC /* LaunchScreen.storyboard */,
 				FA09157A1E2AA4210052BCEC /* Info.plist */,
 				FA0C488F1EAC532100F82C7D /* keys.plist */,
+				FAD5AF6723E8DA38001A793A /* IAPManager.swift */,
+				FAD5AF6923E8DBB6001A793A /* IAP_ProductIDs.plist */,
 			);
 			path = Backlogger;
 			sourceTree = "<group>";
@@ -744,6 +750,7 @@
 				FA358A641EBFC001001EE03D /* PlaylistAddTableCell.xib in Resources */,
 				FA4B449F1E61DF94006A843F /* ImageViewer.xib in Resources */,
 				FA0915761E2AA4210052BCEC /* Assets.xcassets in Resources */,
+				FAD5AF6A23E8DBB6001A793A /* IAP_ProductIDs.plist in Resources */,
 				FA4B44A31E6262FB006A843F /* ToastOverlayView.xib in Resources */,
 				FA0915741E2AA4210052BCEC /* Main.storyboard in Resources */,
 				FA1FFF7D1F0152450048D907 /* CharacterCell.xib in Resources */,
@@ -969,6 +976,7 @@
 				FA0915881E2AA98C0052BCEC /* MoreViewController.swift in Sources */,
 				FA5C623D1E760413008558BF /* ToastOverlayViewController.swift in Sources */,
 				FACD42781F32641C00F6DA0C /* ProgressCell.swift in Sources */,
+				FAD5AF6823E8DA38001A793A /* IAPManager.swift in Sources */,
 				FA1FFF771EFDFBF50048D907 /* SteamLoginViewController.swift in Sources */,
 				FAD3AE1323D26D1E0031B562 /* SteamMapper.swift in Sources */,
 				FA4B44871E556AD3006A843F /* LibraryAddSearchViewController.swift in Sources */,

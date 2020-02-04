@@ -17,7 +17,8 @@ class Util {
 #else
     private static let AD_UNIT_ID = "ca-app-pub-1890106170781921/7267833277"
 #endif
-    
+    static let adContentInset: CGFloat = 60.0
+
     class func getNewBannerAd<T: UIViewController & GADBannerViewDelegate>(for vc: T) -> GADBannerView {
         let bannerView = GADBannerView(adSize: kGADAdSizeBanner)
         bannerView.rootViewController = vc
@@ -28,13 +29,21 @@ class Util {
         return bannerView
     }
     
-    class func showBannerAd(in view: UIView, banner: GADBannerView) {
+    @discardableResult class func showBannerAd(in view: UIView, banner: GADBannerView, offset: CGFloat = 0.0) -> NSLayoutConstraint? {
+        var constraint: NSLayoutConstraint?
         if banner.superview == nil {
             banner.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(banner)
-            banner.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+            constraint = banner.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: offset)
             banner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+            constraint?.isActive = true
         }
+        return constraint
+    }
+    
+    class func shouldShowAds() -> Bool {
+        guard let product = IAPManager.shared.getProductIDs()?.first else { return true }
+        return !UserDefaults.standard.bool(forKey: product)
     }
     
     class var appColor: UIColor {

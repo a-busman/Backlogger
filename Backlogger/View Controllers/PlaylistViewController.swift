@@ -23,9 +23,25 @@ class PlaylistViewController: UIViewController {
     var imageCache: [String: UIImage] = [:]
     
     var isAddingGames = false
+    private var _isAdVisible = false
+    var isAdVisible: Bool {
+        get {
+            return self._isAdVisible
+        }
+        set(newValue) {
+            self._isAdVisible = newValue
+            if newValue {
+                self.tableView?.contentInset.bottom = self.tableDefaultInset + Util.adContentInset
+            } else {
+                self.tableView?.contentInset.bottom = self.tableDefaultInset
+                self.adBannerView.removeFromSuperview()
+            }
+        }
+    }
+    private var tableDefaultInset: CGFloat = 0.0
     
     var addingGames: [Game] = []
-    
+        
     var delegate: PlaylistViewControllerDelegate?
     
     var showFavourites: Bool = false
@@ -46,6 +62,7 @@ class PlaylistViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tableDefaultInset = self.tableView!.contentInset.bottom
         if Util.isICloudContainerAvailable {
             Zephyr.sync()
         }
@@ -72,7 +89,10 @@ class PlaylistViewController: UIViewController {
         if self.isAddingGames {
             self.navigationController?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
         }
-        self.adBannerView = Util.getNewBannerAd(for: self)
+        if Util.shouldShowAds() {
+            self.adBannerView = Util.getNewBannerAd(for: self)
+            self.isAdVisible = true
+        }
     }
     
     @IBAction func sortTapped(sender: UIBarButtonItem) {
@@ -178,6 +198,15 @@ class PlaylistViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if Util.shouldShowAds() {
+            if !self.isAdVisible {
+                self.isAdVisible = true
+            }
+        } else {
+            if self.isAdVisible {
+                self.isAdVisible = false
+            }
+        }
         self.refreshCells()
     }
     

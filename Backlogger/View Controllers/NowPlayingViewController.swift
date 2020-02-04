@@ -9,6 +9,7 @@
 import UIKit
 import RealmSwift
 import WatchConnectivity
+import GoogleMobileAds
 
 class NowPlayingViewController: UIViewController {
     
@@ -23,8 +24,9 @@ class NowPlayingViewController: UIViewController {
     @IBOutlet weak var blurView:          UIVisualEffectView?
     @IBOutlet weak var dimView:           UIView?
     
-    @IBOutlet weak var blurTopLayoutConstraint: NSLayoutConstraint?
-    @IBOutlet weak var keyboardHeightLayoutConstraint: NSLayoutConstraint?
+    @IBOutlet weak var blurTopLayoutConstraint:              NSLayoutConstraint?
+    @IBOutlet weak var keyboardHeightLayoutConstraint:       NSLayoutConstraint?
+    @IBOutlet weak var pageControlBottomLayoutConstraint:    NSLayoutConstraint?
     
     var flowLayout: TopAlignedCollectionViewFlowLayout {
         return self.collectionView?.collectionViewLayout as! TopAlignedCollectionViewFlowLayout
@@ -40,6 +42,24 @@ class NowPlayingViewController: UIViewController {
     var notesEditing = false
     
     let reuseIdentifier = "cell"
+    
+    private var _isAdVisible = false
+    var isAdVisible: Bool {
+        get {
+            return self._isAdVisible
+        }
+        set(newValue) {
+            self._isAdVisible = newValue
+            if newValue {
+                self.pageControlBottomLayoutConstraint?.constant = self.defaultPageControlBottom - Util.adContentInset
+            } else {
+                self.pageControlBottomLayoutConstraint?.constant = self.defaultPageControlBottom
+                self.adBannerView.removeFromSuperview()
+            }
+        }
+    }
+    
+    private var defaultPageControlBottom: CGFloat = 0.0
     
     var longPressGesture : UILongPressGestureRecognizer? = nil
     
@@ -63,6 +83,8 @@ class NowPlayingViewController: UIViewController {
     
     var currentlyTypingTextView: UITextView?
     
+    var adBannerView: GADBannerView!
+    
     var blurViewState: UpNextState {
         get {
             return self._blurViewState
@@ -83,7 +105,6 @@ class NowPlayingViewController: UIViewController {
             self._blurViewState = newValue
         }
     }
-    private var blurViewMinimalY: CGFloat = 0.0
     
     let cellReuseIdentifier = "playlist_detail_cell"
     
@@ -93,6 +114,11 @@ class NowPlayingViewController: UIViewController {
         self.upNextTableView?.separatorColor = .separator
         self.upNextTableView?.contentInset.bottom = 55.0
         NotificationCenter.default.addObserver(self, selector: #selector(refreshFirstGame), name: UIApplication.willEnterForegroundNotification, object: nil)
+        self.defaultPageControlBottom = self.pageControlBottomLayoutConstraint?.constant ?? 0.0
+        if Util.shouldShowAds() {
+            self.adBannerView = Util.getNewBannerAd(for: self)
+            self.isAdVisible = true
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -1014,5 +1040,17 @@ extension NowPlayingViewController: RandomGameViewControllerDelegate {
             self.refreshAll()
         }
         vc.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension NowPlayingViewController: GADBannerViewDelegate {
+    func adViewDidReceiveAd(_ bannerView: GADBannerView) {
+        if let navView = self.navigationController?.view {
+            let bottomConstraint = Util.showBannerAd(in: navView, banner: self.adBannerView, offset: -50.0)
+            if let blurViewConstraint = self.blurView?.topAnchor {
+                bottomConstraint?.isActive = false
+                self.adBannerView.bottomAnchor.constraint(equalTo: blurViewConstraint, constant: 0.0).isActive = true
+            }
+        }
     }
 }

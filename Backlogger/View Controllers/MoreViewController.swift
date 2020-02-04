@@ -26,17 +26,63 @@ class MoreViewController: UIViewController {
     var adBannerView: GADBannerView!
     let generalStrings: [String] = ["Link Steam Account", "Wishlist", "About"]
     let dataStrings: [String] = ["Import", "Export", "Reset Data"]
+    let iaps: [String] = ["Remove Ads", "Restore Purchases"]
+    
+    var iapProduct: SKProduct?
+    var iapPrice: String?
+    private var _isAdVisible = false
+    var isAdVisible: Bool {
+        get {
+            return self._isAdVisible
+        }
+        set(newValue) {
+            self._isAdVisible = newValue
+            if newValue {
+                self.tableView?.contentInset.bottom = self.tableDefaultInset + Util.adContentInset
+            } else {
+                self.tableView?.contentInset.bottom = self.tableDefaultInset
+                self.adBannerView.removeFromSuperview()
+            }
+        }
+    }
+    private var tableDefaultInset: CGFloat = 0.0
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView?.tableFooterView = self.progressCollectionView
         self.progressCollectionView?.register(UINib(nibName: "ProgressCell", bundle: nil), forCellWithReuseIdentifier: self.progressReuseId)
         self.progressCollectionView?.backgroundColor = .clear
-        self.adBannerView = Util.getNewBannerAd(for: self)
+        if Util.shouldShowAds() {
+            self.adBannerView = Util.getNewBannerAd(for: self)
+            self.isAdVisible = true
+        }
+        IAPManager.shared.getProducts { (result) in
+            switch result {
+            case .success(let products):
+                if products.count == 1 {
+                    self.iapProduct = products.first!
+                    self.iapPrice = IAPManager.shared.getPriceFormatted(for: self.iapProduct!)
+                    DispatchQueue.main.async {
+                        self.tableView?.reloadRows(at: [IndexPath(row: 0, section: 2), IndexPath(row: 1, section: 2)], with: .automatic)
+                    }
+                }
+            case .failure(_):
+                NSLog("Failed to get in-app products")
+            }
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if Util.shouldShowAds() {
+            if !self.isAdVisible {
+                self.isAdVisible = true
+            }
+        } else {
+            if self.isAdVisible {
+                self.isAdVisible = false
+            }
+        }
         self.refreshCells()
     }
     
@@ -58,6 +104,52 @@ class MoreViewController: UIViewController {
         }
         if self.tableView!.contentSize.height > (self.tableView!.frame.height - self.navigationController!.navigationBar.frame.height - self.tabBarController!.tabBar.frame.height - 20.0) {
             self.tableView?.bounces = true
+        }
+    }
+    
+    private func removeAds() {
+        self.isAdVisible = false
+    }
+    
+    private func showIAPError(_ error: Error) {
+        let alert = UIAlertController(title: "Error", message: "Could not complete purchase. \(error.localizedDescription)", preferredStyle: .alert)
+        let action = UIAlertAction(title: "Okay", style: .cancel)
+        
+        alert.addAction(action)
+        
+        self.present(alert, animated: true)
+    }
+    
+    @discardableResult func purchase(product: SKProduct) -> Bool {
+        if !IAPManager.shared.canMakePayments() {
+            return false
+        } else {
+            IAPManager.shared.buy(product: product) { (result) in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(_): self.removeAds()
+                    case .failure(let error): self.showIAPError(error)
+                    }
+                }
+            }
+            return true
+        }
+    }
+    
+    func restorePurchases() {
+        IAPManager.shared.restorePurchases { (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let success):
+                    if success {
+                        self.removeAds()
+                    } else {
+                        NSLog("No products to be restored")
+                    }
+
+                case .failure(let error): self.showIAPError(error)
+                }
+            }
         }
     }
 }
@@ -130,7 +222,7 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -139,6 +231,8 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
             return self.generalStrings.count
         case 1:
             return self.dataStrings.count
+        case 2:
+            return self.iaps.count
         default:
             return 0
         }
@@ -146,10 +240,13 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "customcell", for: indexPath)
+        cell.isUserInteractionEnabled = true
+        cell.textLabel?.isEnabled = true
         if indexPath.section == 0 {
             if indexPath.row == 0,
                let steamName = UserDefaults.standard.value(forKey: "steamName") as? String {
                     cell.textLabel?.text = "Unlink Steam Account"
+                    cell.detailTextLabel?.textColor = .secondaryLabel
                     cell.detailTextLabel?.text = steamName
                 
             } else {
@@ -159,6 +256,18 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
         } else if indexPath.section == 1 {
             cell.textLabel?.text = self.dataStrings[indexPath.row]
             cell.detailTextLabel?.text = ""
+        } else if indexPath.section == 2 {
+            cell.textLabel?.text = self.iaps[indexPath.row]
+            if indexPath.row == 0 {
+                cell.detailTextLabel?.textColor = .label
+                cell.detailTextLabel?.text = self.iapPrice
+            } else {
+                cell.detailTextLabel?.text = ""
+            }
+            if self.iapProduct == nil {
+                cell.isUserInteractionEnabled = false
+                cell.textLabel?.isEnabled = false
+            }
         }
         return cell
     }
@@ -288,6 +397,34 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
                 break
             default:
                 break
+            }
+        } else if indexPath.section == 2 {
+            if indexPath.row == 0 {
+                // Remove Ads
+                if self.iapProduct != nil {
+                    let alertView = UIAlertController(title: "Remove Ads", message: "Would you like to buy me a beer and remove all ads at the same time?", preferredStyle: .alert)
+                    let buyButton = UIAlertAction(title: "Buy (\(self.iapPrice!))", style: .default, handler: { action in
+                        self.purchase(product: self.iapProduct!)
+                    })
+                    let cancelButton = UIAlertAction(title: "No!", style: .cancel)
+                    
+                    alertView.addAction(buyButton)
+                    alertView.addAction(cancelButton)
+                    self.present(alertView, animated: true)
+                }
+            } else {
+                // Restore Purchases
+                if self.iapProduct != nil {
+                    let alertView = UIAlertController(title: "Restore Purchase", message: "Would you like to restore your purchase?", preferredStyle: .alert)
+                    let buyButton = UIAlertAction(title: "Restore", style: .default, handler: { action in
+                        self.restorePurchases()
+                    })
+                    let cancelButton = UIAlertAction(title: "No!", style: .cancel)
+                    
+                    alertView.addAction(buyButton)
+                    alertView.addAction(cancelButton)
+                    self.present(alertView, animated: true)
+                }
             }
         }
     }
