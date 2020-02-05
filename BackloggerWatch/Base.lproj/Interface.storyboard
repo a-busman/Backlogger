@@ -114,24 +114,36 @@
                                 <group width="1" alignment="left" layout="vertical" id="xwn-Yl-ohw">
                                     <items>
                                         <label alignment="left" text="Rating" id="BvP-La-xqw"/>
-                                        <group alignment="center" contentMode="right" id="etD-ke-rgs">
+                                        <group alignment="center" id="etD-ke-rgs">
                                             <items>
-                                                <imageView alignment="left" image="star.fill" catalog="system" id="F10-uk-CHh">
+                                                <imageView alignment="center" image="star.fill" catalog="system" id="F10-uk-CHh">
                                                     <color key="tintColor" name="App-blue"/>
                                                 </imageView>
-                                                <imageView alignment="left" image="star.fill" catalog="system" id="CsN-Vl-A6o">
+                                                <imageView alignment="center" image="star.fill" catalog="system" id="CsN-Vl-A6o">
                                                     <color key="tintColor" name="App-blue"/>
                                                 </imageView>
-                                                <imageView alignment="left" image="star.fill" catalog="system" id="bAM-Oj-OJd">
+                                                <imageView alignment="center" image="star.fill" catalog="system" id="bAM-Oj-OJd">
                                                     <color key="tintColor" name="App-blue"/>
                                                 </imageView>
-                                                <imageView alignment="left" image="star.fill" catalog="system" id="dMu-3I-j9e">
+                                                <imageView alignment="center" image="star.fill" catalog="system" id="dMu-3I-j9e">
                                                     <color key="tintColor" name="App-blue"/>
                                                 </imageView>
-                                                <imageView alignment="left" image="star.fill" catalog="system" id="78U-ae-I1n">
+                                                <imageView alignment="center" image="star.fill" catalog="system" id="78U-ae-I1n">
                                                     <color key="tintColor" name="App-blue"/>
                                                 </imageView>
                                             </items>
+                                            <gestureRecognizers>
+                                                <panGestureRecognizer id="TTh-QR-l5I">
+                                                    <connections>
+                                                        <action selector="ratingHandlerWithSender:" destination="c8j-R6-V5r" id="nbe-Bj-X3d"/>
+                                                    </connections>
+                                                </panGestureRecognizer>
+                                                <tapGestureRecognizer id="RBc-Bx-Dx1">
+                                                    <connections>
+                                                        <action selector="ratingHandlerWithSender:" destination="c8j-R6-V5r" id="DbO-iO-mbD"/>
+                                                    </connections>
+                                                </tapGestureRecognizer>
+                                            </gestureRecognizers>
                                         </group>
                                     </items>
                                 </group>
@@ -144,6 +156,11 @@
                         <outlet property="progressBar" destination="tZp-DO-ysZ" id="4oD-53-jCq"/>
                         <outlet property="progressLabel" destination="h2P-PD-RjX" id="tjm-TN-wK7"/>
                         <outlet property="ratingGroup" destination="etD-ke-rgs" id="5FC-g0-K0j"/>
+                        <outlet property="star1Image" destination="F10-uk-CHh" id="Wo1-0Q-e6I"/>
+                        <outlet property="star2Image" destination="CsN-Vl-A6o" id="MAE-hJ-Egu"/>
+                        <outlet property="star3Image" destination="bAM-Oj-OJd" id="gRh-P5-TwG"/>
+                        <outlet property="star4Image" destination="dMu-3I-j9e" id="20I-8x-nuv"/>
+                        <outlet property="star5Image" destination="78U-ae-I1n" id="Vqi-ro-teo"/>
                     </connections>
                 </controller>
             </objects>

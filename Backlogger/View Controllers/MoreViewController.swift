@@ -26,7 +26,7 @@ class MoreViewController: UIViewController {
     var adBannerView: GADBannerView!
     let generalStrings: [String] = ["Link Steam Account", "Wishlist", "About"]
     let dataStrings: [String] = ["Import", "Export", "Reset Data"]
-    let iaps: [String] = ["Remove Ads", "Restore Purchases"]
+    var iaps: [String] = ["Remove Ads", "Restore Purchases"]
     
     var iapProduct: SKProduct?
     var iapPrice: String?
@@ -52,23 +52,26 @@ class MoreViewController: UIViewController {
         self.tableView?.tableFooterView = self.progressCollectionView
         self.progressCollectionView?.register(UINib(nibName: "ProgressCell", bundle: nil), forCellWithReuseIdentifier: self.progressReuseId)
         self.progressCollectionView?.backgroundColor = .clear
-        if Util.shouldShowAds() {
+        let showAds = Util.shouldShowAds()
+        if showAds {
             self.adBannerView = Util.getNewBannerAd(for: self)
             self.isAdVisible = true
-        }
-        IAPManager.shared.getProducts { (result) in
-            switch result {
-            case .success(let products):
-                if products.count == 1 {
-                    self.iapProduct = products.first!
-                    self.iapPrice = IAPManager.shared.getPriceFormatted(for: self.iapProduct!)
-                    DispatchQueue.main.async {
-                        self.tableView?.reloadRows(at: [IndexPath(row: 0, section: 2), IndexPath(row: 1, section: 2)], with: .automatic)
+            IAPManager.shared.getProducts { (result) in
+                switch result {
+                case .success(let products):
+                    if products.count == 1 {
+                        self.iapProduct = products.first!
+                        self.iapPrice = IAPManager.shared.getPriceFormatted(for: self.iapProduct!)
+                        DispatchQueue.main.async {
+                            self.tableView?.reloadRows(at: [IndexPath(row: 0, section: 2), IndexPath(row: 1, section: 2)], with: .automatic)
+                        }
                     }
+                case .failure(_):
+                    NSLog("Failed to get in-app products")
                 }
-            case .failure(_):
-                NSLog("Failed to get in-app products")
             }
+        } else {
+            self.iaps = ["Ads removed!"]
         }
     }
     
@@ -82,6 +85,7 @@ class MoreViewController: UIViewController {
             if self.isAdVisible {
                 self.isAdVisible = false
             }
+            self.iaps = ["Ads removed!"]
         }
         self.refreshCells()
     }
@@ -264,7 +268,7 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
             } else {
                 cell.detailTextLabel?.text = ""
             }
-            if self.iapProduct == nil {
+            if self.iapProduct == nil || !Util.shouldShowAds() {
                 cell.isUserInteractionEnabled = false
                 cell.textLabel?.isEnabled = false
             }
@@ -402,7 +406,7 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
             if indexPath.row == 0 {
                 // Remove Ads
                 if self.iapProduct != nil {
-                    let alertView = UIAlertController(title: "Remove Ads", message: "Would you like to buy me a beer and remove all ads at the same time?", preferredStyle: .alert)
+                    let alertView = UIAlertController(title: "Remove Ads", message: "Would you like to buy me a muffin and remove all ads at the same time?", preferredStyle: .alert)
                     let buyButton = UIAlertAction(title: "Buy (\(self.iapPrice!))", style: .default, handler: { action in
                         self.purchase(product: self.iapProduct!)
                     })

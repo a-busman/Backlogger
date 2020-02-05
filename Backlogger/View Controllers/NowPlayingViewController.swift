@@ -123,6 +123,15 @@ class NowPlayingViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if Util.shouldShowAds() {
+            if !self.isAdVisible {
+                self.isAdVisible = true
+            }
+        } else {
+            if self.isAdVisible {
+                self.isAdVisible = false
+            }
+        }
         self.refreshAll()
     }
     
