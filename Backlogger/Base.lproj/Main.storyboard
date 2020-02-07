@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -286,7 +286,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="QKc-kr-IXb">
-                                <rect key="frame" x="81" y="20" width="213" height="567"/>
+                                <rect key="frame" x="81" y="20" width="213" height="527"/>
                                 <subviews>
                                     <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P5z-6L-sjX" userLabel="Title View">
                                         <rect key="frame" x="0.0" y="0.0" width="213" height="85.5"/>
@@ -359,10 +359,10 @@
                                         </connections>
                                     </view>
                                     <view tag="3" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MVV-uV-QJq" userLabel="Alamo View">
-                                        <rect key="frame" x="0.0" y="185" width="213" height="20.5"/>
+                                        <rect key="frame" x="0.0" y="185" width="213" height="24.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Alamofire" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DOt-j4-z2p">
-                                                <rect key="frame" x="0.0" y="0.0" width="213" height="20.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="213" height="24.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -381,10 +381,10 @@
                                         </connections>
                                     </view>
                                     <view tag="4" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iij-Kq-dsb" userLabel="Realm View">
-                                        <rect key="frame" x="0.0" y="213.5" width="213" height="47.5"/>
+                                        <rect key="frame" x="0.0" y="217.5" width="213" height="50"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Realm" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5mb-iN-H1X">
-                                                <rect key="frame" x="0.0" y="0.0" width="213" height="47.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="213" height="50"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -403,7 +403,7 @@
                                         </connections>
                                     </view>
                                     <view tag="5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="asg-c9-qfF" userLabel="Kingfisher View">
-                                        <rect key="frame" x="0.0" y="269" width="213" height="50"/>
+                                        <rect key="frame" x="0.0" y="275.5" width="213" height="50"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Kingfisher" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="axX-6u-6Na">
                                                 <rect key="frame" x="0.0" y="0.0" width="213" height="50"/>
@@ -425,7 +425,7 @@
                                         </connections>
                                     </view>
                                     <view tag="6" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="twQ-hG-Zia" userLabel="ImageViewer View">
-                                        <rect key="frame" x="0.0" y="327" width="213" height="50"/>
+                                        <rect key="frame" x="0.0" y="333.5" width="213" height="50"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ImageViewer" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P0b-a9-wHC">
                                                 <rect key="frame" x="0.0" y="0.0" width="213" height="50"/>
@@ -447,7 +447,7 @@
                                         </connections>
                                     </view>
                                     <view tag="7" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w9n-lm-8I3" userLabel="Steam View">
-                                        <rect key="frame" x="0.0" y="385" width="213" height="20.5"/>
+                                        <rect key="frame" x="0.0" y="391.5" width="213" height="20.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Steam" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hia-91-m1G">
                                                 <rect key="frame" x="0.0" y="0.0" width="213" height="20.5"/>
@@ -469,7 +469,7 @@
                                         </connections>
                                     </view>
                                     <view tag="8" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oRe-Di-wlS" userLabel="Crashlytics View">
-                                        <rect key="frame" x="0.0" y="413.5" width="213" height="20.5"/>
+                                        <rect key="frame" x="0.0" y="420" width="213" height="20.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Crashlytics" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aHv-wf-y8P">
                                                 <rect key="frame" x="0.0" y="0.0" width="213" height="20.5"/>
@@ -491,7 +491,7 @@
                                         </connections>
                                     </view>
                                     <view tag="9" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tdF-YL-W6Q" userLabel="Zip View">
-                                        <rect key="frame" x="0.0" y="442" width="213" height="20.5"/>
+                                        <rect key="frame" x="0.0" y="448.5" width="213" height="20.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Zip" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uht-7M-B70">
                                                 <rect key="frame" x="0.0" y="0.0" width="213" height="20.5"/>
@@ -513,10 +513,10 @@
                                         </connections>
                                     </view>
                                     <view tag="10" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7dc-yh-Tcg" userLabel="Zephyr View">
-                                        <rect key="frame" x="0.0" y="470.5" width="213" height="20.5"/>
+                                        <rect key="frame" x="0.0" y="477" width="213" height="50"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Zephyr" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VYv-xX-VBS">
-                                                <rect key="frame" x="0.0" y="0.0" width="213" height="20.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="213" height="50"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -534,44 +534,14 @@
                                             <outletCollection property="gestureRecognizers" destination="lDe-mj-fHa" appends="YES" id="FFj-Wt-Rc4"/>
                                         </connections>
                                     </view>
-                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2bB-6R-qDj">
-                                        <rect key="frame" x="30" y="499" width="153" height="30"/>
-                                        <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" title="Remove Ads">
-                                            <color key="titleColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="10"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </button>
-                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fQU-Do-Tlf">
-                                        <rect key="frame" x="30" y="537" width="153" height="30"/>
-                                        <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" title="Restore Purchase">
-                                            <color key="titleColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="10"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </button>
                                 </subviews>
-                                <constraints>
-                                    <constraint firstItem="fQU-Do-Tlf" firstAttribute="leading" secondItem="QKc-kr-IXb" secondAttribute="leading" constant="30" id="1WJ-YV-122"/>
-                                    <constraint firstItem="2bB-6R-qDj" firstAttribute="trailing" secondItem="QKc-kr-IXb" secondAttribute="trailing" constant="-30" id="25y-c7-O2B"/>
-                                    <constraint firstItem="fQU-Do-Tlf" firstAttribute="trailing" secondItem="QKc-kr-IXb" secondAttribute="trailing" constant="-30" id="IJe-Yk-aDr"/>
-                                    <constraint firstItem="2bB-6R-qDj" firstAttribute="leading" secondItem="QKc-kr-IXb" secondAttribute="leading" constant="30" id="kn4-nL-ID8"/>
-                                </constraints>
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="QKc-kr-IXb" firstAttribute="centerX" secondItem="AgY-T7-b5t" secondAttribute="centerX" id="5yh-pD-0HT"/>
                             <constraint firstItem="QKc-kr-IXb" firstAttribute="top" secondItem="Naq-Ru-pix" secondAttribute="bottom" constant="20" id="X7c-Oq-KmK"/>
-                            <constraint firstItem="QKc-kr-IXb" firstAttribute="bottom" secondItem="l9L-XJ-9NA" secondAttribute="top" constant="-80" id="yAZ-Ry-Nrn"/>
+                            <constraint firstItem="QKc-kr-IXb" firstAttribute="bottom" secondItem="l9L-XJ-9NA" secondAttribute="top" constant="-120" id="yAZ-Ry-Nrn"/>
                         </constraints>
                     </view>
                     <connections>
