@@ -1,0 +1,13 @@
+ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES
+FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/Alamofire-watchOS" "${PODS_CONFIGURATION_BUILD_DIR}/Kingfisher-watchOS" "${PODS_CONFIGURATION_BUILD_DIR}/MMWormhole-watchOS" "${PODS_CONFIGURATION_BUILD_DIR}/Realm-watchOS" "${PODS_CONFIGURATION_BUILD_DIR}/RealmSwift-watchOS"
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/Alamofire-watchOS/Alamofire.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/Kingfisher-watchOS/Kingfisher.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/MMWormhole-watchOS/MMWormhole.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/Realm-watchOS/Realm.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/RealmSwift-watchOS/RealmSwift.framework/Headers"
+LD_RUNPATH_SEARCH_PATHS = $(inherited) '@executable_path/Frameworks' '@loader_path/Frameworks'
+LIBRARY_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Realm/core"
+OTHER_LDFLAGS = $(inherited) -ObjC -l"c++" -l"z" -framework "Accelerate" -framework "Alamofire" -framework "CFNetwork" -framework "Foundation" -framework "Kingfisher" -framework "MMWormhole" -framework "Realm" -framework "RealmSwift" -framework "Security" -framework "WatchConnectivity"
+OTHER_SWIFT_FLAGS = $(inherited) -D COCOAPODS
+PODS_BUILD_DIR = ${BUILD_DIR}
+PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
+PODS_PODFILE_DIR_PATH = ${SRCROOT}/.
+PODS_ROOT = ${SRCROOT}/Pods
+USE_RECURSIVE_SCRIPT_INPUTS_IN_SCRIPT_PHASES = YES

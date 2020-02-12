@@ -73,8 +73,8 @@ class PlaylistAddTableCell: UITableViewCell {
             subview.removeFromSuperview()
         }
         self.percentView.isHidden = false
-        self.titleLabel?.textColor = .black
-        self.descriptionLabel?.textColor = .darkGray
+        self.titleLabel?.textColor = .label
+        self.descriptionLabel?.textColor = .secondaryLabel
     }
     
     override func layoutSubviews() {
@@ -120,8 +120,8 @@ class PlaylistAddTableCell: UITableViewCell {
 
             if self.game != nil {
                 self.titleLabel.text = self.game!.gameFields?.name
-                self.titleLabel.textColor = self.game!.inWishlist ? .lightGray : .black
-                self.descriptionLabel.textColor = self.game!.inWishlist ? .lightGray : .darkGray
+                self.titleLabel.textColor = self.game!.inWishlist ? .tertiaryLabel : .label
+                self.descriptionLabel.textColor = self.game!.inWishlist ? .tertiaryLabel : .secondaryLabel
                 self.titleCenterLayoutConstraint?.constant = -10
                 self.titleLeadingLayoutConstraint?.constant = 67
                 self.titleTrailingLayoutConstraint?.constant = self.isHandleHidden ? -40.0 : 0.0
@@ -138,7 +138,7 @@ class PlaylistAddTableCell: UITableViewCell {
     }
     
     func loadImage(url: URL) {
-        if self.imageUrl != url, !url.absoluteString.hasSuffix("gblogo.png"){
+        if self.imageUrl != url, !ImageList.isDefaultPlaceholder(url: url) {
             self.artView.kf.cancelDownloadTask()
             self.artView.kf.setImage(with: url, placeholder: #imageLiteral(resourceName: "table_placeholder_light"), completionHandler: self.cacheCompletionHandler)
             self.imageUrl = url

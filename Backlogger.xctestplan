@@ -13,6 +13,7 @@
   },
   "testTargets" : [
     {
+      "enabled" : false,
       "target" : {
         "containerPath" : "container:Backlogger.xcodeproj",
         "identifier" : "FA135770232EEE31008A5A3F",

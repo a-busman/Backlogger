@@ -38,7 +38,7 @@ class PercentViewController: UIViewController {
         set(newValue) {
             self._complete = newValue
             if newValue {
-                self.shapeLayer.strokeColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0).cgColor
+                self.shapeLayer.strokeColor = UIColor(red: 0.0, green: 0.8, blue: 0.0, alpha: 1.0).cgColor
             } else {
                 self.shapeLayer.strokeColor = Util.appColor.cgColor
             }
@@ -48,7 +48,7 @@ class PercentViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.progressLabel = UILabel()
-        self.progressLabel.textColor = .darkGray
+        self.progressLabel.textColor = .secondaryLabel
         self.progressLabel.text = "\(self._progress)"
         self.progressLabel.textAlignment = .center
         self.progressLabel.font = UIFont.systemFont(ofSize: 10.0, weight: UIFont.Weight(rawValue: 4.0))
@@ -59,7 +59,7 @@ class PercentViewController: UIViewController {
         let backgroundLayer = CAShapeLayer()
         backgroundLayer.path = backgroundCirclePath.cgPath
         backgroundLayer.fillColor = UIColor.clear.cgColor
-        backgroundLayer.strokeColor = UIColor(white: 0.9, alpha: 1.0).cgColor
+        backgroundLayer.strokeColor = UIColor.systemGray5.cgColor
         backgroundLayer.lineWidth = 3.0
         
         self.shapeLayer.path = circlePath.cgPath

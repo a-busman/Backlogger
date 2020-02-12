@@ -44,7 +44,7 @@ class PlaylistTitleCell: UIViewController {
             self._titleString = newValue
             self.titleLabel?.text = newValue
             self.titleTextView?.text = newValue
-            self.titleTextView?.textColor = .black
+            self.titleTextView?.textColor = .label
         }
     }
     private var _isEditable = false
@@ -102,11 +102,11 @@ class PlaylistTitleCell: UIViewController {
         self.cameraBorder?.addGestureRecognizer(self.cameraTapRecognizer!)
         if self._titleString == "" {
             self.titleTextView?.text = "Playlist Name"
-            self.titleTextView?.textColor = .lightGray
+            self.titleTextView?.textColor = .placeholderText
         } else {
             self.titleLabel?.text = self._titleString
             self.titleTextView?.text = self._titleString
-            self.titleTextView?.textColor = .black
+            self.titleTextView?.textColor = .label
         }
         self.titleTextView?.delegate = self.titleDelegate
         self.titleTextView?.isHidden = !self._isEditable

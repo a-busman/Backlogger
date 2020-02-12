@@ -62,12 +62,7 @@ class GameDetailsViewController: UIViewController {
     @IBOutlet weak var moreButton:               UIView?
     @IBOutlet weak var charactersCollectionView: UICollectionView?
     @IBOutlet weak var charactersTitleLabel:     UILabel?
-
-    @IBOutlet weak var firstStar:  UIImageView?
-    @IBOutlet weak var secondStar: UIImageView?
-    @IBOutlet weak var thirdStar:  UIImageView?
-    @IBOutlet weak var fourthStar: UIImageView?
-    @IBOutlet weak var fifthStar:  UIImageView?
+    @IBOutlet weak var starStackView:            UIStackView?
     
     @IBOutlet weak var doneButton: UIBarButtonItem?
     
@@ -145,11 +140,11 @@ class GameDetailsViewController: UIViewController {
     var isRemovingFromWishlist = false
     var isExiting = false
     
-    var addRemoveClosure:      ((UIPreviewAction, UIViewController) -> Void)?
-    var addToPlaylistClosure:  ((UIPreviewAction, UIViewController) -> Void)?
-    var addToPlayNextClosure:  ((UIPreviewAction, UIViewController) -> Void)?
-    var addToPlayLaterClosure: ((UIPreviewAction, UIViewController) -> Void)?
-    var addToWishlistClosure:  ((UIPreviewAction, UIViewController) -> Void)?
+    var addRemoveClosure:      ((UIAction) -> Void)?
+    var addToPlaylistClosure:  ((UIAction) -> Void)?
+    var addToPlayNextClosure:  ((UIAction) -> Void)?
+    var addToPlayLaterClosure: ((UIAction) -> Void)?
+    var addToWishlistClosure:  ((UIAction) -> Void)?
     
     var canRefresh = true
     
@@ -297,7 +292,7 @@ class GameDetailsViewController: UIViewController {
             }
             self.progressIcon?.alpha = 1.0
             self.addSymbolImage?.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 4.0)
-            self.addBackground?.backgroundColor = .red
+            self.addBackground?.backgroundColor = .systemRed
             self.percentTimer?.invalidate()
             self.percentTimer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(hidePercentage), userInfo: nil, repeats: false)
         }
@@ -401,7 +396,7 @@ class GameDetailsViewController: UIViewController {
         UIView.setAnimationsEnabled(false)
         self.platformButton?.setTitle(platformString, for: .normal)
         UIView.setAnimationsEnabled(true)
-        if let mediumUrl = self._gameField?.image?.mediumUrl {
+        if let mediumUrl = self._gameField?.image?.mediumUrl, !ImageList.isDefaultPlaceholder(url: URL(string: mediumUrl)!){
             self.mainImageView?.kf.setImage(with: URL(string: mediumUrl), placeholder: #imageLiteral(resourceName: "info_image_placeholder"), completionHandler: {
                 result in
                 switch result {
@@ -466,46 +461,17 @@ class GameDetailsViewController: UIViewController {
                 self.completionLabel?.text = "Complete"
                 self.completionImageView?.image = #imageLiteral(resourceName: "check")
             }
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-empty-black")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            switch (game.rating) {
-            case 0:
-                self.firstStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-                self.secondStar?.image = #imageLiteral(resourceName: "star-empty-black")
-                self.thirdStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-                self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
-                self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-                break
-            case 1:
-                self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                break
-            case 2:
-                self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-                break
-            case 3:
-                self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-                self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                break
-            case 4:
-                self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-                self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
-                break
-            case 5:
-                self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-                self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
-                self.fifthStar?.image  = #imageLiteral(resourceName: "star-yellow")
-                break
-            default:
-                break
+            let index = game.rating - 1
+            if let stackView = self.starStackView {
+                for (i, star) in stackView.arrangedSubviews.enumerated() {
+                    if let starImage = star as? UIImageView {
+                        if index >= i {
+                            starImage.image = #imageLiteral(resourceName: "star-yellow")
+                        } else {
+                            starImage.image = #imageLiteral(resourceName: "star-empty-black")
+                        }
+                    }
+                }
             }
             self.progressSlider?.value = Float((self._game?.progress)!)
             self.percentageLabel?.text = "\((self._game?.progress)!)%"
@@ -526,53 +492,54 @@ class GameDetailsViewController: UIViewController {
             self.platformTopConstraint?.constant = -20.5
         }
     }
-    override var previewActionItems: [UIPreviewActionItem] {
+    
+    var contextMenu: UIMenu? {
+        var actions: [UIAction] = []
         var addString: String
-        var style: UIPreviewAction.Style
-        switch self._state! {
+        guard let state = self._state else { return nil }
+        switch state {
         case .addToLibrary:
             addString = "Add"
-            style = .default
             break
         case .partialAddToLibrary:
             addString = "Add More..."
-            style = .default
             break
         case .inLibrary:
-            addString = "Remove From Library"
-            style = .destructive
-            break
+            addString = "Remove from Library"
+            break;
         }
-        let addRemove = UIPreviewAction(title: addString, style: style, handler: self.addRemoveClosure!)
+        
+        let addRemove = state != .inLibrary ? UIAction(title: addString, image: UIImage(systemName: "plus"), handler: self.addRemoveClosure!) : UIAction(title: addString, image: UIImage(systemName: "trash"), attributes: .destructive, handler: self.addRemoveClosure!)
+        
         
         let wishlistString: String = self.inWishlist ? "Remove from Wishlist" : "Add to Wishlist"
-        let wishlistAction = UIPreviewAction(title: wishlistString, style: .default, handler: self.addToWishlistClosure!)
-        wishlistAction.setValue(#imageLiteral(resourceName: "wishlist"), forKey: "image")
-        if style == .destructive {
-            addRemove.setValue(#imageLiteral(resourceName: "trash_red"), forKey: "image")
-        } else {
-            //addRemove.setValue(#imageLiteral(resourceName: "add_symbol_blue"), forKey: "image")
-        }
-        let addToPlaylist = UIPreviewAction(title: "Add to Playlist...", style: .default, handler: self.addToPlaylistClosure!)
-        addToPlaylist.setValue(#imageLiteral(resourceName: "add_to_playlist"), forKey: "image")
-        let playNext = UIPreviewAction(title: "Play Next", style: .default, handler: self.addToPlayNextClosure!)
-        playNext.setValue(#imageLiteral(resourceName: "play_next"), forKey: "image")
-        let playLater = UIPreviewAction(title: "Play Later", style: .default, handler: self.addToPlayLaterClosure!)
-        playLater.setValue(#imageLiteral(resourceName: "add_to_queue"), forKey: "image")
-        if let game = self._game {
+        let wishlistAction = UIAction(title: wishlistString, image: UIImage(systemName: "wand.and.rays"), handler: self.addToWishlistClosure!)
+        let addToPlaylist = UIAction(title: "Add to Playlist...", image: UIImage(systemName: "text.badge.plus"), handler: self.addToPlaylistClosure!)
+        
+        let playNext = UIAction(title: "Play Next", image: UIImage(systemName: "text.insert"), handler: self.addToPlayNextClosure!)
+        
+        let playLater = UIAction(title: "Play Later", image: UIImage(systemName: "text.append"), handler: self.addToPlayLaterClosure!)
+
+        actions.append(addRemove)
+        actions.append(addToPlaylist)
+        
+        if let game = self.game {
             if let linkedPlaylists = game.linkedPlaylists {
                 for playlist in linkedPlaylists {
                     if playlist.isUpNext || playlist.isNowPlaying {
-                        return [addRemove, addToPlaylist]
+                        return UIMenu(title:"", children: actions)
                     }
                 }
             }
         }
-        if self._state == .inLibrary {
-            return [addRemove, addToPlaylist, playNext, playLater]
-        } else {
-            return [addRemove, addToPlaylist, playNext, playLater, wishlistAction]
+
+        actions.append(playNext)
+        actions.append(playLater)
+        if state != .inLibrary {
+            actions.append(wishlistAction)
         }
+        // Create and return a UIMenu with the share action
+        return UIMenu(title: "", children: actions)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -859,7 +826,7 @@ class GameDetailsViewController: UIViewController {
         }
         UIView.animate(withDuration: 0.2, animations: {
             self.addSymbolImage?.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 4.0)
-            self.addBackground?.backgroundColor = .red
+            self.addBackground?.backgroundColor = .systemRed
             if self._gameField?.ownedGames.count == 1 {
                 self.statsButton?.alpha = 1.0
                 self.hideStats = false
@@ -1035,7 +1002,7 @@ class GameDetailsViewController: UIViewController {
                 self.statsButton?.backgroundColor = .white
                 self.statsLabel?.textColor = Util.appColor
                 self.statsScrollView?.alpha = 1.0
-                self.statsEffectView?.effect = UIBlurEffect(style: .extraLight)
+                self.statsEffectView?.effect = UIBlurEffect(style: .systemMaterial)
             })
             self.statsState = .visible
         } else {
@@ -1186,7 +1153,13 @@ class GameDetailsViewController: UIViewController {
             newValue = Int(sender.value) + 5 - remainder
         }
         sender.value = Float(newValue)
-        self.percentageLabel?.text = "\(newValue)%"
+        if let game = self._game, game.progress != newValue {
+            UISelectionFeedbackGenerator().selectionChanged()
+            self.percentageLabel?.text = "\(newValue)%"
+            game.update {
+                game.progress = newValue
+            }
+        }
         if self.artViewProgressState == .hidden {
             self.showPercentage()
             self.percentTimer?.invalidate()
@@ -1195,9 +1168,7 @@ class GameDetailsViewController: UIViewController {
             self.percentTimer?.invalidate()
             self.percentTimer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(hidePercentage), userInfo: nil, repeats: false)
         }
-        self._game?.update {
-            self._game?.progress = newValue
-        }
+
         self.notesTextView?.resignFirstResponder()
     }
     
@@ -1222,103 +1193,29 @@ class GameDetailsViewController: UIViewController {
         artViewProgressState = .hidden
     }
     
-    @IBAction func ratingPanHandler(sender: UIPanGestureRecognizer) {
+    @IBAction func ratingHandler(sender: UIGestureRecognizer) {
         let location = sender.location(in: self.ratingContainerView!)
         let starIndex = Int(location.x / ((self.ratingContainerView?.bounds.width)! / 5.0))
-        var rating = 0
-        if starIndex < 0 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-empty-black")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-        } else if starIndex == 0 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-empty-black")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            rating = 1
-        } else if starIndex == 1 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            rating = 2
-        } else if starIndex == 2 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            rating = 3
-        } else if starIndex == 3 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            rating = 4
-        } else {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            rating = 5
-        }
-        self._game?.update {
-            self._game?.rating = rating
-        }
+        self.updateStars(starIndex)
         self.notesTextView?.resignFirstResponder()
     }
     
-    @IBAction func ratingTapHandler(sender: UITapGestureRecognizer) {
-        let location = sender.location(in: self.ratingContainerView!)
-        let starIndex = Int(location.x / ((self.ratingContainerView?.bounds.width)! / 5.0))
-
-        var rating = 0
-        if starIndex <= 0 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-empty-black")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            rating = 1
-        } else if starIndex == 1 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            rating = 2
-        } else if starIndex == 2 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-empty-black")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            rating = 3
-        } else if starIndex == 3 {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-empty-black")
-            rating = 4
-        } else {
-            self.firstStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.secondStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.thirdStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            self.fourthStar?.image = #imageLiteral(resourceName: "star-yellow")
-            self.fifthStar?.image  = #imageLiteral(resourceName: "star-yellow")
-            rating = 5
+    func updateStars(_ index: Int) {
+        for (i, star) in self.starStackView!.arrangedSubviews.enumerated() {
+            if let starImage = star as? UIImageView {
+                if index >= i {
+                    starImage.image = #imageLiteral(resourceName: "star-yellow")
+                } else {
+                    starImage.image = #imageLiteral(resourceName: "star-empty-black")
+                }
+            }
         }
-        self._game?.update {
-            self._game?.rating = rating
+        if let game = self._game, (game.rating != index + 1) && (index + 1 <= 5 && index + 1 >= 0){
+            UISelectionFeedbackGenerator().selectionChanged()
+            game.update {
+                game.rating = index + 1
+            }
         }
-        self.notesTextView?.resignFirstResponder()
     }
     @objc func keyboardWillShow(notification: NSNotification) {
         if self.notesTextView!.isFirstResponder {
@@ -1730,7 +1627,7 @@ extension GameDetailsViewController: UICollectionViewDelegate, UICollectionViewD
             characterImageView.trailingAnchor.constraint(equalTo: cell.characterBorder!.trailingAnchor, constant: -0.5).isActive = true
 
             if let urlString = character.image?.mediumUrl {
-                if urlString.hasSuffix("question_mark.jpg") || urlString.hasSuffix("gblogo.png") {
+                if ImageList.isDefaultPlaceholder(url: URL(string: urlString)!) {
                     characterImageView.image = #imageLiteral(resourceName: "new_playlist")
                     cell.hideImage()
                 } else {

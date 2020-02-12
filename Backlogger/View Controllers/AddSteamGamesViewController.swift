@@ -79,7 +79,7 @@ extension AddSteamGamesViewController: UITableViewDelegate, UITableViewDataSourc
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: tableReuseIdentifier) as! TableViewCell
-        
+        cell.tintColor = UIColor(named: "App-blue")
         if self.gameFields.count >= indexPath.row {
             
             let gameToShow = self.gameFields[indexPath.row]
@@ -112,7 +112,7 @@ extension AddSteamGamesViewController: UITableViewDelegate, UITableViewDataSourc
             }
             cell.descriptionLabel?.text = platformString
             
-            if let image = gameToShow.image, !image.iconUrl!.hasSuffix("gblogo.png") {
+            if let image = gameToShow.image, !image.isDefaultPlaceholder(field: .IconUrl) {
                 cell.imageUrl = URL(string: image.iconUrl!)
             }
             cell.cacheCompletionHandler = {

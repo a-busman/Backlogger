@@ -12,13 +12,10 @@ import Kingfisher
 import Zip
 import MobileCoreServices
 import Zephyr
+import GoogleMobileAds
 
 class MoreViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView?
-    @IBOutlet weak var loadingView: UIView?
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView?
-    @IBOutlet weak var progressLabel: UILabel?
-    @IBOutlet weak var progressBar: UIProgressView?
     @IBOutlet weak var plainLoadingView: UIView?
     @IBOutlet weak var plainActivityIndicator: UIActivityIndicatorView?
     @IBOutlet weak var progressCollectionView: UICollectionView?
@@ -26,17 +23,74 @@ class MoreViewController: UIViewController {
     let progressReuseId = "progress_cell"
     
     var steamVc: UINavigationController?
+    var adBannerView: GADBannerView!
     let generalStrings: [String] = ["Link Steam Account", "Wishlist", "About"]
     let dataStrings: [String] = ["Import", "Export", "Reset Data"]
+    var iaps: [String] = ["Remove Ads", "Restore Purchases"]
+    
+    var iapProduct: SKProduct?
+    var iapPrice: String?
+    private var _isAdVisible = false
+    var isAdVisible: Bool {
+        get {
+            return self._isAdVisible
+        }
+        set(newValue) {
+            self._isAdVisible = newValue
+            if newValue {
+                self.tableView?.contentInset.bottom = self.tableDefaultInset + Util.adContentInset
+            } else {
+                self.tableView?.contentInset.bottom = self.tableDefaultInset
+                self.adBannerView.removeFromSuperview()
+            }
+        }
+    }
+    private var tableDefaultInset: CGFloat = 0.0
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView?.tableFooterView = self.progressCollectionView
         self.progressCollectionView?.register(UINib(nibName: "ProgressCell", bundle: nil), forCellWithReuseIdentifier: self.progressReuseId)
         self.progressCollectionView?.backgroundColor = .clear
+        let showAds = Util.shouldShowAds()
+        if showAds {
+            self.adBannerView = Util.getNewBannerAd(for: self)
+            self.isAdVisible = true
+            IAPManager.shared.getProducts { (result) in
+                switch result {
+                case .success(let products):
+                    if products.count == 1 {
+                        self.iapProduct = products.first!
+                        self.iapPrice = IAPManager.shared.getPriceFormatted(for: self.iapProduct!)
+                        DispatchQueue.main.async {
+                            self.tableView?.reloadRows(at: [IndexPath(row: 0, section: 2), IndexPath(row: 1, section: 2)], with: .automatic)
+                        }
+                    }
+                case .failure(_):
+                    NSLog("Failed to get in-app products")
+                }
+            }
+        } else {
+            self.iaps = ["Ads removed!"]
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if Util.shouldShowAds() {
+            if !self.isAdVisible {
+                self.isAdVisible = true
+            }
+        } else {
+            if self.isAdVisible {
+                self.isAdVisible = false
+            }
+            self.iaps = ["Ads removed!"]
+        }
+        self.refreshCells()
+    }
+    
+    func refreshCells() {
         if Util.isICloudContainerAvailable {
             Zephyr.sync()
         }
@@ -55,6 +109,58 @@ class MoreViewController: UIViewController {
         if self.tableView!.contentSize.height > (self.tableView!.frame.height - self.navigationController!.navigationBar.frame.height - self.tabBarController!.tabBar.frame.height - 20.0) {
             self.tableView?.bounces = true
         }
+    }
+    
+    private func removeAds() {
+        self.isAdVisible = false
+    }
+    
+    private func showIAPError(_ error: Error) {
+        let alert = UIAlertController(title: "Error", message: "Could not complete purchase. \(error.localizedDescription)", preferredStyle: .alert)
+        let action = UIAlertAction(title: "Okay", style: .cancel)
+        
+        alert.addAction(action)
+        
+        self.present(alert, animated: true)
+    }
+    
+    @discardableResult func purchase(product: SKProduct) -> Bool {
+        if !IAPManager.shared.canMakePayments() {
+            return false
+        } else {
+            IAPManager.shared.buy(product: product) { (result) in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(_): self.removeAds()
+                    case .failure(let error): self.showIAPError(error)
+                    }
+                }
+            }
+            return true
+        }
+    }
+    
+    func restorePurchases() {
+        IAPManager.shared.restorePurchases { (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let success):
+                    if success {
+                        self.removeAds()
+                    } else {
+                        NSLog("No products to be restored")
+                    }
+
+                case .failure(let error): self.showIAPError(error)
+                }
+            }
+        }
+    }
+}
+
+extension MoreViewController: GADBannerViewDelegate {
+    func adViewDidReceiveAd(_ bannerView: GADBannerView) {
+        Util.showBannerAd(in: self.view, banner: self.adBannerView)
     }
 }
 
@@ -120,7 +226,7 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -129,6 +235,8 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
             return self.generalStrings.count
         case 1:
             return self.dataStrings.count
+        case 2:
+            return self.iaps.count
         default:
             return 0
         }
@@ -136,10 +244,13 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "customcell", for: indexPath)
+        cell.isUserInteractionEnabled = true
+        cell.textLabel?.isEnabled = true
         if indexPath.section == 0 {
             if indexPath.row == 0,
                let steamName = UserDefaults.standard.value(forKey: "steamName") as? String {
                     cell.textLabel?.text = "Unlink Steam Account"
+                    cell.detailTextLabel?.textColor = .secondaryLabel
                     cell.detailTextLabel?.text = steamName
                 
             } else {
@@ -149,15 +260,31 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
         } else if indexPath.section == 1 {
             cell.textLabel?.text = self.dataStrings[indexPath.row]
             cell.detailTextLabel?.text = ""
+        } else if indexPath.section == 2 {
+            cell.textLabel?.text = self.iaps[indexPath.row]
+            if indexPath.row == 0 {
+                cell.detailTextLabel?.textColor = .label
+                cell.detailTextLabel?.text = self.iapPrice
+            } else {
+                cell.detailTextLabel?.text = ""
+            }
+            if self.iapProduct == nil || !Util.shouldShowAds() {
+                cell.isUserInteractionEnabled = false
+                cell.textLabel?.isEnabled = false
+            }
         }
         return cell
     }
     
     @objc func tappedDone(sender: UIBarButtonItem) {
         self.steamVc?.dismiss(animated: true, completion: nil)
+        self.refreshCells()
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        defer {
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
         if indexPath.section == 0 {
             switch indexPath.row {
             case 0:
@@ -171,7 +298,7 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
                         UserDefaults.standard.removeObject(forKey: "steamId")
                         self.plainActivityIndicator?.startAnimating()
                         self.plainLoadingView?.isHidden = false
-                        UIApplication.shared.beginIgnoringInteractionEvents()
+                        self.view.isUserInteractionEnabled = false
                         autoreleasepool {
                             let realm = try! Realm()
                             if let platform = realm.object(ofType: Platform.self, forPrimaryKey: Steam.steamPlatformIdNumber) {
@@ -181,7 +308,7 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
                                 }
                             }
                         }
-                        UIApplication.shared.endIgnoringInteractionEvents()
+                        self.view.isUserInteractionEnabled = true
                         self.plainLoadingView?.isHidden = true
                         self.plainActivityIndicator?.stopAnimating()
                         self.tableView?.reloadData()
@@ -197,7 +324,6 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
                     self.steamVc?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.tappedDone))
                     self.steamVc?.navigationBar.barTintColor = Util.appColor
                     self.steamVc?.navigationBar.tintColor = .white
-                    self.steamVc?.navigationBar.barStyle = .black
                     self.steamVc?.navigationBar.isTranslucent = true
                     vc.delegate = self
                     self.present(self.steamVc!, animated: true, completion: nil)
@@ -276,8 +402,35 @@ extension MoreViewController: UITableViewDelegate, UITableViewDataSource {
             default:
                 break
             }
+        } else if indexPath.section == 2 {
+            if indexPath.row == 0 {
+                // Remove Ads
+                if self.iapProduct != nil {
+                    let alertView = UIAlertController(title: "Remove Ads", message: "Would you like to buy me a muffin and remove all ads at the same time?", preferredStyle: .alert)
+                    let buyButton = UIAlertAction(title: "Buy (\(self.iapPrice!))", style: .default, handler: { action in
+                        self.purchase(product: self.iapProduct!)
+                    })
+                    let cancelButton = UIAlertAction(title: "No!", style: .cancel)
+                    
+                    alertView.addAction(buyButton)
+                    alertView.addAction(cancelButton)
+                    self.present(alertView, animated: true)
+                }
+            } else {
+                // Restore Purchases
+                if self.iapProduct != nil {
+                    let alertView = UIAlertController(title: "Restore Purchase", message: "Would you like to restore your purchase?", preferredStyle: .alert)
+                    let buyButton = UIAlertAction(title: "Restore", style: .default, handler: { action in
+                        self.restorePurchases()
+                    })
+                    let cancelButton = UIAlertAction(title: "No!", style: .cancel)
+                    
+                    alertView.addAction(buyButton)
+                    alertView.addAction(cancelButton)
+                    self.present(alertView, animated: true)
+                }
+            }
         }
-        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
 
@@ -325,130 +478,112 @@ extension MoreViewController: UIDocumentPickerDelegate {
 }
 
 extension MoreViewController: SteamLoginViewControllerDelegate {
-    func got(steamId: String?, username: String?) {
-        if steamId != nil {
-            UserDefaults.standard.set(steamId, forKey: "steamId")
-            
-            Steam.getUserName(with: steamId!) { results in
-                if let error = results.error {
-                    NSLog(error.localizedDescription)
-                    // Could not get steamID
-                } else {
-                    UserDefaults.standard.set(results.value!, forKey: "steamName")
-                    self.tableView?.reloadData()
-                }
-            }
-            Steam.getUserGameList(with: steamId!) { results in
-                if let listError = results.error {
-                    NSLog(listError.localizedDescription)
-                } else {
-                    if results.value!.count > 0 {
-                        Steam.matchGiantBombGames(with: results.value!, progressHandler: { progress, total in
-                            self.progressBar?.setProgress(Float(progress) / Float(total), animated: true)
-                            self.progressLabel?.text = "\(progress) / \(total)"
-                        }) { matched, unmatched in
-                            if let gamesError = matched.error {
-                                NSLog(gamesError.localizedDescription)
-                            } else {
-                                NSLog("Done")
-                                self.loadingView?.isHidden = true
-                                self.activityIndicator?.stopAnimating()
-                                UIApplication.shared.endIgnoringInteractionEvents()
-                                if matched.value!.count > 0 {
-                                    //dedupe
-                                    var dedupedList: [GameField] = []
-                                    for game in matched.value! {
-                                        var inNewList = false
-                                        for newGame in dedupedList {
-                                            if game.idNumber == newGame.idNumber {
-                                                inNewList = true
-                                                break
-                                            }
-                                        }
-                                        if !inNewList {
-                                            dedupedList.append(game)
+    func getGames(with steamId: String) {
+        Steam.getUserGameList(with: steamId) { results in
+            if let listError = results.error {
+                NSLog(listError.localizedDescription)
+            } else {
+                if results.value!.count > 0 {
+                    let tabBar = self.tabBarController as? RootViewController
+                    if tabBar != nil {
+                        tabBar!.steamLoaderVisibility(true)
+                    }
+                    Steam.matchGiantBombGames(with: results.value!, progressHandler: { progress, total in
+                        if tabBar != nil {
+                            tabBar!.progress = (progress * 100) / total
+                        }
+                    }) { matched, unmatched in
+                        if tabBar != nil {
+                            tabBar!.steamLoaderVisibility(false)
+                        }
+                        if let gamesError = matched.error {
+                            NSLog(gamesError.localizedDescription)
+                        } else {
+                            NSLog("Done")
+                            self.view.isUserInteractionEnabled = true
+                            if matched.value!.count > 0 {
+                                //dedupe
+                                var dedupedList: [GameField] = []
+                                for game in matched.value! {
+                                    var inNewList = false
+                                    for newGame in dedupedList {
+                                        if game.idNumber == newGame.idNumber {
+                                            inNewList = true
+                                            break
                                         }
                                     }
+                                    if !inNewList {
+                                        dedupedList.append(game)
+                                    }
+                                }
+                                if dedupedList.count > 0 {
                                     let vc = self.storyboard!.instantiateViewController(withIdentifier: "add_from_steam") as! UINavigationController
                                     let rootView = vc.viewControllers.first! as! AddSteamGamesViewController
                                     vc.navigationBar.tintColor = .white
                                     rootView.delegate = self
                                     rootView.gameFields = dedupedList
                                     self.present(vc, animated: true, completion: nil)
-                                }
-                            }
-                        }
-                    } else {
-                        self.loadingView?.isHidden = true
-                        self.activityIndicator?.stopAnimating()
-                        UIApplication.shared.endIgnoringInteractionEvents()
-                    }
-                }
-            }
-        } else if username != nil {
-            UserDefaults.standard.set(username!, forKey: "steamName")
-            Steam.getUserId(with: username!) { results in
-                if let error = results.error {
-                    NSLog(error.localizedDescription)
-                    // Could not get steamID
-                } else {
-                    UserDefaults.standard.set(results.value!, forKey: "steamId")
-                    Steam.getUserGameList(with: results.value!) { gameResults in
-                        if let listError = gameResults.error {
-                            NSLog(listError.localizedDescription)
-                        } else {
-                            Steam.matchGiantBombGames(with: gameResults.value!, progressHandler: { progress, total in
-                                self.progressBar?.setProgress(Float(progress) / Float(total), animated: true)
-                                self.progressLabel?.text = "\(progress) / \(total)"
-                            }) { matched, unmatched in
-                                if let gamesError = matched.error {
-                                    NSLog(gamesError.localizedDescription)
                                 } else {
-                                    NSLog("Done")
-                                    self.loadingView?.isHidden = true
-                                    self.activityIndicator?.stopAnimating()
-                                    UIApplication.shared.endIgnoringInteractionEvents()
-                                    if matched.value!.count > 0 {
-                                        //dedupe
-                                        var dedupedList: [GameField] = []
-                                        for game in matched.value! {
-                                            var inNewList = false
-                                            for newGame in dedupedList {
-                                                if game.idNumber == newGame.idNumber {
-                                                    inNewList = true
-                                                    break
-                                                }
-                                            }
-                                            if !inNewList {
-                                                dedupedList.append(game)
-                                            }
-                                        }
-                                        let vc = self.storyboard!.instantiateViewController(withIdentifier: "add_from_steam") as! UINavigationController
-                                        let rootView = vc.viewControllers.first! as! AddSteamGamesViewController
-                                        vc.navigationBar.tintColor = .white
-                                        rootView.delegate = self
-                                        rootView.gameFields = dedupedList
-                                        self.present(vc, animated: true, completion: nil)
-                                    }
+                                    let alert = UIAlertController(title: "No Steam games to add", message: nil, preferredStyle: .alert)
+                                    let ok = UIAlertAction(title: "Okay", style: .default, handler: nil)
+                                    
+                                    alert.addAction(ok)
+                                    self.present(alert, animated: true, completion: nil)
                                 }
                             }
                         }
                     }
+                } else {
+                    self.view.isUserInteractionEnabled = true
                 }
             }
         }
-        self.tableView?.reloadData()
-        self.steamVc?.dismiss(animated: true, completion: nil)
-        self.activityIndicator?.startAnimating()
-        self.progressBar?.setProgress(0.0, animated: false)
-        self.progressLabel?.text = ""
-        self.loadingView?.isHidden = false
-        UIApplication.shared.beginIgnoringInteractionEvents()
+    }
+    func got(steamId: String) {
+        defer {
+            self.tableView?.reloadData()
+            self.steamVc?.dismiss(animated: true, completion: nil)
+            self.refreshCells()
+        }
+        UserDefaults.standard.set(steamId, forKey: "steamId")
+        
+        Steam.getUserName(with: steamId) { results in
+            if let error = results.error {
+                NSLog(error.localizedDescription)
+                // Could not get steamID
+            } else {
+                UserDefaults.standard.set(results.value!, forKey: "steamName")
+                self.tableView?.reloadData()
+            }
+        }
+        self.getGames(with: steamId)
+    }
+
+    func got(username: String) {
+        defer {
+            self.tableView?.reloadData()
+            self.steamVc?.dismiss(animated: true, completion: nil)
+            self.refreshCells()
+        }
+        UserDefaults.standard.set(username, forKey: "steamName")
+        Steam.getUserId(with: username) { results in
+            if let error = results.error {
+                NSLog(error.localizedDescription)
+                // Could not get steamID
+            } else {
+                UserDefaults.standard.set(results.value!, forKey: "steamId")
+                self.getGames(with: results.value!)
+            }
+        }
     }
 }
 
 extension MoreViewController: AddSteamGamesViewControllerDelegate {
     func didSelectSteamGames(vc: AddSteamGamesViewController, games: [GameField]) {
+        defer {
+            self.view.isUserInteractionEnabled = true
+            self.refreshCells()
+        }
         vc.dismiss(animated: true, completion: nil)
         if games.count > 0 {
             var steamPlatform: Platform?
@@ -478,7 +613,7 @@ extension MoreViewController: AddSteamGamesViewControllerDelegate {
             }
             self.plainActivityIndicator?.startAnimating()
             self.plainLoadingView?.isHidden = false
-            UIApplication.shared.beginIgnoringInteractionEvents()
+            self.view.isUserInteractionEnabled = false
             for game in games {
                 let newGame = Game()
                 newGame.inLibrary = true
@@ -487,11 +622,11 @@ extension MoreViewController: AddSteamGamesViewControllerDelegate {
             }
             self.plainLoadingView?.isHidden = true
             self.plainActivityIndicator?.stopAnimating()
-            UIApplication.shared.endIgnoringInteractionEvents()
         }
     }
     
     func didDismiss(vc: AddSteamGamesViewController) {
         vc.dismiss(animated: true, completion: nil)
+        self.refreshCells()
     }
 }

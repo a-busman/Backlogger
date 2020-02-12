@@ -93,12 +93,8 @@ class GameField: Field {
         super.init()
     }
     
-    required init(realm: RLMRealm, schema: RLMObjectSchema) {
-        super.init(realm: realm, schema: schema)
-    }
-    
-    required init(value: Any, schema: RLMSchema) {
-        super.init(value: value, schema: schema)
+    override func migrateToCloudKit() -> Bool {
+        return false
     }
     
     func updateGameDetailsFromJson(json: [String: Any], fromDb: Bool) {
@@ -451,6 +447,11 @@ class GameField: Field {
         return url
     }
     
+    class func getGameDetail(withId id: Int, _ completionHandler: @escaping (Result<GameField>) -> Void) {
+        let url = buildDetailUrl(fromId: id)
+        getGameDetail(withUrl: url, completionHandler)
+    }
+    
     class func getGameDetail(withUrl detailUrl: String?, _ completionHandler: @escaping (Result<GameField>) -> Void) {
         guard var detailedUrl = detailUrl else {
             let error = BackendError.objectSerialization(reason: "no detail url")
@@ -470,7 +471,7 @@ class GameField: Field {
             completionHandler(.failure(error))
             return
         }
-        
+                
         self.request = Alamofire.request(url)
             .responseJSON { response in
                 if let error = response.result.error {

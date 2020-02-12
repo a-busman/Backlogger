@@ -38,9 +38,7 @@ class TableViewCell: UITableViewCell {
     var delegate: TableViewCellDelegate?
     var addButtonHidden = true
     private var _libraryState: LibraryState = .add
-    
-    var laidOut = false
-    
+        
     var row: Int!
     
     var imageUrl: URL?
@@ -78,10 +76,10 @@ class TableViewCell: UITableViewCell {
             self._isWishlist = newValue
             if newValue {
                 self.percentView.isHidden = true
-                self.titleLabel?.textColor = .lightGray
+                self.titleLabel?.textColor = .tertiaryLabel
             } else {
                 self.percentView.isHidden = false
-                self.titleLabel?.textColor = .black
+                self.titleLabel?.textColor = .label
             }
         }
     }
@@ -92,35 +90,40 @@ class TableViewCell: UITableViewCell {
         }
         set(newState) {
             self._libraryState = newState
-            if newState == .remove {
+            switch newState {
+            case .remove:
                 UIView.animate(withDuration: 0.1, animations: {
                     self.addButton?.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 4)
                 })
                 UIView.transition(with: self.addButton!, duration: 0.1, options: .transitionCrossDissolve, animations: {
                     self.addButton?.setImage(#imageLiteral(resourceName: "add_symbol_red"), for: .normal)
                 }, completion: nil)
-            } else if newState == .addPartial {
+                break
+            case .addPartial:
                 UIView.animate(withDuration: 0.1, animations: {
                     self.addButton?.transform = CGAffineTransform.identity
                 })
                 UIView.transition(with: self.addButton!, duration: 0.1, options: .transitionCrossDissolve, animations: {
                     self.addButton?.setImage(#imageLiteral(resourceName: "add_partial"), for: .normal)
                 }, completion: nil)
-            } else if newState == .addPlaylist {
+                break
+            case .addPlaylist:
                 UIView.animate(withDuration: 0.1, animations: {
                     self.addButton?.transform = CGAffineTransform.identity
                 })
                 UIView.transition(with: self.addButton!, duration: 0.1, options: .transitionCrossDissolve, animations: {
                     self.addButton?.setImage(#imageLiteral(resourceName: "add_playlist"), for: .normal)
                 }, completion: nil)
-            } else if newState == .inPlaylist {
+                break
+            case .inPlaylist:
                 UIView.animate(withDuration: 0.1, animations: {
                     self.addButton?.transform = CGAffineTransform.identity
                 })
                 UIView.transition(with: self.addButton!, duration: 0.1, options: .transitionCrossDissolve, animations: {
                     self.addButton?.setImage(#imageLiteral(resourceName: "check_blue"), for: .normal)
                 }, completion: nil)
-            } else {
+                break
+            default:
                 UIView.animate(withDuration: 0.1, animations: {
                     self.addButton?.transform = CGAffineTransform.identity
                 })
@@ -148,7 +151,7 @@ class TableViewCell: UITableViewCell {
         self.percentViewController.view.translatesAutoresizingMaskIntoConstraints = false
         self.addButton?.isHidden = self.addButtonHidden
         if self.addButtonHidden {
-            self.rightTrailingLayoutConstraint?.constant = 0.0
+            self.rightTrailingLayoutConstraint?.constant = -5.0
         } else {
             self.rightTrailingLayoutConstraint?.constant = -28.0
         }
@@ -166,7 +169,7 @@ class TableViewCell: UITableViewCell {
             self.addButton?.setImage(#imageLiteral(resourceName: "add_symbol_blue"), for: .normal)
         }
 
-        if self.imageUrl != nil, !self.imageUrl!.absoluteString.hasSuffix("gblogo.png") {
+        if self.imageUrl != nil, !ImageList.isDefaultPlaceholder(url: self.imageUrl!) {
             self.artView?.kf.cancelDownloadTask()
             self.artView?.kf.setImage(with: self.imageUrl, placeholder: #imageLiteral(resourceName: "table_placeholder_light"), completionHandler: self.cacheCompletionHandler)
         }
@@ -193,8 +196,8 @@ class TableViewCell: UITableViewCell {
         
         if self._isWishlist {
             self.percentView.isHidden = true
-            self.titleLabel?.textColor = .lightGray
-            self.descriptionLabel?.textColor = .lightGray
+            self.titleLabel?.textColor = .tertiaryLabel
+            self.descriptionLabel?.textColor = .tertiaryLabel
         }
         
     }
@@ -223,8 +226,7 @@ class TableViewCell: UITableViewCell {
             subview.removeFromSuperview()
         }
         self.percentView.isHidden = false
-        self.titleLabel?.textColor = .black
-        self.descriptionLabel?.textColor = .darkGray
-        //self.laidOut = false
+        self.titleLabel?.textColor = .label
+        self.descriptionLabel?.textColor = .secondaryLabel
     }
 }

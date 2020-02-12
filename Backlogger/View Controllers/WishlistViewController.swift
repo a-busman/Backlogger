@@ -32,6 +32,10 @@ class WishlistViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.refreshCells()
+    }
+    
+    func refreshCells() {
         autoreleasepool {
             let realm = try? Realm()
             self.wishlistGames = realm?.objects(Game.self).filter("inWishlist = true").sorted(byKeyPath: "dateAdded", ascending: false)
@@ -150,6 +154,7 @@ extension WishlistViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: self.reuseString) as! TableViewCell
+        cell.tintColor = UIColor(named: "App-blue")
         if let game = self.wishlistGames?[indexPath.row] {
             var indent: CGFloat = 0.0
             
@@ -174,7 +179,7 @@ extension WishlistViewController: UITableViewDelegate, UITableViewDataSource {
             cell.rightLabel?.isHidden = true
             cell.accessoryType = .disclosureIndicator
 
-            if let image = game.gameFields?.image, !image.iconUrl!.hasSuffix("gblogo.png") {
+            if let image = game.gameFields?.image, !image.isDefaultPlaceholder(field: .IconUrl) {
                 cell.imageUrl = URL(string: image.iconUrl!)
             } else {
                 cell.artView?.image = #imageLiteral(resourceName: "table_placeholder_light")

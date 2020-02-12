@@ -8,6 +8,7 @@
 
 import Foundation
 import Alamofire
+import FirebaseAnalytics
 
 var STEAM_API_KEY: String {
     var keys: NSDictionary!
@@ -71,6 +72,8 @@ class SteamGameResults {
 
 class Steam {
     
+    static var backgroundTask: UIBackgroundTaskIdentifier = .invalid
+    
     static let steamPlatformIdNumber = Platform.customIdBase() - 1
     class func generateUserSummaryUrl(with steamId: String) -> URL? {
         return URL(string: "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + STEAM_API_KEY + "&steamids=" + steamId)
@@ -88,6 +91,22 @@ class Steam {
         return URL(string: "https://media.steampowered.com/steamcommunity/public/images/apps/\(appId)/" + image + ".jpg")
     }
     
+    class func matchGameFromList(_ steamGame: SteamGame, _ completionHandler: @escaping (GameField?) -> Void) {
+        guard let mappedId = SteamMapper.gameMappings[steamGame.appId] else { completionHandler(nil); return }
+        if mappedId == -1 {
+            let gameField = GameField()
+            gameField.idNumber = -1
+            completionHandler(gameField)
+        } else {
+            GameField.getGameDetail(withId: mappedId) { result in
+                if let error = result.error {
+                    NSLog(error.localizedDescription)
+                }
+                completionHandler(result.value)
+            }
+        }
+    }
+    
     class func matchGiantBombGames(with gameList: [SteamGame], progressHandler: @escaping (Int, Int) -> Void, _ completionHandler: @escaping (_ matched: Result<[GameField]>, _ unmatched: Result<[SteamGame]>) -> Void) {
         var gameFields: [GameField] = []
         var unmatchedSteamGames: [SteamGame] = []
@@ -95,8 +114,10 @@ class Steam {
         var i = 0
         let totalGames = gameList.count
         let queue = DispatchQueue(label: "game.count.queue")
-        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { timer in
+        
+        let timerBlock: (Timer) -> Void = { timer in
             let currentGame = gameList[i]
+                
             var gameName = currentGame.name.trimmingCharacters(in: .whitespacesAndNewlines).removeSpecialEdition()
             
             // for some reason, resident evil games have biohazard written after them (the japanese name)
@@ -106,7 +127,8 @@ class Steam {
                 gameName = String(gameName[gameName.startIndex..<index])
             }
             gameName = gameName.trimmingCharacters(in: .whitespacesAndNewlines)
-            GameField.getGames(from: gameName) { results in
+
+            let resultsHandler = { (results: Result<SearchResults>) -> Void in
                 if let error = results.error {
                     NSLog("Error searching for \(gameName)")
                     unmatchedSteamGames.append(currentGame)
@@ -215,10 +237,13 @@ class Steam {
                     if gameField != nil {
                         gameFields.append(gameField!)
                         gameField!.steamAppId = currentGame.appId
-                        print("\(currentGame.name) -> \(gameField!.name!)")
+                        NSLog("\(currentGame.name) -> \(gameField!.name!)")
+                        Analytics.logEvent(AnalyticsEventSearch, parameters: [ "translation" : "\(currentGame.name.prefix(40)),\(currentGame.appId),\(gameField!.name!.prefix(40)),\(gameField!.idNumber)"])
                     } else {
                         unmatchedSteamGames.append(currentGame)
-                        print("Could not find match for \(currentGame.name)")
+                        NSLog("Could not find match for \(currentGame.name.prefix(60)):\(currentGame.appId)")
+                        Analytics.logEvent(AnalyticsEventSearch, parameters: ["no_match" : "\(currentGame.name),\(currentGame.appId),None,0"])
+                        
                     }
                     queue.sync {
                         gameCount += 1
@@ -229,11 +254,41 @@ class Steam {
                     }
                 }
             }
+            matchGameFromList(currentGame) { gameResult in
+                guard let game = gameResult else { GameField.getGames(from: gameName, resultsHandler); return }
+                if game.idNumber != -1 {
+                    game.steamAppId = currentGame.appId
+                    gameFields.append(game)
+                } else {
+                    unmatchedSteamGames.append(currentGame)
+                }
+                queue.sync {
+                    gameCount += 1
+                    progressHandler(gameCount, totalGames)
+                    if gameCount == totalGames {
+                        completionHandler(.success(gameFields), .success(unmatchedSteamGames))
+                    }
+                }
+            }
             i += 1
             if i >= totalGames {
                 timer.invalidate()
+                endBackgroundTask()
             }
-        })
+        }
+        registerBackgroundTask()
+        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: timerBlock)
+    }
+    
+    class func registerBackgroundTask() {
+        backgroundTask = UIApplication.shared.beginBackgroundTask {
+            endBackgroundTask()
+        }
+    }
+    
+    class func endBackgroundTask() {
+        UIApplication.shared.endBackgroundTask(backgroundTask)
+        backgroundTask = .invalid
     }
     
     class func username(from response: DataResponse<Any>) -> Result<String> {
@@ -381,6 +436,7 @@ class Steam {
     }
     
     class func getUserGameList(with steamId: String, _ completionHandler: @escaping(Result<[SteamGame]>) -> Void) {
+        Analytics.logEvent(AnalyticsEventLogin, parameters: ["steam_id" : steamId])
         guard let url = generateUserGameListUrl(with: steamId) else {
             completionHandler(.failure(BackendError.urlError(reason: "Could not convert username to url")))
             return

@@ -12,6 +12,8 @@ import RealmSwift
 import Fabric
 import Crashlytics
 import Zephyr
+import Firebase
+import GoogleMobileAds
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -20,8 +22,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var shortcutItem: UIApplicationShortcutItem?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        FirebaseApp.configure()
         Fabric.with([Crashlytics.self])
+        
+        GADMobileAds.sharedInstance().start(completionHandler: nil)
+#if targetEnvironment(simulator)
+        GADMobileAds.sharedInstance().requestConfiguration.testDeviceIdentifiers = [(kGADSimulatorID as! String)]
+#endif
 
+        IAPManager.shared.startObserving()
         self.createDirectories()
         let dir: URL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.BackloggerSharing")!
         let realmPath = dir.appendingPathComponent("db.realm")
@@ -44,6 +53,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             Zephyr.sync()
         }
         
+        let coloredAppearance = UINavigationBarAppearance()
+        coloredAppearance.configureWithTransparentBackground()
+        coloredAppearance.backgroundColor = UIColor(named: "App")
+        coloredAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        coloredAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+               
+        UINavigationBar.appearance().standardAppearance = coloredAppearance
+        UINavigationBar.appearance().scrollEdgeAppearance = coloredAppearance
+        
         if let shortcutItem = launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem {
             self.shortcutItem = shortcutItem
             return false
@@ -51,7 +69,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         return true
     }
-    
 
     func handleShortcut(_ shortcutItem:UIApplicationShortcutItem ) -> Bool {
         var succeeded = false
@@ -113,6 +130,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+        IAPManager.shared.stopObserving()
+
     }
 
     func compactRealm(at realmPath: URL) {

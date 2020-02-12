@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -18,18 +14,14 @@
                 <outlet property="completionView" destination="3TZ-CP-MFR" id="eef-wh-Q9u"/>
                 <outlet property="detailsGestureView" destination="E80-4d-4gx" id="J4I-Zp-QkJ"/>
                 <outlet property="favouriteButton" destination="UOY-Gk-eaF" id="ptr-OP-KaO"/>
-                <outlet property="fifthStar" destination="y9i-rq-ml3" id="cog-Ew-osK"/>
                 <outlet property="finishedButton" destination="gkS-pG-4hV" id="5kS-Vg-y7Y"/>
-                <outlet property="firstStar" destination="CxA-tM-oJH" id="xg2-Ko-Qvr"/>
-                <outlet property="fourthStar" destination="Oek-l8-iaa" id="lE1-le-tIM"/>
                 <outlet property="notesTextView" destination="W6r-Gw-umG" id="Db6-Wr-lby"/>
                 <outlet property="platformLabel" destination="AAw-mt-efn" id="IFE-7W-RsU"/>
                 <outlet property="playPauseButton" destination="iRM-dG-gbm" id="abP-8i-IuZ"/>
                 <outlet property="progressSliderView" destination="Ix9-3j-a1e" id="Os6-RR-kYf"/>
                 <outlet property="pullTabView" destination="52E-xR-IXb" id="ycq-U8-hZy"/>
                 <outlet property="ratingContainerView" destination="wIK-yH-Oqj" id="6rn-z4-H7n"/>
-                <outlet property="secondStar" destination="OHT-bk-lFw" id="XLN-Dh-dd8"/>
-                <outlet property="thirdStar" destination="Nk6-fg-vfe" id="fHs-zS-lnx"/>
+                <outlet property="starStackView" destination="0Z5-xb-8sB" id="2d1-O1-TCW"/>
                 <outlet property="titleLabel" destination="Fb5-H8-6ns" id="TCn-aJ-2ly"/>
                 <outlet property="view" destination="iN0-l3-epB" id="wt1-Aj-rbd"/>
             </connections>
@@ -57,7 +49,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="52E-xR-IXb" userLabel="Pull Tab">
-                                <rect key="frame" x="138" y="3" width="35" height="5"/>
+                                <rect key="frame" x="137.5" y="2.5" width="35" height="5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="35" id="bOX-pG-udU"/>
@@ -151,7 +143,7 @@
                     </connections>
                 </slider>
                 <view opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="pco-tc-wrJ">
-                    <rect key="frame" x="-0.5" y="98" width="320" height="452"/>
+                    <rect key="frame" x="0.0" y="98" width="320" height="452"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wIK-yH-Oqj">
                             <rect key="frame" x="65" y="10" width="190" height="20"/>
@@ -208,7 +200,7 @@
                             </connections>
                         </view>
                         <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UOY-Gk-eaF" userLabel="Favourite">
-                            <rect key="frame" x="37" y="55" width="25" height="25"/>
+                            <rect key="frame" x="37" y="55.5" width="25" height="25"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="UOY-Gk-eaF" secondAttribute="height" id="AMF-cT-Wod"/>
                                 <constraint firstAttribute="height" constant="25" id="yiu-0Y-aaZ"/>
@@ -234,7 +226,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gkS-pG-4hV" userLabel="Finished">
-                            <rect key="frame" x="258" y="55" width="25" height="25"/>
+                            <rect key="frame" x="258" y="55.5" width="25" height="25"/>
                             <state key="normal" image="check-empty-white"/>
                             <connections>
                                 <action selector="statsControlTouchDownWithSender:" destination="-1" eventType="touchDown" id="Bnb-Zz-DzT"/>
@@ -321,12 +313,12 @@
         </tapGestureRecognizer>
         <tapGestureRecognizer id="bfh-ay-gvv">
             <connections>
-                <action selector="ratingTapHandlerWithSender:" destination="-1" id="zYp-pP-8hB"/>
+                <action selector="ratingHandlerWithSender:" destination="-1" id="iIt-Fa-NP5"/>
             </connections>
         </tapGestureRecognizer>
         <panGestureRecognizer minimumNumberOfTouches="1" id="uOy-z6-FkW">
             <connections>
-                <action selector="ratingPanHandlerWithSender:" destination="-1" id="dcY-un-zAL"/>
+                <action selector="ratingHandlerWithSender:" destination="-1" id="83S-DL-qR0"/>
             </connections>
         </panGestureRecognizer>
     </objects>
@@ -335,6 +327,6 @@
         <image name="check_light" width="10" height="10"/>
         <image name="heart-empty-white" width="30" height="30"/>
         <image name="pause-white" width="36" height="36"/>
-        <image name="star-white" width="25" height="25"/>
+        <image name="star-white" width="25.5" height="25.5"/>
     </resources>
 </document>

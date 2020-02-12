@@ -41,6 +41,9 @@ class BLObject: Object {
             }
         }
     }
+    func migrateToCloudKit() -> Bool {
+        fatalError("Must override migrateToCloudKit")
+    }
 }
 
 class Field: BLObject {
@@ -59,14 +62,6 @@ class Field: BLObject {
     
     required init() {
         super.init()
-    }
-    
-    required init(realm: RLMRealm, schema: RLMObjectSchema) {
-        super.init(realm: realm, schema: schema)
-    }
-    
-    required init(value: Any, schema: RLMSchema) {
-        super.init(value: value, schema: schema)
     }
     
     override static func primaryKey() -> String? {
@@ -91,5 +86,9 @@ class Field: BLObject {
     
     override func delete() {
         super.delete()
+    }
+    
+    override func migrateToCloudKit() -> Bool {
+        return super.migrateToCloudKit()
     }
 }

@@ -9,6 +9,7 @@
 import UIKit
 import RealmSwift
 import Zephyr
+import GoogleMobileAds
 
 class LibraryViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView?
@@ -16,6 +17,22 @@ class LibraryViewController: UIViewController {
     @IBOutlet weak var addBackgroundView: UIView?
     
     var isSearching = false
+    private var _isAdVisible = false
+    var isAdVisible: Bool {
+        get {
+            return self._isAdVisible
+        }
+        set(newValue) {
+            self._isAdVisible = newValue
+            if newValue {
+                self.tableView?.contentInset.bottom = self.tableDefaultInset + Util.adContentInset
+            } else {
+                self.tableView?.contentInset.bottom = self.tableDefaultInset
+                self.adBannerView.removeFromSuperview()
+            }
+        }
+    }
+    private var tableDefaultInset: CGFloat = 0.0
     
     let tableReuseIdentifier = "table_cell"
     
@@ -38,16 +55,35 @@ class LibraryViewController: UIViewController {
     
     var ascending: Bool?
     
+    var adBannerView: GADBannerView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.searchBar?.tintColor = Util.appColor
         self.tableView?.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: tableReuseIdentifier)
         self.tableView?.tableFooterView = UIView(frame: .zero)
         self.navigationController?.navigationBar.tintColor = .white
+        if Util.shouldShowAds() {
+            self.adBannerView = Util.getNewBannerAd(for: self)
+            self.isAdVisible = true
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if Util.shouldShowAds() {
+            if !self.isAdVisible {
+                self.isAdVisible = true
+            }
+        } else {
+            if self.isAdVisible {
+                self.isAdVisible = false
+            }
+        }
+        self.refreshCells()
+    }
+    
+    func refreshCells() {
         if Util.isICloudContainerAvailable {
             Zephyr.sync()
         }
@@ -322,17 +358,47 @@ class LibraryViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any!) {
-        if segue.identifier == "table_game_list" {
+        let identifier = segue.identifier
+        if identifier == "table_game_list" {
             if let cell = sender as? UITableViewCell {
                 let i = (self.tableView?.indexPath(for: cell)?.row)!
                 let vc = segue.destination as! GameTableViewController
                 vc.platform = self.platforms[i]
             }
         }
+        else if identifier == "add_game_to_library" {
+            let rootVc = segue.destination as? UINavigationController
+            let vc = rootVc?.viewControllers.first as? LibraryAddSearchViewController
+            vc?.delegate = self
+        }
     }
     
     func addGame() {
         self.performSegue(withIdentifier: "add_show_details", sender: nil)
+    }
+    
+    func addAdView(_ banner: GADBannerView) {
+        if banner.superview == nil {
+            banner.translatesAutoresizingMaskIntoConstraints = false
+            self.view.addSubview(banner)
+            
+            banner.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+            banner.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        }
+    }
+}
+
+extension LibraryViewController: GADBannerViewDelegate {
+    func adViewDidReceiveAd(_ bannerView: GADBannerView) {
+        if let navView = self.navigationController?.view {
+            Util.showBannerAd(in: navView, banner: self.adBannerView)
+        }
+    }
+}
+
+extension LibraryViewController: LibraryAddSearchViewControllerDelegate {
+    func didDismiss() {
+        self.refreshCells()
     }
 }
 
@@ -458,7 +524,7 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
                             cell.descriptionLabel?.text = ""
                             cell.hideDetails()
                         }
-                        if let image = platform.image, !image.iconUrl!.hasSuffix("gblogo.png") {
+                        if let image = platform.image, !image.isDefaultPlaceholder(field: .IconUrl) {
                             cell.imageUrl = URL(string: image.iconUrl!)
                         } else {
                             cell.set(image: #imageLiteral(resourceName: "table_placeholder_light"))
@@ -496,7 +562,7 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
                 }
                 
                 if platform.idNumber != Steam.steamPlatformIdNumber {
-                    if let image = platform.image, !image.iconUrl!.hasSuffix("gblogo.png") {
+                    if let image = platform.image, !image.isDefaultPlaceholder(field: .IconUrl) {
                         cell.imageUrl = URL(string: image.iconUrl!)
                     } else {
                         cell.set(image: #imageLiteral(resourceName: "table_placeholder_light"))
@@ -528,7 +594,7 @@ extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
             cell.showDetails()
             cell.percentView?.isHidden = true
             cell.rightLabel?.text = ""
-            if let image = game.gameFields!.image, !image.iconUrl!.hasSuffix("gblogo.png") {
+            if let image = game.gameFields!.image, !image.isDefaultPlaceholder(field: .IconUrl) {
                 cell.imageUrl = URL(string: image.iconUrl!)
             }
             cell.cacheCompletionHandler = {

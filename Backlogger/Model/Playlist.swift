@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 import RealmSwift
 import Realm
 
@@ -49,14 +50,6 @@ class Playlist: BLObject {
     
     required init() {
         super.init()
-    }
-    
-    required init(realm: RLMRealm, schema: RLMObjectSchema) {
-        super.init(realm: realm, schema: schema)
-    }
-    
-    required init(value: Any, schema: RLMSchema) {
-        super.init(value: value, schema: schema)
     }
     
     func set(image: UIImage) {

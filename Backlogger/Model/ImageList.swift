@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 import Alamofire
 import RealmSwift
 import Realm
@@ -49,14 +50,6 @@ class ImageList: BLObject {
         super.init()
     }
     
-    required init(realm: RLMRealm, schema: RLMObjectSchema) {
-        super.init(realm: realm, schema: schema)
-    }
-    
-    required init(value: Any, schema: RLMSchema) {
-        super.init(value: value, schema: schema)
-    }
-    
     override static func primaryKey() -> String? {
         return "id"
     }
@@ -79,6 +72,52 @@ class ImageList: BLObject {
         let newImageList = self.deepCopy()
         self.delete()
         return newImageList
+    }
+    
+    private func getChild(from field: ImageFields) -> String? {
+        switch field {
+        case .IconUrl:
+            return self.iconUrl
+        case .MediumUrl:
+            return self.mediumUrl
+        case .ScreenUrl:
+            return self.screenUrl
+        case .SmallUrl:
+            return self.smallUrl
+        case .SuperUrl:
+            return self.superUrl
+        case .ThumbUrl:
+            return self.thumbUrl
+        case .TinyUrl:
+            return self.tinyUrl
+        case .Tags:
+            return self.tags
+        }
+    }
+    
+    static let defaultImageList: [String] = [
+        "3026329-gb_default-16_9.png",
+        "gblogo.png",
+        "question_mark.jpg"
+    ]
+    
+    func isDefaultPlaceholder(field: ImageFields) -> Bool {
+        guard let child = self.getChild(from: field) else { return true }
+        for url in ImageList.defaultImageList {
+            if child.contains(url) {
+                return true
+            }
+        }
+        return false
+    }
+    
+    class func isDefaultPlaceholder(url: URL) -> Bool {
+        for dUrl in defaultImageList {
+            if url.absoluteString.contains(dUrl) {
+                return true
+            }
+        }
+        return false
     }
 
     func getImage(field: ImageFields, _ completionHandler: @escaping (Result<UIImage>) -> Void) {

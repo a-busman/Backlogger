@@ -17,10 +17,6 @@ class GameTableViewController: UIViewController {
     @IBOutlet weak var platformImage:     UIImageView?
     @IBOutlet weak var titleLabel:        UILabel?
     @IBOutlet weak var shadowView:        UIView?
-    @IBOutlet weak var loadingView:       UIView?
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView?
-    @IBOutlet weak var progressLabel:     UILabel?
-    @IBOutlet weak var progressBar:       UIProgressView?
     
     @IBOutlet weak var shadowBottomLayoutConstraint:  NSLayoutConstraint?
     @IBOutlet weak var titleBottomLayoutConstraint:   NSLayoutConstraint?
@@ -149,11 +145,7 @@ class GameTableViewController: UIViewController {
         }
         self.tableView?.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: tableReuseIdentifier)
         
-        if #available(iOS 9.0, *) {
-            if traitCollection.forceTouchCapability == .available {
-                self.registerForPreviewing(with: self, sourceView: self.tableView!)
-            }
-        }
+        self.tableView?.addInteraction(UIContextMenuInteraction(delegate: self))
         self.toastOverlay.view.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(toastOverlay.view)
         toastOverlay.view.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
@@ -163,6 +155,10 @@ class GameTableViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.refreshCells()
+    }
+    
+    func refreshCells() {
         if Util.isICloudContainerAvailable {
             Zephyr.sync()
         }
@@ -223,7 +219,7 @@ class GameTableViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.startInset = (self.navigationController?.navigationBar.bounds.height ?? 0.0) + self.backgroundTopInitial + UIApplication.shared.statusBarFrame.height
+        self.startInset = (self.navigationController?.navigationBar.bounds.height ?? 0.0) + self.backgroundTopInitial + (self.view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0)
         if !self.didLayout {
             self.shadowGradientLayer.frame = CGRect(x: 0.0, y: 0.0, width: UIScreen.main.bounds.width, height: (self.shadowView?.frame.height)!)
             let darkColor = UIColor(white: 0.0, alpha: 0.3).cgColor
@@ -231,8 +227,8 @@ class GameTableViewController: UIViewController {
             self.shadowGradientLayer.locations = [0.7, 1.0]
             self.tableView?.contentInset.top = self.backgroundTopInitial
             self.tableView?.contentInset.bottom = 0.0
-            self.tableView?.scrollIndicatorInsets.top = self.backgroundTopInitial
-            self.tableView?.scrollIndicatorInsets.bottom = 0.0
+            self.tableView?.verticalScrollIndicatorInsets.top = self.backgroundTopInitial
+            self.tableView?.verticalScrollIndicatorInsets.bottom = 0.0
             self.tableView?.setContentOffset(CGPoint(x: 0.0, y: -self.startInset), animated: false)
             self.shadowView?.layer.addSublayer(self.shadowGradientLayer)
         }
@@ -422,17 +418,22 @@ class GameTableViewController: UIViewController {
                         }
                     }
                 }
+                let tabBar = self.tabBarController as? RootViewController
+                if tabBar != nil {
+                    tabBar!.steamLoaderVisibility(true)
+                }
                 Steam.matchGiantBombGames(with: newGames, progressHandler: { progress, total in
-                    self.progressBar?.setProgress(Float(progress) / Float(total), animated: true)
-                    self.progressLabel?.text = "\(progress) / \(total)"
+                    if tabBar != nil {
+                        tabBar!.progress = (progress * 100) / total
+                    }
                 }) { matched, unmatched in
+                    if tabBar != nil {
+                        tabBar!.steamLoaderVisibility(false)
+                    }
                     if let gamesError = matched.error {
                         NSLog(gamesError.localizedDescription)
                     } else {
                         NSLog("Done")
-                        self.loadingView?.isHidden = true
-                        self.activityIndicator?.stopAnimating()
-                        UIApplication.shared.endIgnoringInteractionEvents()
                         if matched.value!.count > 0 {
                             //dedupe
                             var dedupedList: [GameField] = []
@@ -458,12 +459,20 @@ class GameTableViewController: UIViewController {
                                     dedupedList.append(game)
                                 }
                             }
-                            let vc = self.storyboard!.instantiateViewController(withIdentifier: "add_from_steam") as! UINavigationController
-                            let rootView = vc.viewControllers.first! as! AddSteamGamesViewController
-                            vc.navigationBar.tintColor = .white
-                            rootView.delegate = self
-                            rootView.gameFields = dedupedList
-                            self.present(vc, animated: true, completion: nil)
+                            if dedupedList.count > 0 {
+                                let vc = self.storyboard!.instantiateViewController(withIdentifier: "add_from_steam") as! UINavigationController
+                                let rootView = vc.viewControllers.first! as! AddSteamGamesViewController
+                                vc.navigationBar.tintColor = .white
+                                rootView.delegate = self
+                                rootView.gameFields = dedupedList
+                                self.present(vc, animated: true, completion: nil)
+                            } else {
+                                let alert = UIAlertController(title: "No new Steam games", message: nil, preferredStyle: .alert)
+                                let ok = UIAlertAction(title: "Okay", style: .default, handler: nil)
+                                
+                                alert.addAction(ok)
+                                self.present(alert, animated: true, completion: nil)
+                            }
                         }
                     }
                 }
@@ -471,15 +480,11 @@ class GameTableViewController: UIViewController {
         }
         self.tableView?.reloadData()
         self.steamVc?.dismiss(animated: true, completion: nil)
-        self.activityIndicator?.startAnimating()
-        self.progressBar?.setProgress(0.0, animated: false)
-        self.progressLabel?.text = ""
-        self.loadingView?.isHidden = false
-        UIApplication.shared.beginIgnoringInteractionEvents()
     }
     
     func tappedDone(sender: UIBarButtonItem) {
         self.steamVc?.dismiss(animated: true, completion: nil)
+        self.refreshCells()
     }
     
     func addGames(sender: UIAlertAction) {
@@ -488,6 +493,7 @@ class GameTableViewController: UIViewController {
         navVc.navigationBar.barStyle = .black
         navVc.navigationBar.isTranslucent = true
         navVc.navigationBar.barTintColor = Util.appColor
+        vc.delegate = self
         self.present(navVc, animated: true, completion: nil)
     }
     
@@ -524,10 +530,10 @@ class GameTableViewController: UIViewController {
     }
 }
 
-extension GameTableViewController: UIViewControllerPreviewingDelegate {
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+extension GameTableViewController: UIContextMenuInteractionDelegate {
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        
         guard let indexPath = self.tableView?.indexPathForRow(at: location),
-            let cell = self.tableView?.cellForRow(at: indexPath),
             let gameFields = self.filteredGames![indexPath.row].gameFields else { return nil }
         let game = self.filteredGames![indexPath.row]
         let vc: GameDetailsViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "game_details") as! GameDetailsViewController
@@ -545,15 +551,15 @@ extension GameTableViewController: UIViewControllerPreviewingDelegate {
         vc.state = .inLibrary
         vc.gameField = gameField
         
-        previewingContext.sourceRect = cell.frame
-        
-        vc.addRemoveClosure = { (action, vc) -> Void in
+
+        vc.addRemoveClosure = { (action) -> Void in
             let game = self.filteredGames![indexPath.row]
             if game.inLibrary {
+                let platformId = self.platform!.idNumber
                 game.delete()
                 autoreleasepool {
                     let realm = try? Realm()
-                    self.platform = realm?.object(ofType: Platform.self, forPrimaryKey: self.platform!.idNumber)
+                    self.platform = realm?.object(ofType: Platform.self, forPrimaryKey: platformId)
                 }
                 if self.platform != nil {
                     self.games = self.platform?.ownedGames
@@ -569,10 +575,10 @@ extension GameTableViewController: UIViewControllerPreviewingDelegate {
             }
             self.tableView?.reloadData()
         }
-        vc.addToPlayLaterClosure = { (action, vc) -> Void in
+        vc.addToPlayLaterClosure = { (action) -> Void in
             self.addToUpNext(games: [game], later: true)
         }
-        vc.addToPlaylistClosure = { (action, vc) -> Void in
+        vc.addToPlaylistClosure = { (action) -> Void in
             let vc = self.storyboard?.instantiateViewController(withIdentifier: "PlaylistNavigation") as! UINavigationController
             let playlistVc = vc.viewControllers.first as! PlaylistViewController
             playlistVc.addingGames = [game]
@@ -580,10 +586,10 @@ extension GameTableViewController: UIViewControllerPreviewingDelegate {
             playlistVc.delegate = self
             self.present(vc, animated: true, completion: nil)
         }
-        vc.addToPlayNextClosure = { (action, vc) -> Void in
+        vc.addToPlayNextClosure = { (action) -> Void in
             self.addToUpNext(games: [game], later: false)
         }
-        vc.addToWishlistClosure = { (action, vc) -> Void in
+        vc.addToWishlistClosure = { (action) -> Void in
             let game = self.filteredGames![indexPath.row]
             game.delete()
             autoreleasepool {
@@ -597,12 +603,20 @@ extension GameTableViewController: UIViewControllerPreviewingDelegate {
                 let _ = self.navigationController?.popViewController(animated: true)
             }
         }
-        return vc
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: {() -> UIViewController? in
+            return vc
+        }, actionProvider: { suggestedActions in
+            return vc.contextMenu
+        })
     }
-    
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
-        self.navigationController?.show(viewControllerToCommit, sender: nil)
-        self.navigationController?.navigationBar.titleTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.foregroundColor.rawValue: UIColor.white])
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
+        animator.preferredCommitStyle = .pop
+        guard let vc = animator.previewViewController else { return }
+        
+        animator.addCompletion {
+            self.show(vc, sender: self)
+        }
+        
     }
 }
 
@@ -652,7 +666,7 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
         cell.progress = game.progress
         cell.complete = game.finished
         cell.isWishlist = game.inWishlist
-        if let image = game.gameFields?.image, !image.iconUrl!.hasSuffix("gblogo.png") {
+        if let image = game.gameFields?.image, !image.isDefaultPlaceholder(field: .IconUrl) {
             cell.imageUrl = URL(string: image.iconUrl!)
         } else {
             cell.artView?.image = #imageLiteral(resourceName: "table_placeholder_light")
@@ -754,19 +768,21 @@ extension GameTableViewController: UITableViewDelegate, UITableViewDataSource {
                 self.imageHeightLayoutConstraint?.constant = self.imageHeightInitial
             }
             self.currentScrollPosition = offset
-            self.tableView?.scrollIndicatorInsets.top =  self.startInset - ((self.navigationController?.navigationBar.bounds.height ?? 0.0) + UIApplication.shared.statusBarFrame.height)
-            if offset < ((self.titleLabel?.bounds.height ?? 0) + (self.navigationController?.navigationBar.bounds.height ?? 0) + UIApplication.shared.statusBarFrame.height) {
+            self.tableView?.verticalScrollIndicatorInsets.top =  self.startInset - ((self.navigationController?.navigationBar.bounds.height ?? 0.0) + (self.view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0))
+            
+            let labelNavHeight = (self.titleLabel?.bounds.height ?? 0) + (self.navigationController?.navigationBar.bounds.height ?? 0)
+            if offset < (labelNavHeight + (self.view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0)) {
                 if offset < 0.0 {
                     self.navigationController?.navigationBar.titleTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.foregroundColor.rawValue: UIColor.white])
                 } else {
-                    let remainingWidth = offset - ((self.navigationController?.navigationBar.bounds.height ?? 0) + UIApplication.shared.statusBarFrame.height)
+                    let remainingWidth = offset - ((self.navigationController?.navigationBar.bounds.height ?? 0) + (self.view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0))
                     let newColor = UIColor(white: 1.0, alpha: ((self.titleLabel?.bounds.height ?? 0) - remainingWidth) / (self.titleLabel?.bounds.height ?? 1))
                     self.navigationController?.navigationBar.titleTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.foregroundColor.rawValue: newColor])
                 }
             } else {
                 self.navigationController?.navigationBar.titleTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.foregroundColor.rawValue: UIColor.clear])
                 if offset > self.startInset {
-                    self.tableView?.scrollIndicatorInsets.top = offset - ((self.navigationController?.navigationBar.bounds.height ?? 0.0) + UIApplication.shared.statusBarFrame.height)
+                    self.tableView?.verticalScrollIndicatorInsets.top = offset - ((self.navigationController?.navigationBar.bounds.height ?? 0.0) + (self.view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0))
                 }
             }
         }
@@ -785,11 +801,15 @@ extension GameTableViewController: PlaylistViewControllerDelegate {
             self.toastOverlay.show(withIcon: #imageLiteral(resourceName: "add_to_playlist_large"), title: "Added to Playlist", description: "Added to \"\(playlist.name!)\".")
         })
         vc.navigationController?.dismiss(animated: true, completion: nil)
+        self.refreshCells()
     }
 }
 
 extension GameTableViewController: AddSteamGamesViewControllerDelegate {
     func didSelectSteamGames(vc: AddSteamGamesViewController, games: [GameField]) {
+        defer {
+            self.refreshCells()
+        }
         if games.count > 0 {
             var steamPlatform: Platform?
             autoreleasepool {
@@ -828,6 +848,13 @@ extension GameTableViewController: AddSteamGamesViewControllerDelegate {
     
     func didDismiss(vc: AddSteamGamesViewController) {
         vc.dismiss(animated: true, completion: nil)
+        self.refreshCells()
+    }
+}
+
+extension GameTableViewController: LibraryAddSearchViewControllerDelegate {
+    func didDismiss() {
+        self.refreshCells()
     }
 }
 

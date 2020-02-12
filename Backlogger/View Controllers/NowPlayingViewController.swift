@@ -8,11 +8,14 @@
 
 import UIKit
 import RealmSwift
+import WatchConnectivity
+import GoogleMobileAds
 
 class NowPlayingViewController: UIViewController {
     
     @IBOutlet weak var editBarButtonItem: UIBarButtonItem?
     @IBOutlet weak var addBarButtonItem:  UIBarButtonItem?
+    @IBOutlet weak var rollBarButtonItem: UIBarButtonItem?
     @IBOutlet weak var pageControl:       UIPageControl?
     @IBOutlet weak var collectionView:    UICollectionView?
     @IBOutlet weak var addBackgroundView: UIView?
@@ -21,8 +24,9 @@ class NowPlayingViewController: UIViewController {
     @IBOutlet weak var blurView:          UIVisualEffectView?
     @IBOutlet weak var dimView:           UIView?
     
-    @IBOutlet weak var blurTopLayoutConstraint: NSLayoutConstraint?
-    @IBOutlet weak var keyboardHeightLayoutConstraint: NSLayoutConstraint?
+    @IBOutlet weak var blurTopLayoutConstraint:              NSLayoutConstraint?
+    @IBOutlet weak var keyboardHeightLayoutConstraint:       NSLayoutConstraint?
+    @IBOutlet weak var pageControlBottomLayoutConstraint:    NSLayoutConstraint?
     
     var flowLayout: TopAlignedCollectionViewFlowLayout {
         return self.collectionView?.collectionViewLayout as! TopAlignedCollectionViewFlowLayout
@@ -38,6 +42,24 @@ class NowPlayingViewController: UIViewController {
     var notesEditing = false
     
     let reuseIdentifier = "cell"
+    
+    private var _isAdVisible = false
+    var isAdVisible: Bool {
+        get {
+            return self._isAdVisible
+        }
+        set(newValue) {
+            self._isAdVisible = newValue
+            if newValue {
+                self.pageControlBottomLayoutConstraint?.constant = self.defaultPageControlBottom - Util.adContentInset
+            } else {
+                self.pageControlBottomLayoutConstraint?.constant = self.defaultPageControlBottom
+                self.adBannerView.removeFromSuperview()
+            }
+        }
+    }
+    
+    private var defaultPageControlBottom: CGFloat = 0.0
     
     var longPressGesture : UILongPressGestureRecognizer? = nil
     
@@ -61,6 +83,8 @@ class NowPlayingViewController: UIViewController {
     
     var currentlyTypingTextView: UITextView?
     
+    var adBannerView: GADBannerView!
+    
     var blurViewState: UpNextState {
         get {
             return self._blurViewState
@@ -69,31 +93,49 @@ class NowPlayingViewController: UIViewController {
             switch (newValue) {
             case .minimal:
                 self.navigationController?.navigationBar.topItem?.rightBarButtonItem?.isEnabled = true
+                self.rollBarButtonItem?.isEnabled = true
                 self.dimView?.isUserInteractionEnabled = false
                 break
             case .full:
                 self.navigationController?.navigationBar.topItem?.rightBarButtonItem?.isEnabled = false
+                self.rollBarButtonItem?.isEnabled = false
                 self.dimView?.isUserInteractionEnabled = true
                 break
             }
             self._blurViewState = newValue
         }
     }
-    private var blurViewMinimalY: CGFloat = 0.0
     
     let cellReuseIdentifier = "playlist_detail_cell"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.upNextTableView?.register(UINib(nibName: "PlaylistAddTableCell", bundle: nil), forCellReuseIdentifier: self.cellReuseIdentifier)
-        self.upNextTableView?.separatorColor = .lightGray
-        //self.upNextTableView?.separatorInset = UIEdgeInsetsMake(0, 75, 0, 0)
+        self.upNextTableView?.separatorColor = .separator
         self.upNextTableView?.contentInset.bottom = 55.0
         NotificationCenter.default.addObserver(self, selector: #selector(refreshFirstGame), name: UIApplication.willEnterForegroundNotification, object: nil)
+        self.defaultPageControlBottom = self.pageControlBottomLayoutConstraint?.constant ?? 0.0
+        if Util.shouldShowAds() {
+            self.adBannerView = Util.getNewBannerAd(for: self)
+            self.isAdVisible = true
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if Util.shouldShowAds() {
+            if !self.isAdVisible {
+                self.isAdVisible = true
+            }
+        } else {
+            if self.isAdVisible {
+                self.isAdVisible = false
+            }
+        }
+        self.refreshAll()
+    }
+    
+    func refreshAll() {
         self.navigationController?.navigationBar.tintColor = .white
         self.longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(NowPlayingViewController.handleLongGesture))
         self.collectionView?.addGestureRecognizer(longPressGesture!)
@@ -102,6 +144,13 @@ class NowPlayingViewController: UIViewController {
         self.loadPlaylists()
         
         self.navigationController?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.addTapped))
+        autoreleasepool {
+            if let realm = try? Realm(), realm.objects(Game.self).count > 0 {
+                self.rollBarButtonItem?.isEnabled = true
+            } else {
+                self.rollBarButtonItem?.isEnabled = false
+            }
+        }
 
         if self.games.count > 0 {
             let newButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(handleTapEdit))
@@ -217,13 +266,13 @@ class NowPlayingViewController: UIViewController {
                 vc.game = game
             
                 self.orderedViewControllers.append(vc)
-                vc.addDetails()
+                vc.addDetails(withRefresh: false)
             }
             self.gameIds = newGameIds
-            self.collectionView?.reloadData()
         } else {
             for (i, game) in self.games.enumerated() {
                 self.orderedViewControllers[i].game = game
+                self.orderedViewControllers[i].addDetails(withRefresh: true)
             }
         }
         self.collectionView?.reloadData()
@@ -264,10 +313,12 @@ class NowPlayingViewController: UIViewController {
         let cell = self.collectionView?.cellForItem(at: indexPath) else {
             return
         }
+        
 
         switch(gesture.state) {
-            
         case .began:
+            let generator = UIImpactFeedbackGenerator(style: .rigid)
+            generator.impactOccurred()
             self.setEditing(true, animated: true)
             self.removeWiggleAnimation(from: cell)
             UIView.animate(withDuration: 0.25,
@@ -279,11 +330,7 @@ class NowPlayingViewController: UIViewController {
                             cell.contentView.alpha = 0.7
             },
                            completion: nil)
-            if #available(iOS 11.0, *) {
-                if !self.collectionView!.hasActiveDrag {
-                    self.collectionView?.beginInteractiveMovementForItem(at: indexPath)
-                }
-            } else {
+            if !self.collectionView!.hasActiveDrag {
                 self.collectionView?.beginInteractiveMovementForItem(at: indexPath)
             }
         case .changed:
@@ -323,6 +370,11 @@ class NowPlayingViewController: UIViewController {
             let addToPlaylistViewController = newNavController.topViewController as! AddToPlaylistViewController
             addToPlaylistViewController.delegate = self
             addToPlaylistViewController.title = "Add to Now Playing"
+        } else if segue.identifier == "pick_random" {
+            if let navVc = segue.destination as? UINavigationController,
+                let vc = navVc.topViewController as? RandomGameViewController {
+                vc.delegate = self
+            }
         }
     }
     
@@ -344,7 +396,8 @@ class NowPlayingViewController: UIViewController {
                 } else {
                     self.navigationController?.navigationBar.topItem?.leftBarButtonItem = nil
                 }
-                self.addBarButtonItem?.isEnabled = true
+                self.navigationController?.navigationBar.topItem?.rightBarButtonItem?.isEnabled = true
+                self.rollBarButtonItem?.isEnabled = true
             } else {
                 let newButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(handleTapEdit))
                 newButton.tintColor = .white
@@ -355,7 +408,8 @@ class NowPlayingViewController: UIViewController {
 
                 self.navigationController?.navigationBar.topItem?.leftBarButtonItem = newButton
 
-                self.addBarButtonItem?.isEnabled = false
+                self.navigationController?.navigationBar.topItem?.rightBarButtonItem?.isEnabled = false
+                self.rollBarButtonItem?.isEnabled = false
             }
             for vc in orderedViewControllers {
                 vc.setEditMode(editMode: self.inEditMode, animated: true)
@@ -456,10 +510,27 @@ class NowPlayingViewController: UIViewController {
     }
     
     func updatePlaylist() {
-        self.nowPlayingPlaylist.update {
-            self.nowPlayingPlaylist.games.removeAll()
-            self.nowPlayingPlaylist.games.append(objectsIn: self.games)
+        self.saveNowPlaying()
+        if WCSession.default.isReachable {
+            self.updateWatchList()
         }
+    }
+    
+    func updateWatchList() {
+        var gamesToSend: [[String: Any]] = []
+        
+        for game in self.games {
+            var gameToSend: [String: Any] = [:]
+            gameToSend["name"] = game.gameFields?.name
+            gameToSend["progress"] = game.progress
+            gameToSend["rating"] = game.rating
+            gameToSend["complete"] = game.finished
+            gameToSend["image"] = game.gameFields?.image?.smallUrl
+            gameToSend["favorite"] = game.favourite
+            gameToSend["id"] = game.uuid
+            gamesToSend.append(gameToSend)
+        }
+        WCSession.default.sendMessage(["gameList" : gamesToSend], replyHandler: nil, errorHandler: nil)
     }
     
     // MARK: handleTapDetails
@@ -783,7 +854,7 @@ extension NowPlayingViewController: UITableViewDataSource, UITableViewDelegate {
         shadowView.layer.shadowOffset = CGSize(width: 0.0, height: 20.0)
         shadowView.layer.shadowColor = UIColor.black.cgColor
         shadowView.layer.shadowOpacity = 0.5
-        shadowView.backgroundColor = .white
+        shadowView.backgroundColor = .systemBackground
         shadowView.center = center
         self.view.addSubview(shadowView)
         
@@ -879,11 +950,13 @@ extension NowPlayingViewController: AddToPlaylistViewControllerDelegate {
             }
         }
         self.games += games.map{$0}
-        self.saveNowPlaying()
+        self.updatePlaylist()
+        self.refreshAll()
     }
     func dismissView(_ vc: AddToPlaylistViewController) {
         self._isDismissing = true
         vc.dismiss(animated: true, completion: nil)
+        self.refreshAll()
     }
 }
 
@@ -963,5 +1036,30 @@ extension NowPlayingViewController: UICollectionViewDataSource, UICollectionView
         
         self.orderedViewControllers.insert(gameVc, at: destination.item)
         self.pageControl?.currentPage = destination.item
+        let generator = UISelectionFeedbackGenerator()
+        generator.selectionChanged()
+    }
+}
+
+extension NowPlayingViewController: RandomGameViewControllerDelegate {
+    func selectedGame(_ game: Game?, vc: RandomGameViewController) {
+        if game != nil {
+            self.games.insert(game!, at: 0)
+            self.updatePlaylist()
+            self.refreshAll()
+        }
+        vc.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension NowPlayingViewController: GADBannerViewDelegate {
+    func adViewDidReceiveAd(_ bannerView: GADBannerView) {
+        if let navView = self.navigationController?.view {
+            let bottomConstraint = Util.showBannerAd(in: navView, banner: self.adBannerView, offset: -50.0)
+            if let blurViewConstraint = self.blurView?.topAnchor {
+                bottomConstraint?.isActive = false
+                self.adBannerView.bottomAnchor.constraint(equalTo: blurViewConstraint, constant: 0.0).isActive = true
+            }
+        }
     }
 }

@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -29,10 +25,10 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ofh-AL-noF">
-                    <rect key="frame" x="15" y="4" width="131.5" height="131.5"/>
+                    <rect key="frame" x="15" y="4.5" width="131.5" height="131.5"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="new_playlist" translatesAutoresizingMaskIntoConstraints="NO" id="R4n-Bn-iBO">
-                            <rect key="frame" x="1" y="1" width="129.5" height="129.5"/>
+                            <rect key="frame" x="0.5" y="0.5" width="130.5" height="130.5"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                     <integer key="value" value="5"/>
@@ -40,19 +36,19 @@
                             </userDefinedRuntimeAttributes>
                         </imageView>
                         <visualEffectView opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GLr-ne-YpV">
-                            <rect key="frame" x="1" y="1" width="129.5" height="129.5"/>
+                            <rect key="frame" x="0.5" y="0.5" width="130.5" height="130.5"/>
                             <view key="contentView" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" id="flg-nh-9a5">
-                                <rect key="frame" x="0.0" y="0.0" width="129" height="129"/>
+                                <rect key="frame" x="0.0" y="0.0" width="130.5" height="130.5"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <visualEffectView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="agr-sR-1kn">
-                                        <rect key="frame" x="0.0" y="0.0" width="129.5" height="129.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="130.5" height="130.5"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" id="lIf-Z6-0gB">
-                                            <rect key="frame" x="0.0" y="0.0" width="129" height="129"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="130.5" height="130.5"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="controller_icon_lg" translatesAutoresizingMaskIntoConstraints="NO" id="0FD-GV-eq3">
-                                                    <rect key="frame" x="25" y="25" width="80" height="80"/>
+                                                    <rect key="frame" x="25" y="25" width="80.5" height="80.5"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="0FD-GV-eq3" secondAttribute="height" id="J3j-Rn-aJH"/>
                                                     </constraints>
@@ -84,7 +80,7 @@
                             </userDefinedRuntimeAttributes>
                         </visualEffectView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZIc-EF-gAi">
-                            <rect key="frame" x="45" y="45" width="40" height="40"/>
+                            <rect key="frame" x="46" y="46" width="40" height="40"/>
                             <subviews>
                                 <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wWm-5m-Rjh">
                                     <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
@@ -154,13 +150,13 @@
                     </userDefinedRuntimeAttributes>
                 </view>
                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" text="Title" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="dgA-6g-nKX">
-                    <rect key="frame" x="167" y="-1" width="198" height="35.5"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <rect key="frame" x="166.5" y="-0.5" width="198.5" height="35.5"/>
+                    <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" spellCheckingType="no"/>
                 </textView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9d2-N4-4F0" userLabel="More Button">
-                    <rect key="frame" x="339" y="109.5" width="26" height="26"/>
+                    <rect key="frame" x="339" y="110" width="26" height="26"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="more" translatesAutoresizingMaskIntoConstraints="NO" id="vvL-tQ-PkS">
                             <rect key="frame" x="5" y="5" width="16" height="16"/>
@@ -183,13 +179,13 @@
                     </userDefinedRuntimeAttributes>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9eV-cl-qgm">
-                    <rect key="frame" x="172" y="8" width="193" height="19.5"/>
+                    <rect key="frame" x="171.5" y="8" width="193.5" height="19.5"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
             <constraints>
                 <constraint firstItem="9d2-N4-4F0" firstAttribute="bottom" secondItem="Ofh-AL-noF" secondAttribute="bottom" id="3XE-cd-JnF"/>
                 <constraint firstItem="9d2-N4-4F0" firstAttribute="trailing" secondItem="6TG-YZ-Va9" secondAttribute="trailing" constant="-10" id="5CM-LG-K38"/>
@@ -209,7 +205,7 @@
     </objects>
     <resources>
         <image name="camera" width="16" height="12"/>
-        <image name="controller_icon_lg" width="170" height="170"/>
+        <image name="controller_icon_lg" width="170.5" height="170.5"/>
         <image name="more" width="30" height="30"/>
         <image name="new_playlist" width="90" height="90"/>
     </resources>

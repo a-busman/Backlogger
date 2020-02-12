@@ -12,12 +12,15 @@ enum PanDirection {
     case vertical
     case horizontal
 }
-
 class PanDirectionGestureRecognizer: UIPanGestureRecognizer {
     
     var direction: PanDirection = .vertical
     
-    init(direction: PanDirection, target: AnyObject, action: Selector) {
+    override init(target: Any?, action: Selector?) {
+        super.init(target: target, action: action)
+    }
+    
+    init(direction: PanDirection, target: Any?, action: Selector?) {
         self.direction = direction
         super.init(target: target, action: action)
     }

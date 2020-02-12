@@ -9,6 +9,7 @@
 import UIKit
 import RealmSwift
 import Zephyr
+import GoogleMobileAds
 
 protocol PlaylistViewControllerDelegate {
     func chosePlaylist(vc: PlaylistViewController, playlist: Playlist, games: [Game], isNew: Bool)
@@ -22,9 +23,25 @@ class PlaylistViewController: UIViewController {
     var imageCache: [String: UIImage] = [:]
     
     var isAddingGames = false
+    private var _isAdVisible = false
+    var isAdVisible: Bool {
+        get {
+            return self._isAdVisible
+        }
+        set(newValue) {
+            self._isAdVisible = newValue
+            if newValue {
+                self.tableView?.contentInset.bottom = self.tableDefaultInset + Util.adContentInset
+            } else {
+                self.tableView?.contentInset.bottom = self.tableDefaultInset
+                self.adBannerView.removeFromSuperview()
+            }
+        }
+    }
+    private var tableDefaultInset: CGFloat = 0.0
     
     var addingGames: [Game] = []
-    
+        
     var delegate: PlaylistViewControllerDelegate?
     
     var showFavourites: Bool = false
@@ -40,8 +57,12 @@ class PlaylistViewController: UIViewController {
     var ascending: Bool?
     
     var selectedRow = -1
+    
+    var adBannerView: GADBannerView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tableDefaultInset = self.tableView!.contentInset.bottom
         if Util.isICloudContainerAvailable {
             Zephyr.sync()
         }
@@ -67,6 +88,10 @@ class PlaylistViewController: UIViewController {
         self.navigationController?.navigationBar.tintColor = .white
         if self.isAddingGames {
             self.navigationController?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
+        }
+        if Util.shouldShowAds() {
+            self.adBannerView = Util.getNewBannerAd(for: self)
+            self.isAdVisible = true
         }
     }
     
@@ -172,6 +197,20 @@ class PlaylistViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if Util.shouldShowAds() {
+            if !self.isAdVisible {
+                self.isAdVisible = true
+            }
+        } else {
+            if self.isAdVisible {
+                self.isAdVisible = false
+            }
+        }
+        self.refreshCells()
+    }
+    
+    func refreshCells() {
         autoreleasepool {
             let realm = try! Realm()
             switch self.sortType! {
@@ -220,6 +259,14 @@ class PlaylistViewController: UIViewController {
             }
         }
         self.tableView?.reloadData()
+    }
+}
+
+extension PlaylistViewController: GADBannerViewDelegate {
+    func adViewDidReceiveAd(_ bannerView: GADBannerView) {
+        if let navView = self.navigationController?.view {
+            Util.showBannerAd(in: navView, banner: self.adBannerView)
+        }
     }
 }
 
@@ -338,5 +385,6 @@ extension PlaylistViewController: PlaylistDetailsViewControllerDelegate {
             vc.dismiss(animated: true, completion: nil)
         }
         self.delegate?.chosePlaylist(vc: self, playlist: playlist, games: [], isNew: true)
+        self.refreshCells()
     }
 }
